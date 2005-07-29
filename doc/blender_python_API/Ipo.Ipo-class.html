@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Ipo.Ipo</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Ipo-module.html">Module&nbsp;Ipo</a> ::
+        Class&nbsp;Ipo
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Ipo.Ipo-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Ipo</h2>
+
+<hr/>
+
+<h1 class="heading">The Ipo object</h1>
+  This object gives access to generic data from all objects in 
+  Blender. This object has no attribute.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#EvaluateCurveOn" class="summary-sig-name"><code>EvaluateCurveOn</code></a>(<span class=summary-sig-arg>curvepos</span>,
+          <span class=summary-sig-arg>time</span>)</span></code>
+<br />
+Gets the current value of a curve of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 9 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getBeztriple" class="summary-sig-name"><code>getBeztriple</code></a>(<span class=summary-sig-arg>curvepos</span>,
+          <span class=summary-sig-arg>pointpos</span>)</span></code>
+<br />
+Gets a beztriple of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getBlocktype" class="summary-sig-name"><code>getBlocktype</code></a>()</span></code>
+<br />
+Gets the blocktype of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        IpoCurve object
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getCurve" class="summary-sig-name"><code>getCurve</code></a>(<span class=summary-sig-arg>curvename</span>)</span></code>
+<br />
+Returns the IpoCurve with the given name.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        a list of 4 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getCurveBP" class="summary-sig-name"><code>getCurveBP</code></a>(<span class=summary-sig-arg>curvepos</span>)</span></code>
+<br />
+Gets the basepoint of a curve of the ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getCurvecurval" class="summary-sig-name"><code>getCurvecurval</code></a>(<span class=summary-sig-arg>curvepos</span>)</span></code>
+<br />
+Gets the current value of a curve of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getCurves" class="summary-sig-name"><code>getCurves</code></a>()</span></code>
+<br />
+Gets all the IpoCurves of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Gets the name of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getNcurves" class="summary-sig-name"><code>getNcurves</code></a>()</span></code>
+<br />
+Gets the number of curves of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#getRctf" class="summary-sig-name"><code>getRctf</code></a>()</span></code>
+<br />
+Gets the rctf of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#setBeztriple" class="summary-sig-name"><code>setBeztriple</code></a>(<span class=summary-sig-arg>curvepos</span>,
+          <span class=summary-sig-arg>pointpos</span>,
+          <span class=summary-sig-arg>newbeztriple</span>)</span></code>
+<br />
+Sets the beztriple of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#setBlocktype" class="summary-sig-name"><code>setBlocktype</code></a>(<span class=summary-sig-arg>newblocktype</span>)</span></code>
+<br />
+Sets the blocktype of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>newname</span>)</span></code>
+<br />
+Sets the name of the Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Ipo.Ipo-class.html#setRctf" class="summary-sig-name"><code>setRctf</code></a>(<span class=summary-sig-arg>newrctf</span>)</span></code>
+<br />
+Sets the rctf of the Ipo.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="EvaluateCurveOn"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">EvaluateCurveOn</span>(<span class=sig-arg>curvepos</span>,
+          <span class=sig-arg>time</span>)</span>
+  </h3>
+  Gets the current value of a curve of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvepos</b></code> -
+         the position of the curve in the ipo
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>time</b></code> -
+         the position of the curve in the ipo
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the current value of the selected curve of the Ipo at the 
+        given time.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getBeztriple"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getBeztriple</span>(<span class=sig-arg>curvepos</span>,
+          <span class=sig-arg>pointpos</span>)</span>
+  </h3>
+  Gets a beztriple of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvepos</b></code> -
+         the position of the curve in the ipo
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>pointpos</b></code> -
+         the position of the point in the curve.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the beztriple of the Ipo, or an error is raised.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 9 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getBlocktype"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getBlocktype</span>()</span>
+  </h3>
+  Gets the blocktype of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the blocktype of the Ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getCurve"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getCurve</span>(<span class=sig-arg>curvename</span>)</span>
+  </h3>
+  Returns the IpoCurve with the given name. The possible values for 
+  curvename are 
+  R,G,B,SpecR,SpecG,SpecB,MirR,MirG,MirB,Ref,Alpha,Emit,Amb,Spec,Hard,SpTra,Ang,Mode,HaSize,OfsX,OfsY,OfsZ,SizeX,SizeY,SizeZ,TexR,TexG,TexB,DefVar,Col,Nor,Var(Material 
+  Ipo) 
+  HorR,HorG,HorB,ZenR,ZenG,ZenB,Expos,Misi,MisDi,MisSta,MisHi,StaR,StaG,StaB,StarDi,StarSi,OfsX,OfsY,OfsZ,SizeX,SizeY,SizeZ,TexR,TexG,TexB,DefVar,Col,Nor,Var 
+  (World Ipo) 
+  LocX,LocY,LocZ,dLocX,dLocY,dLocZ,RotX,RotY,RotZ,dRotX,dRotY,dRotZ,SizeX,SizeY,SizeZ,dSizeX,dSizeY,dSizeZ,Layer,Time,ColR,ColG,ColB,ColA 
+  (Object Ipo) Lens,ClSta,ClEnd (Camera Ipo)
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvename</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the corresponding IpoCurve, or None.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=IpoCurve object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getCurveBP"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getCurveBP</span>(<span class=sig-arg>curvepos</span>)</span>
+  </h3>
+  Gets the basepoint of a curve of the ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvepos</b></code> -
+         the position of the curve.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the coordinates of the basepoint, or an error is raised.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=a list of 4 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getCurvecurval"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getCurvecurval</span>(<span class=sig-arg>curvepos</span>)</span>
+  </h3>
+  Gets the current value of a curve of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvepos</b></code> -
+         the position of the curve in the ipo or the name of the 
+        curve
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the current value of the selected curve of the Ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getCurves"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getCurves</span>()</span>
+  </h3>
+  Gets all the IpoCurves of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        A list (possibly void) containing all the IpoCurves associated 
+        to the Ipo object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Gets the name of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the name of the Ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNcurves"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNcurves</span>()</span>
+  </h3>
+  Gets the number of curves of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the number of curve of the Ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRctf"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRctf</span>()</span>
+  </h3>
+  Gets the rctf of the Ipo. Kind of bounding box...
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the rctf of the Ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setBeztriple"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setBeztriple</span>(<span class=sig-arg>curvepos</span>,
+          <span class=sig-arg>pointpos</span>,
+          <span class=sig-arg>newbeztriple</span>)</span>
+  </h3>
+  Sets the beztriple of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>curvepos</b></code> -
+         the position of the curve in the ipo
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>pointpos</b></code> -
+         the position of the point in the curve.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>newbeztriple</b></code> -
+         the new value for the point
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 9 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setBlocktype"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setBlocktype</span>(<span class=sig-arg>newblocktype</span>)</span>
+  </h3>
+  Sets the blocktype of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newblocktype</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int. This value should not be changed, unless you really 
+              know what you do...)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>newname</span>)</span>
+  </h3>
+  Sets the name of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newname</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRctf"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRctf</span>(<span class=sig-arg>newrctf</span>)</span>
+  </h3>
+  Sets the rctf of the Ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newrctf</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=four floats . This value should not be changed, unless 
+              you really know what you do...)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

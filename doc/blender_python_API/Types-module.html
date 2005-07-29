@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Types</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        Module&nbsp;Types
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Types-module.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF MODULE DESCRIPTION =========== -->
+<h2 class="module">Module Types</h2>
+
+<h1 class="heading">The Blender.Types submodule</h1>
+  <p>This module is a dictionary of Blender Python types, for type 
+  checking.</p>
+  Example:
+<pre class="literalblock">
+ import Blender
+ from Blender import Types, Object, NMesh, Camera, Lamp
+ #
+ objs = Object.Get() # a list of all objects in the current scene
+ for o in objs:
+   print
+   print o, type(o)
+   data = o.getData()
+   print type(data)
+   if type(data) == Types.NMeshType:
+     if len(data.verts):
+       print &quot;its vertices are obviously of type:&quot;, type(data.verts[0])
+     print &quot;and its faces:&quot;, Types.NMFaceType
+   elif type(data) == Types.CameraType:
+     print &quot;It's a Camera.&quot;
+   elif type(data) == Types.LampType:
+     print &quot;Let there be light!&quot;
+</pre>
+<hr/>
+
+<!-- =========== START OF VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#ArmatureType"><code>ArmatureType</code></a></b>: Blender Armature.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#BoneType"><code>BoneType</code></a></b>: Blender Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#bufferType"><code>bufferType</code></a></b>: Blender buffer.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#ButtonType"><code>ButtonType</code></a></b>: Blender Button.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#CameraType"><code>CameraType</code></a></b>: Blender Camera.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#constantType"><code>constantType</code></a></b>: Blender constant.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#CurveType"><code>CurveType</code></a></b>: Blender Curve.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#ImageType"><code>ImageType</code></a></b>: Blender Image.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#IpoType"><code>IpoType</code></a></b>: Blender Ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#LampType"><code>LampType</code></a></b>: Blender Lamp.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#MaterialType"><code>MaterialType</code></a></b>: Blender Material.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#MetaballType"><code>MetaballType</code></a></b>: Blender Metaball.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#MTexType"><code>MTexType</code></a></b>: Blender MTex -- it links materials to a texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#NMColType"><code>NMColType</code></a></b>: Blender NMCol.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#NMeshType"><code>NMeshType</code></a></b>: Blender NMesh.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#NMFaceType"><code>NMFaceType</code></a></b>: Blender NMFace.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#NMVertType"><code>NMVertType</code></a></b>: Blender NMVert.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#ObjectType"><code>ObjectType</code></a></b>: Blender Object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#rgbTupleType"><code>rgbTupleType</code></a></b>: Blender rgbTuple.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#SceneType"><code>SceneType</code></a></b>: A Blender Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#TextType"><code>TextType</code></a></b>: Blender Text.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#TextureType"><code>TextureType</code></a></b>: Blender Texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Types-module.html#vectorType"><code>vectorType</code></a></b>: Blender vector.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ArmatureType"></a>
+<h3>ArmatureType</h3>
+Blender Armature. The &quot;skeleton&quot;, for animating and 
+deforming objects.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="BoneType"></a>
+<h3>BoneType</h3>
+Blender Bone. Bones are, obviously, the &quot;pieces&quot; of an 
+Armature.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="bufferType"></a>
+<h3>bufferType</h3>
+Blender buffer. A contiguous piece of storage, used in BGL.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ButtonType"></a>
+<h3>ButtonType</h3>
+Blender Button. One of the Draw widgets.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="CameraType"></a>
+<h3>CameraType</h3>
+Blender Camera.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="constantType"></a>
+<h3>constantType</h3>
+Blender constant. A constant dictionary.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="CurveType"></a>
+<h3>CurveType</h3>
+Blender Curve.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ImageType"></a>
+<h3>ImageType</h3>
+Blender Image.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="IpoType"></a>
+<h3>IpoType</h3>
+Blender Ipo.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="LampType"></a>
+<h3>LampType</h3>
+Blender Lamp.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="MaterialType"></a>
+<h3>MaterialType</h3>
+Blender Material.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="MetaballType"></a>
+<h3>MetaballType</h3>
+Blender Metaball.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="MTexType"></a>
+<h3>MTexType</h3>
+Blender MTex -- it links materials to a texture.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="NMColType"></a>
+<h3>NMColType</h3>
+Blender NMCol. A mesh rgba colour.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="NMeshType"></a>
+<h3>NMeshType</h3>
+Blender NMesh. The mesh structure.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="NMFaceType"></a>
+<h3>NMFaceType</h3>
+Blender NMFace. A mesh face, with one (a point), two (an edge), three 
+(a triangular face) or four (a quad face) vertices.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="NMVertType"></a>
+<h3>NMVertType</h3>
+Blender NMVert. A mesh vertex.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ObjectType"></a>
+<h3>ObjectType</h3>
+Blender Object. The base object, linked to its specific data at its 
+.data member variable.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="rgbTupleType"></a>
+<h3>rgbTupleType</h3>
+Blender rgbTuple. A (red, green, blue) triplet.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="SceneType"></a>
+<h3>SceneType</h3>
+A Blender Scene. Container of all other objects.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="TextType"></a>
+<h3>TextType</h3>
+Blender Text.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="TextureType"></a>
+<h3>TextureType</h3>
+Blender Texture.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="vectorType"></a>
+<h3>vectorType</h3>
+Blender vector. Used in NMesh.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

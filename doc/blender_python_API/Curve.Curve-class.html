@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Curve.Curve</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Curve-module.html">Module&nbsp;Curve</a> ::
+        Class&nbsp;Curve
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Curve.Curve-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Curve</h2>
+
+<hr/>
+
+<h1 class="heading">The Curve Data object</h1>
+  This object gives access to Curve-specific data in Blender.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getBevresol" class="summary-sig-name"><code>getBevresol</code></a>()</span></code>
+<br />
+Get the Curve's bevel resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getControlPoint" class="summary-sig-name"><code>getControlPoint</code></a>(<span class=summary-sig-arg>numcurve</span>,
+          <span class=summary-sig-arg>numpoint</span>)</span></code>
+<br />
+Get the curve's control point value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getExt1" class="summary-sig-name"><code>getExt1</code></a>()</span></code>
+<br />
+Get the Curve's ext1 value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getExt2" class="summary-sig-name"><code>getExt2</code></a>()</span></code>
+<br />
+Get the Curve's ext2 value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        a list of 3 floats.
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getLoc" class="summary-sig-name"><code>getLoc</code></a>()</span></code>
+<br />
+Get the curve's location value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getMode" class="summary-sig-name"><code>getMode</code></a>()</span></code>
+<br />
+Get the Curve mode value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Curve Data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getPathLen" class="summary-sig-name"><code>getPathLen</code></a>()</span></code>
+<br />
+Get this Curve's path length.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getResolu" class="summary-sig-name"><code>getResolu</code></a>()</span></code>
+<br />
+Get the Curve's U-resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getResolv" class="summary-sig-name"><code>getResolv</code></a>()</span></code>
+<br />
+Get the Curve's V-resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        a list of 3 floats.
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getRot" class="summary-sig-name"><code>getRot</code></a>()</span></code>
+<br />
+Get the curve's rotation value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        a list of 3 floats.
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getSize" class="summary-sig-name"><code>getSize</code></a>()</span></code>
+<br />
+Get the curve's size value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getTotcol" class="summary-sig-name"><code>getTotcol</code></a>()</span></code>
+<br />
+Get the number of materials linked to the Curve.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#getWidth" class="summary-sig-name"><code>getWidth</code></a>()</span></code>
+<br />
+Get the Curve's width value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setBevresol" class="summary-sig-name"><code>setBevresol</code></a>(<span class=summary-sig-arg>bevelresol</span>)</span></code>
+<br />
+Set the Curve's bevel resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setControlPoint" class="summary-sig-name"><code>setControlPoint</code></a>(<span class=summary-sig-arg>numcurve</span>,
+          <span class=summary-sig-arg>numpoint</span>,
+          <span class=summary-sig-arg>controlpoint</span>)</span></code>
+<br />
+Set the Curve's controlpoint value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setExt1" class="summary-sig-name"><code>setExt1</code></a>(<span class=summary-sig-arg>ext1</span>)</span></code>
+<br />
+Set the Curve's ext1 value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setExt2" class="summary-sig-name"><code>setExt2</code></a>(<span class=summary-sig-arg>ext2</span>)</span></code>
+<br />
+Set the Curve's ext2 value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setLoc" class="summary-sig-name"><code>setLoc</code></a>(<span class=summary-sig-arg>location</span>)</span></code>
+<br />
+Set the curve's location value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setMode" class="summary-sig-name"><code>setMode</code></a>(<span class=summary-sig-arg>val</span>)</span></code>
+<br />
+Set the Curve mode value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Set the name of this Curve Data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setPathLen" class="summary-sig-name"><code>setPathLen</code></a>(<span class=summary-sig-arg>len</span>)</span></code>
+<br />
+Set this Curve's path length.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setResolu" class="summary-sig-name"><code>setResolu</code></a>(<span class=summary-sig-arg>resolu</span>)</span></code>
+<br />
+Set the Curve's U-resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setResolv" class="summary-sig-name"><code>setResolv</code></a>(<span class=summary-sig-arg>resolv</span>)</span></code>
+<br />
+Set the Curve's V-resolution value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setRot" class="summary-sig-name"><code>setRot</code></a>(<span class=summary-sig-arg>rotation</span>)</span></code>
+<br />
+Set the Curve's rotation value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setSize" class="summary-sig-name"><code>setSize</code></a>(<span class=summary-sig-arg>size</span>)</span></code>
+<br />
+Set the curve size value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setTotcol" class="summary-sig-name"><code>setTotcol</code></a>(<span class=summary-sig-arg>totcol</span>)</span></code>
+<br />
+Set the number of materials linked to the Curve.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Curve.Curve-class.html#setWidth" class="summary-sig-name"><code>setWidth</code></a>(<span class=summary-sig-arg>width</span>)</span></code>
+<br />
+Set the Curve's width value.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#bevresol"><code>bevresol</code></a></b>: The Curve Data bevel resolution.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#ext1"><code>ext1</code></a></b>: The Curve Data extent 1(for bevels).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#ext2"><code>ext2</code></a></b>: The Curve Data extent2 (for bevels).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#flag"><code>flag</code></a></b>: The Curve Data flag value; see function getFlag for the semantics.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#loc"><code>loc</code></a></b>: The Curve Data location(from the center).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#name"><code>name</code></a></b>: The Curve Data name.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#pathlen"><code>pathlen</code></a></b>: The Curve Data path length.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#resolu"><code>resolu</code></a></b>: The Curve Data U-resolution.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#resolv"><code>resolv</code></a></b>: The Curve Data V-resolution.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#rot"><code>rot</code></a></b>: The Curve Data rotation(from the center).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#size"><code>size</code></a></b>: The Curve Data size(from the center).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#totcol"><code>totcol</code></a></b>: The Curve Data maximal number of linked materials.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Curve.Curve-class.html#width"><code>width</code></a></b>: The Curve Data width.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="getBevresol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getBevresol</span>()</span>
+  </h3>
+  Get the Curve's bevel resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getControlPoint"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getControlPoint</span>(<span class=sig-arg>numcurve</span>,
+          <span class=sig-arg>numpoint</span>)</span>
+  </h3>
+  Get the curve's control point value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>numcurve</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>numpoint</b></code>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        depends upon the curve's type.
+        <ul>
+          <li>
+            type bezier : a list of three coordinates
+          </li>
+          <li>
+            type nurbs : a list of nine coordinates.
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getExt1"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getExt1</span>()</span>
+  </h3>
+  Get the Curve's ext1 value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getExt2"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getExt2</span>()</span>
+  </h3>
+  Get the Curve's ext2 value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLoc"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLoc</span>()</span>
+  </h3>
+  Get the curve's location value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        a list of 3 floats.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMode</span>()</span>
+  </h3>
+  Get the Curve mode value. The mode of the curve is a combination of 
+  4 parameters.
+  <ul>
+    <li>
+      Bit 0 : &quot;Back&quot; is set
+    </li>
+    <li>
+      Bit 1 : &quot;Front&quot; is set
+    </li>
+    <li>
+      Bit 2 : &quot;3D&quot; is set
+    </li>
+    <li>
+      Bit 3 : &quot;CurvePath&quot; is set.
+    </li>
+    <li>
+      Bit 4 : &quot;CurveFollow&quot; is set.
+    </li>
+  </ul>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Curve Data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        string
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getPathLen"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getPathLen</span>()</span>
+  </h3>
+  Get this Curve's path length.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the path length.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getResolu"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getResolu</span>()</span>
+  </h3>
+  Get the Curve's U-resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getResolv"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getResolv</span>()</span>
+  </h3>
+  Get the Curve's V-resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRot"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRot</span>()</span>
+  </h3>
+  Get the curve's rotation value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        a list of 3 floats.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSize</span>()</span>
+  </h3>
+  Get the curve's size value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        a list of 3 floats.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTotcol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTotcol</span>()</span>
+  </h3>
+  Get the number of materials linked to the Curve.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        number of materials linked.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getWidth"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getWidth</span>()</span>
+  </h3>
+  Get the Curve's width value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setBevresol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setBevresol</span>(<span class=sig-arg>bevelresol</span>)</span>
+  </h3>
+  Set the Curve's bevel resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>bevelresol</b></code> -
+         The new Curve's bevel resolution value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setControlPoint"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setControlPoint</span>(<span class=sig-arg>numcurve</span>,
+          <span class=sig-arg>numpoint</span>,
+          <span class=sig-arg>controlpoint</span>)</span>
+  </h3>
+  Set the Curve's controlpoint value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>numcurve</b></code> -
+         index for spline in Curve, starting from 0
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>numpoint</b></code> -
+         index for point in spline, starting from 0
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>controlpoint</b></code> -
+         The new controlpoint value. See <a 
+        href="Curve.Curve-class.html#getControlPoint" 
+        class="link"><code>getControlPoint</code></a> for the length of 
+        the list.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setExt1"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setExt1</span>(<span class=sig-arg>ext1</span>)</span>
+  </h3>
+  Set the Curve's ext1 value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ext1</b></code> -
+         The new Curve's ext1 value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setExt2"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setExt2</span>(<span class=sig-arg>ext2</span>)</span>
+  </h3>
+  Set the Curve's ext2 value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ext2</b></code> -
+         The new Curve's ext2 value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLoc"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLoc</span>(<span class=sig-arg>location</span>)</span>
+  </h3>
+  Set the curve's location value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>location</b></code> -
+         The new Curve's location values.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list[3])</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMode</span>(<span class=sig-arg>val</span>)</span>
+  </h3>
+  Set the Curve mode value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>val</b></code> -
+         The new Curve's mode value. See <a 
+        href="Curve.Curve-class.html#getMode" 
+        class="link"><code>getMode</code></a> for the meaning of the bit 
+        fields.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Set the name of this Curve Data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setPathLen"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setPathLen</span>(<span class=sig-arg>len</span>)</span>
+  </h3>
+  Set this Curve's path length.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>len</b></code> -
+         the new curve's length.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setResolu"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setResolu</span>(<span class=sig-arg>resolu</span>)</span>
+  </h3>
+  Set the Curve's U-resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>resolu</b></code> -
+         The new Curve's U-resolution value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setResolv"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setResolv</span>(<span class=sig-arg>resolv</span>)</span>
+  </h3>
+  Set the Curve's V-resolution value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>resolv</b></code> -
+         The new Curve's V-resolution value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRot"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRot</span>(<span class=sig-arg>rotation</span>)</span>
+  </h3>
+  Set the Curve's rotation value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>rotation</b></code> -
+         The new Curve's rotation values.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list[3])</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSize</span>(<span class=sig-arg>size</span>)</span>
+  </h3>
+  Set the curve size value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>size</b></code> -
+         The new Curve's size values.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list[3])</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTotcol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTotcol</span>(<span class=sig-arg>totcol</span>)</span>
+  </h3>
+  Set the number of materials linked to the Curve.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>totcol</b></code> -
+         number of materials linked.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setWidth"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setWidth</span>(<span class=sig-arg>width</span>)</span>
+  </h3>
+  Set the Curve's width value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>width</b></code> -
+         The new Curve's width value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="bevresol"></a>
+<h3>bevresol</h3>
+The Curve Data bevel resolution.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ext1"></a>
+<h3>ext1</h3>
+The Curve Data extent 1(for bevels).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ext2"></a>
+<h3>ext2</h3>
+The Curve Data extent2 (for bevels).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="flag"></a>
+<h3>flag</h3>
+The Curve Data flag value; see function getFlag for the semantics.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="loc"></a>
+<h3>loc</h3>
+The Curve Data location(from the center).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The Curve Data name.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="pathlen"></a>
+<h3>pathlen</h3>
+The Curve Data path length.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="resolu"></a>
+<h3>resolu</h3>
+The Curve Data U-resolution.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="resolv"></a>
+<h3>resolv</h3>
+The Curve Data V-resolution.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="rot"></a>
+<h3>rot</h3>
+The Curve Data rotation(from the center).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="size"></a>
+<h3>size</h3>
+The Curve Data size(from the center).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="totcol"></a>
+<h3>totcol</h3>
+The Curve Data maximal number of linked materials.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="width"></a>
+<h3>width</h3>
+The Curve Data width.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

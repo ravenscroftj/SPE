@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Object.Object</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Object-module.html">Module&nbsp;Object</a> ::
+        Class&nbsp;Object
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Object.Object-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Object</h2>
+
+<hr/>
+
+<h1 class="heading">The Object object</h1>
+  This object gives access to generic data from all objects in 
+  Blender.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#buildParts" class="summary-sig-name"><code>buildParts</code></a>()</span></code>
+<br />
+Recomputes the particle system.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#clearIpo" class="summary-sig-name"><code>clearIpo</code></a>()</span></code>
+<br />
+Unlinks the ipo from this object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#clrParent" class="summary-sig-name"><code>clrParent</code></a>(<span class=summary-sig-arg>mode</span>,
+          <span class=summary-sig-arg>fast</span>)</span></code>
+<br />
+Clears parent object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 8 (x,y,z) float coordinate vectors
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getBoundBox" class="summary-sig-name"><code>getBoundBox</code></a>()</span></code>
+<br />
+Returns the bounding box of this object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Object type specific
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getData" class="summary-sig-name"><code>getData</code></a>()</span></code>
+<br />
+Returns the Datablock object containing the object's data.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        A vector triple
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getDeltaLocation" class="summary-sig-name"><code>getDeltaLocation</code></a>()</span></code>
+<br />
+Returns the object's delta location in a list (x, y, z)</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Integer
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getDrawMode" class="summary-sig-name"><code>getDrawMode</code></a>()</span></code>
+<br />
+Returns the object draw mode.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Integer
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getDrawType" class="summary-sig-name"><code>getDrawType</code></a>()</span></code>
+<br />
+Returns the object draw type</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        A vector triple
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getEuler" class="summary-sig-name"><code>getEuler</code></a>()</span></code>
+<br />
+Returns the object's rotation as Euler rotation vector (rotX, rotY, 
+rotZ).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Matrix object
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getInverseMatrix" class="summary-sig-name"><code>getInverseMatrix</code></a>()</span></code>
+<br />
+Returns the object's inverse matrix.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Ipo
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getIpo" class="summary-sig-name"><code>getIpo</code></a>()</span></code>
+<br />
+Returns the Ipo associated to this object or None if there's no linked 
+ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getLocation" class="summary-sig-name"><code>getLocation</code></a>()</span></code>
+<br />
+Returns the object's location (x, y, z).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of Material Objects
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getMaterials" class="summary-sig-name"><code>getMaterials</code></a>()</span></code>
+<br />
+Returns a list of materials assigned to the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Matrix object.
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getMatrix" class="summary-sig-name"><code>getMatrix</code></a>()</span></code>
+<br />
+Returns the object matrix.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Returns the name of the object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Object
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getParent" class="summary-sig-name"><code>getParent</code></a>()</span></code>
+<br />
+Returns the object's parent object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getSize" class="summary-sig-name"><code>getSize</code></a>()</span></code>
+<br />
+Returns the object's size.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Object
+</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getTracked" class="summary-sig-name"><code>getTracked</code></a>()</span></code>
+<br />
+Returns the object's tracked object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#getType" class="summary-sig-name"><code>getType</code></a>()</span></code>
+<br />
+Returns the type of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#link" class="summary-sig-name"><code>link</code></a>(<span class=summary-sig-arg>object</span>)</span></code>
+<br />
+Links Object with data provided in the argument.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#makeDisplayList" class="summary-sig-name"><code>makeDisplayList</code></a>()</span></code>
+<br />
+Updates this object's display list.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#makeParent" class="summary-sig-name"><code>makeParent</code></a>(<span class=summary-sig-arg>objects</span>,
+          <span class=summary-sig-arg>noninverse</span>,
+          <span class=summary-sig-arg>fast</span>)</span></code>
+<br />
+Makes the object the parent of the objects provided in the argument 
+which must be a list of valid Objects.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setDeltaLocation" class="summary-sig-name"><code>setDeltaLocation</code></a>(<span class=summary-sig-arg>delta_location</span>)</span></code>
+<br />
+Sets the object's delta location which must be a vector triple.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setDrawMode" class="summary-sig-name"><code>setDrawMode</code></a>(<span class=summary-sig-arg>drawmode</span>)</span></code>
+<br />
+Sets the object's drawing mode.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setDrawType" class="summary-sig-name"><code>setDrawType</code></a>(<span class=summary-sig-arg>drawtype</span>)</span></code>
+<br />
+Sets the object's drawing type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setEuler" class="summary-sig-name"><code>setEuler</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Sets the object's rotation according to the specified Euler 
+angles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setIpo" class="summary-sig-name"><code>setIpo</code></a>(<span class=summary-sig-arg>ipo</span>)</span></code>
+<br />
+Links an ipo to this object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setLocation" class="summary-sig-name"><code>setLocation</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Sets the object's location.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setMaterials" class="summary-sig-name"><code>setMaterials</code></a>(<span class=summary-sig-arg>materials</span>)</span></code>
+<br />
+Sets the materials.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Sets the name of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#setSize" class="summary-sig-name"><code>setSize</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Sets the object's size.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Object.Object-class.html#shareFrom" class="summary-sig-name"><code>shareFrom</code></a>(<span class=summary-sig-arg>object</span>)</span></code>
+<br />
+Link data of self with object specified in the argument.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#colbits"><code>colbits</code></a></b>: The Material usage mask.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#data"><code>data</code></a></b>: The data of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dloc"><code>dloc</code></a></b>: The delta (X,Y,Z) location coordinates of the object (vector).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dLocX"><code>dLocX</code></a></b>: The delta X location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dLocY"><code>dLocY</code></a></b>: The delta Y location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dLocZ"><code>dLocZ</code></a></b>: The delta Z location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#drawMode"><code>drawMode</code></a></b>: The object's drawing mode used.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#drawType"><code>drawType</code></a></b>: The object's drawing type used.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#drot"><code>drot</code></a></b>: The delta (X,Y,Z) rotation angles (in radians) of the object 
+(vector).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dRotX"><code>dRotX</code></a></b>: The delta X rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dRotY"><code>dRotY</code></a></b>: The delta Y rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dRotZ"><code>dRotZ</code></a></b>: The delta Z rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dsize"><code>dsize</code></a></b>: The delta (X,Y,Z) size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dSizeX"><code>dSizeX</code></a></b>: The delta X size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dSizeY"><code>dSizeY</code></a></b>: The delta Y size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#dSizeZ"><code>dSizeZ</code></a></b>: The delta Z size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#EffX"><code>EffX</code></a></b>: The X effector coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#EffY"><code>EffY</code></a></b>: The Y effector coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#EffZ"><code>EffZ</code></a></b>: The Z effector coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#ipo"><code>ipo</code></a></b>: The ipo data associated with the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#Layer"><code>Layer</code></a></b>: The object layer (as a bitmask).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#loc"><code>loc</code></a></b>: The (X,Y,Z) location coordinates of the object (vector).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#LocX"><code>LocX</code></a></b>: The X location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#LocY"><code>LocY</code></a></b>: The Y location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#LocZ"><code>LocZ</code></a></b>: The Z location coordinate of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#mat"><code>mat</code></a></b>: The actual matrix of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#matrix"><code>matrix</code></a></b>: The actual matrix of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#name"><code>name</code></a></b>: The name of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#parent"><code>parent</code></a></b>: The parent object of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#rot"><code>rot</code></a></b>: The (X,Y,Z) rotation angles (in radians) of the object (vector).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#RotX"><code>RotX</code></a></b>: The X rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#RotY"><code>RotY</code></a></b>: The Y rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#RotZ"><code>RotZ</code></a></b>: The Z rotation angle (in radians) of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#size"><code>size</code></a></b>: The (X,Y,Z) size of the object (vector).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#SizeX"><code>SizeX</code></a></b>: The X size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#SizeY"><code>SizeY</code></a></b>: The Y size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#SizeZ"><code>SizeZ</code></a></b>: The Z size of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Object.Object-class.html#track"><code>track</code></a></b>: The object tracking this object.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="buildParts"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">buildParts</span>()</span>
+  </h3>
+  Recomputes the particle system. This method only applies to an 
+  Object of the type Effect.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="clearIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">clearIpo</span>()</span>
+  </h3>
+  Unlinks the ipo from this object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        True if there was an ipo linked or False otherwise.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="clrParent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">clrParent</span>(<span class=sig-arg>mode</span>=<span class=sig-default>0</span>,
+          <span class=sig-arg>fast</span>=<span class=sig-default>0</span>)</span>
+  </h3>
+  Clears parent object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>mode</b></code> -
+         A mode flag. If mode flag is 2, then the object transform will 
+        be kept. Any other value, or no value at all will update the 
+        object transform.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      <dd><code><b>fast</b></code> -
+         If the value is 0, the scene hierarchy will not be updated. 
+        Any other value, or no value at all will update the scene 
+        hierarchy.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getBoundBox"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getBoundBox</span>()</span>
+  </h3>
+  Returns the bounding box of this object. This works for meshes (out 
+  of edit mode) and curves.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The coordinates of the 8 corners of the bounding box.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 8 (x,y,z) float coordinate vectors)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getData"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getData</span>()</span>
+  </h3>
+  Returns the Datablock object containing the object's data. For 
+  example the Mesh, Lamp or the Camera.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        Depending on the type of the Object, it returns a specific 
+        object for the data requested.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Object type specific)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDeltaLocation"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDeltaLocation</span>()</span>
+  </h3>
+  Returns the object's delta location in a list (x, y, z)
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        (x, y, z)
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=A vector triple)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDrawMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDrawMode</span>()</span>
+  </h3>
+  Returns the object draw mode.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        a sum of the following:
+        <ul>
+          <li>
+            2 - axis
+          </li>
+          <li>
+            4 - texspace
+          </li>
+          <li>
+            8 - drawname
+          </li>
+          <li>
+            16 - drawimage
+          </li>
+          <li>
+            32 - drawwire
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDrawType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDrawType</span>()</span>
+  </h3>
+  Returns the object draw type
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        One of the following:
+        <ul>
+          <li>
+            1 - Bounding box
+          </li>
+          <li>
+            2 - Wire
+          </li>
+          <li>
+            3 - Solid
+          </li>
+          <li>
+            4 - Shaded
+          </li>
+          <li>
+            5 - Textured
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getEuler"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getEuler</span>()</span>
+  </h3>
+  Returns the object's rotation as Euler rotation vector (rotX, rotY, 
+  rotZ).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        (rotX, rotY, rotZ)
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=A vector triple)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getInverseMatrix"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getInverseMatrix</span>()</span>
+  </h3>
+  Returns the object's inverse matrix.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the inverse of the matrix of the Object
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Matrix object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getIpo</span>()</span>
+  </h3>
+  Returns the Ipo associated to this object or None if there's no 
+  linked ipo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the wrapped ipo or None.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLocation"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLocation</span>()</span>
+  </h3>
+  Returns the object's location (x, y, z).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        <p>(x, y, z)</p>
+        <p><i><b>Example:</b></i></p>
+        The example below works on the default scene. It retrieves all 
+        objects in the scene and prints the name and location of each 
+        object:
+<pre class="literalblock">
+ import Blender
+
+ objects = Blender.Object.Get()
+
+ for obj in objects:
+     print obj.getName()
+     print obj.getLocation()
+</pre>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMaterials"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMaterials</span>()</span>
+  </h3>
+  Returns a list of materials assigned to the object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of Material Objects assigned to the object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of Material Objects)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMatrix"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMatrix</span>()</span>
+  </h3>
+  Returns the object matrix.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the matrix of the Object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Matrix object.)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Returns the name of the object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        <p>The name of the object</p>
+        <p><i><b>Example:</b></i></p>
+        The example below works on the default scene. It retrieves all 
+        objects in the scene and prints the name of each object:
+<pre class="literalblock">
+ import Blender
+
+ objects = Blender.Object.Get()
+
+ for obj in objects:
+     print obj.getName()
+</pre>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getParent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getParent</span>()</span>
+  </h3>
+  Returns the object's parent object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The parent object of the object. If not available, None will 
+        be returned.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSize</span>()</span>
+  </h3>
+  Returns the object's size.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        (SizeX, SizeY, SizeZ)
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTracked"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTracked</span>()</span>
+  </h3>
+  Returns the object's tracked object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The tracked object of the object. If not available, None will 
+        be returned.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getType</span>()</span>
+  </h3>
+  Returns the type of the object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        <p>The type of object.</p>
+        <p><i><b>Example:</b></i></p>
+        The example below works on the default scene. It retrieves all 
+        objects in the scene and updates the location and rotation of the 
+        camera. When run, the camera will rotate 180 degrees and moved to 
+        the oposite side of the X axis. Note that the number 'pi' in the 
+        example is an approximation of the true number 'pi':
+<pre class="literalblock">
+   import Blender
+
+   objects = Blender.Object.Get()
+
+   for obj in objects:
+       if obj.getType() == 'Camera':
+           obj.LocY = -obj.LocY
+           obj.RotZ = 3.141592 - obj.RotZ
+
+   Blender.Redraw()
+</pre>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="link"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">link</span>(<span class=sig-arg>object</span>)</span>
+  </h3>
+  Links Object with data provided in the argument. The data must match 
+  the Object's type, so you cannot link a Lamp to a Mesh type object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>object</b></code> -
+         A Blender Object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="makeDisplayList"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">makeDisplayList</span>()</span>
+  </h3>
+  Updates this object's display list. Blender uses display lists to 
+  store already transformed data (like a mesh with its vertices already 
+  modified by coordinate transformations and armature deformation). If 
+  the object isn't modified, there's no need to recalculate this data. 
+  This method is here for the *few cases* where a script may need it, 
+  like when toggling the &quot;SubSurf&quot; mode for a mesh: 
+  Example:
+<pre class="literalblock">
+bject = Blender.Object.Get(&quot;Sphere&quot;)
+</pre>
+  <p>nmesh = object.getData() nmesh.setMode(&quot;SubSurf&quot;) 
+  nmesh.update() # don't forget to update! object.makeDisplayList() 
+  Blender.Window.RedrawAll() # and don't forget to redraw</p>
+  If you try this example without the line to update the display list, 
+  the object will disappear from the screen until you press 
+  &quot;SubSurf&quot;.
+  <dl><dt></dt><dd>
+<p><b>Warning:</b> If after running your script objects disappear from the screen or are 
+not displayed correctly, try this method function. But if the script 
+works properly without it, there's no reason to use it.
+</p>
+
+  </dd></dl>
+</td></tr></table>
+
+<a name="makeParent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">makeParent</span>(<span class=sig-arg>objects</span>,
+          <span class=sig-arg>noninverse</span>=<span class=sig-default>0</span>,
+          <span class=sig-arg>fast</span>=<span class=sig-default>0</span>)</span>
+  </h3>
+  Makes the object the parent of the objects provided in the argument 
+  which must be a list of valid Objects.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>objects</b></code> -
+         A Blender Object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Object)</i>
+      <dd><code><b>noninverse</b></code> -
+         0 - make parent with inverse 1 - make parent without 
+        inverse
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      <dd><code><b>fast</b></code> -
+         0 - update scene hierarchy automatically 1 - don't update 
+        scene hierarchy (faster). In this case, you must explicitely 
+        update the Scene hierarchy.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDeltaLocation"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDeltaLocation</span>(<span class=sig-arg>delta_location</span>)</span>
+  </h3>
+  Sets the object's delta location which must be a vector triple.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>delta_location</b></code> -
+         A vector triple (x, y, z) specifying the new location.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=A vector triple)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDrawMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDrawMode</span>(<span class=sig-arg>drawmode</span>)</span>
+  </h3>
+  Sets the object's drawing mode. The drawing mode can be a mix of 
+  modes. To enable these, add up the values.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>drawmode</b></code> -
+         A sum of the following:
+        <ul>
+          <li>
+            2 - axis
+          </li>
+          <li>
+            4 - texspace
+          </li>
+          <li>
+            8 - drawname
+          </li>
+          <li>
+            16 - drawimage
+          </li>
+          <li>
+            32 - drawwire
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDrawType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDrawType</span>(<span class=sig-arg>drawtype</span>)</span>
+  </h3>
+  Sets the object's drawing type.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>drawtype</b></code> -
+         One of the following:
+        <ul>
+          <li>
+            1 - Bounding box
+          </li>
+          <li>
+            2 - Wire
+          </li>
+          <li>
+            3 - Solid
+          </li>
+          <li>
+            4 - Shaded
+          </li>
+          <li>
+            5 - Textured
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Integer)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setEuler"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setEuler</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Sets the object's rotation according to the specified Euler 
+  angles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The rotation angle in radians for the X direction.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The rotation angle in radians for the Y direction.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The rotation angle in radians for the Z direction.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setIpo</span>(<span class=sig-arg>ipo</span>)</span>
+  </h3>
+  Links an ipo to this object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ipo</b></code> -
+         an object type ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLocation"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLocation</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Sets the object's location.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The X coordinate of the new location.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The Y coordinate of the new location.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The Z coordinate of the new location.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMaterials"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMaterials</span>(<span class=sig-arg>materials</span>)</span>
+  </h3>
+  Sets the materials. The argument must be a list of valid material 
+  objects.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>materials</b></code> -
+         A list of Blender material objects.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Materials list)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Sets the name of the object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name for the object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=String)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSize</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Sets the object's size.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The X size multiplier.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The Y size multiplier.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The Z size multiplier.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="shareFrom"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">shareFrom</span>(<span class=sig-arg>object</span>)</span>
+  </h3>
+  Link data of self with object specified in the argument. This works 
+  only if self and the object specified are of the same type.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>object</b></code> -
+         A Blender Object of the same type.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="colbits"></a>
+<h3>colbits</h3>
+The Material usage mask. A set bit #n means: the Material #n in the 
+Object's material list is used. Otherwise, the Material #n of the Objects 
+Data material list is displayed.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="data"></a>
+<h3>data</h3>
+The data of the object. (Read-only)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dloc"></a>
+<h3>dloc</h3>
+The delta (X,Y,Z) location coordinates of the object (vector). This 
+variable applies to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dLocX"></a>
+<h3>dLocX</h3>
+The delta X location coordinate of the object. This variable applies 
+to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dLocY"></a>
+<h3>dLocY</h3>
+The delta Y location coordinate of the object. This variable applies 
+to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dLocZ"></a>
+<h3>dLocZ</h3>
+The delta Z location coordinate of the object. This variable applies 
+to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="drawMode"></a>
+<h3>drawMode</h3>
+The object's drawing mode used. The value can be a sum of: 2 - axis, 4 
+- texspace, 8 - drawname, 16 - drawimage, 32 - drawwire.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="drawType"></a>
+<h3>drawType</h3>
+The object's drawing type used. 1 - Bounding box, 2 - wire, 3 - Solid, 
+4- Shaded, 5 - Textured.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="drot"></a>
+<h3>drot</h3>
+The delta (X,Y,Z) rotation angles (in radians) of the object (vector). 
+This variable applies to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dRotX"></a>
+<h3>dRotX</h3>
+The delta X rotation angle (in radians) of the object. This variable 
+applies to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dRotY"></a>
+<h3>dRotY</h3>
+The delta Y rotation angle (in radians) of the object. This variable 
+applies to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dRotZ"></a>
+<h3>dRotZ</h3>
+The delta Z rotation angle (in radians) of the object. This variable 
+applies to IPO Objects only.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dsize"></a>
+<h3>dsize</h3>
+The delta (X,Y,Z) size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dSizeX"></a>
+<h3>dSizeX</h3>
+The delta X size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dSizeY"></a>
+<h3>dSizeY</h3>
+The delta Y size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="dSizeZ"></a>
+<h3>dSizeZ</h3>
+The delta Z size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="EffX"></a>
+<h3>EffX</h3>
+The X effector coordinate of the object. Only applies to IKA.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="EffY"></a>
+<h3>EffY</h3>
+The Y effector coordinate of the object. Only applies to IKA.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="EffZ"></a>
+<h3>EffZ</h3>
+The Z effector coordinate of the object. Only applies to IKA.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ipo"></a>
+<h3>ipo</h3>
+The ipo data associated with the object. (Read-only)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="Layer"></a>
+<h3>Layer</h3>
+The object layer (as a bitmask).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="loc"></a>
+<h3>loc</h3>
+The (X,Y,Z) location coordinates of the object (vector).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="LocX"></a>
+<h3>LocX</h3>
+The X location coordinate of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="LocY"></a>
+<h3>LocY</h3>
+The Y location coordinate of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="LocZ"></a>
+<h3>LocZ</h3>
+The Z location coordinate of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mat"></a>
+<h3>mat</h3>
+The actual matrix of the object. (Read-only)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="matrix"></a>
+<h3>matrix</h3>
+The actual matrix of the object. (Read-only)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The name of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="parent"></a>
+<h3>parent</h3>
+The parent object of the object. (Read-only)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="rot"></a>
+<h3>rot</h3>
+The (X,Y,Z) rotation angles (in radians) of the object (vector).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="RotX"></a>
+<h3>RotX</h3>
+The X rotation angle (in radians) of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="RotY"></a>
+<h3>RotY</h3>
+The Y rotation angle (in radians) of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="RotZ"></a>
+<h3>RotZ</h3>
+The Z rotation angle (in radians) of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="size"></a>
+<h3>size</h3>
+The (X,Y,Z) size of the object (vector).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="SizeX"></a>
+<h3>SizeX</h3>
+The X size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="SizeY"></a>
+<h3>SizeY</h3>
+The Y size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="SizeZ"></a>
+<h3>SizeZ</h3>
+The Z size of the object.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="track"></a>
+<h3>track</h3>
+The object tracking this object. (Read-only)
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

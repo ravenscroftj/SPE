@@ -1,0 +1,991 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Draw</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        Module&nbsp;Draw
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Draw-module.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF MODULE DESCRIPTION =========== -->
+<h2 class="module">Module Draw</h2>
+
+The Blender.Draw submodule.
+<h1 class="heading">Draw</h1>
+  <p>This module provides access to a <b>windowing interface</b> in 
+  Blender. Its widgets include many kinds of buttons: push, toggle, menu, 
+  number, string, slider, scrollbar, plus support for text drawing. It 
+  also includes keyboard keys and mouse button code values in its 
+  dictionary (print dir(Blender.Draw)).</p>
+  Example:
+<pre class="literalblock">
+import Blender
+from Blender import Draw, BGL
+
+mystring = &quot;&quot;
+mymsg = &quot;&quot;
+toggle = 0
+
+def event(evt, val):    # the function to handle input events
+  global mystring, mymsg
+
+  if not val:  # val = 0: it's a key/mbutton release
+    if evt in [Draw.LEFTMOUSE, Draw.MIDDLEMOUSE, Draw.RIGHTMOUSE]:
+      mymsg = &quot;You released a mouse button.&quot;
+      Draw.Redraw(1)
+    return
+
+  if evt == Draw.ESCKEY:
+    Draw.Exit()                 # exit when user presses ESC
+    return
+
+  elif Draw.AKEY &lt;= evt &lt;= Draw.ZKEY: mystring += chr(evt)
+  elif evt == Draw.SPACEKEY: mystring += ' '
+  elif evt == Draw.BACKSPACEKEY and len(mystring):
+    mystring = mystring[:-1]
+  else: return # no need to redraw if nothing changed
+
+  Draw.Redraw(1)
+
+def button_event(evt):  # the function to handle Draw Button events
+  global mymsg, toggle
+  if evt == 1:
+    mymsg = &quot;You pressed the toggle button.&quot;
+    toggle = 1 - toggle
+    Draw.Redraw(1)
+
+def gui():              # the function to draw the screen
+  global mystring, mymsg, toggle
+  if len(mystring) &gt; 90: mystring = &quot;&quot;
+  BGL.glClearColor(0,0,1,1)
+  BGL.glClear(BGL.GL_COLOR_BUFFER_BIT)
+  BGL.glColor3f(1,1,1)
+  Draw.Toggle(&quot;Toggle&quot;, 1, 10, 10, 55, 20, toggle,&quot;A toggle button&quot;)
+  BGL.glRasterPos2i(72, 16)
+  if toggle: toggle_state = &quot;down&quot;
+  else: toggle_state = &quot;up&quot;
+  Draw.Text(&quot;The toggle button is %s.&quot; % toggle_state, &quot;small&quot;)
+  BGL.glRasterPos2i(10, 230)
+  Draw.Text(&quot;Type letters from a to z, ESC to leave.&quot;)
+  BGL.glRasterPos2i(20, 200)
+  Draw.Text(mystring)
+  BGL.glColor3f(1,0.4,0.3)
+  BGL.glRasterPos2i(340, 70)
+  Draw.Text(mymsg, &quot;tiny&quot;)
+
+Draw.Register(gui, event, button_event)  # registering the 3 callbacks
+</pre>
+<hr/>
+<p><b>Warning:</b> Inside the windowing loop (after Draw.Register() has been executed and 
+before Draw.Exit() is called), don't use the redraw functions from other 
+modules (Blender and Window). The Draw submodule has its own 
+Draw.Redraw() and Draw.Draw() functions that can be used inside the 
+windowing loop.
+</p>
+
+<p><b>Note:</b> The example above was fixed to call Draw.Register only once. It's not 
+necessary to re-register the callbacks, they will stay until Draw.Exit is 
+called. It's enough to redraw the screen when a relevant event is caught. 
+Apologies for the confusion.
+</p>
+
+
+<!-- =========== START OF FUNCTION SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Function Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Button" class="summary-sig-name"><code>Button</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new (push) Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Create" class="summary-sig-name"><code>Create</code></a>(<span class=summary-sig-arg>value</span>)</span></code>
+<br />
+Create a default Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Draw" class="summary-sig-name"><code>Draw</code></a>()</span></code>
+<br />
+Force an immediate redraw.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Exit" class="summary-sig-name"><code>Exit</code></a>()</span></code>
+<br />
+Exit the windowing interface.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#GetStringWidth" class="summary-sig-name"><code>GetStringWidth</code></a>(<span class=summary-sig-arg>string</span>,
+          <span class=summary-sig-arg>fontsize</span>)</span></code>
+<br />
+Get the width in pixels of a string.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Menu" class="summary-sig-name"><code>Menu</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>default</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new Menu Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Number" class="summary-sig-name"><code>Number</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>initial</span>,
+          <span class=summary-sig-arg>min</span>,
+          <span class=summary-sig-arg>max</span>,
+          <span class=summary-sig-arg>realtime</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new Number Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#PupMenu" class="summary-sig-name"><code>PupMenu</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>maxrow</span>)</span></code>
+<br />
+Create a pop-up menu.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Redraw" class="summary-sig-name"><code>Redraw</code></a>(<span class=summary-sig-arg>after</span>)</span></code>
+<br />
+Queue a redraw event.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Register" class="summary-sig-name"><code>Register</code></a>(<span class=summary-sig-arg>draw</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>button</span>)</span></code>
+<br />
+Register callbacks for windowing.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Scrollbar" class="summary-sig-name"><code>Scrollbar</code></a>(<span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>initial</span>,
+          <span class=summary-sig-arg>min</span>,
+          <span class=summary-sig-arg>max</span>,
+          <span class=summary-sig-arg>realtime</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new Scrollbar Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Slider" class="summary-sig-name"><code>Slider</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>initial</span>,
+          <span class=summary-sig-arg>min</span>,
+          <span class=summary-sig-arg>max</span>,
+          <span class=summary-sig-arg>realtime</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new Toggle Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#String" class="summary-sig-name"><code>String</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>initial</span>,
+          <span class=summary-sig-arg>length</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new String Button object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Text" class="summary-sig-name"><code>Text</code></a>(<span class=summary-sig-arg>string</span>,
+          <span class=summary-sig-arg>fontsize</span>)</span></code>
+<br />
+Draw a string on the screen.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Button
+</font></td>
+  <td><code><span class="summary-sig"><a href="Draw-module.html#Toggle" class="summary-sig-name"><code>Toggle</code></a>(<span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>event</span>,
+          <span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>width</span>,
+          <span class=summary-sig-arg>height</span>,
+          <span class=summary-sig-arg>default</span>,
+          <span class=summary-sig-arg>tooltip</span>)</span></code>
+<br />
+Create a new Toggle Button object.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF FUNCTION DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Function Details</th></tr>
+</table>
+
+<a name="Button"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Button</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new (push) Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The string to display on the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Create"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Create</span>(<span class=sig-arg>value</span>)</span>
+  </h3>
+  Create a default Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>value</b></code> -
+         The value to store in the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int, float or string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Draw"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Draw</span>()</span>
+  </h3>
+  Force an immediate redraw. Forced redraws are not buffered. In other 
+  words, the window is redrawn once every time this function is 
+  called.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Exit"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Exit</span>()</span>
+  </h3>
+  Exit the windowing interface.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="GetStringWidth"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">GetStringWidth</span>(<span class=sig-arg>string</span>,
+          <span class=sig-arg>fontsize</span>=<span class=sig-default>'normal'</span>)</span>
+  </h3>
+  Get the width in pixels of a string.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>string</b></code> -
+         A string.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>fontsize</b></code> -
+         The size of the font: 'normal', 'small' or 'tiny'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The width of <i>string</i> with the chosen 
+        <i>fontsize</i>.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Menu"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Menu</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>default</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Create a new Menu Button object.</p>
+  The menu options are specified through the 'name' of the button. 
+  Options are <i>followed</i> by a format code and separated by the '|' 
+  (pipe) character. Valid format codes are:
+  <ul>
+    <li>
+      %t - The option should be used as the title;
+    </li>
+    <li>
+      %l - Insert a separating line;
+    </li>
+    <li>
+      %x<b>N</b> - The option should set the integer <b>N</b> in the 
+      button value.
+    </li>
+  </ul>
+  Example:
+<pre class="literalblock">
+ name = &quot;The Title %t|First Entry %x1|Second Entry %x2|Third Entry %x3&quot;
+ menu = Draw.Menu(name, 2, 60, 120, 200, 40, 3, &quot;Just a test menu.&quot;)
+ # note that, since default = 3, the &quot;Third Entry&quot;
+ # will appear as the default choice in the Menu.
+</pre>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The format string to define the contents of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>default</b></code> -
+         The number of the option to be selected by default.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Number"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Number</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>initial</span>,
+          <span class=sig-arg>min</span>,
+          <span class=sig-arg>max</span>,
+          <span class=sig-arg>realtime</span>=<span class=sig-default>1</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new Number Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The string to display on the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>initial</b></code> -
+         The initial value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>min</b></code> -
+         The minimum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>max</b></code> -
+         The maximum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>realtime</b></code> -
+         If non-zero (the default), the slider will emit events as it 
+        is edited.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="PupMenu"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">PupMenu</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>maxrow</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Create a pop-up menu.</p>
+  The menu options are specified through the 'name' parameter, like 
+  with <a href="Draw-module.html#Menu" 
+  class="link"><code>Menu</code></a>: options are followed by a format 
+  code and separated by the '|' character. Valid format codes are:
+  <ul>
+    <li>
+      %t - The option should be used as the title of the pop-up;
+    </li>
+    <li>
+      %l - insert a separating line (only works if 'maxrow' isn't 
+      given);
+    </li>
+    <li>
+      %x<b>N</b> - Chosen this option, PupMenu should return the 
+      integer <b>N</b>.
+    </li>
+  </ul>
+  Example:
+<pre class="literalblock">
+ name = &quot;OK?%t|QUIT BLENDER&quot;  # if no %xN int is set, indices start from 1
+ result = Draw.PupMenu(name)
+ if result:
+   Draw.PupMenu(&quot;Really?%t|Yes|No&quot;)
+</pre>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The format string to define the contents of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>maxrow</b></code> -
+         The maximum number of rows for each column in the pop-up.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the chosen entry number or -1 if none was chosen.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Redraw"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Redraw</span>(<span class=sig-arg>after</span>=<span class=sig-default>0</span>)</span>
+  </h3>
+  Queue a redraw event. Redraw events are buffered so that, regardless 
+  of how many events are queued, the window only receives one redraw 
+  event.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>after</b></code> -
+         If non-zero, the redraw is processed before other input 
+        events.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Register"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Register</span>(<span class=sig-arg>draw</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>event</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>button</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Register callbacks for windowing.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>draw</b></code> -
+         A function to draw the screen, taking no arguments: f().
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=function)</i>
+      <dd><code><b>event</b></code> -
+         A function to handle keyboard and mouse input events, taking 
+        two arguments: f(evt, val), where:
+        <ul>
+          <li>
+            'evt' (int) is the event number;
+          </li>
+          <li>
+            'val' (int) is the value modifier. If val = 0, the event 
+            refers to a key or mouse button being released. Otherwise 
+            it's a key/button press.
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=function)</i>
+      <dd><code><b>button</b></code> -
+         A function to handle Draw Button events, taking one argument: 
+        f(evt), where:
+        <ul>
+          <li>
+            'evt' is the button number (see the <i>event</i> parameter 
+            in <a href="Draw-module.html#Button" 
+            class="link"><code>Button</code></a>).
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=function)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Scrollbar"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Scrollbar</span>(<span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>initial</span>,
+          <span class=sig-arg>min</span>,
+          <span class=sig-arg>max</span>,
+          <span class=sig-arg>realtime</span>=<span class=sig-default>1</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new Scrollbar Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>initial</b></code> -
+         The initial value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>min</b></code> -
+         The minimum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>max</b></code> -
+         The maximum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>realtime</b></code> -
+         If non-zero (the default), the slider will emit events as it 
+        is edited.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Slider"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Slider</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>initial</span>,
+          <span class=sig-arg>min</span>,
+          <span class=sig-arg>max</span>,
+          <span class=sig-arg>realtime</span>=<span class=sig-default>1</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new Toggle Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The string to display on the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>initial</b></code> -
+         The initial value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>min</b></code> -
+         The minimum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>max</b></code> -
+         The maximum value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int or float)</i>
+      <dd><code><b>realtime</b></code> -
+         If non-zero (the default), the slider will emit events as it 
+        is edited.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="String"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">String</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>initial</span>,
+          <span class=sig-arg>length</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new String Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The string to display on the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>initial</b></code> -
+         The string to display initially.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>length</b></code> -
+         The maximum input length.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Text"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Text</span>(<span class=sig-arg>string</span>,
+          <span class=sig-arg>fontsize</span>=<span class=sig-default>'normal'</span>)</span>
+  </h3>
+  Draw a string on the screen.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>string</b></code> -
+         The text string to draw.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>fontsize</b></code> -
+         The size of the font: 'normal', 'small' or 'tiny'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The width of <i>string</i> drawn with the chosen 
+        <i>fontsize</i>.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Toggle"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Toggle</span>(<span class=sig-arg>name</span>,
+          <span class=sig-arg>event</span>,
+          <span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>width</span>,
+          <span class=sig-arg>height</span>,
+          <span class=sig-arg>default</span>,
+          <span class=sig-arg>tooltip</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Create a new Toggle Button object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The string to display on the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>event</b></code> -
+         The event number to pass to the button event function when 
+        activated.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>x</b></code> -
+         The lower left x (horizontal) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The lower left y (vertical) coordinate of the button.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>width</b></code> -
+         The button width.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>height</b></code> -
+         The button height.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>default</b></code> -
+         The value specifying the default state: (0 for &quot;up&quot;, 
+        1 for &quot;down&quot;).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>tooltip</b></code> -
+         The button's tooltip (the string that appears when the mouse 
+        is kept over the button).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The Button created.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Button)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

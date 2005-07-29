@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Scene.Scene</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Scene-module.html">Module&nbsp;Scene</a> ::
+        Class&nbsp;Scene
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Scene.Scene-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Scene</h2>
+
+<hr/>
+
+<h1 class="heading">The Scene object</h1>
+  This object gives access to Scene data in Blender.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Scene
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#copy" class="summary-sig-name"><code>copy</code></a>(<span class=summary-sig-arg>duplicate_objects</span>)</span></code>
+<br />
+Make a copy of this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#currentFrame" class="summary-sig-name"><code>currentFrame</code></a>(<span class=summary-sig-arg>frame</span>)</span></code>
+<br />
+Get (and optionally set) the current frame value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#endFrame" class="summary-sig-name"><code>endFrame</code></a>(<span class=summary-sig-arg>frame</span>)</span></code>
+<br />
+Get (and optionally set) the end frame value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        tuple
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#frameSettings" class="summary-sig-name"><code>frameSettings</code></a>(<span class=summary-sig-arg>start</span>,
+          <span class=summary-sig-arg>end</span>,
+          <span class=summary-sig-arg>current</span>)</span></code>
+<br />
+Get (and optionally set) the start, end and current frame values.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getBackbufdir" class="summary-sig-name"><code>getBackbufdir</code></a>()</span></code>
+<br />
+Get the location of the backbuffer image.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getChildren" class="summary-sig-name"><code>getChildren</code></a>()</span></code>
+<br />
+Get all objects linked to this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Camera
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getCurrentCamera" class="summary-sig-name"><code>getCurrentCamera</code></a>()</span></code>
+<br />
+Get the currently active Camera for this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getRenderdir" class="summary-sig-name"><code>getRenderdir</code></a>()</span></code>
+<br />
+Get the current directory where rendered images are saved.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of two ints
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#getWinSize" class="summary-sig-name"><code>getWinSize</code></a>()</span></code>
+<br />
+Get the current x,y resolution of the render window.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#link" class="summary-sig-name"><code>link</code></a>(<span class=summary-sig-arg>object</span>)</span></code>
+<br />
+Link an Object to this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#makeCurrent" class="summary-sig-name"><code>makeCurrent</code></a>()</span></code>
+<br />
+Make this Scene the currently active one in Blender.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#setCurrentCamera" class="summary-sig-name"><code>setCurrentCamera</code></a>(<span class=summary-sig-arg>camera</span>)</span></code>
+<br />
+Set the currently active Camera in this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Set the name of this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#setWinSize" class="summary-sig-name"><code>setWinSize</code></a>(<span class=summary-sig-arg>dimensions</span>)</span></code>
+<br />
+Set the width and height of the render window.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#startFrame" class="summary-sig-name"><code>startFrame</code></a>(<span class=summary-sig-arg>frame</span>)</span></code>
+<br />
+Get (and optionally set) the start frame value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#unlink" class="summary-sig-name"><code>unlink</code></a>(<span class=summary-sig-arg>object</span>)</span></code>
+<br />
+Unlink an Object from this Scene.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Scene.Scene-class.html#update" class="summary-sig-name"><code>update</code></a>(<span class=summary-sig-arg>full</span>)</span></code>
+<br />
+Update this Scene in Blender.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Scene.Scene-class.html#name"><code>name</code></a></b>: The Scene name.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="copy"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">copy</span>(<span class=sig-arg>duplicate_objects</span>=<span class=sig-default>1</span>)</span>
+  </h3>
+  Make a copy of this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>duplicate_objects</b></code> -
+         Defines how the Scene children are duplicated:
+        <ul>
+          <li>
+            0: Link Objects;
+          </li>
+          <li>
+            1: Link Object Data;
+          </li>
+          <li>
+            2: Full copy.
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The copied Blender Scene.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Scene)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="currentFrame"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">currentFrame</span>(<span class=sig-arg>frame</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Get (and optionally set) the current frame value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>frame</b></code> -
+         The current frame. If None, this method simply returns the 
+        current frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The current frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="endFrame"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">endFrame</span>(<span class=sig-arg>frame</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Get (and optionally set) the end frame value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>frame</b></code> -
+         The end frame. If None, this method simply returns the current 
+        end frame.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The end frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="frameSettings"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">frameSettings</span>(<span class=sig-arg>start</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>end</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>current</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Get (and optionally set) the start, end and current frame 
+  values.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>start</b></code> -
+         The start frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>end</b></code> -
+         The end frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>current</b></code> -
+         The current frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The frame values in a tuple: [start, end, current].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=tuple)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getBackbufdir"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getBackbufdir</span>()</span>
+  </h3>
+  Get the location of the backbuffer image.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The path to the chosen backbuffer image.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getChildren"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getChildren</span>()</span>
+  </h3>
+  Get all objects linked to this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        A list with all Blender Objects linked to this Scene.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getCurrentCamera"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getCurrentCamera</span>()</span>
+  </h3>
+  Get the currently active Camera for this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The currently active Camera.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Camera)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        string
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRenderdir"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRenderdir</span>()</span>
+  </h3>
+  Get the current directory where rendered images are saved.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The path to the current render dir
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getWinSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getWinSize</span>()</span>
+  </h3>
+  Get the current x,y resolution of the render window. These are the 
+  dimensions of the image created by the Blender Renderer.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        [width, height].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of two ints)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="link"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">link</span>(<span class=sig-arg>object</span>)</span>
+  </h3>
+  Link an Object to this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>object</b></code> -
+         A Blender Object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="makeCurrent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">makeCurrent</span>()</span>
+  </h3>
+  Make this Scene the currently active one in Blender.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setCurrentCamera"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setCurrentCamera</span>(<span class=sig-arg>camera</span>)</span>
+  </h3>
+  Set the currently active Camera in this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>camera</b></code> -
+         The new active Camera.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Camera)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Set the name of this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setWinSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setWinSize</span>(<span class=sig-arg>dimensions</span>)</span>
+  </h3>
+  Set the width and height of the render window. These are the 
+  dimensions of the image created by the Blender Renderer.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>dimensions</b></code> -
+         The new [width, height] values.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of two ints)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="startFrame"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">startFrame</span>(<span class=sig-arg>frame</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Get (and optionally set) the start frame value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>frame</b></code> -
+         The start frame. If None, this method simply returns the 
+        current start frame.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The start frame value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="unlink"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">unlink</span>(<span class=sig-arg>object</span>)</span>
+  </h3>
+  Unlink an Object from this Scene.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>object</b></code> -
+         A Blender Object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Object)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="update"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">update</span>(<span class=sig-arg>full</span>=<span class=sig-default>0</span>)</span>
+  </h3>
+  Update this Scene in Blender.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>full</b></code> -
+         A bool to control the level of updating:
+        <ul>
+          <li>
+            0: sort the base list of objects.
+          </li>
+          <li>
+            1: sort and also regroup, do ipos, ikas, keys, script 
+            links, etc.
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+<p><b>Warning:</b> When in doubt, try with <i>full = 0</i> first, since it is faster. The 
+&quot;full&quot; update is a recent addition to this method.
+</p>
+
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The Scene name.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>NMesh.NMFace</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="NMesh-module.html">Module&nbsp;NMesh</a> ::
+        Class&nbsp;NMFace
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="NMesh.NMFace-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class NMFace</h2>
+
+<hr/>
+
+<h1 class="heading">The NMFace object</h1>
+  This object holds mesh face data.
+<hr/>
+
+<p><b>Warning:</b> Assigning uv textures to mesh faces in Blender works like this:
+<ol start="1">
+  <li>
+    Select your mesh.
+  </li>
+  <li>
+    Enter face select mode (press f) and select at least some 
+    face(s).
+  </li>
+  <li>
+    In the UV/Image Editor window, load / select an image.
+  </li>
+  <li>
+    Play in both windows (better split the screen to see both at the 
+    same time) until the uv coordinates are where you want them. Hint: in 
+    the 3d window, the 'u' key opens a menu of default uv choices and the 
+    'r' key lets you rotate the uv coords.
+  </li>
+  <li>
+    Leave face select mode (press f).
+  </li>
+</ol>
+</p>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="NMesh.NMFace-class.html#append" class="summary-sig-name"><code>append</code></a>(<span class=summary-sig-arg>vertex</span>)</span></code>
+<br />
+Append a vertex to this face's vertex list.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#col"><code>col</code></a></b>: The list of vertex colours.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#flag"><code>flag</code></a></b>: Bit vector specifying selection flags (see <a 
+href="NMesh-module.html#FaceFlags" 
+class="link"><code>NMesh.FaceFlags</code></a>).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#image"><code>image</code></a></b>: The Image used as a texture for this face.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#mat"><code>mat</code></a></b>: Same as <i>materialIndex</i> below.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#materialIndex"><code>materialIndex</code></a></b>: The index of this face's material in its NMesh materials list.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#mode"><code>mode</code></a></b>: The display mode (see <a href="NMesh-module.html#FaceModes" 
+class="link"><code>Mesh.FaceModes</code></a>)</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#normal"><code>normal</code></a></b>: (or just <b>no</b>) The normal vector for this face: [x,y,z].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#smooth"><code>smooth</code></a></b>: If non-zero, the vertex normals are averaged to make this face look 
+smooth.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#transp"><code>transp</code></a></b>: Transparency mode bit vector (see <a 
+href="NMesh-module.html#FaceTranspModes" 
+class="link"><code>NMesh.FaceTranspModes</code></a>).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="NMesh.NMFace-class.html#uv"><code>uv</code></a></b>: List of per-face UV coordinates: [(u0, v0), (u1, v1), ...].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">list</font></td>
+<td><b><a href="NMesh.NMFace-class.html#v"><code>v</code></a></b>: The list of face vertices (<b>up to 4</b>).</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="append"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">append</span>(<span class=sig-arg>vertex</span>)</span>
+  </h3>
+  Append a vertex to this face's vertex list.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>vertex</b></code> -
+         An NMVert object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=NMVert)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="col"></a>
+<h3>col</h3>
+The list of vertex colours.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="flag"></a>
+<h3>flag</h3>
+Bit vector specifying selection flags (see <a 
+href="NMesh-module.html#FaceFlags" 
+class="link"><code>NMesh.FaceFlags</code></a>).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="image"></a>
+<h3>image</h3>
+The Image used as a texture for this face.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mat"></a>
+<h3>mat</h3>
+Same as <i>materialIndex</i> below.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="materialIndex"></a>
+<h3>materialIndex</h3>
+The index of this face's material in its NMesh materials list.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mode"></a>
+<h3>mode</h3>
+The display mode (see <a href="NMesh-module.html#FaceModes" 
+class="link"><code>Mesh.FaceModes</code></a>)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="normal"></a>
+<h3>normal</h3>
+(or just <b>no</b>) The normal vector for this face: [x,y,z].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="smooth"></a>
+<h3>smooth</h3>
+If non-zero, the vertex normals are averaged to make this face look 
+smooth.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="transp"></a>
+<h3>transp</h3>
+Transparency mode bit vector (see <a 
+href="NMesh-module.html#FaceTranspModes" 
+class="link"><code>NMesh.FaceTranspModes</code></a>).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="uv"></a>
+<h3>uv</h3>
+List of per-face UV coordinates: [(u0, v0), (u1, v1), ...].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="v"></a>
+<h3>v</h3>
+The list of face vertices (<b>up to 4</b>).
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          list
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Lattice.Lattice</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Lattice-module.html">Module&nbsp;Lattice</a> ::
+        Class&nbsp;Lattice
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Lattice.Lattice-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Lattice</h2>
+
+<hr/>
+
+<h1 class="heading">The Lattice object</h1>
+  This object gives access to Lattices in Blender.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#applyDeform" class="summary-sig-name"><code>applyDeform</code></a>()</span></code>
+<br />
+Applies the current Lattice deformation to any child objects that have 
+this Lattice as the parent.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of strings
+</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#getKeyTypes" class="summary-sig-name"><code>getKeyTypes</code></a>()</span></code>
+<br />
+Returns the deformation key types for the x, y, and z dimensions of 
+the Lattice.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#getMode" class="summary-sig-name"><code>getMode</code></a>()</span></code>
+<br />
+Returns the current Lattice mode</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Lattice datablock.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of ints
+</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#getPartitions" class="summary-sig-name"><code>getPartitions</code></a>()</span></code>
+<br />
+Gets the number of 'walls' or partitions that the Lattice has in the 
+x, y, and z dimensions.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#getPoint" class="summary-sig-name"><code>getPoint</code></a>(<span class=summary-sig-arg>index</span>)</span></code>
+<br />
+Returns the coordinates of a point in the Lattice by index.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#insertKey" class="summary-sig-name"><code>insertKey</code></a>(<span class=summary-sig-arg>frame</span>)</span></code>
+<br />
+Inserts the current state of the Lattice as a new absolute 
+keyframe</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#setKeyTypes" class="summary-sig-name"><code>setKeyTypes</code></a>(<span class=summary-sig-arg>xType</span>,
+          <span class=summary-sig-arg>yType</span>,
+          <span class=summary-sig-arg>zType</span>)</span></code>
+<br />
+Sets the deformation key types for the x, y, and z dimensions of the 
+Lattice.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#setMode" class="summary-sig-name"><code>setMode</code></a>(<span class=summary-sig-arg>modeType</span>)</span></code>
+<br />
+Sets the current Lattice mode There are two Lattice modes 
+possible:</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Set the name of this Lattice datablock.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#setPartitions" class="summary-sig-name"><code>setPartitions</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Set the number of 'walls' or partitions that the Lattice will be 
+created with in the x, y, and z dimensions.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Lattice.Lattice-class.html#setPoint" class="summary-sig-name"><code>setPoint</code></a>(<span class=summary-sig-arg>index</span>,
+          <span class=summary-sig-arg>position</span>)</span></code>
+<br />
+Sets the coordinates of a point in the Lattice by index.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#depth"><code>depth</code></a></b>: The number of z dimension partitions.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#depthType"><code>depthType</code></a></b>: The z dimension key type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#height"><code>height</code></a></b>: The number of y dimension partitions.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#heightType"><code>heightType</code></a></b>: The y dimension key type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#latSize"><code>latSize</code></a></b>: The number of points in this Lattice.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#mode"><code>mode</code></a></b>: The current mode of the Lattice.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#name"><code>name</code></a></b>: The Lattice name.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#width"><code>width</code></a></b>: The number of x dimension partitions.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Lattice.Lattice-class.html#widthType"><code>widthType</code></a></b>: The x dimension key type.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="applyDeform"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">applyDeform</span>()</span>
+  </h3>
+  Applies the current Lattice deformation to any child objects that 
+  have this Lattice as the parent.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getKeyTypes"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getKeyTypes</span>()</span>
+  </h3>
+  Returns the deformation key types for the x, y, and z dimensions of 
+  the Lattice.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        A list corresponding to the key types will be returned: 
+        [x,y,z]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of strings)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMode</span>()</span>
+  </h3>
+  Returns the current Lattice mode
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        A string representing the current Lattice mode
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Lattice datablock.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The name of the Lattice datablock.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getPartitions"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getPartitions</span>()</span>
+  </h3>
+  Gets the number of 'walls' or partitions that the Lattice has in the 
+  x, y, and z dimensions.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        A list corresponding to the number of partitions: [x,y,z]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of ints)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getPoint"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getPoint</span>(<span class=sig-arg>index</span>)</span>
+  </h3>
+  Returns the coordinates of a point in the Lattice by index.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>index</b></code> -
+         The index of the point on the Lattice you want returned
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        The x,y,z coordiates of the Lattice point : [x,y,z]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="insertKey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">insertKey</span>(<span class=sig-arg>frame</span>)</span>
+  </h3>
+  <p>Inserts the current state of the Lattice as a new absolute 
+  keyframe</p>
+  <b>Example</b>:
+<pre class="literalblock">
+ for z in range(5):
+   for y in range(125):
+     vec = myLat.getPoint(y)
+     co1 = vec[0] + vec[2]
+     co2 = vec[1] - vec[2]
+     co3 = vec[2] + vec[1]
+     myLat.setPoint(y,[co1,co2,co3])
+   w = (z + 1) * 10
+   myLat.insertKey(w)
+ myLat.applyDeform()
+</pre>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>frame</b></code> -
+         the frame at which the Lattice will be set as a keyframe
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setKeyTypes"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setKeyTypes</span>(<span class=sig-arg>xType</span>,
+          <span class=sig-arg>yType</span>,
+          <span class=sig-arg>zType</span>)</span>
+  </h3>
+  Sets the deformation key types for the x, y, and z dimensions of the 
+  Lattice. There are three key types possible:
+  <ul>
+    <li>
+      Lattice.CARDINAL
+    </li>
+    <li>
+      Lattice.LINEAR
+    </li>
+    <li>
+      Lattice.BSPLINE
+    </li>
+  </ul>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>xType</b></code> -
+         the deformation key type for the x dimension of the 
+        Lattice
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=enum constant)</i>
+      <dd><code><b>yType</b></code> -
+         the deformation key type for the y dimension of the 
+        Lattice
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=enum constant)</i>
+      <dd><code><b>zType</b></code> -
+         the deformation key type for the z dimension of the 
+        Lattice
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=enum constant)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMode</span>(<span class=sig-arg>modeType</span>)</span>
+  </h3>
+  Sets the current Lattice mode There are two Lattice modes 
+  possible:
+  <ul>
+    <li>
+      Lattice.GRID
+    </li>
+    <li>
+      Lattice.OUTSIDE
+    </li>
+  </ul>
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>modeType</b></code> -
+         the Lattice mode
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=enum constant)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Set the name of this Lattice datablock.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setPartitions"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setPartitions</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Set the number of 'walls' or partitions that the Lattice will be 
+  created with in the x, y, and z dimensions.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The number of partitions in the x dimension of the 
+        Lattice.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>y</b></code> -
+         The number of partitions in the y dimension of the 
+        Lattice.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>z</b></code> -
+         The number of partitions in the z dimension of the 
+        Lattice.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setPoint"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setPoint</span>(<span class=sig-arg>index</span>,
+          <span class=sig-arg>position</span>)</span>
+  </h3>
+  Sets the coordinates of a point in the Lattice by index.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>index</b></code> -
+         The index of the point on the Lattice you want set
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>position</b></code> -
+         The x,y,z coordinates that you want the point to be: 
+        [x,y,z]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="depth"></a>
+<h3>depth</h3>
+The number of z dimension partitions.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="depthType"></a>
+<h3>depthType</h3>
+The z dimension key type.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="height"></a>
+<h3>height</h3>
+The number of y dimension partitions.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="heightType"></a>
+<h3>heightType</h3>
+The y dimension key type.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="latSize"></a>
+<h3>latSize</h3>
+The number of points in this Lattice.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mode"></a>
+<h3>mode</h3>
+The current mode of the Lattice.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The Lattice name.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="width"></a>
+<h3>width</h3>
+The number of x dimension partitions.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="widthType"></a>
+<h3>widthType</h3>
+The x dimension key type.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

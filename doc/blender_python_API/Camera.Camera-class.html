@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Camera.Camera</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Camera-module.html">Module&nbsp;Camera</a> ::
+        Class&nbsp;Camera
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Camera.Camera-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Camera</h2>
+
+<hr/>
+
+<h1 class="heading">The Camera Data object</h1>
+  This object gives access to Camera-specific data in Blender.
+<hr/>
+
+<p><b>Warning:</b> Most member variables assume values in some [Min, Max] interval. When 
+trying to set them, the given parameter will be clamped to lie in that 
+range: if val &lt; Min, then val = Min, if val &gt; Max, then val = 
+Max.
+</p>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#clearIpo" class="summary-sig-name"><code>clearIpo</code></a>()</span></code>
+<br />
+Unlink the ipo from this camera data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getClipEnd" class="summary-sig-name"><code>getClipEnd</code></a>()</span></code>
+<br />
+Get the clip end value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getClipStart" class="summary-sig-name"><code>getClipStart</code></a>()</span></code>
+<br />
+Get the clip start value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getDrawSize" class="summary-sig-name"><code>getDrawSize</code></a>()</span></code>
+<br />
+Get the draw size value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Ipo
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getIpo" class="summary-sig-name"><code>getIpo</code></a>()</span></code>
+<br />
+Get the Ipo associated with this camera data object, if any.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getLens" class="summary-sig-name"><code>getLens</code></a>()</span></code>
+<br />
+Get the lens value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getMode" class="summary-sig-name"><code>getMode</code></a>()</span></code>
+<br />
+Get this Camera's mode flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Camera Data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#getType" class="summary-sig-name"><code>getType</code></a>()</span></code>
+<br />
+Get this Camera's type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setClipEnd" class="summary-sig-name"><code>setClipEnd</code></a>(<span class=summary-sig-arg>clipend</span>)</span></code>
+<br />
+Set the clip end value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setClipStart" class="summary-sig-name"><code>setClipStart</code></a>(<span class=summary-sig-arg>clipstart</span>)</span></code>
+<br />
+Set the clip start value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setDrawSize" class="summary-sig-name"><code>setDrawSize</code></a>(<span class=summary-sig-arg>drawsize</span>)</span></code>
+<br />
+Set the draw size value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setIpo" class="summary-sig-name"><code>setIpo</code></a>(<span class=summary-sig-arg>ipo</span>)</span></code>
+<br />
+Link an ipo to this camera data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setLens" class="summary-sig-name"><code>setLens</code></a>(<span class=summary-sig-arg>lens</span>)</span></code>
+<br />
+Set the lens value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setMode" class="summary-sig-name"><code>setMode</code></a>(<span class=summary-sig-arg>mode1</span>,
+          <span class=summary-sig-arg>mode2</span>)</span></code>
+<br />
+Set this Camera's mode flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Set the name of this Camera Data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Camera.Camera-class.html#setType" class="summary-sig-name"><code>setType</code></a>(<span class=summary-sig-arg>type</span>)</span></code>
+<br />
+Set this Camera's type.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#clipEnd"><code>clipEnd</code></a></b>: The clip end value in [1.0, 5000.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#clipStart"><code>clipStart</code></a></b>: The clip start value in [0.0, 100.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#drawSize"><code>drawSize</code></a></b>: The draw size value in [0.1, 10.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">Blender Ipo</font></td>
+<td><b><a href="Camera.Camera-class.html#ipo"><code>ipo</code></a></b>: The &quot;camera data&quot; ipo linked to this camera data object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#lens"><code>lens</code></a></b>: The lens value in [1.0, 250.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#mode"><code>mode</code></a></b>: The mode flags: <b>or'ed value</b>: 'showLimits':1, 'showMist':2.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#name"><code>name</code></a></b>: The Camera Data name.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Camera.Camera-class.html#type"><code>type</code></a></b>: The Camera type: 'persp':0 or 'ortho':1.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="clearIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">clearIpo</span>()</span>
+  </h3>
+  Unlink the ipo from this camera data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        True if there was an ipo linked or False otherwise.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getClipEnd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getClipEnd</span>()</span>
+  </h3>
+  Get the clip end value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getClipStart"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getClipStart</span>()</span>
+  </h3>
+  Get the clip start value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDrawSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDrawSize</span>()</span>
+  </h3>
+  Get the draw size value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getIpo</span>()</span>
+  </h3>
+  Get the Ipo associated with this camera data object, if any.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the wrapped ipo or None.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLens"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLens</span>()</span>
+  </h3>
+  Get the lens value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMode</span>()</span>
+  </h3>
+  Get this Camera's mode flags.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        <b>OR'ed value</b>: 'showLimits' is 1, 'showMist' is 2, or 
+        resp. 01 and 10 in binary.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Camera Data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        string
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getType</span>()</span>
+  </h3>
+  Get this Camera's type.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        0 for 'persp' or 1 for 'ortho'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setClipEnd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setClipEnd</span>(<span class=sig-arg>clipend</span>)</span>
+  </h3>
+  Set the clip end value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>clipend</b></code> -
+         The new clip end value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setClipStart"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setClipStart</span>(<span class=sig-arg>clipstart</span>)</span>
+  </h3>
+  Set the clip start value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>clipstart</b></code> -
+         The new lens value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDrawSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDrawSize</span>(<span class=sig-arg>drawsize</span>)</span>
+  </h3>
+  Set the draw size value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>drawsize</b></code> -
+         The new draw size value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setIpo</span>(<span class=sig-arg>ipo</span>)</span>
+  </h3>
+  Link an ipo to this camera data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ipo</b></code> -
+         a &quot;camera data&quot; ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLens"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLens</span>(<span class=sig-arg>lens</span>)</span>
+  </h3>
+  Set the lens value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>lens</b></code> -
+         The new lens value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMode</span>(<span class=sig-arg>mode1</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>mode2</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Set this Camera's mode flags. Mode strings given are turned 'on'. 
+  Those not provided are turned 'off', so cam.setMode() -- without 
+  arguments -- turns off all mode flags for Camera cam.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>mode1</b></code> -
+         A mode flag: 'showLimits' or 'showMist'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>mode2</b></code> -
+         A mode flag: 'showLimits' or 'showMist'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Set the name of this Camera Data object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setType</span>(<span class=sig-arg>type</span>)</span>
+  </h3>
+  Set this Camera's type.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>type</b></code> -
+         The Camera type: 'persp' or 'ortho'.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="clipEnd"></a>
+<h3>clipEnd</h3>
+The clip end value in [1.0, 5000.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="clipStart"></a>
+<h3>clipStart</h3>
+The clip start value in [0.0, 100.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="drawSize"></a>
+<h3>drawSize</h3>
+The draw size value in [0.1, 10.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ipo"></a>
+<h3>ipo</h3>
+The &quot;camera data&quot; ipo linked to this camera data object.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          Blender Ipo
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="lens"></a>
+<h3>lens</h3>
+The lens value in [1.0, 250.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mode"></a>
+<h3>mode</h3>
+The mode flags: <b>or'ed value</b>: 'showLimits':1, 'showMist':2.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The Camera Data name.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="type"></a>
+<h3>type</h3>
+The Camera type: 'persp':0 or 'ortho':1.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

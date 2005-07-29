@@ -1,0 +1,12 @@
+A separator is a label which appears in the explore tree 
+to help structuring the script. An easy way to add 
+separators is to use the 'Edit'>'Insert colored separator'
+wizard from the menu.
+
+Syntax:
+* normal:      #---label
+* coloured:    #---label---#foregroundcolour#backgroundcolour
+* highlighted: ####label
+
+Foreground and background colour are in html notation, eg:
+* red on blue label: #---red on blue---#FF0000#0000FF

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>NMesh.NMVert</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="NMesh-module.html">Module&nbsp;NMesh</a> ::
+        Class&nbsp;NMVert
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="NMesh.NMVert-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class NMVert</h2>
+
+<hr/>
+
+<h1 class="heading">The NMVert object</h1>
+  This object holds mesh vertex data.
+<hr/>
+
+<p><b>Warning:</b> There are two kinds of uv texture coordinates in Blender: per vertex 
+(&quot;sticky&quot;) and per face vertex (uv in <a 
+href="NMesh.NMFace-class.html" class="link"><code>NMFace</code></a>). In 
+the first, there's only one uv pair of coordinates for each vertex in the 
+mesh. In the second, for each face it belongs to, a vertex can have 
+different uv coordinates. This makes the per face option more flexible, 
+since two adjacent faces won't have to be mapped to a continuous region 
+in an image: each face can be independently mapped to any part of its 
+texture.
+</p>
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">list of three floats</font></td>
+<td><b><a href="NMesh.NMVert-class.html#co"><code>co</code></a></b>: The vertex coordinates (x, y, z).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">int</font></td>
+<td><b><a href="NMesh.NMVert-class.html#index"><code>index</code></a></b>: The vertex index, if owned by a mesh.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">list of three floats</font></td>
+<td><b><a href="NMesh.NMVert-class.html#no"><code>no</code></a></b>: The vertex normal vector (x, y, z).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">int</font></td>
+<td><b><a href="NMesh.NMVert-class.html#sel"><code>sel</code></a></b>: The selection state (selected:1, unselected:0) of this vertex.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">list of two floats</font></td>
+<td><b><a href="NMesh.NMVert-class.html#uvco"><code>uvco</code></a></b>: The vertex texture &quot;sticky&quot; coordinates.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="co"></a>
+<h3>co</h3>
+The vertex coordinates (x, y, z).
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          list of three floats
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="index"></a>
+<h3>index</h3>
+The vertex index, if owned by a mesh.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          int
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="no"></a>
+<h3>no</h3>
+The vertex normal vector (x, y, z).
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          list of three floats
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="sel"></a>
+<h3>sel</h3>
+The selection state (selected:1, unselected:0) of this vertex.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          int
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="uvco"></a>
+<h3>uvco</h3>
+The vertex texture &quot;sticky&quot; coordinates.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          list of two floats
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

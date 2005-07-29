@@ -1,0 +1,174 @@
+/* basic styles */
+body {
+	font-family: verdana, sans-serif;
+	background-color: white;
+        font-size: 8pt;
+}
+td{
+        text-align: left;
+}
+h1 {
+	text-align: left;
+}
+h2, h3, h4, h5, h6 {
+        font-variant: small-caps;
+	text-align: left;
+}
+input, textarea {
+	font-size: 1em;
+}
+a {
+	text-decoration: none;
+	color: red;
+}
+
+/* box styles */
+.calendarbox {
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+}
+.greybox {
+	background-color: lightgrey;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+}
+.whitebox {
+	background-color: white;
+	border-color: grey;
+	border-top-width: 1px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+        border-style:dotted;
+}
+.greyboxsmall {
+	background-color: lightgrey;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.whiteboxsmall {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.copybox {
+	border-top: solid;
+	border-color: grey;
+	border-width: 1px;
+	text-align: right;
+	font-size: 0.8em;
+}
+
+/* message/text styles */
+.smallfont {
+	font-size: 0.8em;
+}
+.errormsg {
+	color: red;
+	padding: 0.25em;
+	text-align: left;
+}
+.infomsg {
+	color: green;
+	padding: 0.25em;
+	text-align: left;
+}
+
+/* admonition rendering */
+.admonition-title {
+	text-align: center;
+}
+.attention {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.caution {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.danger {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+	color: red;
+}
+.error {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+	color: red;
+}
+.hint {
+	background-color: lightcyan;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.important {
+	background-color: lightcyan;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.note {
+	background-color: lightgrey;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.tip {
+	background-color: lightgrey;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+.warning {
+	background-color: white;
+	border: solid;
+	border-color: grey;
+	border-width: 1px;
+	padding: 0.25em;
+	font-size: 0.8em;
+}
+
+/* styles for restructured text elements */
+.footnote-reference {
+	vertical-align: super;
+	font-size: 0.8em;
+}
+td.field-name {
+	font-weight: bold;
+}
+

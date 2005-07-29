@@ -1,0 +1,1484 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Material.Material</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Material-module.html">Module&nbsp;Material</a> ::
+        Class&nbsp;Material
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Material.Material-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Material</h2>
+
+<hr/>
+
+<h1 class="heading">The Material object</h1>
+  This object gives access to Materials in Blender.
+<hr/>
+
+<p><b>Warning:</b> Most member variables assume values in some [Min, Max] interval. When 
+trying to set them, the given parameter will be clamped to lie in that 
+range: if val &lt; Min, then val = Min, if val &gt; Max, then val = 
+Max.
+</p>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#clearIpo" class="summary-sig-name"><code>clearIpo</code></a>()</span></code>
+<br />
+Unlink the ipo from this material.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#clearTexture" class="summary-sig-name"><code>clearTexture</code></a>(<span class=summary-sig-arg>index</span>)</span></code>
+<br />
+Clear the ith (given by 'index') texture channel of this material.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getAdd" class="summary-sig-name"><code>getAdd</code></a>()</span></code>
+<br />
+Get the glow factor.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getAlpha" class="summary-sig-name"><code>getAlpha</code></a>()</span></code>
+<br />
+Get the alpha (transparency) value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getAmb" class="summary-sig-name"><code>getAmb</code></a>()</span></code>
+<br />
+Get the ambient color blend factor.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getEmit" class="summary-sig-name"><code>getEmit</code></a>()</span></code>
+<br />
+Get the emitting light intensity.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getFlareBoost" class="summary-sig-name"><code>getFlareBoost</code></a>()</span></code>
+<br />
+Get the flare's extra strength.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getFlareSeed" class="summary-sig-name"><code>getFlareSeed</code></a>()</span></code>
+<br />
+Get flare's offset in the seed table.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getFlareSize" class="summary-sig-name"><code>getFlareSize</code></a>()</span></code>
+<br />
+Get the ratio: flareSize / haloSize.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getHaloSeed" class="summary-sig-name"><code>getHaloSeed</code></a>()</span></code>
+<br />
+Get the seed for random ring dimension and line location in halos.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getHaloSize" class="summary-sig-name"><code>getHaloSize</code></a>()</span></code>
+<br />
+Get the halo size.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getHardness" class="summary-sig-name"><code>getHardness</code></a>()</span></code>
+<br />
+Get the hardness of the specularity.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Ipo
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getIpo" class="summary-sig-name"><code>getIpo</code></a>()</span></code>
+<br />
+Get the Ipo associated with this material, if any.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 3 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getMirCol" class="summary-sig-name"><code>getMirCol</code></a>()</span></code>
+<br />
+Get the mirror color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getMode" class="summary-sig-name"><code>getMode</code></a>()</span></code>
+<br />
+Get this Material's mode flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Material object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getNFlares" class="summary-sig-name"><code>getNFlares</code></a>()</span></code>
+<br />
+Get the number of halo subflares.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getNLines" class="summary-sig-name"><code>getNLines</code></a>()</span></code>
+<br />
+Get the number of star shaped lines on each halo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getNRings" class="summary-sig-name"><code>getNRings</code></a>()</span></code>
+<br />
+Get the number of rings on each halo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getNStars" class="summary-sig-name"><code>getNStars</code></a>()</span></code>
+<br />
+Get the number of points in the halo stars.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getRef" class="summary-sig-name"><code>getRef</code></a>()</span></code>
+<br />
+Get the reflectivity value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 3 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getRGBCol" class="summary-sig-name"><code>getRGBCol</code></a>()</span></code>
+<br />
+Get the rgb color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getSpec" class="summary-sig-name"><code>getSpec</code></a>()</span></code>
+<br />
+Get the specularity value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 3 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getSpecCol" class="summary-sig-name"><code>getSpecCol</code></a>()</span></code>
+<br />
+Get the specular color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getSpecTransp" class="summary-sig-name"><code>getSpecTransp</code></a>()</span></code>
+<br />
+Get the specular transparency.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getSubSize" class="summary-sig-name"><code>getSubSize</code></a>()</span></code>
+<br />
+Get the dimension of subflare, dots and circles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getTextures" class="summary-sig-name"><code>getTextures</code></a>()</span></code>
+<br />
+Get this Material's Texture list.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#getZOffset" class="summary-sig-name"><code>getZOffset</code></a>()</span></code>
+<br />
+Get the artificial offset for faces with this Material.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setAdd" class="summary-sig-name"><code>setAdd</code></a>(<span class=summary-sig-arg>add</span>)</span></code>
+<br />
+Set the glow factor.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setAlpha" class="summary-sig-name"><code>setAlpha</code></a>(<span class=summary-sig-arg>alpha</span>)</span></code>
+<br />
+Set the alpha (transparency) value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setAmb" class="summary-sig-name"><code>setAmb</code></a>(<span class=summary-sig-arg>amb</span>)</span></code>
+<br />
+Set the ambient color blend factor.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setEmit" class="summary-sig-name"><code>setEmit</code></a>(<span class=summary-sig-arg>emit</span>)</span></code>
+<br />
+Set the emitting light intensity.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setFlareBoost" class="summary-sig-name"><code>setFlareBoost</code></a>(<span class=summary-sig-arg>flareboost</span>)</span></code>
+<br />
+Set the flare's extra strength.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setFlareSeed" class="summary-sig-name"><code>setFlareSeed</code></a>(<span class=summary-sig-arg>flareseed</span>)</span></code>
+<br />
+Set flare's offset in the seed table.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setFlareSize" class="summary-sig-name"><code>setFlareSize</code></a>(<span class=summary-sig-arg>flaresize</span>)</span></code>
+<br />
+Set the ratio: flareSize / haloSize.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setHaloSeed" class="summary-sig-name"><code>setHaloSeed</code></a>(<span class=summary-sig-arg>haloseed</span>)</span></code>
+<br />
+Set the seed for random ring dimension and line location in halos.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setHaloSize" class="summary-sig-name"><code>setHaloSize</code></a>(<span class=summary-sig-arg>halosize</span>)</span></code>
+<br />
+Set the halo size.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setHardness" class="summary-sig-name"><code>setHardness</code></a>(<span class=summary-sig-arg>hardness</span>)</span></code>
+<br />
+Set the hardness of the specularity.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setIpo" class="summary-sig-name"><code>setIpo</code></a>(<span class=summary-sig-arg>ipo</span>)</span></code>
+<br />
+Link an ipo to this material.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setMirCol" class="summary-sig-name"><code>setMirCol</code></a>(<span class=summary-sig-arg>rgb</span>)</span></code>
+<br />
+Set the mirror color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setMode" class="summary-sig-name"><code>setMode</code></a>(<span class=summary-sig-arg>m</span>,
+          <span class=summary-sig-arg>m2</span>,
+          <span class=summary-sig-arg>m3</span>,
+          <span class=summary-sig-arg>and_so_on</span>,
+          <span class=summary-sig-arg>up_to_21</span>)</span></code>
+<br />
+Set this Material's mode flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Set the name of this Material object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setNFlares" class="summary-sig-name"><code>setNFlares</code></a>(<span class=summary-sig-arg>nflares</span>)</span></code>
+<br />
+Set the number of halo subflares.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setNLines" class="summary-sig-name"><code>setNLines</code></a>(<span class=summary-sig-arg>nlines</span>)</span></code>
+<br />
+Set the number of star shaped lines on each halo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setNRings" class="summary-sig-name"><code>setNRings</code></a>(<span class=summary-sig-arg>nrings</span>)</span></code>
+<br />
+Set the number of rings on each halo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setNStars" class="summary-sig-name"><code>setNStars</code></a>(<span class=summary-sig-arg>nstars</span>)</span></code>
+<br />
+Set the number of points in the halo stars.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setRef" class="summary-sig-name"><code>setRef</code></a>(<span class=summary-sig-arg>ref</span>)</span></code>
+<br />
+Set the reflectivity value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setRGBCol" class="summary-sig-name"><code>setRGBCol</code></a>(<span class=summary-sig-arg>rgb</span>)</span></code>
+<br />
+Set the rgb color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setSpec" class="summary-sig-name"><code>setSpec</code></a>(<span class=summary-sig-arg>spec</span>)</span></code>
+<br />
+Set the specularity value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setSpecCol" class="summary-sig-name"><code>setSpecCol</code></a>(<span class=summary-sig-arg>rgb</span>)</span></code>
+<br />
+Set the specular color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setSpecTransp" class="summary-sig-name"><code>setSpecTransp</code></a>(<span class=summary-sig-arg>spectransp</span>)</span></code>
+<br />
+Set the specular transparency.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setSubSize" class="summary-sig-name"><code>setSubSize</code></a>(<span class=summary-sig-arg>subsize</span>)</span></code>
+<br />
+Set the dimension of subflare, dots and circles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setTexture" class="summary-sig-name"><code>setTexture</code></a>(<span class=summary-sig-arg>index</span>,
+          <span class=summary-sig-arg>texture</span>,
+          <span class=summary-sig-arg>texco</span>,
+          <span class=summary-sig-arg>mapto</span>)</span></code>
+<br />
+Assign a Blender Texture object to slot number 'number'.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Material.Material-class.html#setZOffset" class="summary-sig-name"><code>setZOffset</code></a>(<span class=summary-sig-arg>zoffset</span>)</span></code>
+<br />
+Set the artificial offset for faces with this Material.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#add"><code>add</code></a></b>: Glow factor - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#alpha"><code>alpha</code></a></b>: Alpha (translucency) component of the Material - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#amb"><code>amb</code></a></b>: Ambient factor - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#B"><code>B</code></a></b>: Blue component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#emit"><code>emit</code></a></b>: Emitting light intensity - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#flareBoost"><code>flareBoost</code></a></b>: Flare's extra strength - [0.1, 10.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#flareSeed"><code>flareSeed</code></a></b>: Offset in the seed table - [0, 255].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#flareSize"><code>flareSize</code></a></b>: Factor the flare is larger than the halo - [0.1, 25.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#G"><code>G</code></a></b>: Green component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#haloSeed"><code>haloSeed</code></a></b>: To use random values for ring dimension and line location - [0, 
+255].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#haloSize"><code>haloSize</code></a></b>: Dimension of the halo - [0.0, 100.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#hard"><code>hard</code></a></b>: Hardness of the specularity - [1, 255].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">Blender Ipo</font></td>
+<td><b><a href="Material.Material-class.html#ipo"><code>ipo</code></a></b>: This Material's ipo.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#mirCol"><code>mirCol</code></a></b>: Mirror color rgb triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">int</font></td>
+<td><b><a href="Material.Material-class.html#mode"><code>mode</code></a></b>: Mode flags as an or'ed int value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#name"><code>name</code></a></b>: Material's name.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#nFlares"><code>nFlares</code></a></b>: Number of halo subflares - [1, 32].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#nLines"><code>nLines</code></a></b>: Number of star shaped lines on each halo - [0, 250].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#nRings"><code>nRings</code></a></b>: Number of halo rings - [0, 24].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#nStars"><code>nStars</code></a></b>: Number of points on the halo stars - [3, 50].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#R"><code>R</code></a></b>: Red component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#ref"><code>ref</code></a></b>: Reflectivity - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#rgbCol"><code>rgbCol</code></a></b>: Material's RGB color triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#spec"><code>spec</code></a></b>: Specularity - [0.0, 2.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#specCol"><code>specCol</code></a></b>: Specular color rgb triplet.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#specTransp"><code>specTransp</code></a></b>: Specular transparency - [0.0, 1.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#subSize"><code>subSize</code></a></b>: Dimension of subflares, dots and circles - [0.1, 25.0].</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Material.Material-class.html#zOffset"><code>zOffset</code></a></b>: Artificial Z offset for faces - [0.0, 10.0].</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="clearIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">clearIpo</span>()</span>
+  </h3>
+  Unlink the ipo from this material.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        True if there was an ipo linked or False otherwise.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="clearTexture"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">clearTexture</span>(<span class=sig-arg>index</span>)</span>
+  </h3>
+  Clear the ith (given by 'index') texture channel of this 
+  material.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>index</b></code> -
+         material's texture channel index in [0, 7].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getAdd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getAdd</span>()</span>
+  </h3>
+  Get the glow factor.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getAlpha"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getAlpha</span>()</span>
+  </h3>
+  Get the alpha (transparency) value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getAmb"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getAmb</span>()</span>
+  </h3>
+  Get the ambient color blend factor.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getEmit"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getEmit</span>()</span>
+  </h3>
+  Get the emitting light intensity.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getFlareBoost"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getFlareBoost</span>()</span>
+  </h3>
+  Get the flare's extra strength.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getFlareSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getFlareSeed</span>()</span>
+  </h3>
+  Get flare's offset in the seed table.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getFlareSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getFlareSize</span>()</span>
+  </h3>
+  Get the ratio: flareSize / haloSize.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getHaloSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getHaloSeed</span>()</span>
+  </h3>
+  Get the seed for random ring dimension and line location in 
+  halos.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getHaloSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getHaloSize</span>()</span>
+  </h3>
+  Get the halo size.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getHardness"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getHardness</span>()</span>
+  </h3>
+  Get the hardness of the specularity.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getIpo</span>()</span>
+  </h3>
+  Get the Ipo associated with this material, if any.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the wrapped ipo or None.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMirCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMirCol</span>()</span>
+  </h3>
+  Get the mirror color triplet.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        [mirR, mirG, mirb]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMode</span>()</span>
+  </h3>
+  Get this Material's mode flags.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        <p><b>OR'ed value</b>. Use the Modes dictionary to check which 
+        flags are 'on'.</p>
+        Example:
+<pre class="literalblock">
+ import Blender
+ from Blender import Material
+ flags = mymat.getMode()
+ if flags &amp; Material.Modes['HALO']:
+   print &quot;This material is rendered as a halo&quot;
+ else:
+   print &quot;Not a halo&quot;
+</pre>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Material object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        string
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNFlares"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNFlares</span>()</span>
+  </h3>
+  Get the number of halo subflares.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNLines"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNLines</span>()</span>
+  </h3>
+  Get the number of star shaped lines on each halo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNRings"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNRings</span>()</span>
+  </h3>
+  Get the number of rings on each halo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNStars"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNStars</span>()</span>
+  </h3>
+  Get the number of points in the halo stars.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        int
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRef"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRef</span>()</span>
+  </h3>
+  Get the reflectivity value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRGBCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRGBCol</span>()</span>
+  </h3>
+  Get the rgb color triplet.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        [r, g, b]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSpec"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSpec</span>()</span>
+  </h3>
+  Get the specularity value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSpecCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSpecCol</span>()</span>
+  </h3>
+  Get the specular color triplet.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        [specR, specG, specB]
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSpecTransp"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSpecTransp</span>()</span>
+  </h3>
+  Get the specular transparency.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSubSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSubSize</span>()</span>
+  </h3>
+  Get the dimension of subflare, dots and circles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTextures"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTextures</span>()</span>
+  </h3>
+  Get this Material's Texture list.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        a list of Blender Textures. None is returned for each empty 
+        texture slot.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getZOffset"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getZOffset</span>()</span>
+  </h3>
+  Get the artificial offset for faces with this Material.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setAdd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setAdd</span>(<span class=sig-arg>add</span>)</span>
+  </h3>
+  Set the glow factor.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>add</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setAlpha"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setAlpha</span>(<span class=sig-arg>alpha</span>)</span>
+  </h3>
+  Set the alpha (transparency) value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>alpha</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setAmb"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setAmb</span>(<span class=sig-arg>amb</span>)</span>
+  </h3>
+  Set the ambient color blend factor.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>amb</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setEmit"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setEmit</span>(<span class=sig-arg>emit</span>)</span>
+  </h3>
+  Set the emitting light intensity.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>emit</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setFlareBoost"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setFlareBoost</span>(<span class=sig-arg>flareboost</span>)</span>
+  </h3>
+  Set the flare's extra strength.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>flareboost</b></code> -
+         The new value in [0.1, 10.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setFlareSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setFlareSeed</span>(<span class=sig-arg>flareseed</span>)</span>
+  </h3>
+  Set flare's offset in the seed table.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>flareseed</b></code> -
+         The new value in [0, 255].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setFlareSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setFlareSize</span>(<span class=sig-arg>flaresize</span>)</span>
+  </h3>
+  Set the ratio: flareSize / haloSize.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>flaresize</b></code> -
+         The new value in [0.1, 25.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setHaloSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setHaloSeed</span>(<span class=sig-arg>haloseed</span>)</span>
+  </h3>
+  Set the seed for random ring dimension and line location in 
+  halos.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>haloseed</b></code> -
+         The new value in [0, 255].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setHaloSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setHaloSize</span>(<span class=sig-arg>halosize</span>)</span>
+  </h3>
+  Set the halo size.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>halosize</b></code> -
+         The new value in [0.0, 100.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setHardness"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setHardness</span>(<span class=sig-arg>hardness</span>)</span>
+  </h3>
+  Set the hardness of the specularity.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>hardness</b></code> -
+         The new value in [1, 255].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setIpo"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setIpo</span>(<span class=sig-arg>ipo</span>)</span>
+  </h3>
+  Link an ipo to this material.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ipo</b></code> -
+         a material type ipo.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Ipo)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMirCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMirCol</span>(<span class=sig-arg>rgb</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Set the mirror color triplet. If <b>rgb</b> is None, set the color 
+  to black.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>rgb</b></code> -
+         The rgb color values in [0.0, 1.0] as:
+        <ul>
+          <li>
+            a list of three floats: setMirCol ([r, g, b]) 
+            <b>or</b>
+          </li>
+          <li>
+            three floats as separate parameters: setMirCol 
+            (r,g,b).
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=three floats or a list of three floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMode"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMode</span>(<span class=sig-arg>m</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>m2</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>m3</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>and_so_on</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>up_to_21</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Set this Material's mode flags. Mode strings given are turned 'on'. 
+  Those not provided are turned 'off', so mat.setMode() -- without 
+  arguments -- turns off all mode flags for Material mat.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>m</b></code> -
+         A mode flag. From 1 to 21 can be set at the same time.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Set the name of this Material object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNFlares"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNFlares</span>(<span class=sig-arg>nflares</span>)</span>
+  </h3>
+  Set the number of halo subflares.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>nflares</b></code> -
+         The new value in [1, 32].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNLines"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNLines</span>(<span class=sig-arg>nlines</span>)</span>
+  </h3>
+  Set the number of star shaped lines on each halo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>nlines</b></code> -
+         The new value in [0, 250].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNRings"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNRings</span>(<span class=sig-arg>nrings</span>)</span>
+  </h3>
+  Set the number of rings on each halo.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>nrings</b></code> -
+         The new value in [0, 24].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNStars"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNStars</span>(<span class=sig-arg>nstars</span>)</span>
+  </h3>
+  Set the number of points in the halo stars.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>nstars</b></code> -
+         The new value in [3, 50].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRef"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRef</span>(<span class=sig-arg>ref</span>)</span>
+  </h3>
+  Set the reflectivity value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>ref</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRGBCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRGBCol</span>(<span class=sig-arg>rgb</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Set the rgb color triplet. If <b>rgb</b> is None, set the color to 
+  black.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>rgb</b></code> -
+         The rgb color values in [0.0, 1.0] as:
+        <ul>
+          <li>
+            a list of three floats: setRGBCol ([r, g, b]) 
+            <b>or</b>
+          </li>
+          <li>
+            three floats as separate parameters: setRGBCol 
+            (r,g,b).
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=three floats or a list of three floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSpec"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSpec</span>(<span class=sig-arg>spec</span>)</span>
+  </h3>
+  Set the specularity value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>spec</b></code> -
+         The new value in [0.0, 2.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSpecCol"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSpecCol</span>(<span class=sig-arg>rgb</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Set the specular color triplet. If <b>rgb</b> is None, set the color 
+  to black.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>rgb</b></code> -
+         The rgb color values in [0.0, 1.0] as:
+        <ul>
+          <li>
+            a list of three floats: setSpecCol ([r, g, b]) 
+            <b>or</b>
+          </li>
+          <li>
+            three floats as separate parameters: setSpecCol 
+            (r,g,b).
+          </li>
+        </ul>
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=three floats or a list of three floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSpecTransp"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSpecTransp</span>(<span class=sig-arg>spectransp</span>)</span>
+  </h3>
+  Set the specular transparency.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>spectransp</b></code> -
+         The new value in [0.0, 1.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSubSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSubSize</span>(<span class=sig-arg>subsize</span>)</span>
+  </h3>
+  Set the dimension of subflare, dots and circles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>subsize</b></code> -
+         The new value in [0.1, 25.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTexture"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTexture</span>(<span class=sig-arg>index</span>,
+          <span class=sig-arg>texture</span>,
+          <span class=sig-arg>texco</span>,
+          <span class=sig-arg>mapto</span>)</span>
+  </h3>
+  Assign a Blender Texture object to slot number 'number'.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>index</b></code> -
+         material's texture index in [0, 7].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>texture</b></code> -
+         a Blender Texture object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=Blender Texture)</i>
+      <dd><code><b>texco</b></code> -
+         optional or'ed bitflag -- defaults to TexCo.ORCO. See TexCo 
+        var in <a href="Texture-module.html" 
+        class="link"><code>Texture</code></a>.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      <dd><code><b>mapto</b></code> -
+         optional or'ed bitflag -- defaults to MapTo.COL. See MapTo var 
+        in <a href="Texture-module.html" 
+        class="link"><code>Texture</code></a>.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setZOffset"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setZOffset</span>(<span class=sig-arg>zoffset</span>)</span>
+  </h3>
+  Set the artificial offset for faces with this Material.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>zoffset</b></code> -
+         The new value in [0.0, 10.0].
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="add"></a>
+<h3>add</h3>
+Glow factor - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="alpha"></a>
+<h3>alpha</h3>
+Alpha (translucency) component of the Material - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="amb"></a>
+<h3>amb</h3>
+Ambient factor - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="B"></a>
+<h3>B</h3>
+Blue component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="emit"></a>
+<h3>emit</h3>
+Emitting light intensity - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="flareBoost"></a>
+<h3>flareBoost</h3>
+Flare's extra strength - [0.1, 10.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="flareSeed"></a>
+<h3>flareSeed</h3>
+Offset in the seed table - [0, 255].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="flareSize"></a>
+<h3>flareSize</h3>
+Factor the flare is larger than the halo - [0.1, 25.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="G"></a>
+<h3>G</h3>
+Green component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="haloSeed"></a>
+<h3>haloSeed</h3>
+To use random values for ring dimension and line location - [0, 
+255].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="haloSize"></a>
+<h3>haloSize</h3>
+Dimension of the halo - [0.0, 100.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="hard"></a>
+<h3>hard</h3>
+Hardness of the specularity - [1, 255].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ipo"></a>
+<h3>ipo</h3>
+This Material's ipo.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          Blender Ipo
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mirCol"></a>
+<h3>mirCol</h3>
+Mirror color rgb triplet.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mode"></a>
+<h3>mode</h3>
+Mode flags as an or'ed int value. See the Modes dictionary keys and 
+descriptions in <a href="Material-module.html#Modes" 
+class="link"><code>Modes</code></a>.
+<dl>
+  <dt></dt>
+  <dd>
+    <dl>
+      <dt><b>Type:</b></dt>
+      <dd>
+          int
+
+      </dd>
+    </dl>
+  </dd>
+</dl></td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+Material's name.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="nFlares"></a>
+<h3>nFlares</h3>
+Number of halo subflares - [1, 32].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="nLines"></a>
+<h3>nLines</h3>
+Number of star shaped lines on each halo - [0, 250].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="nRings"></a>
+<h3>nRings</h3>
+Number of halo rings - [0, 24].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="nStars"></a>
+<h3>nStars</h3>
+Number of points on the halo stars - [3, 50].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="R"></a>
+<h3>R</h3>
+Red component of <a href="Material.Material-class.html#rgbCol" 
+class="link"><code>rgbCol</code></a> - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="ref"></a>
+<h3>ref</h3>
+Reflectivity - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="rgbCol"></a>
+<h3>rgbCol</h3>
+Material's RGB color triplet.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="spec"></a>
+<h3>spec</h3>
+Specularity - [0.0, 2.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="specCol"></a>
+<h3>specCol</h3>
+Specular color rgb triplet.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="specTransp"></a>
+<h3>specTransp</h3>
+Specular transparency - [0.0, 1.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="subSize"></a>
+<h3>subSize</h3>
+Dimension of subflares, dots and circles - [0.1, 25.0].
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="zOffset"></a>
+<h3>zOffset</h3>
+Artificial Z offset for faces - [0.0, 10.0].
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

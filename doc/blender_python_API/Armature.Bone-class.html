@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Armature.Bone</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Armature-module.html">Module&nbsp;Armature</a> ::
+        Class&nbsp;Bone
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Armature.Bone-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Bone</h2>
+
+<hr/>
+
+<h1 class="heading">The Bone object</h1>
+  This object gives access to Bone-specific data in Blender.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of Blender Bones
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getChildren" class="summary-sig-name"><code>getChildren</code></a>()</span></code>
+<br />
+Get this Bone's children Bones, if available.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of three floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getHead" class="summary-sig-name"><code>getHead</code></a>()</span></code>
+<br />
+Get the &quot;head&quot; ending position.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of three floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getLoc" class="summary-sig-name"><code>getLoc</code></a>()</span></code>
+<br />
+Get the location of this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        string
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getName" class="summary-sig-name"><code>getName</code></a>()</span></code>
+<br />
+Get the name of this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        Blender Bone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getParent" class="summary-sig-name"><code>getParent</code></a>()</span></code>
+<br />
+Get this Bone's parent Bone, if available.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of four floats.
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getQuat" class="summary-sig-name"><code>getQuat</code></a>()</span></code>
+<br />
+Get this Bone's quaternion.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getRoll" class="summary-sig-name"><code>getRoll</code></a>()</span></code>
+<br />
+Get the roll value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of three floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getSize" class="summary-sig-name"><code>getSize</code></a>()</span></code>
+<br />
+Get the size attribute.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of three floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#getTail" class="summary-sig-name"><code>getTail</code></a>()</span></code>
+<br />
+Get the &quot;tail&quot; ending position.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        true or false
+</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#hasParent" class="summary-sig-name"><code>hasParent</code></a>()</span></code>
+<br />
+True if this Bone has a parent Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setHead" class="summary-sig-name"><code>setHead</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Set the &quot;head&quot; ending position.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setLoc" class="summary-sig-name"><code>setLoc</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Set the new location for this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setName" class="summary-sig-name"><code>setName</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Rename this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setQuat" class="summary-sig-name"><code>setQuat</code></a>(<span class=summary-sig-arg>real</span>,
+          <span class=summary-sig-arg>imag_i</span>,
+          <span class=summary-sig-arg>imag_j</span>,
+          <span class=summary-sig-arg>imag_k</span>)</span></code>
+<br />
+Set the new quaternion orientation for this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setRoll" class="summary-sig-name"><code>setRoll</code></a>(<span class=summary-sig-arg>roll</span>)</span></code>
+<br />
+Set the roll value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setSize" class="summary-sig-name"><code>setSize</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Set the new size for this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Armature.Bone-class.html#setTail" class="summary-sig-name"><code>setTail</code></a>(<span class=summary-sig-arg>x</span>,
+          <span class=summary-sig-arg>y</span>,
+          <span class=summary-sig-arg>z</span>)</span></code>
+<br />
+Set the &quot;tail&quot; ending position.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#children"><code>children</code></a></b>: The children bones.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#head"><code>head</code></a></b>: This Bone's &quot;head&quot; ending position when in rest state.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#loc"><code>loc</code></a></b>: This Bone's location.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#name"><code>name</code></a></b>: The name of this Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#parent"><code>parent</code></a></b>: The parent Bone.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#quat"><code>quat</code></a></b>: This Bone's quaternion.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#roll"><code>roll</code></a></b>: This Bone's roll value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#size"><code>size</code></a></b>: This Bone's size.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Armature.Bone-class.html#tail"><code>tail</code></a></b>: This Bone's &quot;tail&quot; ending position when in rest state.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="getChildren"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getChildren</span>()</span>
+  </h3>
+  Get this Bone's children Bones, if available.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of Blender Bones
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getHead"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getHead</span>()</span>
+  </h3>
+  Get the &quot;head&quot; ending position.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of three floats
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLoc"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLoc</span>()</span>
+  </h3>
+  Get the location of this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of three floats
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getName</span>()</span>
+  </h3>
+  Get the name of this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        string
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getParent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getParent</span>()</span>
+  </h3>
+  Get this Bone's parent Bone, if available.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        Blender Bone
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getQuat"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getQuat</span>()</span>
+  </h3>
+  Get this Bone's quaternion.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of four floats.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRoll"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRoll</span>()</span>
+  </h3>
+  Get the roll value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        float
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSize</span>()</span>
+  </h3>
+  Get the size attribute.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of three floats
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTail"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTail</span>()</span>
+  </h3>
+  Get the &quot;tail&quot; ending position.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        list of three floats
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="hasParent"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">hasParent</span>()</span>
+  </h3>
+  True if this Bone has a parent Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        true or false
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setHead"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setHead</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Set the &quot;head&quot; ending position.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The new x value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The new y value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The new z value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLoc"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLoc</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Set the new location for this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The new x value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The new y value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The new z value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setName"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setName</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Rename this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         The new name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setQuat"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setQuat</span>(<span class=sig-arg>real</span>,
+          <span class=sig-arg>imag_i</span>,
+          <span class=sig-arg>imag_j</span>,
+          <span class=sig-arg>imag_k</span>)</span>
+  </h3>
+  Set the new quaternion orientation for this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>real</b></code> -
+         The new quat[0] value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>imag_i</b></code> -
+         The new quat[1] value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>imag_j</b></code> -
+         The new quat[2] value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>imag_k</b></code> -
+         The new quat[3] value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRoll"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRoll</span>(<span class=sig-arg>roll</span>)</span>
+  </h3>
+  Set the roll value.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>roll</b></code> -
+         The new value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSize</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Set the new size for this Bone.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The new x value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The new y value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The new z value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTail"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTail</span>(<span class=sig-arg>x</span>,
+          <span class=sig-arg>y</span>,
+          <span class=sig-arg>z</span>)</span>
+  </h3>
+  Set the &quot;tail&quot; ending position.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>x</b></code> -
+         The new x value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>y</b></code> -
+         The new y value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      <dd><code><b>z</b></code> -
+         The new z value.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="children"></a>
+<h3>children</h3>
+The children bones.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="head"></a>
+<h3>head</h3>
+This Bone's &quot;head&quot; ending position when in rest state.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="loc"></a>
+<h3>loc</h3>
+This Bone's location.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="name"></a>
+<h3>name</h3>
+The name of this Bone.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="parent"></a>
+<h3>parent</h3>
+The parent Bone.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="quat"></a>
+<h3>quat</h3>
+This Bone's quaternion.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="roll"></a>
+<h3>roll</h3>
+This Bone's roll value.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="size"></a>
+<h3>size</h3>
+This Bone's size.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="tail"></a>
+<h3>tail</h3>
+This Bone's &quot;tail&quot; ending position when in rest state.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

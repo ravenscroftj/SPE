@@ -1,0 +1,1964 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Effect.Effect</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="Effect-module.html">Module&nbsp;Effect</a> ::
+        Class&nbsp;Effect
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Effect.Effect-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Effect</h2>
+
+<hr/>
+
+<h1 class="heading">The Effect object</h1>
+  This object gives access to generic data from all effects in 
+  Blender. Its attributes depend upon its type.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 4 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getChild" class="summary-sig-name"><code>getChild</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the average number of children of the 
+particles (4 generations).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getDamp" class="summary-sig-name"><code>getDamp</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the damp of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 3 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getDefvec" class="summary-sig-name"><code>getDefvec</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the x, y and z components of the force 
+defined by the texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getEnd" class="summary-sig-name"><code>getEnd</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the endr time of a particle effect 
+object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getFlag" class="summary-sig-name"><code>getFlag</code></a>()</span></code>
+<br />
+Retreives the flag of an effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of three floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getForce" class="summary-sig-name"><code>getForce</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the force applied to the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getHeight" class="summary-sig-name"><code>getHeight</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the height of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getLen" class="summary-sig-name"><code>getLen</code></a>()</span></code>
+<br />
+(Build Effect) Retreives the length of an build effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 4 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getLife" class="summary-sig-name"><code>getLife</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the average life of the particles (4 
+generations)</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getLifetime" class="summary-sig-name"><code>getLifetime</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the lifetime of a particle effect 
+object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 4 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getMat" class="summary-sig-name"><code>getMat</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the indexes of the materials associated to 
+the particles (4 generations).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getMinfac" class="summary-sig-name"><code>getMinfac</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the minfac of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        list of 4 floats
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getMult" class="summary-sig-name"><code>getMult</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the probabilities of a particle having a 
+child.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getNabla" class="summary-sig-name"><code>getNabla</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the sensibility of te particles to the 
+variations of the texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getNarrow" class="summary-sig-name"><code>getNarrow</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the narrowness of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getNormfac" class="summary-sig-name"><code>getNormfac</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the normal strength of the particles 
+(relatively to mesh).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getObfac" class="summary-sig-name"><code>getObfac</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the initial strength of the particles 
+relatively to objects.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getRandfac" class="summary-sig-name"><code>getRandfac</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the random strength applied to the 
+particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getRandlife" class="summary-sig-name"><code>getRandlife</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the variability of the life of the 
+particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getSeed" class="summary-sig-name"><code>getSeed</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the RNG seed.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getSfra" class="summary-sig-name"><code>getSfra</code></a>()</span></code>
+<br />
+(Build Effect) Retreives the starting frame of an build effect 
+object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getSpeed" class="summary-sig-name"><code>getSpeed</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the speed of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getSta" class="summary-sig-name"><code>getSta</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the starting time of a particle effect 
+object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getStartx" class="summary-sig-name"><code>getStartx</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the x-coordinate of the starting point of the 
+wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getStarty" class="summary-sig-name"><code>getStarty</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the y-coordinate of the starting point of the 
+wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getTexfac" class="summary-sig-name"><code>getTexfac</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the strength applied to the particles from 
+the texture of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getTimeoffs" class="summary-sig-name"><code>getTimeoffs</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the time offset of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getTotkey" class="summary-sig-name"><code>getTotkey</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the number of keys associated to the 
+particles (kinda degree of freedom)</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getTotpart" class="summary-sig-name"><code>getTotpart</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the total number of particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        int
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getType" class="summary-sig-name"><code>getType</code></a>()</span></code>
+<br />
+Retreives the type of an effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getVectsize" class="summary-sig-name"><code>getVectsize</code></a>()</span></code>
+<br />
+(Particle Effect) Retreives the size of the vector which is associated 
+to the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        float
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#getWidth" class="summary-sig-name"><code>getWidth</code></a>()</span></code>
+<br />
+(Wave Effect) Retreives the width of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setChild" class="summary-sig-name"><code>setChild</code></a>(<span class=summary-sig-arg>newchild</span>)</span></code>
+<br />
+(Particle Effect) Sets the average number of children of the particles 
+(4 generations).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setDamp" class="summary-sig-name"><code>setDamp</code></a>(<span class=summary-sig-arg>damp</span>)</span></code>
+<br />
+(Wave Effect) Sets the damp of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setDefvec" class="summary-sig-name"><code>setDefvec</code></a>(<span class=summary-sig-arg>newdefvec</span>)</span></code>
+<br />
+(Particle Effect) Sets the x, y and z components of the force defined 
+by the texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setEnd" class="summary-sig-name"><code>setEnd</code></a>(<span class=summary-sig-arg>newendrt</span>)</span></code>
+<br />
+(Particle Effect) Sets the end time of an particle effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setFlag" class="summary-sig-name"><code>setFlag</code></a>(<span class=summary-sig-arg>newflag</span>)</span></code>
+<br />
+Sets the flag of an effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setForce" class="summary-sig-name"><code>setForce</code></a>(<span class=summary-sig-arg>newforce</span>)</span></code>
+<br />
+(Particle Effect) Sets the force applied to the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setHeight" class="summary-sig-name"><code>setHeight</code></a>(<span class=summary-sig-arg>height</span>)</span></code>
+<br />
+(Wave Effect) Sets the height of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setLen" class="summary-sig-name"><code>setLen</code></a>(<span class=summary-sig-arg>newlength</span>)</span></code>
+<br />
+(Build Effect) Sets the length of an build effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setLife" class="summary-sig-name"><code>setLife</code></a>(<span class=summary-sig-arg>newlife</span>)</span></code>
+<br />
+(Particle Effect) Sets the average life of the particles (4 
+generations).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setLifetime" class="summary-sig-name"><code>setLifetime</code></a>(<span class=summary-sig-arg>newlifetime</span>)</span></code>
+<br />
+(Particle Effect) Sets the lifetime of a particle effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setMat" class="summary-sig-name"><code>setMat</code></a>(<span class=summary-sig-arg>newmat</span>)</span></code>
+<br />
+(Particle Effect) Sets the indexes of the materials associated to the 
+particles (4 generations).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setMinfac" class="summary-sig-name"><code>setMinfac</code></a>(<span class=summary-sig-arg>minfac</span>)</span></code>
+<br />
+(Wave Effect) Sets the minfac of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setMult" class="summary-sig-name"><code>setMult</code></a>(<span class=summary-sig-arg>newmult</span>)</span></code>
+<br />
+(Particle Effect) Sets the probabilities of a particle having a 
+child.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setNabla" class="summary-sig-name"><code>setNabla</code></a>(<span class=summary-sig-arg>newnabla</span>)</span></code>
+<br />
+(Particle Effect) Sets the sensibility of te particles to the 
+variations of the texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setNarrow" class="summary-sig-name"><code>setNarrow</code></a>(<span class=summary-sig-arg>narrow</span>)</span></code>
+<br />
+(Wave Effect) Sets the narrowness of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setNormfac" class="summary-sig-name"><code>setNormfac</code></a>(<span class=summary-sig-arg>newnormfac</span>)</span></code>
+<br />
+(Particle Effect) Sets the normal strength of the particles 
+(relatively to mesh).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setObfac" class="summary-sig-name"><code>setObfac</code></a>(<span class=summary-sig-arg>newobfac</span>)</span></code>
+<br />
+(Particle Effect) Sets the initial strength of the particles 
+relatively to objects.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setRandfac" class="summary-sig-name"><code>setRandfac</code></a>(<span class=summary-sig-arg>newrandfac</span>)</span></code>
+<br />
+(Particle Effect) Sets the random strength applied to the 
+particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setRandlife" class="summary-sig-name"><code>setRandlife</code></a>(<span class=summary-sig-arg>newrandlife</span>)</span></code>
+<br />
+(Particle Effect) Sets the variability of the life of the 
+particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setSeed" class="summary-sig-name"><code>setSeed</code></a>(<span class=summary-sig-arg>newseed</span>)</span></code>
+<br />
+(Particle Effect) Sets the RNG seed.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setSfra" class="summary-sig-name"><code>setSfra</code></a>(<span class=summary-sig-arg>sfra</span>)</span></code>
+<br />
+(Build Effect) Sets the starting frame of an build effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setSpeed" class="summary-sig-name"><code>setSpeed</code></a>(<span class=summary-sig-arg>speed</span>)</span></code>
+<br />
+(Wave Effect) Sets the speed of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setSta" class="summary-sig-name"><code>setSta</code></a>(<span class=summary-sig-arg>newstart</span>)</span></code>
+<br />
+(Particle Effect) Sets the starting time of an particle effect 
+object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setStartx" class="summary-sig-name"><code>setStartx</code></a>(<span class=summary-sig-arg>startx</span>)</span></code>
+<br />
+(Wave Effect) Sets the x-coordinate of the starting point of the 
+wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setStarty" class="summary-sig-name"><code>setStarty</code></a>(<span class=summary-sig-arg>starty</span>)</span></code>
+<br />
+(Wave Effect) Sets the y-coordinate of the starting point of the 
+wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setTexfac" class="summary-sig-name"><code>setTexfac</code></a>(<span class=summary-sig-arg>newtexfac</span>)</span></code>
+<br />
+(Particle Effect) Sets the strength applied to the particles from the 
+texture of the object.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setTimeoffs" class="summary-sig-name"><code>setTimeoffs</code></a>(<span class=summary-sig-arg>timeoffs</span>)</span></code>
+<br />
+(Wave Effect) Sets the time offset of the wave.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setTotkey" class="summary-sig-name"><code>setTotkey</code></a>(<span class=summary-sig-arg>newtotkey</span>)</span></code>
+<br />
+(Particle Effect) Sets the number of keys associated to the 
+particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setTotpart" class="summary-sig-name"><code>setTotpart</code></a>(<span class=summary-sig-arg>newtotpart</span>)</span></code>
+<br />
+(Particle Effect) Sets the the total number of particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setType" class="summary-sig-name"><code>setType</code></a>(<span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Sets the type of an effect object</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setVectsize" class="summary-sig-name"><code>setVectsize</code></a>(<span class=summary-sig-arg>newvectsize</span>)</span></code>
+<br />
+(Particle Effect) Sets the size of the vector which is associated to 
+the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">        PyNone
+</font></td>
+  <td><code><span class="summary-sig"><a href="Effect.Effect-class.html#setWidth" class="summary-sig-name"><code>setWidth</code></a>(<span class=summary-sig-arg>width</span>)</span></code>
+<br />
+(Wave Effect) Sets the width of the wave.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF CLASS VARIABLE SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Class Variable Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#child"><code>child</code></a></b>: (Particle effects) number of children a particle may have.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#damp"><code>damp</code></a></b>: (Wave effects) damp factor of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#defvec"><code>defvec</code></a></b>: (Particle effects)x, y and z axis of the force defined by the 
+texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#end"><code>end</code></a></b>: (Particle effects) end time of the effect</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#force"><code>force</code></a></b>: (Particle effects) constant force applied to the parts.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#height"><code>height</code></a></b>: (Wave effects) height of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#len"><code>len</code></a></b>: (Build effects) length of the build effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#lifetime"><code>lifetime</code></a></b>: (Particle and Wave effects)lifetime of the effect</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#mat"><code>mat</code></a></b>: (Particle effects) materials used by the 4 generation particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#minfac"><code>minfac</code></a></b>: (Wave effects)</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#mult"><code>mult</code></a></b>: (Particle effects) probabilities of a particle having a child.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#nabla"><code>nabla</code></a></b>: (Particle effects) The nabla value .</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#narrow"><code>narrow</code></a></b>: (Wave effects)narrowness of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#normfac"><code>normfac</code></a></b>: (Particle effects) normal strength of the particles (relatively to 
+mesh).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#obfac"><code>obfac</code></a></b>: (Particle effects)initial strength of the particles relatively to 
+objects.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#randfac"><code>randfac</code></a></b>: (Particle effects) initial random speed of the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#randlife"><code>randlife</code></a></b>: (Particle effects) variability of the life of the particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#seed"><code>seed</code></a></b>: (Particle effects) seed of the RNG.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#sfra"><code>sfra</code></a></b>: (Build effects) starting frame of the build effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#speed"><code>speed</code></a></b>: (Wave effects) speed of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#sta"><code>sta</code></a></b>: (Particle effects) start time of the effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#startx"><code>startx</code></a></b>: (Wave effects) x-position of the origin of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#starty"><code>starty</code></a></b>: (Wave effects) y-position of the origin of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#texfac"><code>texfac</code></a></b>: (Particle effects) initial speed of the particles caused by the 
+texture.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#timeoffs"><code>timeoffs</code></a></b>: (Wave effects) time offset of the wave effect.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#totpart"><code>totpart</code></a></b>: (Particle effects) total number of particles.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#vectsize"><code>vectsize</code></a></b>: (Particle effects) size of vectors associated to the particles (if 
+any).</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+<td><b><a href="Effect.Effect-class.html#width"><code>width</code></a></b>: (Wave effects) width of the wave effect.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="getChild"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getChild</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the average number of children of the 
+  particles (4 generations).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        average number of children of the particles (4 
+        generations).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDamp"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDamp</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the damp of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the damp of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getDefvec"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getDefvec</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the x, y and z components of the force 
+  defined by the texture.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        x, y and z components of the force defined by the texture.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getEnd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getEnd</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the endr time of a particle effect 
+  object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the end time of the effect.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getFlag"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getFlag</span>()</span>
+  </h3>
+  Retreives the flag of an effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the flag of an effect object : 0 = build effect; 1 = wave 
+        effect;2 = particle effect;
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getForce"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getForce</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the force applied to the particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        force applied to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of three floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getHeight"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getHeight</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the height of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the height of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLen"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLen</span>()</span>
+  </h3>
+  (Build Effect) Retreives the length of an build effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the length of the effect.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLife"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLife</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the average life of the particles (4 
+  generations)
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        average life of the particles (4 generations)
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getLifetime"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getLifetime</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the lifetime of a particle effect 
+  object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the lifetime of the effect.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMat"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMat</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the indexes of the materials associated 
+  to the particles (4 generations).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        indexes of the materials associated to the particles (4 
+        generations).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMinfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMinfac</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the minfac of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the minfac of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getMult"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getMult</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the probabilities of a particle having a 
+  child.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        probabilities of a particle having a child.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNabla"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNabla</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the sensibility of te particles to the 
+  variations of the texture.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        sensibility of te particles to the variations of the 
+        texture.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNarrow"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNarrow</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the narrowness of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the narrowness of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getNormfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getNormfac</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the normal strength of the particles 
+  (relatively to mesh).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        normal strength of the particles (relatively to mesh).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getObfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getObfac</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the initial strength of the particles 
+  relatively to objects.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        initial strength of the particles (relatively to mesh).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRandfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRandfac</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the random strength applied to the 
+  particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        random strength applied to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getRandlife"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getRandlife</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the variability of the life of the 
+  particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        variability of the life of the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSeed</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the RNG seed.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        RNG seed.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSfra"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSfra</span>()</span>
+  </h3>
+  (Build Effect) Retreives the starting frame of an build effect 
+  object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the starting frame of the effect.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSpeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSpeed</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the speed of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the speed of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getSta"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getSta</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the starting time of a particle effect 
+  object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the starting time of the effect.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getStartx"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getStartx</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the x-coordinate of the starting point of 
+  the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the x-coordinate of the starting point of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getStarty"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getStarty</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the y-coordinate of the starting point of 
+  the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the y-coordinate of the starting point of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTexfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTexfac</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the strength applied to the particles 
+  from the texture of the object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        strength applied to the particles from the texture of the 
+        object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTimeoffs"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTimeoffs</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the time offset of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the time offset of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTotkey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTotkey</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the number of keys associated to the 
+  particles (kinda degree of freedom)
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        number of keys associated to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getTotpart"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getTotpart</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the total number of particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the total number of particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getType</span>()</span>
+  </h3>
+  Retreives the type of an effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the type of an effect object : 0 = build effect; 1 = wave 
+        effect;2 = particle effect;
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getVectsize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getVectsize</span>()</span>
+  </h3>
+  (Particle Effect) Retreives the size of the vector which is 
+  associated to the particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        size of the vector which is associated to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getWidth"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getWidth</span>()</span>
+  </h3>
+  (Wave Effect) Retreives the width of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the width of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setChild"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setChild</span>(<span class=sig-arg>newchild</span>)</span>
+  </h3>
+  (Particle Effect) Sets the average number of children of the 
+  particles (4 generations).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newchild</b></code> -
+         average number of children of the particles (4 
+        generations).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDamp"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDamp</span>(<span class=sig-arg>damp</span>)</span>
+  </h3>
+  (Wave Effect) Sets the damp of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>damp</b></code> -
+         the damp of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setDefvec"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setDefvec</span>(<span class=sig-arg>newdefvec</span>)</span>
+  </h3>
+  (Particle Effect) Sets the x, y and z components of the force 
+  defined by the texture.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newdefvec</b></code> -
+         the x, y and z components of the force defined by the 
+        texture.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setEnd"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setEnd</span>(<span class=sig-arg>newendrt</span>)</span>
+  </h3>
+  (Particle Effect) Sets the end time of an particle effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newendrt</b></code> -
+         the new end time.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setFlag"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setFlag</span>(<span class=sig-arg>newflag</span>)</span>
+  </h3>
+  Sets the flag of an effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newflag</b></code> -
+         the new flag.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setForce"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setForce</span>(<span class=sig-arg>newforce</span>)</span>
+  </h3>
+  (Particle Effect) Sets the force applied to the particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newforce</b></code> -
+         force applied to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 3 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setHeight"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setHeight</span>(<span class=sig-arg>height</span>)</span>
+  </h3>
+  (Wave Effect) Sets the height of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>height</b></code> -
+         the height of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLen"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLen</span>(<span class=sig-arg>newlength</span>)</span>
+  </h3>
+  (Build Effect) Sets the length of an build effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newlength</b></code> -
+         the new length.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLife"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLife</span>(<span class=sig-arg>newlife</span>)</span>
+  </h3>
+  (Particle Effect) Sets the average life of the particles (4 
+  generations).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newlife</b></code> -
+         average life of the particles (4 generations).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setLifetime"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setLifetime</span>(<span class=sig-arg>newlifetime</span>)</span>
+  </h3>
+  (Particle Effect) Sets the lifetime of a particle effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newlifetime</b></code> -
+         the new lifetime.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMat"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMat</span>(<span class=sig-arg>newmat</span>)</span>
+  </h3>
+  (Particle Effect) Sets the indexes of the materials associated to 
+  the particles (4 generations).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newmat</b></code> -
+         the indexes of the materials associated to the particles (4 
+        generations).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMinfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMinfac</span>(<span class=sig-arg>minfac</span>)</span>
+  </h3>
+  (Wave Effect) Sets the minfac of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>minfac</b></code> -
+         the minfac of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setMult"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setMult</span>(<span class=sig-arg>newmult</span>)</span>
+  </h3>
+  (Particle Effect) Sets the probabilities of a particle having a 
+  child.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newmult</b></code> -
+         probabilities of a particle having a child.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=list of 4 floats)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNabla"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNabla</span>(<span class=sig-arg>newnabla</span>)</span>
+  </h3>
+  (Particle Effect) Sets the sensibility of te particles to the 
+  variations of the texture.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newnabla</b></code> -
+         the sensibility of te particles to the variations of the 
+        texture.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNarrow"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNarrow</span>(<span class=sig-arg>narrow</span>)</span>
+  </h3>
+  (Wave Effect) Sets the narrowness of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>narrow</b></code> -
+         the narrowness of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setNormfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setNormfac</span>(<span class=sig-arg>newnormfac</span>)</span>
+  </h3>
+  (Particle Effect) Sets the normal strength of the particles 
+  (relatively to mesh).
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newnormfac</b></code> -
+         the normal strength of the particles (relatively to mesh).
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setObfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setObfac</span>(<span class=sig-arg>newobfac</span>)</span>
+  </h3>
+  (Particle Effect) Sets the initial strength of the particles 
+  relatively to objects.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newobfac</b></code> -
+         the initial strength of the particles relatively to 
+        objects.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRandfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRandfac</span>(<span class=sig-arg>newrandfac</span>)</span>
+  </h3>
+  (Particle Effect) Sets the random strength applied to the 
+  particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newrandfac</b></code> -
+         the random strength applied to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setRandlife"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setRandlife</span>(<span class=sig-arg>newrandlife</span>)</span>
+  </h3>
+  (Particle Effect) Sets the variability of the life of the 
+  particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newrandlife</b></code> -
+         the variability of the life of the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSeed</span>(<span class=sig-arg>newseed</span>)</span>
+  </h3>
+  (Particle Effect) Sets the RNG seed.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newseed</b></code> -
+         RNG seed.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSfra"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSfra</span>(<span class=sig-arg>sfra</span>)</span>
+  </h3>
+  (Build Effect) Sets the starting frame of an build effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>sfra</b></code> -
+         the new starting frame.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSpeed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSpeed</span>(<span class=sig-arg>speed</span>)</span>
+  </h3>
+  (Wave Effect) Sets the speed of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>speed</b></code> -
+         the speed of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setSta"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setSta</span>(<span class=sig-arg>newstart</span>)</span>
+  </h3>
+  (Particle Effect) Sets the starting time of an particle effect 
+  object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newstart</b></code> -
+         the new starting time.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setStartx"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setStartx</span>(<span class=sig-arg>startx</span>)</span>
+  </h3>
+  (Wave Effect) Sets the x-coordinate of the starting point of the 
+  wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>startx</b></code> -
+         the new x-coordinate of the starting point of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setStarty"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setStarty</span>(<span class=sig-arg>starty</span>)</span>
+  </h3>
+  (Wave Effect) Sets the y-coordinate of the starting point of the 
+  wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>starty</b></code> -
+         the new y-coordinate of the starting point of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTexfac"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTexfac</span>(<span class=sig-arg>newtexfac</span>)</span>
+  </h3>
+  (Particle Effect) Sets the strength applied to the particles from 
+  the texture of the object.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newtexfac</b></code> -
+         the strength applied to the particles from the texture of the 
+        object.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTimeoffs"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTimeoffs</span>(<span class=sig-arg>timeoffs</span>)</span>
+  </h3>
+  (Wave Effect) Sets the time offset of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>timeoffs</b></code> -
+         the time offset of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTotkey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTotkey</span>(<span class=sig-arg>newtotkey</span>)</span>
+  </h3>
+  (Particle Effect) Sets the number of keys associated to the 
+  particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newtotkey</b></code> -
+         number of keys associated to the particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setTotpart"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setTotpart</span>(<span class=sig-arg>newtotpart</span>)</span>
+  </h3>
+  (Particle Effect) Sets the the total number of particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newtotpart</b></code> -
+         the the total number of particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setType"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setType</span>(<span class=sig-arg>name</span>)</span>
+  </h3>
+  Sets the type of an effect object
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>name</b></code> -
+         the new type.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=int)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setVectsize"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setVectsize</span>(<span class=sig-arg>newvectsize</span>)</span>
+  </h3>
+  (Particle Effect) Sets the size of the vector which is associated to 
+  the particles.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>newvectsize</b></code> -
+         the size of the vector which is associated to the 
+        particles.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="setWidth"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">setWidth</span>(<span class=sig-arg>width</span>)</span>
+  </h3>
+  (Wave Effect) Sets the width of the wave.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>width</b></code> -
+         the width of the wave.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=float)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        PyNone
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=PyNone)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF CLASS VARIABLE DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Class Variable Details</th></tr>
+</table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="child"></a>
+<h3>child</h3>
+(Particle effects) number of children a particle may have.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="damp"></a>
+<h3>damp</h3>
+(Wave effects) damp factor of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="defvec"></a>
+<h3>defvec</h3>
+(Particle effects)x, y and z axis of the force defined by the 
+texture.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="end"></a>
+<h3>end</h3>
+(Particle effects) end time of the effect
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="force"></a>
+<h3>force</h3>
+(Particle effects) constant force applied to the parts.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="height"></a>
+<h3>height</h3>
+(Wave effects) height of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="len"></a>
+<h3>len</h3>
+(Build effects) length of the build effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="lifetime"></a>
+<h3>lifetime</h3>
+(Particle and Wave effects)lifetime of the effect
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mat"></a>
+<h3>mat</h3>
+(Particle effects) materials used by the 4 generation particles.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="minfac"></a>
+<h3>minfac</h3>
+(Wave effects)
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="mult"></a>
+<h3>mult</h3>
+(Particle effects) probabilities of a particle having a child.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="nabla"></a>
+<h3>nabla</h3>
+(Particle effects) The nabla value .
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="narrow"></a>
+<h3>narrow</h3>
+(Wave effects)narrowness of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="normfac"></a>
+<h3>normfac</h3>
+(Particle effects) normal strength of the particles (relatively to 
+mesh).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="obfac"></a>
+<h3>obfac</h3>
+(Particle effects)initial strength of the particles relatively to 
+objects.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="randfac"></a>
+<h3>randfac</h3>
+(Particle effects) initial random speed of the particles.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="randlife"></a>
+<h3>randlife</h3>
+(Particle effects) variability of the life of the particles.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="seed"></a>
+<h3>seed</h3>
+(Particle effects) seed of the RNG.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="sfra"></a>
+<h3>sfra</h3>
+(Build effects) starting frame of the build effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="speed"></a>
+<h3>speed</h3>
+(Wave effects) speed of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="sta"></a>
+<h3>sta</h3>
+(Particle effects) start time of the effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="startx"></a>
+<h3>startx</h3>
+(Wave effects) x-position of the origin of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="starty"></a>
+<h3>starty</h3>
+(Wave effects) y-position of the origin of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="texfac"></a>
+<h3>texfac</h3>
+(Particle effects) initial speed of the particles caused by the 
+texture.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="timeoffs"></a>
+<h3>timeoffs</h3>
+(Wave effects) time offset of the wave effect.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="totpart"></a>
+<h3>totpart</h3>
+(Particle effects) total number of particles.
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="vectsize"></a>
+<h3>vectsize</h3>
+(Particle effects) size of vectors associated to the particles (if 
+any).
+</td></tr></table>
+<table width="100%" class="var-details" bgcolor="#e0e0e0"><tr><td>
+<a name="width"></a>
+<h3>width</h3>
+(Wave effects) width of the wave effect.
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:06 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

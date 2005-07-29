@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Registry</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        Module&nbsp;Registry
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="Registry-module.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF MODULE DESCRIPTION =========== -->
+<h2 class="module">Module Registry</h2>
+
+The Blender.Registry submodule.
+<h1 class="heading">Registry</h1>
+  <p>This module provides a way to create, retrieve and edit 
+  <b>persistent data</b> in Blender. When a script runs in Blender, it 
+  has its own private global dictionary, which is deleted when the script 
+  finishes. This is done to avoid problems with name clashes and garbage 
+  collecting. But the result is that data created by a script isn't kept 
+  after it leaves, for itself or others to access later: the data isn't 
+  persistent. The Registry module was created to give script authors a 
+  way around this limitation.</p>
+  <p>In Python terms, the Registry holds a dictionary of dictionaries. 
+  You should use it to save Python objects only, not BPython (Blender 
+  Python) objects -- but you can save BPython object names, since those 
+  are strings. Also, if you need to save a considerable amount of data, 
+  please save to a file instead. There's no need to keep huge blocks of 
+  memory around when they can simply be read from a file.</p>
+  <p>Two uses for this module:</p>
+  <p>a) To save data from a script that another script will need to 
+  access later.</p>
+  <p>b) To save configuration data from your script's gui (button values) 
+  so that the next time the user runs your script, the changes will still 
+  be there. Later we can make Blender save the Registry so that its data 
+  won't be lost after users quit the program. And also add an option to 
+  save as a Text that can be kept in a .blend file, letting users keep 
+  script data there.</p>
+  Example:
+<pre class="literalblock">
+ import Blender
+ from Blender import Registry
+
+ # first declare your global variables:
+ myvar1 = 0
+ myvar2 = 3.2
+ mystr = &quot;hello&quot;
+
+ # then check if they are already at the Registry (saved on a
+ # previous execution of this script):
+ dict = Registry.GetKey('MyScript')
+ if dict: # if found, get the values saved there
+   myvar1 = dict['myvar1']
+   myvar2 = dict['myvar2']
+   mystr = dict['mystr']
+
+ # let's create a function to update the Registry when we need to:
+ def update_Registry():
+   d = {}
+   d['myvar1'] = myvar1
+   d['myvar2'] = myvar2
+   d['mystr'] = mystr
+   Blender.Registry.SetKey('MyScript', d)
+
+ # ...
+ # here goes the main part of the script ...
+ # ...
+
+ # at the end, before exiting, we use our helper function:
+ update_Registry()
+ # note1: better not update the Registry when the user cancels the script
+ # note2: most scripts shouldn't need to register more than one key.
+</pre>
+<hr/>
+
+<!-- =========== START OF FUNCTION SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Function Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Registry-module.html#GetKey" class="summary-sig-name"><code>GetKey</code></a>(<span class=summary-sig-arg>key</span>)</span></code>
+<br />
+Get key 'key' from the Registry.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Registry-module.html#Keys" class="summary-sig-name"><code>Keys</code></a>()</span></code>
+<br />
+Get all keys currently in the Registry's dictionary.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Registry-module.html#RemoveKey" class="summary-sig-name"><code>RemoveKey</code></a>(<span class=summary-sig-arg>key</span>)</span></code>
+<br />
+Remove the dictionary with key 'key' from the Registry.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="Registry-module.html#SetKey" class="summary-sig-name"><code>SetKey</code></a>(<span class=summary-sig-arg>key</span>,
+          <span class=summary-sig-arg>dict</span>)</span></code>
+<br />
+Store a new entry in the Registry.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF FUNCTION DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Function Details</th></tr>
+</table>
+
+<a name="GetKey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">GetKey</span>(<span class=sig-arg>key</span>)</span>
+  </h3>
+  Get key 'key' from the Registry.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>key</b></code> -
+         a key from the Registry dictionary.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+    <dl><dt><b>Returns:</b></dt>
+      <dd>
+        the dictionary called 'key'.
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Keys"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Keys</span>()</span>
+  </h3>
+  Get all keys currently in the Registry's dictionary.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="RemoveKey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">RemoveKey</span>(<span class=sig-arg>key</span>)</span>
+  </h3>
+  Remove the dictionary with key 'key' from the Registry.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>key</b></code> -
+         the name of an existing Registry key.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="SetKey"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">SetKey</span>(<span class=sig-arg>key</span>,
+          <span class=sig-arg>dict</span>)</span>
+  </h3>
+  Store a new entry in the Registry.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Parameters:</b></dt>
+      <dd><code><b>key</b></code> -
+         the name of the new entry, tipically your script's name.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=string)</i>
+      <dd><code><b>dict</b></code> -
+         a dict with all data you want to save in the Registry.
+        <br /><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        (type=dictionary)</i>
+      </dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="Blender-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://www.blender.org">Blender</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.0 on Mon Feb  2 18:51:07 2004</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

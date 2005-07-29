@@ -1,0 +1,67 @@
+You can define your own menus and toolbar buttons, which 
+can execute any Python code and also external files.  
+
+Look at 'framework/menus/Extra.py' for an example.
+
+
+Instructions:
+
+<b>Step 1:</b>
+Suppose you want to add a new menu with the name 'XXX' to the
+menubar. Create a new file with the name XXX.py in the 
+'framework/menus/' directory
+
+
+<b>Step2:</b>
+Import or define some actions, with the following structure:
+
+def action(script,app,event):
+    ...
+
+The arguments of the function are:
+script      -> current script window
+app         -> application window
+event       -> event
+
+Some usefull stuff:
+    script.fileName
+    script.source
+        script.source.GetText()
+        script.source.SetText(text)
+        script.source.GetSelectedText()
+        script.source.ReplaceSelection(text)
+    app.run(fileName)             -> runs an external file
+    app.new()                     -> creates a new file
+    app.open(fileName,lineno,col) -> opens a file at given position
+    app.message(text)             -> shows a dialog window with the text
+    app.messageEntry(text)        -> shows a dialog prompting an entry
+    app.messageError(text)        -> shows an error dialog window with the text
+    app.SetStatus(text)           -> sets the status text
+
+
+<b>Step3:</b>
+Define the 'main' function:
+
+def main(app):
+    menu(app,
+        item(label=<str:label that will appear in menu>,
+             action=<function:that will be called>),
+        item(...),
+        SEPARATOR,
+        item(...),
+        item(...),
+        ...
+        SEPARATOR,
+        item(...),
+        ...
+    )
+
+If you want this menu item also to have a toolbar button, than
+make a 16x16pixels png image (transparency is allowed). The image
+has to be located in the menu folder.  Pass the the fileName with
+the toolbar keyword:  
+
+        item(label=<str:label that will appear in menu>,
+             action=<function:that will be called>,
+		 toolbar=<str:fileName of the toolbar image (optional)>)
+
