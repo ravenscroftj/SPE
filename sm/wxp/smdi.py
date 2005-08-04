@@ -344,20 +344,21 @@ class Framework:
     def onFrameActivate(self, event):
         """Activate event (to be overwritten)."""
         getActive   = (not event) or event.GetActive()
-        if self.app.DEBUG: 
-            print 'Event<: Framework: %s.Activate(%s)'%(self.__class__,getActive)
         if getActive:
+            if self.app.DEBUG: 
+                print 'Event<: Framework: %s.Activate(%s)'%(self.__class__,getActive)
             if hasattr(self.panel,'onActivate'):
                 self.panel.onActivate(event)
             elif hasattr(self.panel,'onDeactivate'):
                 self.panel.onDeactivate(event)
+            if self.app.DEBUG: 
+                print 'Event>: Framework: %s.Activate(%s)'%(self.__class__,getActive)
         if event: event.Skip()
-        if self.app.DEBUG: 
-            print 'Event>: Framework: %s.Activate(%s)'%(self.__class__,getActive)
         
     def onFrameClose(self, event=None, destroy = 1):
         """Close event (to be overwritten/extended)."""
-        if self.app.DEBUG: 
+        debug = self.app.DEBUG
+        if debug:
             print 'Event<: Framework: %s.Close'%self.__class__
         if hasattr(self.panel,'onClose'):
             self.dead = self.panel.onClose()
@@ -368,11 +369,11 @@ class Framework:
                 eventManager.DeregisterWindow(self)
                 self.Destroy()
                 if event: event.Skip()
-            if self.app.DEBUG: 
+            if debug: 
                 print 'Event>: Framework: %s.Close returns True'%self.__class__
             return True
         else:
-            if self.app.DEBUG: 
+            if debug: 
                 print 'Event>: Framework: %s.Close returns False'%self.__class__
             return False
         

@@ -1,4 +1,5 @@
 #(c)www.stani.be (read __doc__ for more information)                            
+import os
 import sm
 INFO=sm.INFO.copy()
 
@@ -13,7 +14,7 @@ __doc__=INFO['doc']%INFO
 #_______________________________________________________________________________
 
 ####IMPORT----------------------------------------------------------------------
-import sm,os,time,shutil,string, stat
+import os,time,shutil,string, stat
 
 ####CLASSES---------------------------------------------------------------------
 displayTitle=1

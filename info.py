@@ -5,6 +5,8 @@ WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
 
 path                        = os.path.dirname(__file__)
+os.chdir(path)
+
 #---Append sm
 smLocation                  = os.path.join(path,'sm')
 if smLocation not in sys.path:
@@ -80,26 +82,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 WILDCARD = "Python (*.py;*.pyw;*.tpy)|*.py;*.pyw;*.tpy|All files (*)|*"
 WILDCARD_EXTENDED = WILDCARD+'|Python All(*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo)|*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo|Text (*.txt;*.rtf;*.htm;*.html;*.pdf)|*.txt;*.rtf;*.htm;*.html;*.pdf|Bitmap (*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic)|*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic|Vector (*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl)|*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl'
 
-# TH 2003/10/16:
-# Check if someone is root (uid=0) on unix and therefore
-# might not be able to access the Xserver.
-    # Is there a better solution to check if somebody has
-# access to it or not?
-isnotroot=True
-try:
-    # again os.getuid() exists only on unix according to documentation
-    isnotroot = os.getuid()
-except:
-    pass
-if isnotroot:
-    import wx
-    INFO['encoding']    = wx.GetDefaultPyEncoding()
-    INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
 
 __doc__=INFO['doc']%INFO
 
 def copy():
     return INFO.copy()
 
-
-
+#---wx
+import wx
+INFO['encoding']    = wx.GetDefaultPyEncoding()
+INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
