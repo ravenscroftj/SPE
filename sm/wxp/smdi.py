@@ -811,8 +811,8 @@ class Child(Framework):
         #index
         mdi     = self.app.mdi
         index   = self.getIndex()
-        if mdi: delta = 0
-        else:   delta = 1
+        if mdi in [SDI,MDI_TABS]:  delta = 1
+        else:                       delta = 0
         print 'index=%s,delta=%s'%(index,delta)
         #Update children
         children    = self.app.children
@@ -829,11 +829,11 @@ class Child(Framework):
             # * parent frame (mdi & sdi)
             parentFrame.unbindTabs()
             parentFrame.tabs.DeletePage(current)
-            if mdi in [SDI,MDI_SPLIT] and children:
+            if mdi in [SDI,MDI_TABS] or (mdi==MDI_SPLIT and children):
                 parentFrame.tabs.SetSelection(0)
             parentFrame.bindTabs()
             # * children frames (sdi)
-            if not mdi: #not for mdichild
+            if mdi in [SDI,MDI_TABS]: #not for mdichild
                 eventManager.DeregisterWindow(self.tabs)
                 c       = 1
                 for child in children:
@@ -849,11 +849,7 @@ class Child(Framework):
         if debug: 
             print 'Event>: Child: %s.Close returns True'%self.__class__
         return True    
-    
-    def getIndexSmdi(self):
-        if self.app.mdi:return self.getIndex()
-        else:           return self.getIndex() + 1
-        
+            
     def setTitle(self,page='',extra='',new=True,draw=True):
         if new:
             #parameters
