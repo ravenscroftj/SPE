@@ -13,9 +13,6 @@ If spe fails to start:
  - send debug.txt with some info to s_t_a_n_i@yahoo.com
  """%(INFO['version'],)
 ####Import Modules
-if INFO['smLocation'] not in sys.path:
-    sys.path.append(INFO['smLocation'])
-
 #---General
 import ConfigParser, os
 import sm.wxp.smdi as smdi

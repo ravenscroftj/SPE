@@ -1,22 +1,28 @@
-import os,sys,sm.osx
+import os,sys
 
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
 
-path=os.path.dirname(__file__)
+path                        = os.path.dirname(__file__)
+#---Append sm
+smLocation                  = os.path.join(path,'sm')
+if smLocation not in sys.path:
+    sys.path.append(smLocation)
+import sm.osx
+
 INFO={
     'author'           : "www.stani.be",
     'title'            : "SPE",
     'date'             : "13-9-2003",
     'doc'              : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
-    'version'          : "0.7.4.x",
+    'version'          : "0.7.4.y",
     'blenderVersion'   : "2.35",
     'pyVersion'        : "2.3",
     'pyVersionC'       : sys.version.split(' ')[0],
     'wxVersion'        : "2.6.1.0.",
     'location'         : path,
-    'smLocation'       : os.path.join(path,'sm'),
+    'smLocation'       : smLocation,
     'userPath'         : sm.osx.userPath('.spe'),
 }
 
