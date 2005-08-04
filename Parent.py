@@ -266,7 +266,6 @@ class Panel(wx.Notebook):
            
     def preferences(self):
         """Show preferences dialog box."""
-        self.frame.maximize()
         from dialogs import preferencesDialog
         prefs=preferencesDialog.Create(self,-1,'')
         prefs.ShowModal()

@@ -16,9 +16,7 @@ INFO={
     'pyVersionC'       : sys.version.split(' ')[0],
     'wxVersion'        : "2.6.1.0.",
     'location'         : path,
-    'blenpyLocation'   : path.replace('_spe','blenpy'),
-    'smLocation'       : path.replace('_spe','sm'),
-    'smIdleLocation'   : path.replace('_spe','sm'),
+    'smLocation'       : os.path.join(path,'sm'),
     'userPath'         : sm.osx.userPath('.spe'),
 }
 

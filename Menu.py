@@ -13,6 +13,7 @@ __doc__=INFO['doc']%INFO
 ####Modules & constants
 import os, wx
 import wxgMenu
+import sm.wxp.smdi as smdi
 
 STATUS          = "(c) www.stani.be - Press F1 anywhere to see local help tips."
 
@@ -202,7 +203,7 @@ class Bar(wxgMenu.Bar):
         else:
             #maybe weird to remove it afterwards but keeps wxGlade intact
             self.Remove(BLENDER)
-        if not info.DARWIN:    
+        if app.mdi not in [smdi.MDI_SPLIT,smdi.SDI]:    
             self.Remove(WINDOW)
             self.CHILD_MENUS.remove(wxgMenu.NEXT)
             self.CHILD_MENUS.remove(wxgMenu.PREVIOUS)
