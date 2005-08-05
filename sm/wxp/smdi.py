@@ -1035,6 +1035,9 @@ class MdiSplitChildFrame(Child,wx.Panel):
     def SetIcon(self,*args,**keyw):
         pass
     
+    def IsMaximized(self):
+        return True
+    
     #def Raise(self):
     #    self.tabs.SetSelection(self.getIndex())
 
@@ -1159,7 +1162,7 @@ class App(wx.App):
             if   WIN:
                 mdiName = MDI_SASH_TABS_WIN
             elif DARWIN:#mac osx
-                mdiName = MDI_MAC
+                mdiName = MDI_SPLIT_ALL 
             else:
                 mdiName = MDI_SASH_TABS_LINUX
 

@@ -18,7 +18,7 @@ INFO={
     'title'            : "SPE",
     'date'             : "13-9-2003",
     'doc'              : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
-    'version'          : "0.7.4.y",
+    'version'          : "0.7.4.z",
     'blenderVersion'   : "2.35",
     'pyVersion'        : "2.3",
     'pyVersionC'       : sys.version.split(' ')[0],
