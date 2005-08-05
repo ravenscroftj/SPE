@@ -205,19 +205,19 @@ class NotebookPlus(wx.Notebook):
     def __init__(self,app,*args,**keyw):
         wx.Notebook.__init__(self,*args,**keyw)
         self.app = app
-        eventManager.Register(self.onFrameMiddleClick, wx.EVT_MIDDLE_UP, self)
-        eventManager.Register(self.onFrameMiddleClick, wx.EVT_LEFT_DCLICK, self)
+        self.Bind(wx.EVT_MIDDLE_UP,self.onFrameMiddleClick)
+        self.Bind(wx.EVT_LEFT_DCLICK,self.onFrameMiddleClick)
         
     def onFrameMiddleClick(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
         mousePos    = event.GetPosition()
-        index, other = self.tabs.HitTest(mousePos)
+        index, other = self.HitTest(mousePos)
         if self.app.mdi in [SDI,MDI_TABS]:
             zero = 0
         else:
             zero = -1
         if index>zero:
-            self.app.children[index].frame,onFrameClose()
+            self.app.children[index].frame.onFrameClose()
             
             
 ####Foundation Classes
@@ -595,11 +595,12 @@ class MdiParentFrame(Parent,wx.MDIParentFrame):
             
 class MdiTabsParentFrame(TabPlatform,MdiParentFrame):
     def __stage__(self,page,extra,**options):
+        app                 = self.app
         self.panelFrame     = wx.MDIChildFrame(parent=self,id=wx.ID_ANY)
-        self.panelFrame.SetTitle(self.app.panelFrameTitle)
+        self.panelFrame.SetTitle(app.panelFrameTitle)
         self.panelFrame.Raise= self.panelFrame.Activate
         #parentPanel
-        self.tabs   = wx.Notebook(parent=self.panelFrame, id=wx.ID_ANY,
+        self.tabs   = NotebookPlus(app=app,parent=self.panelFrame, id=wx.ID_ANY,
             style = STYLE_NOTEBOOK )
         self.panel  = self.Panel(parent=self.tabs,**options)
         self.tabs.AddPage(self.panel, page)
@@ -607,7 +608,7 @@ class MdiTabsParentFrame(TabPlatform,MdiParentFrame):
         #events
         eventManager.Register(self.onSashClose, wx.EVT_CLOSE, self.panelFrame)
         #palette
-        if self.app.Palette:
+        if app.Palette:
             self.palette    = self.app.Palette(parent=self,id=wx.ID_ANY)
             self.palette.Show()
                 
@@ -668,7 +669,7 @@ class MdiSashTabsParentFrame(Tabs,MdiSashParentFrame):
         self.tabsSash.SetOrientation(wx.LAYOUT_HORIZONTAL)
         self.tabsSash.SetAlignment(wx.LAYOUT_TOP)
         self.tabsSash.SetDefaultSize(wx.Size(792, TABSASH_HEIGHT))
-        self.tabs = wx.Notebook(id=wx.ID_ANY, parent=self.tabsSash, style=STYLE_NOTEBOOK)
+        self.tabs = NotebookPlus(app=self.app,id=wx.ID_ANY, parent=self.tabsSash, style=STYLE_NOTEBOOK)
         self.__layoutTabs__(self.tabsSash)
         MdiSashParentFrame.__stage__(self,page,**options)
 
@@ -764,7 +765,7 @@ class SdiParentFrame(TabPlatform,Parent,wx.Frame):
         """Create tabs to switch between documents as an wx.Notebook"""
         if self.app.DEBUG:
             print 'Create: Sdi:   %s.tabs'%(self.__class__,)
-        self.tabs   = wx.Notebook(parent=self, id=wx.ID_ANY,
+        self.tabs   = NotebookPlus(app=self.app,parent=self, id=wx.ID_ANY,
             style = STYLE_NOTEBOOK )
         self.panel  = self.Panel(parent=self.tabs,**options)
         self.tabs.AddPage(self.panel, page)
@@ -952,7 +953,7 @@ class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
             print 'Create: Sdi:   %s.tabs'%(self.__class__,)
-        tabs = self.tabs   = wx.Notebook(parent=self, id=wx.ID_ANY,
+        tabs = self.tabs   = NotebookPlus(app=self.app,parent=self, id=wx.ID_ANY,
             style = STYLE_NOTEBOOK )
         panel = self.panel = self.Panel(parent=tabs,**options)
         #Add parent tab to itself
@@ -1075,7 +1076,7 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
             print 'Create: Sdi:   %s.tabs'%(self.__class__,)
-        tabs = self.tabs   = wx.Notebook(parent=self, id=wx.ID_ANY,
+        tabs = self.tabs   = NotebookPlus(app=self.app,parent=self, id=wx.ID_ANY,
             style = STYLE_NOTEBOOK )
         panel = self.panel = self.Panel(parent=tabs,**options)
         #Add parent tab to itself
