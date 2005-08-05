@@ -39,6 +39,7 @@ SIZE            = (600,400)
 SKIN            = 'default'
 TABS            = ['Shell','Locals','Session','Find','Browser','Recent','Todo','Index','Notes','Donate']
 TITLE           = 'SPE %s'
+UNNAMED         = 'unnamed'
 
 ####Subclassed Parent class-----------------------------------------------------
 class Panel(wx.Notebook):
@@ -201,7 +202,7 @@ class Panel(wx.Notebook):
     
     ####Menu
     #---File
-    def new(self,name='unnamed',source='',maximize=None):
+    def new(self,name=UNNAMED,source='',maximize=None):
         """Create a new empty script window.?"""
         app = self.app
         child = app.ChildFrame(self.frame,
@@ -381,11 +382,19 @@ class Panel(wx.Notebook):
             self.busyHide()
 
     def debug(self):
-        child   = self.app.childActive.fileName
-        from plugins.winpdb import __file__ as fileName
-        path    = os.path.dirname(fileName)
-        os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,os.path.join(path,'_winpdb.py'),'-t',child)
-        self.SetStatusText('winpdb debugger is succesfully started.',1)
+        child   = self.app.childActive
+        if child.confirmSave():
+            from plugins.winpdb import __file__ as fileName
+            path    = os.path.dirname(fileName)
+            args    = [os.P_NOWAIT,
+                       PYTHON_EXEC,
+                       PYTHON_EXEC,
+                       os.path.join(path,'_winpdb.py'),
+                       '-t']
+            name    = child.fileName
+            if name != UNNAMED: args.append(name)
+            os.spawnl(*args)
+            self.SetStatusText('winpdb debugger is succesfully started.',1)
 
     def browse_object_with_pyfilling(self):
         """Browse object with pyfilling"""
