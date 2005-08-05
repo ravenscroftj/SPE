@@ -380,6 +380,13 @@ class Panel(wx.Notebook):
             self.activateShell()
             self.busyHide()
 
+    def debug(self):
+        child   = self.app.childActive.fileName
+        from plugins.winpdb import __file__ as fileName
+        path    = os.path.dirname(fileName)
+        os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,os.path.join(path,'_winpdb.py'),'-t',child)
+        self.SetStatusText('winpdb debugger is succesfully started.',1)
+
     def browse_object_with_pyfilling(self):
         """Browse object with pyfilling"""
         from wx.py.filling import FillingFrame

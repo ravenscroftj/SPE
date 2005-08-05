@@ -365,6 +365,10 @@ class Bar(wxgMenu.Bar):
         """Tools > Import"""
         self.parentPanel.import_()
 
+    def menu_debug(self, event=None):
+        """Tools > Import"""
+        self.parentPanel.debug()
+
     def menu_browse_object_with_pyfilling(self, event=None):
         """Tools > Browse object with PyFilling..."""
         self.parentPanel.browse_object_with_pyfilling()
