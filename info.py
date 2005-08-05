@@ -5,16 +5,16 @@ WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
 
 path                        = os.path.dirname(__file__)
-os.chdir(path)
 
 #---Append sm
 smLocation                  = os.path.join(path,'sm')
-if smLocation not in sys.path:
-    sys.path.append(smLocation)
+if path not in sys.path:
+    sys.path.append(path)
 import sm.osx
 
 INFO={
     'author'           : "www.stani.be",
+    'author_email'     : 'spe.stani.be@gmail.com',
     'title'            : "SPE",
     'date'             : "13-9-2003",
     'doc'              : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
@@ -23,9 +23,12 @@ INFO={
     'pyVersion'        : "2.3",
     'pyVersionC'       : sys.version.split(' ')[0],
     'wxVersion'        : "2.6.1.0.",
+    'license'          : 'GPL',
     'location'         : path,
     'smLocation'       : smLocation,
+    'url'              : 'http://www.stani.be/python/spe', 
     'userPath'         : sm.osx.userPath('.spe'),
+    'scripts'          : ['spe']
 }
 
 
@@ -35,10 +38,10 @@ INFO['defaultsUser'] = os.path.join(INFO['userPath'],'defaults.cfg')
 INFO['titleFull']    = "%(title)s %(version)s"%INFO
 
 INFO['links']=\
-"""Homepage : http://spe.pycs.net
-Website  : http://projects.blender.org/projects/spe/
-Forum    : http://projects.blender.org/forum/?group_id=30
-Contact  : http://www.pycs.net/system/mailto.py?usernum=0000167"""
+"""Homepage : %s
+Donwloads: http://www.stani.be/python/spe/page_blender
+Forum    : http://www.stani.be/python/spe/page_forum
+Lists    : http://www.stani.be/python/spe/page_mailman"""%INFO['url']
 
 INFO['description']=\
 """Stani's Python Editor

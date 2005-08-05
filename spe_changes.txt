@@ -93,6 +93,9 @@ Spe 0.7
           http://wxglade.sourceforge.net          
         
     :New features:
+      [4.y]
+        - editor:       close pages by double or middle-clicking on their tab
+        - Mac OsX:      single and multiple document interface
       [4.a]
         - editor:       call-tips for classes
         - preferences:  configurable shortcuts (see shortcuts/__init__.py)
@@ -107,6 +110,8 @@ Spe 0.7
         - Uml viewer
         
     :Bug fixes:
+      [4.y]
+        - Blender:      SPE runs inside Blender again
       [4.q]
         - preferences:  possible patch
         - menu:         close
