@@ -113,7 +113,7 @@ MDI_MAC             = "single with palette (mac default)"
 MDI_TABS_LINUX      = "multiple with tabs (linux)"
 MDI_TABS_WIN        = "multiple with tabs (windows)"
 MDI_TABS_MAC        = "single with tabs (mac)"
-MDI_SPLIT_ALL       = "multiple with sash & tabs (windows,linux,mac)"
+MDI_SPLIT_ALL       = "multiple with sash & tabs (mac,windows,linux)"
 
 DEFAULT             = "<default>"
 DI                  = {SDI_MAC                  : SDI,
@@ -131,6 +131,9 @@ DI                  = {SDI_MAC                  : SDI,
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
+
+if DARWIN:
+    print 'If spe is unstable, try this interface from the preferences:\n  "%s"\n'%MDI_SPLIT_ALL
 
 #wx related
 FULL_REPAINT_ON_RESIZE      = wx.FULL_REPAINT_ON_RESIZE
@@ -217,7 +220,7 @@ class NotebookPlus(wx.Notebook):
         else:
             zero = -1
         if index>zero:
-            self.app.children[index].frame.onFrameClose()
+            self.app.children[index-zero-1].frame.onFrameClose()
             
             
 ####Foundation Classes
@@ -458,8 +461,9 @@ class Tabs(Framework):
                     window = window.panelFrame
             else:
                 window = self.app.children[index-1].frame
-            print '%s.Raise()'%window
-            print window.Raise
+            if self.app.DEBUG:
+                print '%s.Raise()'%window
+                print window.Raise
             window.Raise()
             if self.app.DEBUG:
                 print 'Event>: Tab:   %s.onFrameTab(%s)'%(self.__class__,index)
@@ -835,7 +839,6 @@ class Child(Framework):
         index   = self.getIndex()
         if mdi in [SDI,MDI_TABS]:  delta = 1
         else:                       delta = 0
-        print 'index=%s,delta=%s'%(index,delta)
         #Update children
         children    = self.app.children
         children.remove(self.panel)
@@ -1266,6 +1269,6 @@ def __test__(debug,mdi=MDI):
     app.MainLoop()
     
 if __name__=='__main__':
-    #__test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
-    __test__(debug=1,mdi=MDI_SPLIT_ALL)#multiple document interface for mac
+    __test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
+    #__test__(debug=1,mdi=MDI_SPLIT_ALL)#multiple document interface for mac
     
