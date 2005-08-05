@@ -200,6 +200,25 @@ class DummyPage(wx.StaticText):
     """Page to fill the tabs (not meant to be visible)."""
     def __init__(self,tabs):
         wx.StaticText.__init__(self, tabs, wx.ID_ANY, "SPE bug: This shouldn't be visible")
+        
+class NotebookPlus(wx.Notebook):
+    def __init__(self,app,*args,**keyw):
+        wx.Notebook.__init__(self,*args,**keyw)
+        self.app = app
+        eventManager.Register(self.onFrameMiddleClick, wx.EVT_MIDDLE_UP, self)
+        eventManager.Register(self.onFrameMiddleClick, wx.EVT_LEFT_DCLICK, self)
+        
+    def onFrameMiddleClick(self,event):
+        """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
+        mousePos    = event.GetPosition()
+        index, other = self.tabs.HitTest(mousePos)
+        if self.app.mdi in [SDI,MDI_TABS]:
+            zero = 0
+        else:
+            zero = -1
+        if index>zero:
+            self.app.children[index].frame,onFrameClose()
+            
             
 ####Foundation Classes
 class Framework:
@@ -691,8 +710,10 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         
     def __stage__(self,page,extra,**options):
         self.split  = split = wx.SplitterWindow(self,wx.ID_ANY,style=STYLE_SPLIT)
-        self.tabs   = wx.Notebook(parent=split, id=wx.ID_ANY,
+        self.tabs   = NotebookPlus(app=self.app,parent=split, id=wx.ID_ANY,
             style = STYLE_NOTEBOOK )
+        #self.tabs   = wx.Notebook(parent=split, id=wx.ID_ANY,
+        #    style = STYLE_NOTEBOOK )
         self.panel  = self.Panel(parent=split,**options)
         split.SetMinimumPaneSize(20)
         split.SplitHorizontally(self.tabs, self.panel, -200)
@@ -1244,6 +1265,6 @@ def __test__(debug,mdi=MDI):
     app.MainLoop()
     
 if __name__=='__main__':
-    __test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
-    #__test__(debug=1,mdi=MDI_SPLIT_ALL)#multiple document interface for mac
+    #__test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
+    __test__(debug=1,mdi=MDI_SPLIT_ALL)#multiple document interface for mac
     
