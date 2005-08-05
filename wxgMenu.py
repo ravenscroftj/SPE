@@ -16,7 +16,7 @@ AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR, PREFERENCES
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR, SHELL,
 
-RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT,
+RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT, DEBUG,
 BROWSE_OBJECT_WITH_PYFILLING, TEST_REGULAR_EXPRESSION_WITH_KIKI,
 DESIGN_A_GUI_WITH_WXGLADE, DESIGN_A_GUI_WITH_XRC, CHECK_SOURCE_WITH_PYCHECKER, 
 OPEN_TERMINAL_EMULATOR, BROWSE_FOLDER, RUN_IN_TERMINAL_EMULATOR, 
@@ -36,7 +36,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(64)]
+[wx.NewId() for x in range(65)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -47,7 +47,7 @@ AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR,
 
-RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT,
+RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT, DEBUG,
 CHECK_SOURCE_WITH_PYCHECKER,
 
 NEXT,PREVIOUS]
@@ -286,10 +286,12 @@ class Bar(wx.MenuBar):
         self.tools.Append(RUN_VERBOSE, _("Run &verbose\tCtrl+Alt+R"), "", wx.ITEM_NORMAL)
         self.tools.Append(IMPORT, _("&Import\tF10"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
+        self.tools.Append(DEBUG, _("&Debug"), "", wx.ITEM_NORMAL)
+        self.tools.AppendSeparator()
         self.tools.Append(BROWSE_OBJECT_WITH_PYFILLING, _("&Browse object with PyFilling...\tCtrl+Alt+F"), "", wx.ITEM_NORMAL)
         self.tools.Append(TEST_REGULAR_EXPRESSION_WITH_KIKI, _("Test regular expression with &Kiki...\tCtrl+K"), "", wx.ITEM_NORMAL)
-        self.tools.Append(DESIGN_A_GUI_WITH_WXGLADE, _("&Design a gui with wxGlade...\tCtrl+Alt+G"), "", wx.ITEM_NORMAL)
-        self.tools.Append(DESIGN_A_GUI_WITH_XRC, _("&Design a gui with XRC...\tCtrl+Alt+X"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DESIGN_A_GUI_WITH_WXGLADE, _("Design a &gui with wxGlade...\tCtrl+Alt+G"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DESIGN_A_GUI_WITH_XRC, _("Design a gui with &XRC...\tCtrl+Alt+X"), "", wx.ITEM_NORMAL)
         self.tools.Append(CHECK_SOURCE_WITH_PYCHECKER, _("&Check source with PyChecker\tCtrl+Alt+C"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(BROWSE_FOLDER, _("Browse &folder\tShift+F9"), "", wx.ITEM_NORMAL)
@@ -385,6 +387,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_run_in_separate_namespace, id=RUN_IN_SEPARATE_NAMESPACE)
         self.Bind(wx.EVT_MENU, self.menu_run_verbose, id=RUN_VERBOSE)
         self.Bind(wx.EVT_MENU, self.menu_import, id=IMPORT)
+        self.Bind(wx.EVT_MENU, self.menu_debug, id=DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_browse_object_with_pyfilling, id=BROWSE_OBJECT_WITH_PYFILLING)
         self.Bind(wx.EVT_MENU, self.menu_test_regular_expression_with_kiki, id=TEST_REGULAR_EXPRESSION_WITH_KIKI)
         self.Bind(wx.EVT_MENU, self.menu_design_a_gui_with_wxglade, id=DESIGN_A_GUI_WITH_WXGLADE)
@@ -660,6 +663,9 @@ class Bar(wx.MenuBar):
         event.Skip()
 
     def menu_previous(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_debug(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
 # end of class Bar

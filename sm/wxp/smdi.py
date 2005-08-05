@@ -453,19 +453,21 @@ class Tabs(Framework):
         
     def raiseTab(self,index):
         if index > -1:
-            if self.app.DEBUG:
+            app = self.app
+            if app.DEBUG:
                 print 'Event<: Tab:   %s.onFrameTab(%s)'%(self.__class__,index)
-            if index == 0:
-                window = self.parentFrame
+            parent      = app.mdi in [SDI,MDI_TABS]
+            if index == 0 and parent:
+                window  = self.parentFrame
                 if hasattr(window,'panelFrame'):
                     window = window.panelFrame
             else:
-                window = self.app.children[index-1].frame
-            if self.app.DEBUG:
+                window = self.app.children[index-[0,1][parent]].frame
+            if app.DEBUG:
                 print '%s.Raise()'%window
                 print window.Raise
             window.Raise()
-            if self.app.DEBUG:
+            if app.DEBUG:
                 print 'Event>: Tab:   %s.onFrameTab(%s)'%(self.__class__,index)
 
 #---SDI Platform dependent
@@ -484,7 +486,7 @@ class TabUnix(Tabs):
         index       = event.GetSelection()
         event.Veto()#instead of event.Skip() (don't do this here anyway)
         self.raiseTab(index)
-        
+
 if PLATFORM == 'win32':
     TabPlatform     = TabWin32
 else:
@@ -663,7 +665,7 @@ class MdiSashParentFrame(MdiParentFrame):
         Framework.onFrameSize(self)
         wx.LayoutAlgorithm().LayoutMDIFrame(self)
 
-class MdiSashTabsParentFrame(Tabs,MdiSashParentFrame):
+class MdiSashTabsParentFrame(TabPlatform,MdiSashParentFrame):
     def __stage__(self,page,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
@@ -678,14 +680,9 @@ class MdiSashTabsParentFrame(Tabs,MdiSashParentFrame):
         MdiSashParentFrame.__stage__(self,page,**options)
 
     def onFrameTab(self,event):
-        """When a tab is changed."""
-        index = event.GetSelection()
-        if self.app.DEBUG:
-            print 'Event<: Mdi: %s.onFrameTab(%s)'%(self.__class__,index)
+        """When a tab is changed (EVT_MOUSE_LEFT&HitTest)."""
+        TabPlatform.onFrameTab(self,event)
         event.Skip()
-        self.app.children[index].frame.Raise()
-        if self.app.DEBUG:
-            print 'Event>: Mdi: %s.onFrameTab(%s)'%(self.__class__,index)
             
 class MdiSplitParentFrame(Parent,wx.Frame):
     def __init__(self,app,
@@ -1272,6 +1269,6 @@ def __test__(debug,mdi=MDI):
     app.MainLoop()
     
 if __name__=='__main__':
-    __test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
+    __test__(debug=1,mdi=MDI_SASH_TABS_WIN)#multiple document interface for windows
+    #__test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac
     #__test__(debug=1,mdi=MDI_SPLIT_ALL)#multiple document interface for mac
-    
