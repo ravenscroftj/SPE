@@ -7,7 +7,6 @@ DARWIN                      = PLATFORM.startswith('darwin')
 path                        = os.path.dirname(__file__)
 
 #---Append sm
-smLocation                  = os.path.join(path,'sm')
 if path not in sys.path:
     sys.path.append(path)
 import sm.osx
@@ -24,7 +23,7 @@ INFO={
     'pyVersion'         : "2.3",
     'pyVersionC'        : sys.version.split(' ')[0],
     'scripts'           : ['spe_wininst.py'],
-    'smLocation'        : smLocation,
+    'smLocation'        : os.path.join(path,'sm'),
     'title'             : "SPE",
     'url'               : 'http://www.stani.be/python/spe',
     'userPath'          : sm.osx.userPath('.spe'),
@@ -83,6 +82,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """%INFO
 
+INFO['contribute'] = """There are different ways to contribute:
+    
+- %s (or convince your boss)
+- Let your company sponsor SPE (see manual)
+- SPE needs documentation writers and screenshot takers for manual
+- Contribute code (eg wxPython panels) & patches
+- Promote SPE in newsgroups, press, blogs, ...
+- Subscribe to mailing lists
+- Translate manual
+- Report bugs in the bug tracker"""%INFO['donate']
+
 WILDCARD = "Python (*.py;*.pyw;*.tpy)|*.py;*.pyw;*.tpy|All files (*)|*"
 WILDCARD_EXTENDED = WILDCARD+'|Python All(*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo)|*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo|Text (*.txt;*.rtf;*.htm;*.html;*.pdf)|*.txt;*.rtf;*.htm;*.html;*.pdf|Bitmap (*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic)|*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic|Vector (*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl)|*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl'
 
@@ -93,6 +103,14 @@ def copy():
     return INFO.copy()
 
 #---wx
-import wx
-INFO['encoding']    = wx.GetDefaultPyEncoding()
-INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
+try:
+    import wx
+    INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
+    if INFO['wxVersionC']!=INFO['wxVersion']:
+        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],wxV)
+        print 'If you experience any problems please install wxPython v%s\n'%INFO['wxVersion']
+    INFO['encoding']    = wx.GetDefaultPyEncoding()
+    WX_ERROR = False
+except ImportError:
+    print "Spe Error: Please install the right version of wxPython: %s"%INFO['wxVersion']
+    WX_ERROR = True

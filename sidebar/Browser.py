@@ -7,7 +7,7 @@ class Browser(wx.GenericDirCtrl) :
         wx.GenericDirCtrl.__init__(self,parent,id,
             dir     = init_path,
             filter  = info.WILDCARD_EXTENDED,
-            style   = wx.DIRCTRL_SHOW_FILTERS|wx.DIRCTRL_EDIT_LABELS)
+            style   = wx.DIRCTRL_SHOW_FILTERS)
         self.dir    = init_path
         self.tree   = self.GetTreeCtrl()
         self.tree.Bind(wx.EVT_LEFT_DCLICK, self.onClick)

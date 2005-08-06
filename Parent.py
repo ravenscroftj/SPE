@@ -390,7 +390,8 @@ class Panel(wx.Notebook):
                        PYTHON_EXEC,
                        PYTHON_EXEC,
                        os.path.join(path,'_winpdb.py'),
-                       '-t']
+                       ['-t',''][self.app.fCrypto],
+                       ['','--debug'][self.app.DEBUG]]
             name    = child.fileName
             if name != UNNAMED: args.append(name)
             os.spawnl(*args)

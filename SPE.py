@@ -16,19 +16,9 @@ If spe fails to start:
 ####Import Modules
 
 #---General
-import ConfigParser, sys, os
+import ConfigParser, sys, os, wx
 import sm.wxp.smdi as smdi
 import Menu,Parent,Child
-#---wx
-try:
-    import wx
-    if INFO['wxVersionC']!=INFO['wxVersion']:
-        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],wxV)
-        print 'If you experience any problems please install wxPython v%s\n'%INFO['wxVersion']
-    WX_ERROR = False
-except ImportError:
-    print "Spe Error: Please install the right version of wxPython: %s"%INFO['wxVersion']
-    WX_ERROR = True
 
 #---Blender
 print "Blender support",
@@ -41,6 +31,17 @@ except ImportError:
     redraw      = None
     print 'disabled (run SPE inside Blender to enable).'
     
+#---Crypto
+try:
+    from Crypto.Cipher import DES
+    fCrypto = True
+    print "Encrypted debugging enabled.\n"
+except ImportError:
+    fCrypto = False
+    print """\nEncrypted debugging disabled. 
+  If you prefer encrypted debugging, install the "Python Cryptography Toolkit"
+  from http://www.amk.ca/python/code/crypto\n"""
+
 ####Constants
 MDI         = 0
 DEBUG       = 0
@@ -107,8 +108,6 @@ class Translate:
         l               = self.strip(label)
         if self.keys.has_key(l):
             shortcut    = self.keys[l]
-        #if smdi.DARWIN: appearantly this makes no sense
-        #    shortcut    = shortcut.replace('Ctrl','Cmd')
         if shortcut:
             return '%s\t%s'%(label,shortcut)
         else:
@@ -150,6 +149,7 @@ app = smdi.App(\
         Palette         = Menu.Palette,
         mdi             = mdi,
         debug           = __debug,
+        fCrypto         = fCrypto,
         title           = 'SPE %s'%INFO['version'],
         panelFrameTitle = 'Shell',
         redraw          = redraw,
