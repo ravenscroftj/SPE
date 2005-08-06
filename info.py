@@ -13,22 +13,23 @@ if path not in sys.path:
 import sm.osx
 
 INFO={
-    'author'           : "www.stani.be",
-    'author_email'     : 'spe.stani.be@gmail.com',
-    'title'            : "SPE",
-    'date'             : "13-9-2003",
-    'doc'              : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
-    'version'          : "0.7.4.z",
-    'blenderVersion'   : "2.35",
-    'pyVersion'        : "2.3",
-    'pyVersionC'       : sys.version.split(' ')[0],
-    'wxVersion'        : "2.6.1.0.",
-    'license'          : 'GPL',
-    'location'         : path,
-    'smLocation'       : smLocation,
-    'url'              : 'http://www.stani.be/python/spe', 
-    'userPath'         : sm.osx.userPath('.spe'),
-    'scripts'          : ['spe']
+    'author'            : "www.stani.be",
+    'author_email'      : 'spe.stani.be@gmail.com',
+    'blenderVersion'    : "2.35",
+    'date'              : "5-8-2005",
+    'donate'            : "If you enjoy SPE, consider a (small) donation.",
+    'doc'               : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
+    'license'           : 'GPL',
+    'location'          : path,
+    'pyVersion'         : "2.3",
+    'pyVersionC'        : sys.version.split(' ')[0],
+    'scripts'           : ['spe_wininst.py'],
+    'smLocation'        : smLocation,
+    'title'             : "SPE",
+    'url'               : 'http://www.stani.be/python/spe',
+    'userPath'          : sm.osx.userPath('.spe'),
+    'version'           : "0.7.5.b",
+    'wxVersion'         : "2.6.1.0.",
 }
 
 
