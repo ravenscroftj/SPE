@@ -1,7 +1,7 @@
 ####(c)www.stani.be-------------------------------------------------------------
 
 try:
-    import sm
+    import sm, sm.osx
     INFO=sm.INFO.copy()
     
     INFO['title']     = INFO['titleFull'] = 'Sdi/Mdi Framework'
@@ -25,6 +25,7 @@ Attributes of Application:
         - mdi
         - title
         - parentFrame
+        - parentPanel
         - pos
         - size
         - style
@@ -93,6 +94,7 @@ Todo:
 import  os, sys, pprint
 import  wx
 from    wx.lib.evtmgr import eventManager
+import  singleApp
 #import sm.spy
 
 ####Constants
@@ -1100,7 +1102,7 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
         
 ####Application
 
-class App(wx.App):
+class App(singleApp.SingleInstanceApp):
     def __init__(self, ParentPanel, ChildPanel, MenuBar, ToolBar, StatusBar,
             Palette=None, mdi=DEFAULT, debug=0, title='name',
             panelFrameTitle='panel',size=wx.Size(800,400),
@@ -1138,19 +1140,29 @@ class App(wx.App):
                 setattr(self,key,attributes[key])
         #start
         print "Launching application..."
-        wx.App.__init__(self,redirect=not debug)
+        singleApp.SingleInstanceApp.__init__(self,name=title,redirect=not debug)
         
+    def OnArgs(self, evt):
+        if hasattr(self.parentPanel,'onArgs'):
+            self.parentPanel.onArgs(evt.data)
+        self.GetTopWindow().Raise()
+
     def OnInit(self):
-        wx.InitAllImageHandlers()
-        self.parentFrame = self.ParentFrame(self,
-            size    = self.size,
-            page    = self.title,
-            pos     = self.pos,
-            style   = self.style,
-            **self.attributes)
-        self.parentFrame.Show(True)
-        self.SetTopWindow(self.parentFrame)
-        return True
+        if self.active:
+            return False
+        else:
+            self.Bind(singleApp.EVT_POST_ARGS, self.OnArgs)
+            wx.InitAllImageHandlers()
+            self.parentFrame = self.ParentFrame(self,
+                size    = self.size,
+                page    = self.title,
+                pos     = self.pos,
+                style   = self.style,
+                **self.attributes)
+            self.parentPanel = self.parentFrame.panel
+            self.parentFrame.Show(True)
+            self.SetTopWindow(self.parentFrame)
+            return True
         
     def SetMdi(self,mdiName=DEFAULT):
         """Defines parent and children frame classes."""

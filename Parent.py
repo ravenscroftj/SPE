@@ -148,7 +148,6 @@ class Panel(wx.Notebook):
         self.preferencesSave()
         self.__remember__(openFiles=self._openFiles)
         self.__menus__()
-
                 
     def __menus__(self):
         #parentInit.importMenus
@@ -691,6 +690,10 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         if self.redraw:self.redraw()
         
     #---extra
+    def onArgs(self,*args,**keyw):
+        self.openList(*args,**keyw)
+        self.shell.prompt()
+        
     def excepthook(self, type, value, traceback) :
         webbrowser.open('''mailto:s_t_a_n_i@yahoo.com?subject=SPE %s error report&body="%s %s\n%s"'''%(type,type,value,traceback))
         

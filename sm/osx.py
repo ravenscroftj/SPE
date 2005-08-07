@@ -236,6 +236,7 @@ def registerFileCreate(label, action, fileType='Python.File'):
     except:
         pass
     try:
+        print (key,"command",_winreg.REG_SZ,action+' "%1"')
         _winreg.SetValue(key,"command",_winreg.REG_SZ,action+' "%1"')
         return 1
     except:
