@@ -29,11 +29,6 @@ wx=crust=shell=filling=None#for the demo down
 
 import wx
 from wx.py import crust,shell, filling
-import pyCrustApp
-#reload(wxpPyCrustApp)
-from pyCrustApp import main
-
-pyCrust=main
 
 #---Dialogs
 class FileDir:

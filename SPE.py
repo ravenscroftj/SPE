@@ -166,3 +166,15 @@ app.MainLoop()
 
 print "\nThank you for using SPE, please donate to support further development."
 
+if __debug:
+    try:
+        import msvcrt
+        print "\nPress any key to quit..."
+        msvcrt.getch( )
+    except:
+        import time
+        print "\nPress Ctrl+C to quit..."
+        time.sleep(10)
+
+
+

@@ -621,10 +621,8 @@ class Panel(wx.Notebook):
                 return False
         eventManager.DeregisterWindow(self)
         self.frame.dead = 1
-        if (not self.app.DEBUG) and self.getValue('RedirectShell'):
-            self.shell.redirectStdin(0)
-            self.shell.redirectStdout(0)
-            self.shell.redirectStderr(0)
+        #if (not self.app.DEBUG) and self.getValue('RedirectShell'):
+        self.redirect(0)
         fileList=[]
         if self.remember and self.app.children:
             active=self.app.childActive
