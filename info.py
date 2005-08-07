@@ -22,7 +22,7 @@ INFO={
     'location'          : path,
     'pyVersion'         : "2.3",
     'pyVersionC'        : sys.version.split(' ')[0],
-    'scripts'           : ['spe_wininst.py'],
+    'scripts'           : ['spe','spe_wininst.py'],
     'smLocation'        : os.path.join(path,'sm'),
     'title'             : "SPE",
     'url'               : 'http://www.stani.be/python/spe',
