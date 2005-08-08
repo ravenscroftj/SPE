@@ -1,5 +1,4 @@
 #!/usr/bin/env python
 
-import _spe
-_spe.main()
+import _spe.SPE
 
