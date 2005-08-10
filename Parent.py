@@ -194,7 +194,8 @@ class Panel(wx.Notebook):
             self.openList(fileList,
                 message     = 0,
                 select      = None, 
-                maximize    = self.getValue("MaxChildren"))
+                maximize    = self.getValue("MaxChildren"),
+                verbose     = True)
         else:
             self.rememberSet(0)
             self.new(maximize = self.getValue("MaxChildren"))
@@ -534,13 +535,16 @@ class Panel(wx.Notebook):
         helpDialog.create(self,self.path,'about.htm', replacements=INFO)
 
     #---Backstage
-    def openList(self,fileList,lineno=None,col=1,message=1,select='line',maximize=None):
+    def openList(self,fileList,lineno=None,col=1,message=1,select='line',\
+                    maximize=None, verbose=False):
         """Open a list of files."""
         if type(fileList)!=types.ListType:
             fileList=[fileList]
         for fileName in fileList:
             if type(fileName)==types.TupleType:
                 fileName, lineno, col = fileName
+            if self.app.DEBUG:
+                print 'Opening %s'%fileName
             child=self.getChildByFileName(fileName)
             if child:
                 #opened already

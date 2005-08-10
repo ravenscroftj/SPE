@@ -35,31 +35,36 @@ class ArgsPosterThread:
 
     def Stop(self):
         self.keepGoing = False
-        server = xmlrpclib.ServerProxy("http://localhost:50007")
+        server = xmlrpclib.ServerProxy("http://localhost:%d"%self.app.port)
         server.Stop()
     def IsRunning(self):
         return self.running
 
     def Run(self):
-        server = SimpleXMLRPCServer.SimpleXMLRPCServer(("localhost", 50007))
+        server = SimpleXMLRPCServer.SimpleXMLRPCServer(("localhost", self.app.port))
         server.register_instance(PostAppServer(self.app))
         while self.keepGoing:
             server.handle_request( ) 
         self.running = False
         
 class SingleInstanceApp(wx.App):
-    def __init__(self,  name, *args, **keyw):
+    port = 50008
+    def __init__(self,  name,*args, **kwargs):
         self.name = name
-        self.instance = wx.SingleInstanceChecker(name+str(wx.GetUserId()))
+        self.instance = wx.SingleInstanceChecker(name+wx.GetUserId())
+        try:
+            self.port = kwargs.pop("port")
+        except:
+            pass
         if self.instance.IsAnotherRunning():
             self.active = True
-            server = xmlrpclib.ServerProxy("http://localhost:50007")
+            server = xmlrpclib.ServerProxy("http://localhost:%d"%self.port)
             server.PostArgs(sys.argv[1:])
-            wx.App.__init__(self, *args)
+            wx.App.__init__(self, *args, **kwargs)
         else:
             self.active = False
             self.args = sys.argv[1:]
-            wx.App.__init__(self, *args, **keyw)
+            wx.App.__init__(self, *args, **kwargs)
             self.argsPosterThread = ArgsPosterThread(self)
             self.argsPosterThread.Start()
     
@@ -77,19 +82,20 @@ class SingleInstanceApp(wx.App):
 if __name__ == "__main__":
     class TestApp(SingleInstanceApp):
         def OnArgs(self, evt):
-            self.tf.AppendText("\nReceived args: "+str(evt.data))
+            self.tf.AppendText(u"\nReceived args: "+unicode(evt.data))
             self.GetTopWindow().Raise()
+            self.GetTopWindow().Iconize(False)# thanks to Alexei for pointing it out
             
         def OnInit(self):
-            if not self.active:
+            if self.active:
+                return False
+            else:
                 self.Bind(EVT_POST_ARGS, self.OnArgs)
                 self.mainFrame = wx.Frame(None, title=self.name)
                 self.tf = wx.TextCtrl(self.mainFrame, style=wx.TE_MULTILINE)
-                self.tf.AppendText("Original args: "+str(self.args))
+                self.tf.AppendText(u"Original args: "+unicode(self.args))
                 self.SetTopWindow(self.mainFrame)
                 self.mainFrame.Show()
                 return True
-            else:
-                return False
-    app = TestApp("A_simple_TestApp",0)
+    app = TestApp("A_simple_TestApp",0, port= 50009)
     app.MainLoop()

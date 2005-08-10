@@ -1146,6 +1146,7 @@ class App(singleApp.SingleInstanceApp):
         if hasattr(self.parentPanel,'onArgs'):
             self.parentPanel.onArgs(evt.data)
         self.GetTopWindow().Raise()
+        self.GetTopWindow().Iconize(False)
 
     def OnInit(self):
         if self.active:
