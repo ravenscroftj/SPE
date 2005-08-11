@@ -393,7 +393,8 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.0"
+WINPDB_TITLE = "Winpdb 1.0.1"
+WINPDB_VERSION = "WINPDB_1_0_1"
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -404,7 +405,7 @@ SPLITTER_4_POS = "splitter_4_pos"
 
 WINPDB_SIZE_MIN = (640, 480)
 
-WINPDB_SETTINGS_FILENAME = "winpdb_settings.txt"
+WINPDB_SETTINGS_FILENAME = "winpdb_settings.cfg"
 
 WINPDB_SETTINGS_DEFAULT = {
     WINPDB_SIZE: (800, 600),
@@ -458,6 +459,8 @@ ML_WINDOW = "&Window"
 
 ML_HELP = "&Help"
 ML_WEBSITE = "&Website"
+ML_SUPPORT = "&Support"
+ML_DOCS = "&Online Docs"
 ML_LICENSE = "&License"
 ML_ABOUT = "&About"
 
@@ -487,7 +490,9 @@ ATTACH_TIP = "Attach to a debugged script."
 DETACH_TIP = "Detach from debugged sctipt."
 STOP_TIP = "Shutdown the debugged script."
 OPEN_TIP = "Open source file in the source viewer."
-WEBSITE_TIP = "Goto the Winpdb homepage."
+WEBSITE_TIP = "Open the Winpdb homepage."
+SUPPORT_TIP = "Open the Winpdb support web page."
+DOCS_TIP = "Open the Winpdb online documentation web page."
 TOGGLE_TIP = "Toggle breakpoint at cursor location."
 DISABLE_TIP = "Disable all breakpoints."
 ENABLE_TIP = "Enable all breakpoints."
@@ -522,6 +527,7 @@ SHOW = "Show"
 VALUE = "Value"
 BITMAP = "Bitmap"
 
+STATE_SPAWNING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH]}
 STATE_ATTACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH]}
 STATE_BROKEN_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
 STATE_ANALYZE_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
@@ -532,11 +538,13 @@ STATE_DETACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREA
 STATE_BROKEN_TOOLBAR = {ENABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO], DISABLED: [TB_BREAK]}
 STATE_ANALYZE_TOOLBAR = {ENABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP], DISABLED: [TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
 STATE_RUNNING_TOOLBAR = {ENABLED: [TB_TOGGLE_BP, TB_BREAK], DISABLED: [TB_EXCEPTION, TB_FILTER, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
+STATE_SPAWNING_TOOLBAR = {ENABLED: [], DISABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
 STATE_ATTACHING_TOOLBAR = {ENABLED: [], DISABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
 STATE_DETACHED_TOOLBAR = {ENABLED: [], DISABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
 STATE_DETACHING_TOOLBAR = {ENABLED: [], DISABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
 
 STATE_MAP = {
+    rpdb2.STATE_SPAWNING: (STATE_SPAWNING_MENU, STATE_SPAWNING_TOOLBAR),
     rpdb2.STATE_ATTACHING: (STATE_ATTACHING_MENU, STATE_ATTACHING_TOOLBAR),
     rpdb2.STATE_BROKEN: (STATE_BROKEN_MENU, STATE_BROKEN_TOOLBAR),
     rpdb2.STATE_ANALYZE: (STATE_ANALYZE_MENU, STATE_ANALYZE_TOOLBAR),
@@ -562,6 +570,8 @@ ABOUT_HTML_SUFFIX = """
 """
 
 WEBSITE_URL = "http://www.digitalpeers.com/pythondebugger/"
+SUPPORT_URL = "http://www.digitalpeers.com/pythondebugger/support.htm"
+DOCS_URL = "http://www.digitalpeers.com/pythondebugger/docs.htm"
 
 STR_ERROR_INTERFACE_COMPATIBILITY = "The rpdb2 module which was found is of unexpected version. Please upgrade to the latest versions of winpdb.py and rpdb2.py."
 
@@ -986,8 +996,10 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             "/2/" + ML_CONTROL + "/5/" + ML_RETURN: {COMMAND: self.do_return}, 
             "/3/" + ML_WINDOW + "/0/" + ML_EMPTY: None,
             "/4/" + ML_HELP +   "/0/" + ML_WEBSITE: {COMMAND: self.do_website, TOOLTIP: WEBSITE_TIP}, 
-            "/4/" + ML_HELP +   "/1/" + ML_ABOUT: {COMMAND: self.do_about}, 
-            "/4/" + ML_HELP +   "/2/" + ML_LICENSE: {COMMAND: self.do_license}
+            "/4/" + ML_HELP +   "/1/" + ML_SUPPORT: {COMMAND: self.do_support, TOOLTIP: SUPPORT_TIP}, 
+            "/4/" + ML_HELP +   "/2/" + ML_DOCS: {COMMAND: self.do_docs, TOOLTIP: DOCS_TIP}, 
+            "/4/" + ML_HELP +   "/3/" + ML_ABOUT: {COMMAND: self.do_about}, 
+            "/4/" + ML_HELP +   "/4/" + ML_LICENSE: {COMMAND: self.do_license}
         }
         
         self.init_menubar(menu_resource)
@@ -1064,6 +1076,9 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         event_type_dict = {rpdb2.CEventThreads: {}}
         self.m_session_manager.register_callback(self.update_threads, event_type_dict, fSingleUse = False)
 
+        event_type_dict = {rpdb2.CEventNoThreads: {}}
+        self.m_session_manager.register_callback(self.update_no_threads, event_type_dict, fSingleUse = False)
+
         event_type_dict = {rpdb2.CEventNamespace: {}}
         self.m_session_manager.register_callback(self.update_namespace, event_type_dict, fSingleUse = False)
 
@@ -1103,6 +1118,15 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
     def update_threads(self, event):
         wx.CallAfter(self.m_threads_viewer.update_threads_list, event.m_current_thread, event.m_thread_list)
+
+    def update_no_threads(self, event):
+        wx.CallAfter(self.clear_all)
+
+    def clear_all(self):
+        self.m_code_viewer._clear()
+        self.m_namespave_viewer._clear()
+        self.m_stack_viewer._clear()
+        self.m_threads_viewer._clear()
 
     def update_thread_broken(self, event):
         wx.CallAfter(self.m_threads_viewer.update_thread, event.m_tid, True)
@@ -1236,7 +1260,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             self.m_threads_viewer._clear()
             self.m_console.set_focus()
             
-        elif (old_state in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_ATTACHING]) and (self.m_state not in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_ATTACHING]):
+        elif (old_state in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_SPAWNING, rpdb2.STATE_ATTACHING]) and (self.m_state not in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_SPAWNING, rpdb2.STATE_ATTACHING]):
             f = self.m_session_manager.get_encryption()
             data = [BASE64_UNLOCKED, BASE64_LOCKED][f] 
             tooltip = [TOOLTIP_UNLOCKED, TOOLTIP_LOCKED][f]
@@ -1245,7 +1269,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         if self.m_state == rpdb2.STATE_BROKEN:
             self.set_toggle(TB_EXCEPTION, False)
             
-            self.m_code_viewer._enable()
+            #self.m_code_viewer._enable()
             self.m_namespave_viewer._enable()
             self.m_stack_viewer._enable()
             self.m_threads_viewer._enable()
@@ -1253,21 +1277,27 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         elif self.m_state == rpdb2.STATE_ANALYZE:
             self.set_toggle(TB_EXCEPTION, True)
             
-            self.m_code_viewer._enable()
+            #self.m_code_viewer._enable()
             self.m_namespave_viewer._enable()
             self.m_stack_viewer._enable()
             self.m_threads_viewer._disable()
             self.m_console.set_focus()
             
         else:
-            self.m_code_viewer._disable()
+            #self.m_code_viewer._disable()
             self.m_namespave_viewer._disable()
             self.m_stack_viewer._disable()
             self.m_threads_viewer._disable()
             self.m_console.set_focus()
 
     def do_website(self, event):
-        self.job_post(webbrowser.open, (WEBSITE_URL, ))
+        self.job_post(webbrowser.open_new, (WEBSITE_URL, ))
+
+    def do_support(self, event):
+        self.job_post(webbrowser.open_new, (SUPPORT_URL, ))
+
+    def do_docs(self, event):
+        self.job_post(webbrowser.open_new, (DOCS_URL, ))
 
     def do_license(self, event):
         about = CHTMLDialog(self, LICENSE_TITLE, LICENSE_NOTICE + COPY_OF_THE_GPL_LICENSE)
@@ -2435,6 +2465,10 @@ class CNamespacePanel(wx.Panel, CJobs):
                 (el, fFilter) = self.m_jobs.pop()
                 rl = self.m_session_manager.get_namespace(el, fFilter)
                 wx.CallAfter(self.do_update_namespace, rl)
+
+            except (rpdb2.ThreadDone, rpdb2.NoThreads):
+                wx.CallAfter(self.m_tree.DeleteAllItems)
+                
             except:
                 rpdb2.print_debug()
 
@@ -3175,11 +3209,16 @@ def StartClient(command_line, fAttach, pwd, fAllowUnencrypted, fRemote, host):
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_02_00_00":
+    if rpdb2.get_version() != "RPDB_2_0_1":
         print STR_ERROR_INTERFACE_COMPATIBILITY
         return
         
     return rpdb2.main(StartClient)
+
+
+
+def get_version():
+    return WINPDB_VERSION
 
 
 

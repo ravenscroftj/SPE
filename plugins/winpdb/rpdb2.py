@@ -300,7 +300,11 @@ except ImportError:
 
 
 
-def start_embedded_debugger(pwd, fAllowUnencrypted = False, fRemote = False, fDebug = False):
+TIMEOUT_FIVE_MINUTES = 5 * 60.0
+
+
+
+def start_embedded_debugger(pwd, fAllowUnencrypted = False, fRemote = False, timeout = TIMEOUT_FIVE_MINUTES, fDebug = False):
     """
     Use 'start_embedded_debugger' to invoke the debugger engine in embedded 
     scripts. put the following line as the first line in your script:
@@ -313,7 +317,9 @@ def start_embedded_debugger(pwd, fAllowUnencrypted = False, fRemote = False, fDe
     fAllowUnencrypted - Allow unencrypted communications. Communication will
         be authenticated but encrypted only if possible.
     fRemote - Allow debugger consoles on remote machines to connect.
-    fDebug - debug output.
+    timeout - Seconds to wait for attachment before giving up. If None, 
+              never give up.
+    fDebug  - debug output.
 
     IMPORTNAT SECURITY NOTE:
     USING A HARDCODED PASSWORD MAY BE UNSECURE SINCE ANYONE WITH READ
@@ -323,11 +329,11 @@ def start_embedded_debugger(pwd, fAllowUnencrypted = False, fRemote = False, fDe
     It is safer to use: start_embedded_debugger_interactive_password()    
     """
 
-    return __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, fDebug)
+    return __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug)
     
 
 
-def start_embedded_debugger_interactive_password(fAllowUnencrypted = False, fRemote = False, fDebug = False, stdin = sys.stdin, stdout = sys.stdout):
+def start_embedded_debugger_interactive_password(fAllowUnencrypted = False, fRemote = False, timeout = TIMEOUT_FIVE_MINUTES, fDebug = False, stdin = sys.stdin, stdout = sys.stdout):
     if g_server != None:
         return
 
@@ -336,7 +342,7 @@ def start_embedded_debugger_interactive_password(fAllowUnencrypted = False, fRem
         
     pwd = stdin.readline()[:-1]
     
-    return __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, fDebug)
+    return __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug)
     
 
 
@@ -360,7 +366,7 @@ def settrace():
 
 
 
-RPDB_VERSION = "RPDB_02_00_00"
+RPDB_VERSION = "RPDB_2_0_1"
 
 
 
@@ -581,6 +587,13 @@ class ThreadNotFound(CException):
 
 
 
+class NoThreads(CException):
+    """
+    No Threads.
+    """
+
+
+
 class ThreadDone(CException):
     """
     Thread Done.
@@ -648,6 +661,11 @@ class NotAttached(CConnectionException):
 
 
 
+class SpawnUnsupported(CConnectionException):
+    """Spawn Unsupported."""
+
+
+
 class UnknownServer(CConnectionException):
     """Unknown Server."""
 
@@ -690,13 +708,14 @@ class AuthenticationFailure(CSecurityException):
 
 class AuthenticationBadIndex(CSecurityException):
     """Authentication Bad Index."""
-    def __init__(self, max_index):
+    def __init__(self, max_index, anchor):
         CSecurityException.__init__(self)
 
         self.m_max_index = max_index
+        self.m_anchor = anchor
 
     def __str__(self):
-        return repr(self.m_max_index)
+        return repr((self.m_max_index, self.m_anchor))
 
 
 
@@ -710,7 +729,7 @@ class AuthenticationBadIndex(CSecurityException):
 # '%s' serves as a place holder.
 #
 osSpawn = {
-    'nt': 'start cmd /k %s %s', 
+    'nt': 'start "rpdb2 - Version ' + get_version() + ' - Debugee Console" cmd /k %s %s', 
     'posix': 'xterm -e %s %s &', 
     'mac': '%s %s',
     'screen': 'screen -t debugger_console python %s'
@@ -757,6 +776,7 @@ Type "help", "copyright", "license" for more information.""" % (RPDB_VERSION))
 PRINT_NOTICE_PROMPT = "Hit Return for more, or q (and Return) to quit:"
 PRINT_NOTICE_LINES_PER_SECTION = 20
 
+STR_NO_THREADS = "Operation failed since no traced threads were found."
 STR_AUTOMATIC_LAUNCH_UNKNOWN = "RPDB doesn't know how to launch a new terminal on this platform. Please start the debuggee manually with the -d flag on a seperate console and then use the 'attach' command to attach to it."
 STR_STARTUP_NOTICE = "Attaching to debuggee..."
 STR_STARTUP_SPAWN_NOTICE = "Spawning debuggee..."
@@ -866,6 +886,7 @@ STATE_RUNNING = 'running'
 STATE_ANALYZE = 'analyze'
 STATE_DETACHED = 'detached'
 STATE_DETACHING = 'detaching'
+STATE_SPAWNING = 'spawning'
 STATE_ATTACHING = 'attaching'
 
 DEFAULT_NUMBER_OF_LINES = 15
@@ -918,7 +939,7 @@ XML_DATA = """<?xml version='1.0'?>
 N_WORK_QUEUE_THREADS = 15
 
 
-
+g_server_lock = threading.RLock()
 g_server = None
 g_debugger = None
 
@@ -927,6 +948,8 @@ g_main_global_dictionay = None
 
 g_fDebug = False
 g_fScreen = False
+
+g_traceback_lock = threading.RLock()
 
 
 
@@ -968,7 +991,13 @@ def safe_repr_limited(x):
 def print_debug():
     if g_fDebug == True:
         (t, v, b) = sys.exc_info()
-        traceback.print_exception(t, v, b, file = sys.__stderr__)
+
+        try:
+            g_traceback_lock.acquire()
+            traceback.print_exception(t, v, b, file = sys.stderr)
+            
+        finally:    
+            g_traceback_lock.release()
 
        
 
@@ -1042,11 +1071,11 @@ def my_abspath1(path):
 
 
 def IsPythonSourceFile(filename):
-    return filename.endswith('.py')
+    return filename.endswith(PYTHON_FILE_EXTENSION)
 
 
 
-def FindFile(filename, sources_paths = []):
+def FindFile(filename, sources_paths = [], fModules = False):
     """ 
     Expand filname to explicit path.   
     Find file looks in the following directories in this order:
@@ -1057,16 +1086,27 @@ def FindFile(filename, sources_paths = []):
     4. PATH
     """
 
-    if os.path.dirname(filename) != '':
-        abs_path = my_abspath(filename)
+    if fModules:
+        modulename = CalcModuleName(filename)
+        _module = sys.modules.get(modulename, None)
+        if _module != None:
+            _filename = CalcScriptName(_module.__file__)
+            abs_path = my_abspath(_filename)
+            if os.path.isfile(abs_path):
+                return abs_path
+
+    _filename = CalcScriptName(filename)
+        
+    if os.path.dirname(_filename) != '':
+        abs_path = my_abspath(_filename)
         if os.path.isfile(abs_path):
             return abs_path
 
-    _basename = os.path.basename(filename)
+    _basename = os.path.basename(_filename)
     cwd = os.getcwd()
     path = os.environ['PATH']
     paths = sources_paths + [cwd] + sys.path + path.split(os.pathsep)
-    norm_filename = os.path.normpath(filename)
+    norm_filename = os.path.normpath(_filename)
     
     for p in paths:
         f = os.path.join(p, _basename)
@@ -1091,9 +1131,28 @@ def winlower(path):
     
 
 def CalcModuleName(filename):
-    module_name = os.path.basename(filename).rstrip(PYTHON_FILE_EXTENSION)
+    _basename = os.path.basename(filename)
+    
+    if _basename[:-1].endswith(PYTHON_FILE_EXTENSION):
+        module_name = _basename[:-4]
+    else:    
+        module_name = _basename.rstrip(PYTHON_FILE_EXTENSION)
+        
     return module_name
 
+
+
+def CalcScriptName(filename):
+    if filename.endswith(PYTHON_FILE_EXTENSION):
+        return filename
+        
+    if filename[:-1].endswith(PYTHON_FILE_EXTENSION):
+        scriptname = filename[:-1]
+        return scriptname
+
+    scriptname = filename + PYTHON_FILE_EXTENSION
+    return scriptname
+        
 
 
 def _getpid():
@@ -1208,15 +1267,22 @@ class CCrypto:
         self.m_failure_lock = threading.RLock()
 
         self.m_lock = threading.RLock()
+
+        self.m_index_anchor_in = random.randint(0, 1000000000)
+        self.m_index_anchor_ex = 0
+
         self.m_index = 0
         self.m_index_table = {}
         self.m_index_table_size = INDEX_TABLE_SIZE
         self.m_max_index = 0
 
-    def set_index(self, i):
+    def set_index(self, i, anchor):
         try:    
             self.m_lock.acquire()
+
             self.m_index = i
+            self.m_index_anchor_ex = anchor
+            
         finally:
             self.m_lock.release()
 
@@ -1297,16 +1363,19 @@ class CCrypto:
 
     def __wait_a_little(self):
         self.m_failure_lock.acquire()
-        time.sleep(1.0 + random.random())
+        time.sleep((1.0 + random.random()) / 2)
         self.m_failure_lock.release()
 
-    def __verify_index(self, i, id):
+    def __verify_index(self, anchor, i, id):
         try:
             try:    
                 self.m_lock.acquire()
 
+                if anchor != self.m_index_anchor_in:
+                    raise AuthenticationBadIndex(self.m_max_index, self.m_index_anchor_in)
+
                 if i > self.m_max_index + INDEX_TABLE_SIZE / 2:
-                    raise AuthenticationBadIndex(self.m_max_index)
+                    raise AuthenticationBadIndex(self.m_max_index, self.m_index_anchor_in)
 
                 _i = i % INDEX_TABLE_SIZE
                 (iv, idl) = self.m_index_table.get(_i, (None, None))
@@ -1319,7 +1388,7 @@ class CCrypto:
                 elif (iv == i) and (not id in idl):
                     idl.append(id)
                 else:
-                    raise AuthenticationBadIndex(self.m_max_index)
+                    raise AuthenticationBadIndex(self.m_max_index, self.m_index_anchor_in)
 
                 self.m_index_table[_i] = (iv, idl) 
 
@@ -1336,7 +1405,7 @@ class CCrypto:
 
     def __auth_make(self, s):
         i = self.__get_next_index()
-        _s = cPickle.dumps((i, self.m_rid, s))
+        _s = cPickle.dumps((self.m_index_anchor_ex, i, self.m_rid, s))
         
         d = hmac.new(self.m_key, _s, md5)
         _d = d.digest()
@@ -1358,7 +1427,7 @@ class CCrypto:
                 self.__wait_a_little()
                 raise AuthenticationFailure
                 
-            (i, id, __s) = cPickle.loads(_s)
+            (anchor, i, id, __s) = cPickle.loads(_s)
         except AuthenticationFailure:
             raise
         except:
@@ -1366,7 +1435,7 @@ class CCrypto:
             raise AuthenticationBadData
             
         if fVerifyIndex:
-            self.__verify_index(i, id)
+            self.__verify_index(anchor, i, id)
 
         return __s
         
@@ -1409,6 +1478,11 @@ class CEventNamespace(CEvent):
     
 
 
+class CEventNoThreads(CEvent):
+    pass
+
+
+    
 class CEventThreads(CEvent):
     def __init__(self, current_thread, thread_list):
         self.m_current_thread = current_thread
@@ -1827,7 +1901,8 @@ class CFileBreakInfo:
         return scl
 
     def __CalcBreakInfoFromSource(self, source):
-        code = compile(source, self.m_filename, "exec")
+        _source = source.replace('\r\n', '\n')
+        code = compile(_source, self.m_filename, "exec")
         
         self.m_scope_break_info = []
         self.m_first_line = code.co_firstlineno
@@ -1939,6 +2014,18 @@ class CBreakPoint:
         if (expr != None) and (expr != ''):
             self.m_code = compile(expr, '', 'eval')
         
+    def calc_enclosing_scope_name(self):
+        if self.m_scope_offset != 0:
+            return None
+            
+        if self.m_scope_fqn == MODULE_SCOPE:
+            return None
+
+        scope_name_list = self.m_scope_fqn.split(SCOPE_SEP)
+        enclosing_scope_name = scope_name_list[-2]
+
+        return enclosing_scope_name
+            
     def enable(self):
         self.m_fEnabled = True
         
@@ -2095,17 +2182,35 @@ class CBreakPointsManager:
         try:
             bpf = self.m_break_points_by_function[function_name]
             del bpf[bp]
+            if len(bpf) == 0:
+                del self.m_break_points_by_function[function_name]
         except KeyError:
-            return
+            pass
 
-        if len(bpf) == 0:
-            del self.m_break_points_by_function[function_name]
-                    
+        _function_name = bp.calc_enclosing_scope_name()
+        if _function_name == None:
+            return
+            
+        try:
+            _bpf = self.m_break_points_by_function[_function_name]
+            del _bpf[bp]
+            if len(_bpf) == 0:
+                del self.m_break_points_by_function[_function_name]
+        except KeyError:
+            pass
+
     def __add_to_function_list(self, bp):
         function_name = bp.m_scope_name
 
         bpf = self.m_break_points_by_function.setdefault(function_name, {})
         bpf[bp] = True 
+
+        _function_name = bp.calc_enclosing_scope_name()
+        if _function_name == None:
+            return
+            
+        _bpf = self.m_break_points_by_function.setdefault(_function_name, {})
+        _bpf[bp] = True 
             
     def get_breakpoint(self, filename, lineno):
         bpm = self.m_break_points_by_file[filename]
@@ -2319,7 +2424,7 @@ class CDebuggerCoreThread:
         self.m_frame_lock = threading.Condition(threading.Lock())
         self.m_frame_external_references = 0
         
-    def profile(self, frame, event, arg):                    
+    def profile(self, frame, event, arg):    
         if event == 'return':            
             self.m_frame = frame.f_back
             try:
@@ -2423,15 +2528,27 @@ class CDebuggerCoreThread:
 
             (f, lineno) = self.get_frame(base_frame, frame_index, fException)
 
-            module_name = CalcModuleName(f.f_code.co_filename)
-
             if f.f_globals is g_main_global_dictionay:
                 gc = g_main_global_dictionay
             elif f.f_globals is vars(sys.modules['__main__']):
                 gc = vars(sys.modules['__main__'])
             else:
-                gc = vars(sys.modules[module_name])
-
+                gc = {}
+                sn1 = CalcScriptName(f.f_code.co_filename)
+                
+                for m in sys.modules.values():
+                    if m == None:
+                        continue
+                        
+                    fn = vars(m).get('__file__', None)
+                    if fn == None:
+                        continue
+                        
+                    sn2 = CalcScriptName(fn)
+                    if sn1 == sn2:
+                        gc = vars(m)
+                        break
+                
             try:
                 lc = self.m_locals_copy[f]
             except KeyError:
@@ -2677,6 +2794,8 @@ class CDebuggerCore:
         self.m_current_ctx = None 
         self.m_f_first_to_break = True
         self.m_f_break_on_init = False
+
+        self.m_timer_embedded_giveup = None
         
         self.m_threads_lock = threading.Condition(threading.Lock())
 
@@ -2700,13 +2819,29 @@ class CDebuggerCore:
         self.m_event_dispatcher.shutdown()
         self.m_state_manager.shutdown()
         
-    def settrace(self, f = None, f_break_on_init = True):
+    def set_request_go_timer(self, timeout):
+        if timeout == None:
+            return
+            
+        _timeout = max(5.0, timeout)
+        self.m_timer_embedded_giveup = threading.Timer(_timeout, self.request_go)
+        self.m_timer_embedded_giveup.start()
+    
+    def cancel_request_go_timer(self):
+        t = self.m_timer_embedded_giveup
+        if t != None:
+            self.m_timer_embedded_giveup = None
+            t.cancel()
+            
+    def settrace(self, f = None, f_break_on_init = True, timeout = None):
         if not self.m_ftrace:
             return 
             
         tid = thread.get_ident()
         if tid in self.m_threads:
             return
+
+        self.set_request_go_timer(timeout)
             
         self.m_f_break_on_init = f_break_on_init
         
@@ -2731,15 +2866,21 @@ class CDebuggerCore:
         except KeyError:
             code_context = CCodeContext(code, self.m_bp_manager)
             return self.m_code_contexts.setdefault(code, code_context)
-            
+
+    def get_current_ctx(self):
+        if len(self.m_threads) == 0:
+            raise NoThreads
+
+        return self.m_current_ctx 
+        
     def wait_for_first_thread(self):
-        if len(self.m_threads) > 0:
+        if self.m_current_ctx != None:
             return
 
         try:
             self.m_threads_lock.acquire() 
 
-            while len(self.m_threads) == 0:
+            while self.m_current_ctx == None:
                 self.m_threads_lock.wait(1.0)
 
         finally:
@@ -2885,7 +3026,7 @@ class CDebuggerCore:
             raise DebuggerNotBroken
     
     def get_current_filename(self, frame_index, fException):
-        ctx = self.m_current_ctx
+        ctx = self.get_current_ctx()
         
         try:
             f = None
@@ -2950,7 +3091,7 @@ class CDebuggerCore:
             if filename in [None, '']:
                 _filename = self.get_current_filename(frame_index, fException)
             else:
-                _filename = FindFile(filename)
+                _filename = FindFile(filename, fModules = True)
                 
             self.m_bp_manager.set_temp_breakpoint(_filename, scope, lineno)
             self.set_all_tracers()
@@ -2966,7 +3107,12 @@ class CDebuggerCore:
                 
             self.verify_broken()
 
-            self.m_step_tid = self.m_current_ctx.m_thread_id
+            try:
+                ctx = self.get_current_ctx()
+            except NoThreads:
+                return
+                
+            self.m_step_tid = ctx.m_thread_id
             self.m_next_frame = None
             self.m_return_frame = None       
 
@@ -2981,10 +3127,15 @@ class CDebuggerCore:
             self.m_state_manager.acquire()
             self.verify_broken()
 
+            try:
+                ctx = self.get_current_ctx()
+            except NoThreads:
+                return
+                
             if self.m_lastest_event in ['return', 'exception']:
                 return self.request_step(fLock = False)
 
-            self.m_next_frame = self.m_current_ctx.m_frame
+            self.m_next_frame = ctx.m_frame
             self.m_return_frame = None
             
             self.request_go(fLock = False)
@@ -2997,11 +3148,16 @@ class CDebuggerCore:
             self.m_state_manager.acquire()
             self.verify_broken()
 
+            try:
+                ctx = self.get_current_ctx()
+            except NoThreads:
+                return
+                
             if self.m_lastest_event == 'return':
                 return self.request_step(fLock = False)
                 
             self.m_next_frame = None
-            self.m_return_frame = self.m_current_ctx.m_frame
+            self.m_return_frame = ctx.m_frame
 
             self.request_go(fLock = False)
 
@@ -3013,7 +3169,12 @@ class CDebuggerCore:
             self.m_state_manager.acquire()
             self.verify_broken()
 
-            frame = self.m_current_ctx.m_frame
+            try:
+                ctx = self.get_current_ctx()
+            except NoThreads:
+                return
+                
+            frame = ctx.m_frame
             code = frame.f_code
 
             valid_lines = CalcValidLines(code)
@@ -3062,6 +3223,7 @@ class CDebuggerEngine(CDebuggerCore):
             CEventStackDepth: {}, 
             CEventBreakpoint: {}, 
             CEventThreads: {},
+            CEventNoThreads: {},
             CEventThreadBroken: {},
             CEventNamespace: {},
             CEventStack: {},
@@ -3096,6 +3258,8 @@ class CDebuggerEngine(CDebuggerCore):
         return index
 
     def wait_for_event(self, timeout, nStateChange):
+        self.cancel_request_go_timer()
+        
         (n, sel) = self.m_event_queue.wait_for_event(timeout, nStateChange)
         return (n, sel)
 
@@ -3116,7 +3280,7 @@ class CDebuggerEngine(CDebuggerCore):
                 
                 _filename = self.get_current_filename(frame_index, fException)
             else:
-                _filename = FindFile(filename)
+                _filename = FindFile(filename, fModules = True)
                 
             bp = self.m_bp_manager.set_breakpoint(_filename, scope, lineno, fEnabled, expr)
             self.set_all_tracers()
@@ -3178,12 +3342,16 @@ class CDebuggerEngine(CDebuggerCore):
             self.send_threads_event(fException)
             self.send_stack_event(fException)
             self.send_namespace_event()
+
+        except NoThreads:
+            self.send_no_threads_event()
+            
         except:
             print_debug()
             raise
     
     def send_stack_depth(self):
-        ctx = self.m_current_ctx
+        ctx = self.get_current_ctx()
         
         try:
             try:
@@ -3192,13 +3360,25 @@ class CDebuggerEngine(CDebuggerCore):
             except ThreadDone:
                 return
 
-            s = traceback.extract_stack(f)
+            try:
+                g_traceback_lock.acquire()
+                s = traceback.extract_stack(f)
+                
+            finally:    
+                g_traceback_lock.release()
+
             stack_depth = len(s)
 
             if f.f_exc_traceback == None:
                 stack_depth_exception = None
             else:    
-                _s = traceback.extract_tb(f.f_exc_traceback)
+                try:
+                    g_traceback_lock.acquire()
+                    _s = traceback.extract_tb(f.f_exc_traceback)
+                    
+                finally:    
+                    g_traceback_lock.release()
+
                 stack_depth_exception = stack_depth + len(_s) - 1
 
             event = CEventStackDepth(stack_depth, stack_depth_exception)
@@ -3221,9 +3401,10 @@ class CDebuggerEngine(CDebuggerCore):
 
         event = CEventThreads(*_tl)
         self.m_event_dispatcher.fire_event(event)
-        
+
     def send_stack_event(self, fException):
         sl = self.get_stack([], False, fException)
+
         if len(sl) == 0:
             return
             
@@ -3234,6 +3415,10 @@ class CDebuggerEngine(CDebuggerCore):
         event = CEventNamespace()
         self.m_event_dispatcher.fire_event(event)
 
+    def send_no_threads_event(self):
+        _event = CEventNoThreads()
+        self.m_event_dispatcher.fire_event(_event)
+        
     def __get_stack(self, ctx, ctid, fException):
         tid = ctx.m_thread_id    
 
@@ -3245,7 +3430,13 @@ class CDebuggerEngine(CDebuggerCore):
                 return None
 
             _f = f
-            s = traceback.extract_stack(f)
+
+            try:
+                g_traceback_lock.acquire()
+                s = traceback.extract_stack(f)
+                
+            finally:    
+                g_traceback_lock.release()
 
             if fException: 
                 if f.f_exc_traceback == None:
@@ -3257,7 +3448,13 @@ class CDebuggerEngine(CDebuggerCore):
 
                 _f = _tb.tb_frame    
                     
-                _s = traceback.extract_tb(f.f_exc_traceback)
+                try:
+                    g_traceback_lock.acquire()
+                    _s = traceback.extract_tb(f.f_exc_traceback)
+                    
+                finally:    
+                    g_traceback_lock.release()
+
                 s = s[:-1] + _s
 
             code_list = []
@@ -3295,7 +3492,7 @@ class CDebuggerEngine(CDebuggerCore):
         if fException and (fAll or (len(tid_list) != 0)):
             raise BadArgument
 
-        ctx = self.m_current_ctx       
+        ctx = self.get_current_ctx()       
         ctid = ctx.m_thread_id
 
         if fAll:
@@ -3315,34 +3512,40 @@ class CDebuggerEngine(CDebuggerCore):
             lineno = 1
             nlines = -1
 
-        if (filename != '') and not IsPythonSourceFile(filename):
-            raise IOError
+        #if (filename != '') and not IsPythonSourceFile(filename):
+        #    raise IOError
             
         _lineno = lineno
         r = {}
-
-        ctx = self.m_current_ctx
-
-        try:
-            f = None
-            base_frame = None
-            
-            base_frame = ctx.frame_acquire()
-            (f, frame_lineno) = ctx.get_frame(base_frame, frame_index, fException)
-            frame_filename = my_abspath(f.f_code.co_filename)
-
-        finally:
-            f = None
-            base_frame = None            
-            ctx.frame_release()
-            
-        frame_event = [[ctx.m_event, 'call'][frame_index > 0], 'exception'][fException]
+        frame_filename = None
         
+        try:
+            ctx = self.get_current_ctx()
+
+            try:
+                f = None
+                base_frame = None
+                
+                base_frame = ctx.frame_acquire()
+                (f, frame_lineno) = ctx.get_frame(base_frame, frame_index, fException)
+                frame_filename = my_abspath(f.f_code.co_filename)
+
+            finally:
+                f = None
+                base_frame = None            
+                ctx.frame_release()
+
+            frame_event = [[ctx.m_event, 'call'][frame_index > 0], 'exception'][fException]
+            
+        except NoThreads:
+            if filename in [None, '']:
+                raise
+            
         if filename in [None, '']:
             __filename = frame_filename
             r[DICT_KEY_TID] = ctx.m_thread_id
         else:
-            __filename = FindFile(filename)
+            __filename = FindFile(filename, fModules = True)
 
         _filename = winlower(__filename)    
 
@@ -3350,7 +3553,13 @@ class CDebuggerEngine(CDebuggerCore):
         breakpoints = {}
         
         while nlines != 0:
-            line = linecache.getline(_filename, _lineno)
+            try:
+                g_traceback_lock.acquire()
+                line = linecache.getline(_filename, _lineno)
+                
+            finally:    
+                g_traceback_lock.release()
+
             if line == '':
                 break
 
@@ -3407,7 +3616,13 @@ class CDebuggerEngine(CDebuggerCore):
         breakpoints = {}
         
         while nlines != 0:
-            line = linecache.getline(frame_filename, _lineno)
+            try:
+                g_traceback_lock.acquire()
+                line = linecache.getline(frame_filename, _lineno)
+                
+            finally:    
+                g_traceback_lock.release()
+
             if line == '':
                 break
 
@@ -3442,7 +3657,8 @@ class CDebuggerEngine(CDebuggerCore):
         if fAll:
             ctx_list = self.get_threads().values()
         else:
-            ctx_list = [self.m_current_ctx]
+            ctx = self.get_current_ctx()
+            ctx_list = [ctx]
 
         _sl = [self.__get_source(ctx, nlines, frame_index, fException) for ctx in ctx_list]
         sl = [s for s in _sl if s != None]    
@@ -3450,7 +3666,7 @@ class CDebuggerEngine(CDebuggerCore):
         return sl
 
     def __get_locals_globals(self, frame_index, fException, fReadOnly = False):
-        ctx = self.m_current_ctx
+        ctx = self.get_current_ctx()
         (_globals, _locals) = ctx.get_locals_copy(frame_index, fException, fReadOnly)
 
         return (_globals, _locals)
@@ -3606,7 +3822,7 @@ class CDebuggerEngine(CDebuggerCore):
         return snl                
 
     def get_exception(self, frame_index, fException):
-        ctx = self.m_current_ctx
+        ctx = self.get_current_ctx()
 
         try:
             f = None
@@ -3699,7 +3915,7 @@ class CDebuggerEngine(CDebuggerCore):
         return (w, e)
 
     def get_thread_list(self):
-        ctx = self.m_current_ctx
+        ctx = self.get_current_ctx()
         
         if ctx == None:
             current_thread_id = -1
@@ -3896,7 +4112,7 @@ class CPwdServerProxy:
                     raise e
 
             except AuthenticationBadIndex, e:
-                self.m_crypto.set_index(e.m_max_index)
+                self.m_crypto.set_index(e.m_max_index, e.m_anchor)
                 continue
 
             except xmlrpclib.Fault, fault:
@@ -4367,6 +4583,8 @@ class CSessionManagerInternal:
         self.register_callback(self.reset_frame_indexes, event_type_dict, fSingleUse = False)
         event_type_dict = {CEventStackDepth: {}}
         self.register_callback(self.set_stack_depth, event_type_dict, fSingleUse = False)
+        event_type_dict = {CEventNoThreads: {}}
+        self.register_callback(self._reset_frame_indexes, event_type_dict, fSingleUse = False)
         
         self.m_printer = self.__nul_printer
 
@@ -4429,23 +4647,33 @@ class CSessionManagerInternal:
 
         rid = generate_rid()
 
-        self.__spawn_server(ExpandedFilename, args, rid)            
+        self.m_state_manager.set_state(STATE_SPAWNING)
 
         try:
-            server = self.__wait_for_debuggee(rid)
-        except UnknownServer:
-            self.m_printer(STR_STARTUP_FAILURE)
-            raise
-            
-        self.attach(server.m_rid, server.m_filename)
+            try:
+                self.__spawn_server(ExpandedFilename, args, rid)            
+            except SpawnUnsupported:    
+                self.m_printer(STR_AUTOMATIC_LAUNCH_UNKNOWN)
+                raise
+
+            try:
+                server = self.__wait_for_debuggee(rid)
+            except UnknownServer:
+                self.m_printer(STR_STARTUP_FAILURE)
+                raise
+                
+            self.attach(server.m_rid, server.m_filename)
+        except:
+            if self.m_state_manager.get_state() != STATE_DETACHED:
+                self.m_state_manager.set_state(STATE_DETACHED)
+
+            raise    
 
     def __spawn_server(self, ExpandedFilename, args, rid):
         """
         Start an OS console to act as server.
         What it does is to start rpdb again in a new console in server only mode.
         """
-        if not os.name in osSpawn:
-           self.m_printer(STR_AUTOMATIC_LAUNCH_UNKNOWN) 
 
         if g_fScreen:
             name = 'screen'
@@ -4454,6 +4682,9 @@ class CSessionManagerInternal:
                 import terminalcommand
                 name = 'mac'
             except:
+                if not os.name in osSpawn:
+                   raise SpawnUnsupported
+                   
                 name = os.name
         
         e = ['', ' --plaintext'][self.m_fAllowUnencrypted]
@@ -4535,6 +4766,10 @@ class CSessionManagerInternal:
             self.m_printer(STR_ALREADY_ATTACHED)
         elif type == NotAttached:
             self.m_printer(STR_NOT_ATTACHED)
+        elif type == NoThreads:
+            self.m_printer(STR_NO_THREADS)
+        elif type == SpawnUnsupported:
+            self.m_printer(STR_AUTOMATIC_LAUNCH_UNKNOWN)
         elif type == UnknownServer:
             self.m_printer(STR_DEBUGGEE_UNKNOWN)
         elif type == UnsetPassword:
@@ -4756,8 +4991,8 @@ class CSessionManagerInternal:
         return r
 
     def get_source_file(self, filename, lineno, nlines): 
-        if (filename != '') and not IsPythonSourceFile(filename):
-            raise IOError
+        #if (filename != '') and not IsPythonSourceFile(filename):
+        #    raise IOError
             
         frame_index = self.get_frame_index()
         fAnalyzeMode = (self.m_state_manager.get_state() == STATE_ANALYZE) 
@@ -4828,7 +5063,10 @@ class CSessionManagerInternal:
         if si == None:
             return ''
         return si.m_filename    
-        
+
+    def _reset_frame_indexes(self, event):
+        self.reset_frame_indexes(None)
+    
     def reset_frame_indexes(self, event):
         try:
             self.m_state_manager.acquire()
@@ -4863,7 +5101,7 @@ class CSessionManagerInternal:
             self.m_state_manager.acquire()
             self.__verify_broken()
 
-            if frame_index < 0:
+            if (frame_index < 0) or (self.m_stack_depth == None):
                 return self.get_frame_index(fLock = False)
 
             if self.m_state_manager.get_state() == STATE_ANALYZE:
@@ -5485,7 +5723,7 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
                         
                     print >> self.stdout, ' %1s %5d  %-28s  %4d  %s' % (m, i, calc_suffix(e[0], 28), e[1], calc_prefix(e[2], 20))
                     i += 1
-        except (socket.error, CConnectionException):
+        except (socket.error, NoThreads, CConnectionException):
             self.m_session_manager.report_exception(*sys.exc_info())
         except ValueError:
             print >> self.stdout, STR_BAD_ARGUMENT
@@ -5495,7 +5733,14 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
     do_k = do_stack
     
     def do_list(self, arg):
-        _args = arg.split(BP_EVAL_SEP)
+        __args = arg.split(BP_FILENAME_SEP)
+        __args2 = __args[-1]
+        if len(__args) > 1:
+            _filename = __args[0]
+        else:
+            _filename = ''
+                
+        _args = __args2.split(BP_EVAL_SEP)
         
         fAll = (_args[0] == SYMBOL_ALL)
         fMore = (_args[0] == SOURCE_MORE)
@@ -5503,7 +5748,7 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
         fEntire = (_args[0] == SOURCE_ENTIRE_FILE)
         fCurrent = (_args[0] == '')
         fLine = False
-        l = -1
+        l = 1
         
         try:
             if len(_args) > 1:
@@ -5532,9 +5777,11 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
             
         try:
             if fEntire:
-                r = [self.m_session_manager.get_source_file('', -1, -1)]
+                r = [self.m_session_manager.get_source_file(_filename, -1, -1)]
             elif fLine:
-                r = [self.m_session_manager.get_source_file('', l, nlines)]
+                r = [self.m_session_manager.get_source_file(_filename, l, nlines)]
+            elif _filename != '':
+                r = [self.m_session_manager.get_source_file(_filename, l, nlines)]
             else:
                 r = self.m_session_manager.get_source_lines(nlines, fAll)
 
@@ -5593,7 +5840,9 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
             self.m_session_manager.report_exception(*sys.exc_info())
         except NoExceptionFound:
             print >> self.stdout, STR_EXCEPTION_NOT_FOUND
-        except (InvalidFrame, ThreadDone, IOError):
+        except NoThreads:
+            self.m_session_manager.report_exception(*sys.exc_info())
+        except (InvalidFrame, IOError):
             print >> self.stdout, STR_SOURCE_NOT_FOUND
 
     do_l = do_list
@@ -5684,7 +5933,7 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
                 
         except ValueError:
             print >> self.stdout, STR_BAD_ARGUMENT
-        except (socket.error, CConnectionException):
+        except (socket.error, NoThreads, CConnectionException):
             self.m_session_manager.report_exception(*sys.exc_info())
         except ThreadNotFound:
             print >> self.stdout, STR_THREAD_NOT_FOUND
@@ -5941,8 +6190,7 @@ will happen only when it returns to do python code."""
 
 Set a breakpoint.
 
-<filename> - is the file name which basically is the script's name without
-             the '.py' extension. 
+<filename> - either the filename or the module name. 
 <line>     - is the line number to assign the breakpoint to.
 <scope>    - is a "fully qualified" function name. That is, not only the 
              function name but also the class name (in case of a member 
@@ -6058,7 +6306,7 @@ Type 'help up' or 'help down' for more information on focused frames."""
     help_k = help_stack
     
     def help_list(self):
-        print >> self.stdout, """list [<line_no> | '+' | '-' | '*'] [',' <nlines>]
+        print >> self.stdout, """list [<file_name>:][<line_no> | '+' | '-' | '^' | '*'] [',' <nlines>]
 
 (shorthand - l)
 
@@ -6076,14 +6324,15 @@ If a breakpoint is assigned to a line, that line will be marked with:
 
     'B' - if the breakpoint is enabled
     'D' - if the breakpoint is disabled
-    
-<line_no> - Print the source lines around that line number in the same file 
-            of the current line.
-'+'       - Print the next lines in the file.
-'-'       - Print the previous lines in the file.
-'^'       - Print the entire file.
-'*'       - Print the source lines for each of the active threads.
-<nlines>  - Print <nlines> of source
+
+<file_name> - List source from filename    
+<line_no>   - Print the source lines around that line number in the same file 
+              of the current line.
+'+'         - Print the next lines in the file.
+'-'         - Print the previous lines in the file.
+'^'         - Print the entire file.
+'*'         - Print the source lines for each of the active threads.
+<nlines>    - Print <nlines> of source
 
 Type 'help break' for more information on 'broken' and un-'broken' threads.
 Type 'help up' or 'help down' for more information on focused frames."""  
@@ -6218,30 +6467,36 @@ def __settrace():
 
     
 
-def __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, fDebug):
+def __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug):
     global g_server
     global g_debugger
     global g_fDebug
 
-    if g_server != None:
-        return
+    try:
+        g_server_lock.acquire()
+        
+        if g_server != None:
+            return
 
-    g_fDebug = fDebug
-    
-    xmlrpclib.loads(XML_DATA)    
+        g_fDebug = fDebug
+        
+        xmlrpclib.loads(XML_DATA)    
 
-    if (not fAllowUnencrypted) and not is_encryption_supported():
-        raise EncryptionNotSupported
-    
-    f = sys._getframe(2)
-    filename = my_abspath(f.f_code.co_filename)
-    
-    g_debugger = CDebuggerEngine()
+        if (not fAllowUnencrypted) and not is_encryption_supported():
+            raise EncryptionNotSupported
+        
+        f = sys._getframe(2)
+        filename = my_abspath(f.f_code.co_filename)
+        
+        g_debugger = CDebuggerEngine()
 
-    g_server = CDebuggeeServer(filename, g_debugger, pwd, fAllowUnencrypted, fRemote)
-    g_server.start()
+        g_server = CDebuggeeServer(filename, g_debugger, pwd, fAllowUnencrypted, fRemote)
+        g_server.start()
 
-    g_debugger.settrace(f)
+        g_debugger.settrace(f, timeout = timeout)
+
+    finally:
+        g_server_lock.release()
 
 
     
