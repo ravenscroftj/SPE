@@ -75,6 +75,7 @@ class SingleInstanceApp(wx.App):
             running = 1
             while running:
                 running = 0
+                print "_spe/sm/wxp/singleApp.py:78: running"
                 running = running + self.argsPosterThread.IsRunning()
                 time.sleep(0.1)
                 
