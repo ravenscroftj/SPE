@@ -10,7 +10,7 @@ SPE v%s (c)2003-2005 www.stani.be
 
 If spe fails to start:
  - type "python SPE.py --debug > debug.txt 2>&1" at the command prompt
- - send debug.txt with some info to s_t_a_n_i@yahoo.com
+ - send debug.txt with some info to spe.stani.be[at]gmail.com
  """%(INFO['version'],)
  
 ####Import Modules
