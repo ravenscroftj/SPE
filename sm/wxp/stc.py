@@ -38,7 +38,7 @@ import wx
 import wx.stc as wx_stc
 import wx.gizmos as wx_gizmos
 
-import inspect,keyword,os,sys
+import inspect,keyword,os,sys,types
 
 #-------------------------------------------------------------------------------
 
@@ -230,22 +230,27 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     obj=self.getWordObject()
                     self.AddText('(')
                     if not obj: return
-                    #docstring
-                    if hasattr(obj,'__init__'):
+                    #classes, mehtods & functions
+                    if type(obj) in [types.ClassType] and hasattr(obj,'__init__'):
                         init    = obj.__init__
                         tip     = getargspec(init).strip()
                         if tip == '(self, *args, **kwargs)':
                             tip = ""
                         else:
                             tip = "%s\n"%tip
-                        print repr(tip)
-                        doci    = init.__doc__.strip()
+                        doci    = init.__doc__
                         if doci:
-                            doc = '%s\n'%(doci)
+                            doc = '%s\n'%(doci.strip())
+                        else:
+                            doc = ""
+                        tip = getargspec(init)
                     else:
                         doc = ""
                         tip = getargspec(obj)
-                    doc += obj.__doc__
+                    #normal docstring
+                    _doc    = obj.__doc__
+                    #compose
+                    if _doc: doc += _doc
                     if doc:
                         if CallTips == 'first paragraph only':
                             tip += doc.split('\n')[0]
@@ -672,10 +677,10 @@ def getargspec(func):
     except:
         pass
     try:
-        return inspect.formatargspec(*inspect.getargspec(func))+'\n\n'
+        return inspect.formatargspec(*inspect.getargspec(func)).replace('self, ','')+'\n\n'
     except:
         pass
     try:
-        return inspect.formatargvalues(*inspect.getargvalues(func))+'\n\n'
+        return inspect.formatargvalues(*inspect.getargvalues(func)).replace('self, ','')+'\n\n'
     except:
         return ''

@@ -249,7 +249,10 @@ class Panel(wx.SplitterWindow):
                 self.frame.setTitle(os.path.basename(fileName),fileName)
             else:
                 self.frame.setTitle()
-        self.fileTime=os.path.getmtime(self.fileName)
+        if os.path.exists(self.fileName):
+            self.fileTime   = os.path.getmtime(self.fileName)
+        else:
+            self.fileTime   = 0
         if self.parentPanel.get('UpdateSidebar')!='realtime':
             self.updateSidebar()
     
