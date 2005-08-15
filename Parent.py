@@ -393,7 +393,9 @@ class Panel(wx.Notebook):
                        ['-t',''][self.app.fCrypto],
                        ['','--debug'][self.app.DEBUG]]
             name    = child.fileName
-            if name != UNNAMED: args.append(name)
+            if os.path.exists(name): 
+                os.chdir(os.path.dirname(name))
+                args.append(name)
             os.spawnl(*args)
             self.SetStatusText('winpdb debugger is succesfully started.',1)
 
