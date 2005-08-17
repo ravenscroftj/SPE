@@ -28,7 +28,7 @@ INFO={
     'url'               : 'http://www.stani.be/python/spe/blog',
     'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.7.5.b",
+    'version'           : "0.7.5.c",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -108,7 +108,7 @@ try:
     import wx
     INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
     if INFO['wxVersionC']!=INFO['wxVersion']:
-        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],wxV)
+        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],INFO['wxVersionC'])
         print 'If you experience any problems please install wxPython v%s\n'%INFO['wxVersion']
     INFO['encoding']    = wx.GetDefaultPyEncoding()
     WX_ERROR = False

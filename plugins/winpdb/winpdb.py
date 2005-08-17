@@ -378,6 +378,7 @@ LABEL_ATTACH_HOST = "Host:"
 LABEL_CONSOLE = "Command:"
 BUTTON_LAUNCH_BROWSE = "Browse"
 BUTTON_ATTACH_REFRESH = "Refresh"
+CHECKBOX_LAUNCH = "Set working directory to the script folder."
 
 HLIST_HEADER_PID = "PID"
 HLIST_HEADER_FILENAME = "Filename"
@@ -388,13 +389,14 @@ HLIST_HEADER_STATE = "State"
 HLIST_HEADER_FRAME = "Frame"
 HLIST_HEADER_LINENO = "Line"
 HLIST_HEADER_FUNCTION = "Function"
+HLIST_HEADER_PATH = "Path"
 
 TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.0.1"
-WINPDB_VERSION = "WINPDB_1_0_1"
+WINPDB_TITLE = "Winpdb 1.0.2"
+WINPDB_VERSION = "WINPDB_1_0_2"
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -461,6 +463,7 @@ ML_HELP = "&Help"
 ML_WEBSITE = "&Website"
 ML_SUPPORT = "&Support"
 ML_DOCS = "&Online Docs"
+ML_UPDATES = "&Check for Updates"
 ML_LICENSE = "&License"
 ML_ABOUT = "&About"
 
@@ -493,6 +496,7 @@ OPEN_TIP = "Open source file in the source viewer."
 WEBSITE_TIP = "Open the Winpdb homepage."
 SUPPORT_TIP = "Open the Winpdb support web page."
 DOCS_TIP = "Open the Winpdb online documentation web page."
+UPDATES_TIP = "Check for updates in the Winpdb website."
 TOGGLE_TIP = "Toggle breakpoint at cursor location."
 DISABLE_TIP = "Disable all breakpoints."
 ENABLE_TIP = "Enable all breakpoints."
@@ -555,7 +559,7 @@ STATE_MAP = {
 
 LICENSE_TITLE = 'License.'
 
-ABOUT_TITLE = 'About Winpdb 1.0'
+ABOUT_TITLE = 'About ' + WINPDB_TITLE
 
 ABOUT_HTML_PREFIX = """
 <html>
@@ -572,8 +576,9 @@ ABOUT_HTML_SUFFIX = """
 WEBSITE_URL = "http://www.digitalpeers.com/pythondebugger/"
 SUPPORT_URL = "http://www.digitalpeers.com/pythondebugger/support.htm"
 DOCS_URL = "http://www.digitalpeers.com/pythondebugger/docs.htm"
+UPDATES_URL = "http://www.digitalpeers.com/pythondebugger/download.htm"
 
-STR_ERROR_INTERFACE_COMPATIBILITY = "The rpdb2 module which was found is of unexpected version. Please upgrade to the latest versions of winpdb.py and rpdb2.py."
+STR_ERROR_INTERFACE_COMPATIBILITY = "The rpdb2 module which was found by Winpdb is of unexpected version (version expected: %s, version found: %s). Please upgrade to the latest versions of winpdb.py and rpdb2.py."
 
 BAD_FILE_WARNING_TIMEOUT_SEC = 10.0
 
@@ -947,7 +952,7 @@ class CMainWindow(CMenuBar, CToolBar, CStatusBar, CJobs):
 
 
 class CWinpdbWindow(wx.Frame, CMainWindow):
-    def __init__(self, session_manager, command_line, fAttach, settings):
+    def __init__(self, session_manager, fchdir, command_line, fAttach, settings):
         CMainWindow.__init__(self)
 
         wx.Frame.__init__(self, None, -1, WINPDB_TITLE, size = settings[WINPDB_SIZE],
@@ -957,7 +962,8 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         
         self.m_session_manager = session_manager
         self.m_source_manager = CSourceManager(self, session_manager)
-        
+
+        self.m_fchdir = fchdir
         self.m_command_line = command_line
         self.m_fAttach = fAttach
         self.m_settings = settings
@@ -998,8 +1004,9 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             "/4/" + ML_HELP +   "/0/" + ML_WEBSITE: {COMMAND: self.do_website, TOOLTIP: WEBSITE_TIP}, 
             "/4/" + ML_HELP +   "/1/" + ML_SUPPORT: {COMMAND: self.do_support, TOOLTIP: SUPPORT_TIP}, 
             "/4/" + ML_HELP +   "/2/" + ML_DOCS: {COMMAND: self.do_docs, TOOLTIP: DOCS_TIP}, 
-            "/4/" + ML_HELP +   "/3/" + ML_ABOUT: {COMMAND: self.do_about}, 
-            "/4/" + ML_HELP +   "/4/" + ML_LICENSE: {COMMAND: self.do_license}
+            "/4/" + ML_HELP +   "/3/" + ML_UPDATES: {COMMAND: self.do_updates, TOOLTIP: UPDATES_TIP}, 
+            "/4/" + ML_HELP +   "/4/" + ML_ABOUT: {COMMAND: self.do_about}, 
+            "/4/" + ML_HELP +   "/5/" + ML_LICENSE: {COMMAND: self.do_license}
         }
         
         self.init_menubar(menu_resource)
@@ -1055,7 +1062,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_code_viewer = CCodeViewer(self.m_splitterh3, style = wx.STATIC_BORDER | wx.TAB_TRAVERSAL, session_manager = self.m_session_manager, source_manager = self.m_source_manager, notify_filename = self.do_notify_filename)
         
         self.m_console = CConsole(self.m_splitterh3, style = wx.STATIC_BORDER | wx.TAB_TRAVERSAL)
-        self.job_post(self.m_console.start, (self, self.m_session_manager, self.m_command_line, self.m_fAttach))
+        self.job_post(self.m_console.start, (self, self.m_session_manager, self.m_fchdir, self.m_command_line, self.m_fAttach))
         
         self.m_splitterh2.SplitHorizontally(self.m_namespave_viewer, self.m_threads_viewer)
         self.m_splitterh1.SplitHorizontally(self.m_splitterh2, self.m_stack_viewer)
@@ -1299,6 +1306,9 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def do_docs(self, event):
         self.job_post(webbrowser.open_new, (DOCS_URL, ))
 
+    def do_updates(self, event):
+        self.job_post(webbrowser.open_new, (UPDATES_URL, ))
+
     def do_license(self, event):
         about = CHTMLDialog(self, LICENSE_TITLE, LICENSE_NOTICE + COPY_OF_THE_GPL_LICENSE)
         about.ShowModal()
@@ -1331,15 +1341,15 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         launch_dialog = CLaunchDialog(self, self.m_last_launch)
         r = launch_dialog.ShowModal()
         if r == wx.ID_OK:
-            command_line = launch_dialog.get_command_line()
+            (command_line, fchdir) = launch_dialog.get_command_line()
             self.m_last_launch = command_line
-            self.job_post(self.job_launch, (command_line, ))
+            self.job_post(self.job_launch, (fchdir, command_line, ))
             
         launch_dialog.Destroy()
 
-    def job_launch(self, path):
+    def job_launch(self, fchdir, path):
         try:
-            self.m_session_manager.launch(path)
+            self.m_session_manager.launch(fchdir, path)
             return
             
         except (socket.error, rpdb2.CConnectionException):
@@ -1470,9 +1480,10 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
 
 class CWinpdbApp(wx.App):
-    def __init__(self, session_manager, command_line, fAttach, fAllowUnencrypted):
+    def __init__(self, session_manager, fchdir, command_line, fAttach, fAllowUnencrypted):
         self.m_frame = None
         self.m_session_manager = session_manager
+        self.m_fchdir = fchdir
         self.m_command_line = command_line
         self.m_fAttach = fAttach
         self.m_fAllowUnencrypted = fAllowUnencrypted
@@ -1492,7 +1503,7 @@ class CWinpdbApp(wx.App):
             dlg.Destroy()
             return True
         
-        self.m_frame = CWinpdbWindow(self.m_session_manager, self.m_command_line, self.m_fAttach, self.m_settings)
+        self.m_frame = CWinpdbWindow(self.m_session_manager, self.m_fchdir, self.m_command_line, self.m_fAttach, self.m_settings)
         self.m_frame.Show()
 
         self.SetTopWindow(self.m_frame)
@@ -2086,7 +2097,7 @@ class CConsole(wx.Panel, CCaptionManager):
         new_font = wx.Font(pointSize = point_size, family = font.GetFamily(), style = font.GetStyle(), weight = font.GetWeight(), face = face)
         ctrl.SetFont(new_font)
         
-    def start(self, parent, session_manager, command_line, fAttach):
+    def start(self, parent, session_manager, fchdir, command_line, fAttach):
         self.m_parent = parent
         self.m_console = rpdb2.CConsole(session_manager, stdin = self, stdout = self, fSplit = True)
         self.m_console.start()
@@ -2094,7 +2105,7 @@ class CConsole(wx.Panel, CCaptionManager):
         if fAttach:
             session_manager.attach_nothrow(command_line)
         elif command_line != '':
-            session_manager.launch_nothrow(command_line)
+            session_manager.launch_nothrow(fchdir, command_line)
         
     def stop(self):
         self.m_queue.put('exit\n')
@@ -2272,6 +2283,7 @@ class CNamespacePanel(wx.Panel, CJobs):
         self.m_tree.AddColumn(TLC_HEADER_NAME)
         self.m_tree.AddColumn(TLC_HEADER_TYPE)
         self.m_tree.AddColumn(TLC_HEADER_REPR)
+        self.m_tree.SetColumnWidth(2, 800)
         self.m_tree.SetMainColumn(0) 
         
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -2637,6 +2649,7 @@ class CStackViewer(wx.Panel, CCaptionManager):
         self.m_stack.InsertColumn(1, HLIST_HEADER_FILENAME)
         self.m_stack.InsertColumn(2, HLIST_HEADER_LINENO)
         self.m_stack.InsertColumn(3, HLIST_HEADER_FUNCTION)
+        self.m_stack.InsertColumn(4, HLIST_HEADER_PATH)
 
         sizerv.Add(self.m_stack, 1, wx.EXPAND | wx.ALL, 0)
 
@@ -2673,9 +2686,10 @@ class CStackViewer(wx.Panel, CCaptionManager):
             e = s[-(1 + i)]
 
             index = self.m_stack.InsertStringItem(sys.maxint, repr(i))
-            self.m_stack.SetStringItem(index, 1, e[0])
+            self.m_stack.SetStringItem(index, 1, os.path.basename(e[0]))
             self.m_stack.SetStringItem(index, 2, repr(e[1]))
             self.m_stack.SetStringItem(index, 3, e[2])
+            self.m_stack.SetStringItem(index, 4, os.path.dirname(e[0]))
             self.m_stack.SetItemData(index, i)
 
             i += 1
@@ -3080,6 +3094,8 @@ class COpenDialog(wx.Dialog):
             
     def do_validate(self):
         filename = self.m_entry.GetValue()
+        if filename[:1] + filename[-1:] in ['""', "''"]:
+            filename = filename[1:-1]
 
         if not rpdb2.IsPythonSourceFile(filename):
             dlg = wx.MessageDialog(self, MSG_ERROR_FILE_NOT_PYTHON, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
@@ -3122,10 +3138,13 @@ class CLaunchDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.do_browse, btn)
         sizerh.Add(btn, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
 
+        self.m_cb = wx.CheckBox(self, -1, CHECKBOX_LAUNCH)
+        self.m_cb.SetValue(True)
+        sizerv.Add(self.m_cb, 0, wx.ALIGN_LEFT | wx.ALL, 5)
+        
         btnsizer = wx.StdDialogButtonSizer()
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
 
-        
         self.m_ok = wx.Button(self, wx.ID_OK)
         self.Bind(wx.EVT_BUTTON, self.do_ok, self.m_ok)
         self.m_ok.SetDefault()
@@ -3173,7 +3192,8 @@ class CLaunchDialog(wx.Dialog):
         (_path, filename, args)  = rpdb2.split_command_line_path_filename_args(command_line)
         
         try:
-            abs_path = rpdb2.FindFile(_path + filename)
+            _filename = os.path.join(_path, filename)
+            abs_path = rpdb2.FindFile(_filename)
         except IOError:                    
             dlg = wx.MessageDialog(self, MSG_ERROR_FILE_NOT_FOUND, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
@@ -3197,20 +3217,20 @@ class CLaunchDialog(wx.Dialog):
         event.Skip()
         
     def get_command_line(self):
-        return self.m_entry_commandline.GetValue()
+        return (self.m_entry_commandline.GetValue(), self.m_cb.GetValue())
 
 
 
-def StartClient(command_line, fAttach, pwd, fAllowUnencrypted, fRemote, host):
+def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, host):
     sm = rpdb2.CSessionManager(pwd, fAllowUnencrypted, fRemote, host)
-    app = CWinpdbApp(sm, command_line, fAttach, fAllowUnencrypted)
+    app = CWinpdbApp(sm, fchdir, command_line, fAttach, fAllowUnencrypted)
     app.MainLoop()
 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_0_1":
-        print STR_ERROR_INTERFACE_COMPATIBILITY
+    if rpdb2.get_version() != "RPDB_2_0_2":
+        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_1", rpdb2.get_version())
         return
         
     return rpdb2.main(StartClient)

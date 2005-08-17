@@ -313,12 +313,13 @@ def start_embedded_debugger(pwd, fAllowUnencrypted = False, fRemote = False, tim
 
     This will cause the script to freeze until a debugger console attaches.
 
-    pwd - The password that governs security of client/server communication
+    pwd     - The password that governs security of client/server communication
     fAllowUnencrypted - Allow unencrypted communications. Communication will
-        be authenticated but encrypted only if possible.
+                        be authenticated but encrypted only if possible.
     fRemote - Allow debugger consoles on remote machines to connect.
     timeout - Seconds to wait for attachment before giving up. If None, 
-              never give up.
+              never give up. Once the timeout period expires, the debugee will
+              resume execution.
     fDebug  - debug output.
 
     IMPORTNAT SECURITY NOTE:
@@ -340,7 +341,7 @@ def start_embedded_debugger_interactive_password(fAllowUnencrypted = False, fRem
     if stdout != None:
         stdout.write('Please type password:')
         
-    pwd = stdin.readline()[:-1]
+    pwd = stdin.readline().rstrip('\n')
     
     return __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug)
     
@@ -366,7 +367,8 @@ def settrace():
 
 
 
-RPDB_VERSION = "RPDB_2_0_1"
+RPDB_VERSION = "RPDB_2_0_2"
+RPDB_COMPATIBILITY_VERSION = "RPDB_2_0_1"
 
 
 
@@ -376,7 +378,7 @@ def get_version():
 
     
 def get_interface_compatibility_version():
-    return RPDB_VERSION
+    return RPDB_COMPATIBILITY_VERSION
 
     
 
@@ -405,11 +407,11 @@ class CSessionManager:
     def refresh(self):
         return self.__smi.refresh()
 
-    def launch_nothrow(self, command_line):
-        return self.__smi.launch_nothrow(command_line)
+    def launch_nothrow(self, fchdir, command_line):
+        return self.__smi.launch_nothrow(fchdir, command_line)
         
-    def launch(self, command_line):
-        return self.__smi.launch(command_line)
+    def launch(self, fchdir, command_line):
+        return self.__smi.launch(fchdir, command_line)
         
     def attach_nothrow(self, key):
         return self.__smi.attach_nothrow(key)
@@ -1006,6 +1008,10 @@ def split_command_line_path_filename_args(command_line):
     if len(command_line) == 0:
         return ('', '', '')
 
+    if os.path.isfile(command_line):
+        (_path, _filename) = split_path(command_line)
+        return (_path, _filename, '')
+        
     if command_line[0] in ['"', "'"]:
         _command_line = command_line[1:]
         i = _command_line.find(command_line[0])
@@ -1031,12 +1037,9 @@ def split_command_line_path_filename_args(command_line):
 def split_path(path):
     (_path, filename) = os.path.split(path)
 
-    if _path in [os.path.sep, os.path.altsep]:
-        _path = ''
-        
-    if _path != '':
+    if (_path[-1:] not in [os.path.sep, os.path.altsep]) and (path[len(_path): len(_path) + 1] in [os.path.sep, os.path.altsep]):
         _path = _path + path[len(_path): len(_path) + 1]
-
+        
     return (_path, filename)
 
     
@@ -1086,6 +1089,9 @@ def FindFile(filename, sources_paths = [], fModules = False):
     4. PATH
     """
 
+    if filename[:1] + filename[-1:] in ['""', "''"]:
+        filename = filename[1:-1]
+    
     if fModules:
         modulename = CalcModuleName(filename)
         _module = sys.modules.get(modulename, None)
@@ -1101,6 +1107,8 @@ def FindFile(filename, sources_paths = [], fModules = False):
         abs_path = my_abspath(_filename)
         if os.path.isfile(abs_path):
             return abs_path
+
+        raise IOError
 
     _basename = os.path.basename(_filename)
     cwd = os.getcwd()
@@ -4620,13 +4628,13 @@ class CSessionManagerInternal:
     def get_encryption(self):
         return self.getSession().get_encryption()
     
-    def launch_nothrow(self, command_line):
+    def launch_nothrow(self, fchdir, command_line):
         try:
-            self.launch(command_line)
+            self.launch(fchdir, command_line)
         except:
             pass
 
-    def launch(self, command_line):
+    def launch(self, fchdir, command_line):
         self.__verify_unattached()
         
         if self.m_pwd == None:
@@ -4639,8 +4647,10 @@ class CSessionManagerInternal:
 
         if not IsPythonSourceFile(filename):
             raise IOError
+
+        _filename = os.path.join(path, filename) 
            
-        ExpandedFilename = FindFile(filename, [path])
+        ExpandedFilename = FindFile(_filename)
         self.set_host("localhost")
 
         self.m_printer(STR_STARTUP_SPAWN_NOTICE)
@@ -4651,7 +4661,7 @@ class CSessionManagerInternal:
 
         try:
             try:
-                self.__spawn_server(ExpandedFilename, args, rid)            
+                self.__spawn_server(fchdir, ExpandedFilename, args, rid)            
             except SpawnUnsupported:    
                 self.m_printer(STR_AUTOMATIC_LAUNCH_UNKNOWN)
                 raise
@@ -4669,7 +4679,7 @@ class CSessionManagerInternal:
 
             raise    
 
-    def __spawn_server(self, ExpandedFilename, args, rid):
+    def __spawn_server(self, fchdir, ExpandedFilename, args, rid):
         """
         Start an OS console to act as server.
         What it does is to start rpdb again in a new console in server only mode.
@@ -4689,15 +4699,21 @@ class CSessionManagerInternal:
         
         e = ['', ' --plaintext'][self.m_fAllowUnencrypted]
         r = ['', ' --remote'][self.m_fRemote]
-
+        c = ['', ' --chdir'][fchdir]
+        
         debugger = os.path.abspath(__file__)
         if debugger[-1:] == 'c':
             debugger = debugger[:-1]
 
         debug_prints = ['', '--debug'][g_fDebug]    
             
-        options = '"%s" %s --debugee --pwd="%s"%s%s --rid=%s "%s" %s' % (debugger, debug_prints, self.m_pwd, e, r, rid, ExpandedFilename, args)
-        command = osSpawn[name] % (sys.executable, options)
+        options = '"%s" %s --debugee --pwd="%s"%s%s%s --rid=%s "%s" %s' % (debugger, debug_prints, self.m_pwd, e, r, c, rid, ExpandedFilename, args)
+
+        python_exec = sys.executable
+        if python_exec.endswith('w.exe'):
+            python_exec = python_exec[:-5] + '.exe'
+            
+        command = osSpawn[name] % (python_exec, options)
 
         if name == 'mac':
             terminalcommand.run(command)
@@ -5334,10 +5350,17 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
             print >> self.stdout, STR_BAD_ARGUMENT
             return
 
+        if arg[:2] == '-k':
+            fchdir = False
+            _arg = arg[2:].strip()
+        else:
+            fchdir = True
+            _arg = arg
+
         self.fPrintBroken = True
 
         try:
-            self.m_session_manager.launch(arg)
+            self.m_session_manager.launch(fchdir, _arg)
             return
             
         except (socket.error, CConnectionException):
@@ -5733,13 +5756,14 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
     do_k = do_stack
     
     def do_list(self, arg):
-        __args = arg.split(BP_FILENAME_SEP)
-        __args2 = __args[-1]
-        if len(__args) > 1:
-            _filename = __args[0]
-        else:
+        rf = arg.rfind(BP_FILENAME_SEP)
+        if rf == -1:
             _filename = ''
-                
+            __args2 = arg
+        else:
+            _filename = arg[:rf]
+            __args2 = arg[rf + 1:]
+            
         _args = __args2.split(BP_EVAL_SEP)
         
         fAll = (_args[0] == SYMBOL_ALL)
@@ -6148,9 +6172,12 @@ consoles on remote machines will BE able to see and attach to the debuggee."""
 Shutdown the debugged script."""
 
     def help_launch(self):
-        print >> self.stdout, """Launch <script_name> [<script_args>]
+        print >> self.stdout, """Launch [-k] <script_name> [<script_args>]
 
-Spawn script <script_name> and attach to it."""
+Spawn script <script_name> and attach to it.
+
+-k  Don't change the current working directory. By default the working
+    directory of the launched script is set to its folder."""
 
     def help_attach(self):
         print >> self.stdout, """attach [<arg>]
@@ -6462,6 +6489,9 @@ Type 'help up' or 'help down' for more information on focused frames."""
 
 
 def __settrace():
+    if g_debugger == None:
+        return
+        
     f = sys._getframe(2)
     g_debugger.settrace(f, f_break_on_init = False)
 
@@ -6500,7 +6530,7 @@ def __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug):
 
 
     
-def StartServer(args, pwd, fAllowUnencrypted, fRemote, rid): 
+def StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, rid): 
     global g_server
     global g_debugger
     global g_main_module_name
@@ -6510,11 +6540,14 @@ def StartServer(args, pwd, fAllowUnencrypted, fRemote, rid):
         ExpandedFilename = FindFile(args[0])
     except IOError:
         print 'File', args[0], ' not found.'
-       
-    #
-    # Insert script directory in front of file search path
-    #
-    sys.path.insert(0, os.path.dirname(ExpandedFilename))
+
+    if fchdir:   
+        #
+        # Insert script directory in front of file search path
+        #
+        sys.path.insert(0, os.path.dirname(ExpandedFilename))
+        os.chdir(os.path.dirname(ExpandedFilename))
+
     sys.argv = args
 
     d = {}
@@ -6540,7 +6573,7 @@ def StartServer(args, pwd, fAllowUnencrypted, fRemote, rid):
     
 
 
-def StartClient(command_line, fAttach, pwd, fAllowUnencrypted, fRemote, host):
+def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, host):
     if (not fAllowUnencrypted) and not is_encryption_supported():
         print STR_ENCRYPTION_SUPPORT_ERROR
         return 2
@@ -6552,7 +6585,7 @@ def StartClient(command_line, fAttach, pwd, fAllowUnencrypted, fRemote, host):
     if fAttach:
         sm.attach_nothrow(command_line)
     elif command_line != '':
-        sm.launch_nothrow(command_line)
+        sm.launch_nothrow(fchdir, command_line)
         
     c.join()
 
@@ -6573,6 +6606,8 @@ def PrintUsage(fExtended = False):
                     debuggees.
     -p, --pwd       Password.
     -s, --screen    Use the Unix screen utility when spawning the debuggee.
+    -c, --chdir     Change the working directory to that of the launched 
+                    script.
     --debug         Debug prints.
 """ % {"rpdb": scriptName}
     
@@ -6590,8 +6625,8 @@ def main(StartClient_func = StartClient):
     try:
         options, args = getopt.getopt(
                             sys.argv[1:], 
-                            'hdao:rtp:s', 
-                            ['help', 'debugee', 'attach', 'host=', 'remote', 'plaintext', 'pwd=', 'rid=', 'screen', 'debug']
+                            'hdao:rtp:sc', 
+                            ['help', 'debugee', 'attach', 'host=', 'remote', 'plaintext', 'pwd=', 'rid=', 'screen', 'chdir', 'debug']
                             )
 
     except getopt.GetoptError, e:
@@ -6606,6 +6641,7 @@ def main(StartClient_func = StartClient):
     secret = None
     host = None
     pwd = None
+    fchdir = False
     fRemote = False
     fAllowUnencrypted = False
     
@@ -6631,6 +6667,8 @@ def main(StartClient_func = StartClient):
             secret = a
         if o in ['-s', '--screen']:
             g_fScreen = True
+        if o in ['-c', '--chdir']:
+            fchdir = True
 
     if fWrap and (len(args) == 0):
         print "--debuggee option requires a script name with optional <script-arg> arguments"
@@ -6662,6 +6700,10 @@ def main(StartClient_func = StartClient):
     fSpawn = (len(args) != 0) and (not fWrap) and (not fAttach)
     fStart = (len(args) == 0)
     
+    if fchdir and not (fWrap or fSpawn):
+        print "-c can only be used when launching or starting a script from command line."
+        return 2
+
     assert (fWrap + fAttach + fSpawn + fStart) == 1
 
     if (pwd in [None, ""]) and (fWrap or fAttach):
@@ -6679,7 +6721,7 @@ def main(StartClient_func = StartClient):
         try:
             FindFile(args[0])
         except IOError:
-            print STR_FILE_NOT_FOUND, (args[0], )
+            print STR_FILE_NOT_FOUND % (args[0], )
             return 2
             
     if fWrap:
@@ -6687,16 +6729,21 @@ def main(StartClient_func = StartClient):
             print STR_ENCRYPTION_SUPPORT_ERROR
             return 2
 
-        StartServer(args, pwd, fAllowUnencrypted, fRemote, secret)
+        StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, secret)
         
     elif fAttach:
-        StartClient_func(args[0], fAttach, pwd, fAllowUnencrypted, fRemote, host)
+        StartClient_func(args[0], fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, host)
         
     elif fStart:
-        StartClient_func('', fAttach, pwd, fAllowUnencrypted, fRemote, host)
+        StartClient_func('', fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, host)
         
-    else: 
-        StartClient_func(string.join(args), fAttach, pwd, fAllowUnencrypted, fRemote, host)
+    else:
+        if len(args) == 0:
+            _args = ''
+        else:
+            _args = '"' + string.join(args, '" "') + '"'
+
+        StartClient_func(_args, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, host)
    
     return 0
 
