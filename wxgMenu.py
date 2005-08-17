@@ -255,7 +255,7 @@ class Bar(wx.MenuBar):
         self.edit.Append(wx.ID_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(wx.ID_REPLACE, _("&Find && replace...\tCtrl+F"), "", wx.ITEM_NORMAL)
-        self.edit.Append(wx.ID_FIND, _("Find &Next"), "", wx.ITEM_NORMAL)
+        self.edit.Append(wx.ID_FIND, _("Find &Next\tF3"), "", wx.ITEM_NORMAL)
         self.edit.Append(GO_TO_LINE, _("&Go to line...\tCtrl+G"), "", wx.ITEM_NORMAL)
         self.edit.Append(BROWSE_SOURCE, _("&Browse source\tCtrl+Enter"), "", wx.ITEM_NORMAL)
         self.edit.Append(AUTO_COMPLETE, _("&Auto complete\tCtrl+Space"), "", wx.ITEM_NORMAL)

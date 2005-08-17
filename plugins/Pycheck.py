@@ -58,10 +58,11 @@ class Panel(wx.ListCtrl):
                 self.methodIndex    = 1
                 self.started        = 1
                 fileName            = self.panel.fileName
+                os.chdir(os.path.dirname(fileName))
                 cmd                 = 'python -u "%s "%s"'%\
                     (os.path.join(self.panel.parentPanel.pathPlugins,
                     METHOD_PATHS[self.methodIndex]),fileName)
-                print cmd
+                #print cmd
                 self.process = wx.Process(self)
                 self.process.Redirect()
                 pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
