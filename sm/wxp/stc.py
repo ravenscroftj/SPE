@@ -213,7 +213,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         control = event.ControlDown()
         alt     = event.AltDown()
         # GF We avoid an error while evaluating chr(key), next line.
-        if key > 255:
+        if key > 255 or key < 0:
             event.Skip()
         # GF No keyboard needs control or alt to make '(', ')' or '.'
         # GF Shift is not included as it is needed in some keyboards.
@@ -230,8 +230,8 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     obj=self.getWordObject()
                     self.AddText('(')
                     if not obj: return
-                    #classes, mehtods & functions
-                    if type(obj) in [types.ClassType] and hasattr(obj,'__init__'):
+                    #classes, methods & functions
+                    if type(obj) in [types.ClassType,types.TypeType] and hasattr(obj,'__init__'):
                         init    = obj.__init__
                         tip     = getargspec(init).strip()
                         if tip == '(self, *args, **kwargs)':
