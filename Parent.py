@@ -727,6 +727,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             self.numberMessages=0
         source.GotoPos(position)
         source.SetSelection(position,position+len(self.findStr))
+        #self.WarpPointer(0,0)
         return position
         
     def onFindClose(self,event):
