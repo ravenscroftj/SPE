@@ -1,5 +1,5 @@
 # frame.py: wxFrame and wxStatusBar objects
-# $Id: frame.py,v 1.41 2005/05/06 21:48:21 agriggio Exp $
+# $Id: frame.py,v 1.43 2005/08/23 11:49:47 agriggio Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -109,7 +109,8 @@ class EditStatusBar(EditBase):
             if misc.check_wx_version(2, 6):
                 if EditStatusBar._hidden_frame is None:
                     EditStatusBar._hidden_frame = wxFrame(None, -1, "")
-                self.widget.Reparent(EditStatusBar._hidden_frame)
+                if self.widget is not None:
+                    self.widget.Reparent(EditStatusBar._hidden_frame)
             self.widget = None
 
     def popup_menu(self, *args):
@@ -194,6 +195,7 @@ class EditFrame(TopLevelBase):
                         'wxFRAME_FLOAT_ON_PARENT',
                         'wxNO_BORDER',
                         'wxNO_FULL_REPAINT_ON_RESIZE',
+                        'wxFULL_REPAINT_ON_RESIZE',
                         'wxTAB_TRAVERSAL', 'wxCLIP_CHILDREN']
         self.style_pos = [wxDEFAULT_FRAME_STYLE,
                           wxICONIZE, wxCAPTION, wxMINIMIZE,
@@ -203,6 +205,7 @@ class EditFrame(TopLevelBase):
                           wxFRAME_NO_TASKBAR, wxFRAME_FLOAT_ON_PARENT,
                           wxNO_BORDER,
                           wxNO_FULL_REPAINT_ON_RESIZE,
+                          wxFULL_REPAINT_ON_RESIZE,
                           wxTAB_TRAVERSAL, wxCLIP_CHILDREN]
         if misc.check_wx_version(2, 5):
             style_labels.insert(5, 'wxCLOSE_BOX')

@@ -1,5 +1,5 @@
 # py_codegen.py: python code generator
-# $Id: py_codegen.py,v 1.57 2005/05/06 21:48:24 agriggio Exp $
+# $Id: py_codegen.py,v 1.60 2005/07/11 12:12:46 agriggio Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -294,8 +294,13 @@ def quote_str(s, translate=True, escape_chars=True):
     s = s.replace('"', r'\"')
     if escape_chars: s = _quote_str_pattern.sub(_do_replace, s)
     else: s = s.replace('\\', r'\\') # just quote the backslashes
-    if _use_gettext and translate: return '_("' + s + '")'
-    else: return '"' + s + '"'
+    try:
+        unicode(s, 'ascii')
+        if _use_gettext and translate: return '_("' + s + '")'
+        else: return '"' + s + '"'
+    except UnicodeDecodeError:
+        if _use_gettext and translate: return '_(u"' + s + '")'
+        else: return 'u"' + s + '"'
 
 
 def initialize(app_attrs): 
@@ -729,6 +734,9 @@ def add_class(code_obj):
                 buf.append(tabs(1) + 'def %s(self, event): '
                            '# wxGlade: %s.<event_handler>\n'
                            % (handler, code_obj.klass))
+                buf.append(
+                    tab + 'print "Event handler `%s\' not implemented"\n' %
+                    handler)
                 buf.append(tab + 'event.Skip()\n\n')
         tag = '<%swxGlade event_handlers %s>' % (nonce, code_obj.klass)
         if prev_src.content.find(tag) < 0:
@@ -743,6 +751,8 @@ def add_class(code_obj):
             write('\n' + tabs(1) + 'def %s(self, event): '
                   '# wxGlade: %s.<event_handler>\n'
                   % (handler, code_obj.klass))
+            write(tab + 'print "Event handler `%s\' not implemented!"\n' %
+                  handler)
             write(tab + 'event.Skip()\n')
 
     # the code has been generated
@@ -910,7 +920,7 @@ def generate_code_size(obj):
     name = _get_code_name(obj)
     size = obj.properties.get('size', '').strip()
     use_dialog_units = (size[-1] == 'd')
-    if for_version < (2, 5):
+    if for_version < (2, 5) or obj.parent is None:
         method = 'SetSize'
     else:
         method = 'SetMinSize'
