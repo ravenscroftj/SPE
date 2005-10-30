@@ -954,6 +954,11 @@ class MdiChildFrame(MdiSashTabsChildFrame, Child):
     def __finish__(self):
         Child.__finish__(self)
         
+    def onFrameActivate(self, event):
+        if event.GetActive():
+            self.setTitle(new=False)
+        Child.onFrameActivate(self,event)
+        
 class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
