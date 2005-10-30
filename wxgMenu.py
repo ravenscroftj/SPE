@@ -8,6 +8,8 @@ def _(x):
     return x
 
 MENUS =[
+SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
+
 REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
@@ -36,10 +38,11 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(65)]
+[wx.NewId() for x in range(69)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
+SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE, wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
@@ -240,8 +243,13 @@ class Bar(wx.MenuBar):
         self.file.Append(wx.ID_OPEN, _("&Open file(s)...\tCtrl+O"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVEAS, _("Save &As...\tCtrl+Alt+S"), "", wx.ITEM_NORMAL)
-        self.file.Append(wx.ID_CLOSE, _("&Close\tCtrl+W"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
+        self.file.Append(SAVE_UML_AS, _("Save Uml As..."), "", wx.ITEM_NORMAL)
+        self.file.Append(PRINT_UML_SETUP, _("Page Uml Setup..."), "", wx.ITEM_NORMAL)
+        self.file.Append(PRINT_UML_PREVIEW, _("Print Uml Preview..."), "", wx.ITEM_NORMAL)
+        self.file.Append(PRINT_UML, _("Print Uml..."), "", wx.ITEM_NORMAL)
+        self.file.AppendSeparator()
+        self.file.Append(wx.ID_CLOSE, _("&Close\tCtrl+W"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_EXIT, _("&Exit\tAlt+F4"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
         self.file.Append(REMEMBER_OPEN_FILES, _("&Remember open file(s)"), "", wx.ITEM_CHECK)
@@ -286,7 +294,7 @@ class Bar(wx.MenuBar):
         self.tools.Append(RUN_VERBOSE, _("Run &verbose\tCtrl+Alt+R"), "", wx.ITEM_NORMAL)
         self.tools.Append(IMPORT, _("&Import\tF10"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
-        self.tools.Append(DEBUG, _("&Debug with winpdb\tCtrl+D"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DEBUG, _("&Debug with winpdb...\tCtrl+D"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(BROWSE_OBJECT_WITH_PYFILLING, _("&Browse object with PyFilling...\tCtrl+Alt+F"), "", wx.ITEM_NORMAL)
         self.tools.Append(TEST_REGULAR_EXPRESSION_WITH_KIKI, _("Test regular expression with &Kiki...\tCtrl+K"), "", wx.ITEM_NORMAL)
@@ -356,6 +364,10 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_open_files, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.menu_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.menu_save_as, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.menu_save_uml_as, id=SAVE_UML_AS)
+        self.Bind(wx.EVT_MENU, self.menu_print_uml_setup, id=PRINT_UML_SETUP)
+        self.Bind(wx.EVT_MENU, self.menu_print_uml_preview, id=PRINT_UML_PREVIEW)
+        self.Bind(wx.EVT_MENU, self.menu_print_uml, id=PRINT_UML)
         self.Bind(wx.EVT_MENU, self.menu_close, id=wx.ID_CLOSE)
         self.Bind(wx.EVT_MENU, self.menu_exit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.menu_remember_open_files, id=REMEMBER_OPEN_FILES)
@@ -666,6 +678,26 @@ class Bar(wx.MenuBar):
         event.Skip()
 
     def menu_debug(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_save_uml_as(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_save_uml_as' not implemented"
+        event.Skip()
+
+    def menu_print_uml_setup(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_print_uml_setup' not implemented"
+        event.Skip()
+
+    def menu_uml_preview(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_uml_preview' not implemented"
+        event.Skip()
+
+    def menu_print_uml(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_print_uml' not implemented"
+        event.Skip()
+
+    def menu_print_uml_preview(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_print_uml_preview' not implemented"
         event.Skip()
 
 # end of class Bar

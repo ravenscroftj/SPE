@@ -14,4 +14,4 @@ def message(level=0):
     return text
             
 def frame(level=0):
-    print message(0)
+    print message(level)

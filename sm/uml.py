@@ -1,4 +1,3 @@
-
 import re
 import wx, wx.lib.ogl as ogl
 
@@ -33,20 +32,15 @@ class Class:
             self.hierarchy  = 0
             self.verified   = True
         
-    def __measure(self):
+    def __str__(self):
         self.width      = max([len(x) for x in [self.name]+self.container])
         self.height     = len(self.container)+1
-        self.wxWidth    = self.width*8
-        self.wxHeight   = self.height*20
-        
-    def __str__(self):
-        self.__measure()
         entry           = '| %%-%ss |'%self.width
         line            = '+'+'-'*(self.width+2)+'+'
         return '\n'.join([line]+[entry%x for x in self.container]+[line])
 
     def append(self,x,t=DEFAULT):
-        self.container.append('%s%s'%(t,x))
+        self.container.append('%s%s'%(t,x.replace(' ','')))
             
     def extend(self,l,t=DEFAULT):
         for x in l: self.append(x,t=t)
@@ -63,17 +57,280 @@ class Class:
         return self.hierarchy
             
     #---wx
-    def wx(self,canvas):
-        self.__measure()
-        return wxClass(self.wxWidth, self.wxHeight,canvas,self.name,self.container)
+    def wx(self,dc,canvas):
+        width = height = 10
+        for x in [self.name]+self.container:
+            w, h    = dc.GetTextExtent(x)
+            width   = max(width,w)
+            height  += h
+        return _Class(width, height, canvas, self.name, self.container)
         
 ####WxPython
+#---Printing support
+ID_Setup    = wx.NewId()
+ID_Preview  = wx.NewId()
+ID_Print    = wx.NewId()
+
+BITMAP_TYPE = {
+                "bmp": wx.BITMAP_TYPE_BMP,      # Save a Windows bitmap file.
+                "eps": None,
+                "gif": wx.BITMAP_TYPE_GIF,      # Save a GIF file.
+                "jpg": wx.BITMAP_TYPE_JPEG,     # Save a JPG file.
+                "pcx": wx.BITMAP_TYPE_PCX,      # Save a PCX file.
+                "png": wx.BITMAP_TYPE_PNM,      # Save a PNG file.
+                "pnm": wx.BITMAP_TYPE_PNM,      # Save a PNM file.
+                "tif": wx.BITMAP_TYPE_TIF,      # Save a TIF file.
+                "xbm": wx.BITMAP_TYPE_XBM,      # Save an X bitmap file.
+                "xpm": wx.BITMAP_TYPE_XPM,      # Save an XPM bitmap file.
+            }
+
+def wxTopLevelFrame(window):
+    while not window.IsTopLevel():
+        window = window.GetParent()
+    return window
+    
+def doPrint(dc,canvas):
+    # One possible method of setting scaling factors...
+    maxX, maxY = canvas.GetVirtualSize()
+    # Let's have at least 50 device units margin
+    marginX = 50
+    marginY = 50
+    # Add the margin to the graphic size
+    maxX = maxX + (2 * marginX)
+    maxY = maxY + (2 * marginY)
+    # Get the size of the DC in pixels
+    (w, h) = dc.GetSizeTuple()
+    # Calculate a suitable scaling factor
+    scaleX = float(w) / maxX
+    scaleY = float(h) / maxY
+    # Use x or y scaling factor, whichever fits on the DC
+    actualScale = min(scaleX, scaleY)
+    # Calculate the position on the DC for centering the graphic
+    posX = (w - (maxX * actualScale)) / 2.0
+    posY = (h - (maxY * actualScale)) / 2.0
+    # Set the scale and origin
+    dc.SetUserScale(actualScale, actualScale)
+    dc.SetDeviceOrigin(int(posX), int(posY))
+    canvas.Redraw(dc)
+    dc.DrawText("Drawn by SPE [http://pythonide.stani.be]", marginX/2, maxY-marginY)
+
+class PrintCanvas(ogl.ShapeCanvas):
+    def __init__(self, *args, **keyw):
+        #initialize
+        global INITIALIZED
+        if not INITIALIZED: 
+            ogl.OGLInitialize()
+            INITIALIZED = True
+        maxWidth  = 800
+        maxHeight = 800
+        #frame
+        ogl.ShapeCanvas.__init__(self, size=(maxWidth,maxHeight), *args, **keyw)
+        self.frame = wxTopLevelFrame(self)
+        self.SetScrollbars(20, 20, maxWidth/20, maxHeight/20)
+        #Print data
+        self.printSetup = False
+        self.printData = wx.PrintData()
+        self.printData.SetPaperId(wx.PAPER_A4)
+        self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
+        #events
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnPrintPreview)
+        self.Bind(wx.EVT_MIDDLE_DCLICK, self.OnDoSave)
+        self.Bind(wx.EVT_RIGHT_DCLICK, self.OnPrintSetup)
+    
+    def _checkPrintSetup(self):
+        if not self.printSetup: self.OnPrintSetup()
+
+    def OnPrintSetup(self, event=None):
+        data = wx.PrintDialogData(self.printData)
+        printerDialog = wx.PrintDialog(self, data)
+        printerDialog.GetPrintDialogData().SetSetupDialog(True)
+        printerDialog.ShowModal();
+        # this makes a copy of the wx.PrintData instead of just saving
+        # a reference to the one inside the PrintDialogData that will
+        # be destroyed when the dialog is destroyed
+        self.printData = wx.PrintData( printerDialog.GetPrintDialogData().GetPrintData() )
+        printerDialog.Destroy()
+        self.pageSetup = True
+
+    def OnPrintPreview(self, event=None):
+        self._checkPrintSetup()        
+        data = wx.PrintDialogData(self.printData)
+        printout = Printout(self)
+        printout2 = Printout(self)
+        self.preview = wx.PrintPreview(printout, printout2, data)
+        if not self.preview.Ok():
+            return
+        frame = wx.PreviewFrame(self.preview, self.frame, "SPE - Print Preview")
+        frame.Initialize()
+        frame.SetPosition(self.frame.GetPosition())
+        frame.SetSize(self.frame.GetSize())
+        frame.Show(True)
+
+    def OnDoPrint(self, event=None):
+        pdd = wx.PrintDialogData(self.printData)
+        pdd.SetToPage(2)
+        printer = wx.Printer(pdd)
+        printout = Printout(self)
+        if not printer.Print(self.frame, printout, True):
+            wx.MessageBox("Printing was cancelled.\n\nIf you didn't cancel the print, perhaps\nyour current printer is not set correctly?", "Printing", wx.OK)
+        else:
+            self.printData = wx.PrintData( printer.GetPrintDialogData().GetPrintData() )
+        printout.Destroy()
+        
+    def OnDoSave(self, event=None):
+        self.SaveFile()#"c:\\test.png")
+        
+    def SaveFile(self, fileName= ''):
+        """Saves the file to the type specified in the extension. If no file
+        name is specified a dialog box is provided.  Returns True if sucessful,
+        otherwise False.
+        
+        .bmp  Save a Windows bitmap file.
+        .xbm  Save an X bitmap file.
+        .xpm  Save an XPM bitmap file.
+        .png  Save a Portable Network Graphics file.
+        .jpg  Save a Joint Photographic Experts Group file.
+        """
+        fileTypes   = BITMAP_TYPE.keys()
+        fileTypes.sort()
+        ext         = fileName[-3:].lower()
+        if ext not in fileTypes:
+            dlg1    = wx.FileDialog(
+                    self, 
+                    "Save image as", ".", "",
+                    "|".join(["%s files (*.%s)|*.%s"%(t.upper(),t,t) for t in fileTypes]),
+                    wx.SAVE|wx.OVERWRITE_PROMPT
+                    )
+            try:
+                while 1:
+                    if dlg1.ShowModal() == wx.ID_OK:
+                        fileName    = dlg1.GetPath()
+                        # Check for proper exension
+                        ext         = fileName[-3:].lower()
+                        if ext not in fileTypes:
+                            dlg2 = wx.MessageDialog(self, 'File name extension\n'
+                              'must be one of %s'%(", ".join(fileTypes)),
+                              'File Name Error', wx.OK | wx.ICON_ERROR)
+                            try:
+                                dlg2.ShowModal()
+                            finally:
+                                dlg2.Destroy()
+                        else:
+                            break # now save file
+                    else: # exit without saving
+                        return False
+            finally:
+                dlg1.Destroy()
+
+        tp          = BITMAP_TYPE[ext]
+        # Save...
+        w, h        = self.GetVirtualSize()
+        if tp:
+            #...as bitmap
+            dc      = wx.MemoryDC()
+            bitmap  = wx.EmptyBitmap(w+10,h+10)
+            dc.SelectObject(bitmap)
+            dc.SetBackground(wx.WHITE_BRUSH)
+            dc.Clear()
+            self.Redraw(dc)
+            return bitmap.SaveFile(fileName, tp)
+        else:
+            #... as postscript
+            printData   = wx.PrintData()
+            printData.SetFilename(fileName)
+            dc          = wx.PostScriptDC(printData)
+            if dc.Ok():
+                dc.StartDoc('Saving as postscript')
+                doPrint(dc,self)
+                #self.Redraw(dc)
+                dc.EndDoc()
+            
+        
+class Printout(wx.Printout):
+    def __init__(self, canvas):
+        wx.Printout.__init__(self)
+        self.canvas = canvas
+
+    def OnBeginDocument(self, start, end):
+        return self.base_OnBeginDocument(start, end)
+
+    def OnEndDocument(self):
+        self.base_OnEndDocument()
+
+    def OnBeginPrinting(self):
+        self.base_OnBeginPrinting()
+
+    def OnEndPrinting(self):
+        self.base_OnEndPrinting()
+
+    def OnPreparePrinting(self):
+        self.base_OnPreparePrinting()
+
+    def HasPage(self, page):
+        if page <= 2:
+            return True
+        else:
+            return False
+
+    def GetPageInfo(self):
+        return (1, 2, 1, 2)
+
+    def OnPrintPage(self, page):
+        dc = self.GetDC()
+        doPrint(dc,self.canvas)
+        return True
+
+#---General
 def wxAssertColour(c):
     name    = htmlColour(c)
     wx.TheColourDatabase.AddColour(name,c)
     return name
+    
+class _EvtHandler(ogl.ShapeEvtHandler):
+    def __init__(self, frame):
+        ogl.ShapeEvtHandler.__init__(self)
+        self.statbarFrame = frame
 
-class wxClass(ogl.DividedShape):
+    def OnLeftClick(self, x, y, keys=0, attachment=0):
+        shape = self.GetShape()
+        canvas = shape.GetCanvas()
+        dc = wx.ClientDC(canvas)
+        canvas.PrepareDC(dc)
+
+        if shape.Selected():
+            shape.Select(False, dc)
+            canvas.Redraw(dc)
+        else:
+            shapeList = canvas.GetDiagram().GetShapeList()
+            toUnselect = []
+            for s in shapeList:
+                if s.Selected():
+                    # If we unselect it now then some of the objects in
+                    # shapeList will become invalid (the control points are
+                    # shapes too!) and bad things will happen...
+                    toUnselect.append(s)
+            shape.Select(True, dc)
+            if toUnselect:
+                for s in toUnselect:
+                    s.Select(False, dc)
+                canvas.Redraw(dc)
+
+    def OnEndDragLeft(self, x, y, keys=0, attachment=0):
+        shape = self.GetShape()
+        ogl.ShapeEvtHandler.OnEndDragLeft(self, x, y, keys, attachment)
+        if not shape.Selected():
+            self.OnLeftClick(x, y, keys, attachment)
+
+    def OnSizingEndDragLeft(self, pt, x, y, keys, attch):
+        ogl.ShapeEvtHandler.OnSizingEndDragLeft(self, pt, x, y, keys, attch)
+
+    def OnMovePost(self, dc, x, y, oldX, oldY, display):
+        ogl.ShapeEvtHandler.OnMovePost(self, dc, x, y, oldX, oldY, display)
+
+    def OnRightClick(self, dc, *dontcare):
+        pass
+
+class _Class(ogl.DividedShape):
     def __init__(self, width, height, canvas, name, container, 
             lineColour=wx.Colour(80,80,80), textColour=wx.Colour(0,0,0),
             pen=wx.BLACK_PEN,brush=wx.LIGHT_GREY_BRUSH):
@@ -138,28 +395,36 @@ class wxClass(ogl.DividedShape):
             self.FormatText(dc, text, rnum)
             rnum += 1
 
-
-class wxCanvas(ogl.ShapeCanvas):
+#class Canvas(ogl.ShapeCanvas):
+class Canvas(PrintCanvas):
     def __init__(self, parent,**keyw):
-        global INITIALIZED
-        if not INITIALIZED: 
-            ogl.OGLInitialize()
-            INITIALIZED = True
-        maxWidth  = 10000
-        maxHeight = 10000
-
-        ogl.ShapeCanvas.__init__(self, parent,size=(maxWidth,maxHeight),**keyw)
-        self.SetScrollbars(20, 20, maxWidth/20, maxHeight/20)
+        PrintCanvas.__init__(self, parent,**keyw)
 
         self.parent = parent
-        self.frame = self#frame
         self.SetBackgroundColour(wx.WHITE)
         self.diagram = ogl.Diagram()
         self.SetDiagram(self.diagram)
         self.diagram.SetCanvas(self)
         self.shapes = []
         self.save_gdi = []
+        self.__test__()
+            
+    def __test__(self):
+        u = Class()
+        u.append('mmmm')
+        u.append('test')
+        u.append('test')
+        u.append('test')
+        u.append('haha',SEPARATOR)
+        u.append('test')
+        u.append('test')
+        u.append('test')
+        self.DrawUml(classes={'u':u,'v':u})
+        return True
         
+##    def OnDoPrint(self,event=None):
+##        self.GetParent().OnPrintPreview(None)
+##        
     def DrawUml(self,classes={},between=20):
         """Draws the uml diagram"""
         #verify all hierachies
@@ -169,7 +434,7 @@ class wxCanvas(ogl.ShapeCanvas):
                 u.getHierarchy(classes)
             rows[u.hierarchy].append(u)
         #draw uml
-        shapes              = {}
+        shapes          = {}
         dc              = wx.ClientDC(self)
         self.PrepareDC(dc)
         
@@ -181,9 +446,9 @@ class wxCanvas(ogl.ShapeCanvas):
                 x           = between
                 height      = 0
                 for u in row:
-                    shape   = u.wx(self)
+                    shape   = u.wx(dc,self)
                     shapes[u.name.split('(')[0]]  = shape
-                    ds      = self.__addShape(shape, x, y, '')
+                    self.__addShape(shape, x, y, '')
                     x       += between+shape.width
                     height  = max(height,shape.height)
                     for parent in u.parents:
@@ -205,10 +470,8 @@ class wxCanvas(ogl.ShapeCanvas):
         total_height        -= 3*between
         self.SetVirtualSize((total_width, total_height))
         self.SetScrollRate(20,20)
-        #self.SetCursor(wx.StockCursor(wx.CURSOR_MAGNIFIER))
 
     def __addShape(self, shape, x, y, text):
-        # Composites have to be moved for all children to get in place
         if isinstance(shape, ogl.CompositeShape):
             dc = wx.ClientDC(self)
             self.PrepareDC(dc)
@@ -224,7 +487,7 @@ class wxCanvas(ogl.ShapeCanvas):
         self.diagram.AddShape(shape)
         shape.Show(True)
 
-        evthandler = wxEvtHandler(self.frame)
+        evthandler = _EvtHandler(self)
         evthandler.SetShape(shape)
         evthandler.SetPreviousHandler(shape.GetEventHandler())
         shape.SetEventHandler(evthandler)
@@ -234,68 +497,12 @@ class wxCanvas(ogl.ShapeCanvas):
 
     def OnBeginDragLeft(self, x, y, keys):
         pass
-        #self log.write("OnBeginDragLeft: %s, %s, %s\n" % (x, y, keys))
 
     def OnEndDragLeft(self, x, y, keys):
         pass
-        #self log.write("OnEndDragLeft: %s, %s, %s\n" % (x, y, keys))
 
-class wxEvtHandler(ogl.ShapeEvtHandler):
-    def __init__(self, frame):
-        ogl.ShapeEvtHandler.__init__(self)
-        self.statbarFrame = frame
-
-    def OnLeftClick(self, x, y, keys=0, attachment=0):
-        shape = self.GetShape()
-        canvas = shape.GetCanvas()
-        dc = wx.ClientDC(canvas)
-        canvas.PrepareDC(dc)
-
-        if shape.Selected():
-            shape.Select(False, dc)
-            canvas.Redraw(dc)
-        else:
-            redraw = False
-            shapeList = canvas.GetDiagram().GetShapeList()
-            toUnselect = []
-            for s in shapeList:
-                if s.Selected():
-                    # If we unselect it now then some of the objects in
-                    # shapeList will become invalid (the control points are
-                    # shapes too!) and bad things will happen...
-                    toUnselect.append(s)
-            shape.Select(True, dc)
-            if toUnselect:
-                for s in toUnselect:
-                    s.Select(False, dc)
-                canvas.Redraw(dc)
-
-    def OnEndDragLeft(self, x, y, keys=0, attachment=0):
-        shape = self.GetShape()
-        ogl.ShapeEvtHandler.OnEndDragLeft(self, x, y, keys, attachment)
-        if not shape.Selected():
-            self.OnLeftClick(x, y, keys, attachment)
-
-    def OnSizingEndDragLeft(self, pt, x, y, keys, attch):
-        ogl.ShapeEvtHandler.OnSizingEndDragLeft(self, pt, x, y, keys, attch)
-
-    def OnMovePost(self, dc, x, y, oldX, oldY, display):
-        ogl.ShapeEvtHandler.OnMovePost(self, dc, x, y, oldX, oldY, display)
-
-    def OnRightClick(self, dc, *dontcare):
-
-        pass
         
 if __name__=='__main__':
     import sm.wxp
-    u = Class()
-    u.append('mmmm')
-    u.append('test')
-    u.append('test')
-    u.append('test')
-    u.append('haha',SEPARATOR)
-    u.append('test')
-    u.append('test')
-    u.append('test')
     
-    sm.wxp.panelApp(wxCanvas,classes=[u,u])
+    sm.wxp.panelApp(Canvas)

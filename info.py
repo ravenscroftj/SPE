@@ -15,7 +15,7 @@ INFO={
     'author'            : "www.stani.be",
     'author_email'      : 'spe.stani.be@gmail.com',
     'blenderVersion'    : "2.35",
-    'date'              : "5-8-2005",
+    'date'              : "27-10-2005",
     'donate'            : "If you enjoy SPE, consider a (small) donation.",
     'doc'               : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
     'license'           : 'GPL',
@@ -25,10 +25,10 @@ INFO={
     'scripts'           : ['spe','spe_wininst.py'],
     'smLocation'        : os.path.join(path,'sm'),
     'title'             : "SPE",
-    'url'               : 'http://www.stani.be/python/spe/blog',
+    'url'               : 'http://pythonide.stani.be',
     'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.7.5.c",
+    'version'           : "0.7.5.d",
     'wxVersion'         : "2.6.1.0.",
 }
 

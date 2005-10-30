@@ -35,6 +35,7 @@ RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
 RE_ENCODING             = re.compile('# -[*]- coding[:=]\s*([-\w.]+)', re.IGNORECASE)
+UML_PAGE                = 1
 
 ####Utilities-------------------------------------------------------------------
 def umlAdd(classes, umlClass):
@@ -205,7 +206,7 @@ class Panel(wx.SplitterWindow):
         self.main.AddPage(page=self.sash, text='Source',imageId=self.sashIcon)
         
         #uml
-        self.uml    = sm.uml.wxCanvas(parent=self.main,style=wx.FULL_REPAINT_ON_RESIZE)
+        self.uml    = sm.uml.Canvas(parent=self.main,style=wx.FULL_REPAINT_ON_RESIZE)
         self.main.AddPage(page=self.uml, text='Uml',imageId=self.umlIcon)
         
         #events
@@ -224,16 +225,22 @@ class Panel(wx.SplitterWindow):
             source=self.source.GetText()
             if self.parentPanel.getValue('StripTrailingSpaces'):
                 source='\n'.join([l.rstrip() for l in source.split('\n')])
-            content = str(source.replace('\r\n','\n'))
             if not self.dosLines:
                 #convert to Unix lines
-                content     = str(source.replace('\r\n','\n'))
+                content     = source.replace('\r\n','\n')
+            else:
+                content     = source
             #Note that the mode here must be "wb" to allow
             #line endings to be preserved.
             if self.encoding:
-                file        = codecs.open(str(self.fileName),'wb',self.encoding)
+                file        = codecs.open(self.fileName,'wb',self.encoding)
+                try:
+                    content = content.decode(self.encoding)
+                except UnicodeDecodeError:
+                    #already unicode
+                    pass
             else:
-                file        = open(str(self.fileName),'wb')
+                file        = open(self.fileName,'wb')
             file.write(content)
             file.close()
             self.notesSave(file=1)
@@ -265,6 +272,22 @@ class Panel(wx.SplitterWindow):
             paths = dlg.GetPaths()
             self.save(paths[0])
         dlg.Destroy()
+        
+    def saveUmlAs(self):
+        self.main.SetSelection(UML_PAGE)
+        self.uml.OnDoSave()
+        
+    def printUml(self):
+        self.main.SetSelection(UML_PAGE)
+        self.uml.OnDoPrint()
+        
+    def printUmlPreview(self):
+        self.main.SetSelection(UML_PAGE)
+        self.uml.OnPrintPreview()
+        
+    def printUmlSetup(self):
+        self.main.SetSelection(UML_PAGE)
+        self.uml.OnPrintSetup()
         
     #---edit
     def comment(self):
@@ -857,13 +880,15 @@ and also give these details (copy & paste from shell):\n
         if not source:
             try:
                 source          = open(self.fileName).read()
-                encode_hit      = RE_ENCODING.match(source)
-                if encode_hit:
-                    self.encoding   = encode_hit.group(1)
-                    if self.encoding != INFO['encoding']:
-                        source.encode()
-            except:
-                source=''
+            except IOError:
+                source          = ''
+        try:
+            encode_hit          = RE_ENCODING.match(source)
+            if encode_hit:
+                self.encoding   = encode_hit.group(1)
+                source          = source.encode(self.encoding)
+        except UnicodeDecodeError, message:
+            self.SetStatusText("Unicode Decode Error for '%s' (%s)"%(self.fileName, message),1)
         if self.parentPanel.getValue('ConvertTabsToSpaces'):
             source=source.replace('\t',' '.ljust(self.parentPanel.getValue('TabWidth')))
         self.source.SetText(source)

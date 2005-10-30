@@ -19,7 +19,7 @@ class Panel(wx.Panel):
         self.notes = wx.TextCtrl(self.notebook, -1, "")
         self.pychecker = Pycheck.Panel(self.notebook, -1)
         self.sash = PythonSTC(self.main, -1)
-        self.uml = sm.uml.wxCanvas(self.main, -1)
+        self.uml = sm.uml.Canvas(self.main, -1)
 
         self.__set_properties()
         self.__do_layout()

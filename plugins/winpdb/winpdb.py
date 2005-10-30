@@ -395,8 +395,8 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.0.2"
-WINPDB_VERSION = "WINPDB_1_0_2"
+WINPDB_TITLE = "Winpdb 1.0.5"
+WINPDB_VERSION = "WINPDB_1_0_5"
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -407,7 +407,10 @@ SPLITTER_4_POS = "splitter_4_pos"
 
 WINPDB_SIZE_MIN = (640, 480)
 
-WINPDB_SETTINGS_FILENAME = "winpdb_settings.cfg"
+SETTINGS_FILENAME_EXT = ".cfg"
+
+WINPDB_SETTINGS_PATH = "winpdb"
+WINPDB_SETTINGS_FILENAME = "winpdb_settings"
 
 WINPDB_SETTINGS_DEFAULT = {
     WINPDB_SIZE: (800, 600),
@@ -594,13 +597,40 @@ def image_from_base64(str_b64):
     
 
 class CSettings:
-    def __init__(self, filename, default_settings):
+    def __init__(self, path, filename, default_settings):
+        self.m_path = path
         self.m_filename = filename
         self.m_dict = default_settings
 
+    def calc_path(self):
+        if os.name == 'nt' and os.environ.has_key('APPDATA'):
+            app_data = os.environ['APPDATA']
+            path = app_data + '\\' + self.m_path + '\\' + self.m_filename + SETTINGS_FILENAME_EXT
+            return path
+            
+        elif os.name == 'posix':
+            app_data = os.path.expanduser('~')
+            path = app_data + '/.' + self.m_filename
+            return path
+
+        path = self.m_filename + SETTINGS_FILENAME_EXT        
+        return path
+
+    def create_path(self):
+        if os.name != 'nt':
+            return
+
+        path = self.calc_path()    
+        folder = os.path.dirname(path)
+        if os.path.isdir(folder):
+            return
+
+        os.mkdir(folder)        
+            
     def load_settings(self):
         try:
-            f = open(self.m_filename, 'r')
+            path = self.calc_path()
+            f = open(path, 'r')
         except IOError:
             return 
             
@@ -611,7 +641,10 @@ class CSettings:
             f.close()
             
     def save_settings(self):
-        f = open(self.m_filename, 'w')
+        self.create_path()
+
+        path = self.calc_path()
+        f = open(path, 'w')
         try:
             cPickle.dump(self.m_dict, f)
         finally:
@@ -1488,7 +1521,7 @@ class CWinpdbApp(wx.App):
         self.m_fAttach = fAttach
         self.m_fAllowUnencrypted = fAllowUnencrypted
         
-        self.m_settings = CSettings(WINPDB_SETTINGS_FILENAME, WINPDB_SETTINGS_DEFAULT)
+        self.m_settings = CSettings(WINPDB_SETTINGS_PATH, WINPDB_SETTINGS_FILENAME, WINPDB_SETTINGS_DEFAULT)
 
         wx.App.__init__(self, redirect = False)
 
@@ -2150,7 +2183,7 @@ class CConsole(wx.Panel, CCaptionManager):
             self.m_console_in.Clear()
             self.m_queue.put(value + '\n')
 
-            if value == 'exit':
+            if value in ['exit', 'EOF']:
                 self.m_parent.do_exit()
                 
             return
@@ -3229,8 +3262,8 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_0_2":
-        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_1", rpdb2.get_version())
+    if rpdb2.get_version() != "RPDB_2_0_5":
+        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_5", rpdb2.get_version())
         return
         
     return rpdb2.main(StartClient)

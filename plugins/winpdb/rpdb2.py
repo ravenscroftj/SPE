@@ -367,8 +367,8 @@ def settrace():
 
 
 
-RPDB_VERSION = "RPDB_2_0_2"
-RPDB_COMPATIBILITY_VERSION = "RPDB_2_0_1"
+RPDB_VERSION = "RPDB_2_0_5"
+RPDB_COMPATIBILITY_VERSION = "RPDB_2_0_5"
 
 
 
@@ -731,7 +731,8 @@ class AuthenticationBadIndex(CSecurityException):
 # '%s' serves as a place holder.
 #
 osSpawn = {
-    'nt': 'start "rpdb2 - Version ' + get_version() + ' - Debugee Console" cmd /k %s %s', 
+    'nt': 'start "rpdb2 - Version ' + get_version() + ' - Debugee Console" cmd /c %s %s', 
+    'nt_debug': 'start "rpdb2 - Version ' + get_version() + ' - Debugee Console" cmd /k %s %s', 
     'posix': 'xterm -e %s %s &', 
     'mac': '%s %s',
     'screen': 'screen -t debugger_console python %s'
@@ -753,6 +754,7 @@ SERVER_PORT_RANGE_LENGTH = 20
 
 ERROR_SOCKET_ADDRESS_IN_USE_WIN = 10048
 ERROR_SOCKET_ADDRESS_IN_USE_UNIX = 98
+ERROR_SOCKET_ADDRESS_IN_USE_MAC = 48
 
 SOURCE_EVENT_CALL = 'C'
 SOURCE_EVENT_LINE = 'L'
@@ -815,9 +817,9 @@ STR_COMMUNICATION_FAILURE = "Failed to communicate with debugged script."
 STR_BAD_VERSION = "A debuggee was found that uses incompatible version (%s) of RPDB2."
 STR_BAD_VERSION2 = "While attempting to find the specified debuggee at least one debuggee was found that uses incompatible version of RPDB2."
 STR_UNEXPECTED_DATA = "Unexpected data received."
-STR_ACCESS_DENIED = "While attempting to find the specified debuggee at least one debuggee denied connection because of mismatched passwords. Please verify your password."
+STR_ACCESS_DENIED = "While attempting to find debuggee, at least one debuggee denied connection because of mismatched passwords. Please verify your password."
 STR_ACCESS_DENIED2 = "Communication is denied because of un-matching passwords."
-STR_ENCRYPTION_EXPECTED = "While attempting to find the specified debuggee at least one debuggee denied connection since it accepts encrypted connections only."
+STR_ENCRYPTION_EXPECTED = "While attempting to find debuggee, at least one debuggee denied connection since it accepts encrypted connections only."
 STR_ENCRYPTION_EXPECTED2 = "Debuggee will only talk over an encrypted channel."
 STR_DECRYPTION_FAILURE = "Bad packet was received by the debuggee."
 STR_DEBUGGEE_NO_ENCRYPTION = "Debuggee does not support encrypted mode. Either install the python-crypto package on the debuggee machine or allow unencrypted connections."
@@ -933,7 +935,7 @@ XML_DATA = """<?xml version='1.0'?>
 <methodName>dispatcher_method</methodName>
 <params>
 <param>
-<value><string>RPDB_02_00_00</string></value>
+<value><string>RPDB_02_00_04</string></value>
 </param>
 </params>
 </methodCall>"""
@@ -945,13 +947,12 @@ g_server_lock = threading.RLock()
 g_server = None
 g_debugger = None
 
-g_main_module_name = None
-g_main_global_dictionay = None
-
 g_fDebug = False
 g_fScreen = False
 
 g_traceback_lock = threading.RLock()
+
+g_blender_text = {}
 
 
 
@@ -1078,7 +1079,7 @@ def IsPythonSourceFile(filename):
 
 
 
-def FindFile(filename, sources_paths = [], fModules = False):
+def FindFile(filename, sources_paths = [], fModules = False, fAllowAnyExt = True):
     """ 
     Expand filname to explicit path.   
     Find file looks in the following directories in this order:
@@ -1091,17 +1092,24 @@ def FindFile(filename, sources_paths = [], fModules = False):
 
     if filename[:1] + filename[-1:] in ['""', "''"]:
         filename = filename[1:-1]
-    
+
     if fModules:
         modulename = CalcModuleName(filename)
         _module = sys.modules.get(modulename, None)
         if _module != None:
-            _filename = CalcScriptName(_module.__file__)
+            _filename = CalcScriptName(_module.__file__, fAllowAnyExt = True)
             abs_path = my_abspath(_filename)
             if os.path.isfile(abs_path):
                 return abs_path
 
-    _filename = CalcScriptName(filename)
+    if fAllowAnyExt:
+        try:
+            abs_path = FindFile(filename, sources_paths, fModules, fAllowAnyExt = False)
+            return abs_path
+        except IOError:
+            pass
+
+    _filename = CalcScriptName(filename, fAllowAnyExt)
         
     if os.path.dirname(_filename) != '':
         abs_path = my_abspath(_filename)
@@ -1138,6 +1146,78 @@ def winlower(path):
     
     
 
+def is_blender_file(filename):
+    if not 'Blender.Text' in sys.modules:
+        return False
+        
+    _filename = os.path.basename(filename)
+
+    try:
+        sys.modules['Blender.Text'].get(_filename)
+        return True
+
+    except NameError:
+        f = winlower(_filename)
+        tlist = sys.modules['Blender.Text'].get()
+        for t in tlist:
+            n = winlower(t.getName())
+            if n == f:
+                return True
+            
+        return False
+
+
+
+def get_blender_source(filename):
+    _filename = os.path.basename(filename)
+
+    lines = g_blender_text.get(_filename, None)
+    if lines != None:
+        return lines
+        
+    f = winlower(_filename)
+    lines = g_blender_text.get(f, None)
+    if lines != None:
+        return lines
+
+    try:
+        t = sys.modules['Blender.Text'].get(_filename)
+        lines = t.asLines()
+        g_blender_text[_filename] = lines
+        return lines
+        
+    except NameError:
+        f = winlower(_filename)
+        tlist = sys.modules['Blender.Text'].get()
+
+        for _t in tlist:
+            n = winlower(_t.getName())
+            if n == f:
+                t = _t
+                break
+        
+        lines = t.asLines()
+        g_blender_text[f] = lines
+        return lines
+
+    
+            
+def get_source_line(filename, lineno, fBlender):
+    if fBlender:
+        lines = get_blender_source(filename)
+
+        try:
+            line = lines[lineno - 1] + '\n'
+            return line
+            
+        except IndexError:
+            return '' 
+
+    line = linecache.getline(filename, lineno) 
+    return line
+
+
+
 def CalcModuleName(filename):
     _basename = os.path.basename(filename)
     
@@ -1150,7 +1230,7 @@ def CalcModuleName(filename):
 
 
 
-def CalcScriptName(filename):
+def CalcScriptName(filename, fAllowAnyExt = True):
     if filename.endswith(PYTHON_FILE_EXTENSION):
         return filename
         
@@ -1158,7 +1238,11 @@ def CalcScriptName(filename):
         scriptname = filename[:-1]
         return scriptname
 
+    if fAllowAnyExt:
+        return filename
+
     scriptname = filename + PYTHON_FILE_EXTENSION
+        
     return scriptname
         
 
@@ -1909,7 +1993,7 @@ class CFileBreakInfo:
         return scl
 
     def __CalcBreakInfoFromSource(self, source):
-        _source = source.replace('\r\n', '\n')
+        _source = source.replace('\r\n', '\n') + '\n'
         code = compile(_source, self.m_filename, "exec")
         
         self.m_scope_break_info = []
@@ -1936,9 +2020,13 @@ class CFileBreakInfo:
             t = subcodeslist + [si] + t
             
     def CalcBreakInfo(self):
-        f = open(self.m_filename, "r")
-        source = f.read()
-        f.close()
+        if is_blender_file(self.m_filename):
+            lines = get_blender_source(self.m_filename)
+            source = '\n'.join(lines) + '\n'
+        else:    
+            f = open(self.m_filename, "r")
+            source = f.read()
+            f.close()
         
         self.__CalcBreakInfoFromSource(source)
 
@@ -2409,6 +2497,9 @@ class CCodeContext:
     def is_untraced(self):
         return self.m_basename in [THREADING_FILENAME, DEBUGGER_FILENAME]
 
+    def is_exception_trap_frame(self):
+        return self.m_basename == THREADING_FILENAME
+
 
 
 class CDebuggerCoreThread:
@@ -2435,6 +2526,7 @@ class CDebuggerCoreThread:
     def profile(self, frame, event, arg):    
         if event == 'return':            
             self.m_frame = frame.f_back
+
             try:
                 self.m_code_context = self.m_core.m_code_contexts[self.m_frame.f_code]
             except AttributeError:
@@ -2530,43 +2622,25 @@ class CDebuggerCoreThread:
 
         return (f, lineno)  
 
-    def get_locals_copy(self, frame_index, fException, fReadOnly):
+    def get_locals_copy(self, frame_index, fException, fReadOnly):        
         try:
             base_frame = self.frame_acquire()
 
             (f, lineno) = self.get_frame(base_frame, frame_index, fException)
 
-            if f.f_globals is g_main_global_dictionay:
-                gc = g_main_global_dictionay
-            elif f.f_globals is vars(sys.modules['__main__']):
-                gc = vars(sys.modules['__main__'])
-            else:
-                gc = {}
-                sn1 = CalcScriptName(f.f_code.co_filename)
-                
-                for m in sys.modules.values():
-                    if m == None:
-                        continue
-                        
-                    fn = vars(m).get('__file__', None)
-                    if fn == None:
-                        continue
-                        
-                    sn2 = CalcScriptName(fn)
-                    if sn1 == sn2:
-                        gc = vars(m)
-                        break
-                
+            gc = f.f_globals
+
             try:
-                lc = self.m_locals_copy[f]
+                lc = self.m_locals_copy[f][0]
             except KeyError:
                 if f.f_code.co_name == '?':
                     lc = gc
                 else:    
                     lc = copy.copy(f.f_locals)
-                if not fReadOnly:
-                    self.m_locals_copy[f] = lc
-                    self.set_local_trace(f)
+
+                    if not fReadOnly:
+                        self.m_locals_copy[f] = (lc, copy.copy(lc))
+                        self.set_local_trace(f)
 
             return (gc, lc)
 
@@ -2576,12 +2650,28 @@ class CDebuggerCoreThread:
             
             self.frame_release()
 
-    def update_locals(self):
-        lc = self.m_locals_copy.pop(self.m_frame, None)
-        if lc == None:
+    def update_locals_copy(self):
+        lct = self.m_locals_copy.get(self.m_frame, None)
+        if lct == None:
             return
+
+        (lc, base) = lct
+        cr = copy.copy(self.m_frame.f_locals)
+        
+        sb = set(base.items())
+        sc = set(cr.items())
+
+        nsc = [k for (k, v) in sc - sb]
+
+        for k in nsc:
+            lc[k] = cr[k]
             
-        self.m_frame.f_locals.update(lc)
+    def update_locals(self):
+        lct = self.m_locals_copy.pop(self.m_frame, None)
+        if lct == None:
+            return
+
+        self.m_frame.f_locals.update(lct[0])
             
     def __eval_breakpoint(self, frame, bp):
         if not bp.m_fEnabled:
@@ -2592,7 +2682,7 @@ class CDebuggerCoreThread:
 
         try:
             if frame in self.m_locals_copy:
-                l = self.m_locals_copy[frame]
+                l = self.m_locals_copy[frame][0]
                 v = eval(bp.m_code, frame.f_globals, l)
             else:
                 v = eval(bp.m_code, frame.f_globals, frame.f_locals)
@@ -2652,7 +2742,12 @@ class CDebuggerCoreThread:
             self.set_exc_info(arg)
             
         self.m_event = event
+
+        if frame in self.m_locals_copy:
+            self.update_locals_copy()
+
         self.m_core._break(self, frame, event, arg)
+
         if frame in self.m_locals_copy:
             self.update_locals()
             self.set_local_trace(frame)
@@ -2694,24 +2789,31 @@ class CDebuggerCoreThread:
         
     def trace_dispatch(self, frame, event, arg):
         if (event == 'line'):
+            if frame in self.m_locals_copy:
+                self.update_locals_copy()
+
             bp = self.m_code_context.m_file_breakpoints.get(frame.f_lineno, None)                
+
             if bp != None and self.__eval_breakpoint(frame, bp): 
                 self.m_event = event
                 self.m_core._break(self, frame, event, arg)
                 
-            if frame in self.m_locals_copy:
-                self.update_locals()
-                self.set_local_trace(frame)
+                if frame in self.m_locals_copy:
+                    self.update_locals()
+                    self.set_local_trace(frame)
 
             return frame.f_trace     
                         
         if event == 'return':
+            if frame in self.m_locals_copy:
+                self.update_locals_copy()
+
             if frame == self.m_core.m_return_frame:
                 self.m_event = event
                 self.m_core._break(self, frame, event, arg)
                 
-            if frame in self.m_locals_copy:
-                self.update_locals()
+                if frame in self.m_locals_copy:
+                    self.update_locals()
 
             return None     
             
@@ -2731,22 +2833,28 @@ class CDebuggerCoreThread:
         self.m_event = event
 
         if (event == 'line'):
+            if frame in self.m_locals_copy:
+                self.update_locals_copy()
+
             bp = self.m_code_context.m_file_breakpoints.get(frame.f_lineno, None)                
             if bp != None and self.__eval_breakpoint(frame, bp): 
                 self.m_core._break(self, frame, event, arg)
                 
-            if frame in self.m_locals_copy:
-                self.update_locals()
-                self.set_local_trace(frame)
+                if frame in self.m_locals_copy:
+                    self.update_locals()
+                    self.set_local_trace(frame)
 
             return frame.f_trace     
                         
         if event == 'return':
+            if frame in self.m_locals_copy:
+                self.update_locals_copy()
+
             if frame == self.m_core.m_return_frame:
                 self.m_core._break(self, frame, event, arg)
                 
-            if frame in self.m_locals_copy:
-                self.update_locals()
+                if frame in self.m_locals_copy:
+                    self.update_locals()
 
             return None     
             
@@ -2904,13 +3012,13 @@ class CDebuggerCore:
     def set_exception_trap_frame(self, frame):
         while frame != None:
             code_context = self.get_code_context(frame.f_code)
-            if code_context.is_untraced():                
+            if code_context.is_exception_trap_frame():                
                 code_context.m_fExceptionTrap = True
                 return
 
             frame = frame.f_back
 
-    def trace_dispatch_init(self, frame, event, arg):
+    def trace_dispatch_init(self, frame, event, arg):        
         if event not in ['call', 'line', 'return']:
             return None
 
@@ -2925,12 +3033,14 @@ class CDebuggerCore:
         self.m_threads[ctx.m_thread_id] = ctx
 
         if len(self.m_threads) == 1:
+            g_blender_text.clear()
+            
             self.m_current_ctx = ctx
             self.notify_first_thread()
 
             if self.m_f_break_on_init:
                 self.m_f_break_on_init = False
-                self.request_break()            
+                self.request_break()
 
         sys.settrace(ctx.trace_dispatch_call)
         sys.setprofile(ctx.profile)
@@ -3098,6 +3208,8 @@ class CDebuggerCore:
 
             if filename in [None, '']:
                 _filename = self.get_current_filename(frame_index, fException)
+            elif is_blender_file(filename):
+                _filename = filename
             else:
                 _filename = FindFile(filename, fModules = True)
                 
@@ -3287,6 +3399,8 @@ class CDebuggerEngine(CDebuggerCore):
                 self.verify_broken()
                 
                 _filename = self.get_current_filename(frame_index, fException)
+            elif is_blender_file(filename):
+                _filename = filename
             else:
                 _filename = FindFile(filename, fModules = True)
                 
@@ -3548,11 +3662,16 @@ class CDebuggerEngine(CDebuggerCore):
         except NoThreads:
             if filename in [None, '']:
                 raise
-            
+
+        fBlender = False
+        
         if filename in [None, '']:
             __filename = frame_filename
             r[DICT_KEY_TID] = ctx.m_thread_id
-        else:
+        elif is_blender_file(filename):
+            fBlender = True
+            __filename = filename
+        else:    
             __filename = FindFile(filename, fModules = True)
 
         _filename = winlower(__filename)    
@@ -3563,7 +3682,7 @@ class CDebuggerEngine(CDebuggerCore):
         while nlines != 0:
             try:
                 g_traceback_lock.acquire()
-                line = linecache.getline(_filename, _lineno)
+                line = get_source_line(_filename, _lineno, fBlender)
                 
             finally:    
                 g_traceback_lock.release()
@@ -3620,13 +3739,14 @@ class CDebuggerEngine(CDebuggerCore):
         first_line = max(1, frame_lineno - nlines / 2)     
         _lineno = first_line
 
+        fBlender = is_blender_file(frame_filename)
         lines = []
         breakpoints = {}
         
         while nlines != 0:
             try:
                 g_traceback_lock.acquire()
-                line = linecache.getline(frame_filename, _lineno)
+                line = get_source_line(frame_filename, _lineno, fBlender)
                 
             finally:    
                 g_traceback_lock.release()
@@ -3771,6 +3891,15 @@ class CDebuggerEngine(CDebuggerCore):
         if type(r) in [dict, list, tuple]:
             return len(r)
 
+        if isinstance(r, dict):
+            return len(r)
+
+        if isinstance(r, list):
+            return len(r)
+
+        if isinstance(r, tuple):
+            return len(r)
+
         return len(self.__calc_attribute_list(r))
 
     def __parse_type(self, t):
@@ -3781,7 +3910,7 @@ class CDebuggerEngine(CDebuggerCore):
     def __calc_subnodes(self, expr, r, fForceNames, fFilter):
         snl = []
         
-        if type(r) in [list, tuple]:
+        if (type(r) in [list, tuple]) or isinstance(r, list) or isinstance(r, tuple):
             for i, v in enumerate(r):
                 e = {}
                 e[DICT_KEY_EXPR] = '%s[%d]' % (expr, i)
@@ -3794,7 +3923,7 @@ class CDebuggerEngine(CDebuggerCore):
 
             return snl
 
-        if type(r) == dict:
+        if (type(r) == dict) or isinstance(r, dict):
             for k, v in r.items():
                 rt = self.__parse_type(type(v))
                 if fFilter and (rt in ['function', 'module', 'classobj']):
@@ -4262,7 +4391,7 @@ class CIOServer(threading.Thread):
                 
                 return (port, server)
             except socket.error, e:
-                if not GetSocketError(e) in [ERROR_SOCKET_ADDRESS_IN_USE_WIN, ERROR_SOCKET_ADDRESS_IN_USE_UNIX]:
+                if not GetSocketError(e) in [ERROR_SOCKET_ADDRESS_IN_USE_WIN, ERROR_SOCKET_ADDRESS_IN_USE_UNIX, ERROR_SOCKET_ADDRESS_IN_USE_MAC]:
                     raise
                     
                 if port >= SERVER_PORT_RANGE_START + SERVER_PORT_RANGE_LENGTH - 1:
@@ -4645,8 +4774,8 @@ class CSessionManagerInternal:
 
         (path, filename, args) = split_command_line_path_filename_args(command_line)
 
-        if not IsPythonSourceFile(filename):
-            raise IOError
+        #if not IsPythonSourceFile(filename):
+        #    raise IOError
 
         _filename = os.path.join(path, filename) 
            
@@ -4696,6 +4825,9 @@ class CSessionManagerInternal:
                    raise SpawnUnsupported
                    
                 name = os.name
+
+        if name == 'nt' and g_fDebug:
+            name = 'nt_debug'
         
         e = ['', ' --plaintext'][self.m_fAllowUnencrypted]
         r = ['', ' --remote'][self.m_fRemote]
@@ -4793,13 +4925,13 @@ class CSessionManagerInternal:
         elif type == EncryptionNotSupported:
             self.m_printer(STR_DEBUGGEE_NO_ENCRYPTION)
         elif type == EncryptionExpected:
-            self.m_printer(STR_ENCRYPTION_EXPECTED2)
+            self.m_printer(STR_ENCRYPTION_EXPECTED)
         elif type == DecryptionFailure:
             self.m_printer(STR_DECRYPTION_FAILURE)
         elif type == AuthenticationBadData:
-            self.m_printer(STR_ACCESS_DENIED2)
+            self.m_printer(STR_ACCESS_DENIED)
         elif type == AuthenticationFailure:
-            self.m_printer(STR_ACCESS_DENIED2)
+            self.m_printer(STR_ACCESS_DENIED)
             
     def __report_server_errors(self, errors):
         for k in errors.keys():
@@ -4972,6 +5104,9 @@ class CSessionManagerInternal:
             filename = self.getSession().getServerInfo().m_module_name + BREAKPOINTS_FILE_EXT
         else: 
             filename = _filename + BREAKPOINTS_FILE_EXT
+
+        if filename[:1] == '<':
+            return
             
         file = open(filename, 'wb')
         file.write(sbpl)
@@ -6037,7 +6172,11 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
         if self.m_session_manager.get_state() != STATE_DETACHED:    
             self.do_stop("")
 
-        return True    
+        print >> self.stdout, ''
+
+        return True 
+
+    do_EOF = do_exit    
 
     def do_copyright(self, arg):
         self.print_notice(COPYRIGHT_NOTICE)
@@ -6303,6 +6442,8 @@ If an argument is present, continue execution until that argument is reached.
 
 Exit the debugger. If the debugger is attached to a script, the debugger
 will attempt to detach from the script first."""  
+
+    help_EOF = help_exit
     
     def help_host(self):
         print >> self.stdout, """host [<arg>]
@@ -6533,8 +6674,6 @@ def __start_embedded_debugger(pwd, fAllowUnencrypted, fRemote, timeout, fDebug):
 def StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, rid): 
     global g_server
     global g_debugger
-    global g_main_module_name
-    global g_main_global_dictionay
     
     try:
         ExpandedFilename = FindFile(args[0])
@@ -6547,6 +6686,10 @@ def StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, rid):
         #
         sys.path.insert(0, os.path.dirname(ExpandedFilename))
         os.chdir(os.path.dirname(ExpandedFilename))
+    else:
+        cwd = os.getcwd()
+        if cwd not in sys.path:
+            sys.path.insert(0, cwd)
 
     sys.argv = args
 
@@ -6555,9 +6698,6 @@ def StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, rid):
     d['__name__'] = '__main__'
     d['__file__'] = ExpandedFilename
     d['__doc__'] = None
-
-    g_main_module_name = CalcModuleName(ExpandedFilename)
-    g_main_global_dictionay = d
     
     g_debugger = CDebuggerEngine()
 
@@ -6568,7 +6708,7 @@ def StartServer(args, fchdir, pwd, fAllowUnencrypted, fRemote, rid):
 
     execfile(ExpandedFilename, d, d)
     
-    g_debugger.stoptrace()
+    #g_debugger.stoptrace()
     #g_server.stop()
     
 
@@ -6748,12 +6888,24 @@ def main(StartClient_func = StartClient):
     return 0
 
 
-
+#
 # When invoked as main program, invoke the debugger on a script
+#
 if __name__=='__main__':
     import rpdb2
 
+    #
+    # Debuggee breaks (pauses) here
+    # on unhandled exceptions.
+    # Use analyze mode for post mortem.
+    # type 'help analyze' for more information.
+    #
     ret = rpdb2.main()
+
+    #
+    # Debuggee breaks (pauses) here 
+    # before program termination.
+    #
     sys.exit(ret)
 
 

@@ -228,6 +228,18 @@ class Bar(wxgMenu.Bar):
     def menu_save_as(self, event=None):
         """File > Save As..."""
         self.app.childActive.saveAs()
+        
+    def menu_save_uml_as(self, event=None):
+        self.app.childActive.saveUmlAs()
+        
+    def menu_print_uml(self, event=None):
+        self.app.childActive.printUml()
+        
+    def menu_print_uml_preview(self, event=None):
+        self.app.childActive.printUmlPreview()
+        
+    def menu_print_uml_setup(self, event=None):
+        self.app.childActive.printUmlSetup()
 
     def menu_close(self, event=None):
         """File > Close"""
@@ -415,7 +427,7 @@ class Bar(wxgMenu.Bar):
 
     def menu_blender_python_manual(self, event=None):
         """Blender > Blender python manual..."""
-        self.parentPanel.messageHtml(os.path.join('blender_python_API','index.html'),doc=self.parentPanel.path)
+        self.link('http://spe.stani.be/manual/blender/frames.html')
 
     def menu_blender_python_tutorial(self, event=None):
         """Blender > Blender python tutorial..."""
@@ -499,11 +511,11 @@ class Bar(wxgMenu.Bar):
 
     def menu_manual(self, event=None):
         """Help > Manual..."""
-        self.link('manual.pdf',doc=self.parentPanel.path)
+        self.link('http://pythonide.stani.be/manual/html/manual.html')
 
     def menu_keyboard_shortcuts(self, event=None):
         """Help > Keyboard shortcuts..."""
-        self.parentPanel.keyboard_shortcuts()
+        self.link('http://pythonide.stani.be/manual/html/manual12.html')
 
     def menu_python_library(self, event=None):
         """Help > Python library..."""
@@ -519,11 +531,11 @@ class Bar(wxgMenu.Bar):
 
     def menu_wxglade_manual(self, event=None):
         """Help > wxGlade manual..."""
-        self.parentPanel.wxglade_manual()
+        self.link("http://spe.stani.be/manual/wxGlade/index.html")
 
     def menu_wxglade_tutorial(self, event=None):
         """Help > wxGlade tutorial..."""
-        self.parentPanel.wxglade_tutorial()
+        self.link("http://spe.stani.be/manual/wxGlade/tutorial.html")
 
     def menu_wxwindows_documentation(self, event=None):
         """Help > wxWindows documentation..."""
