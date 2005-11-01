@@ -94,7 +94,7 @@ INFO['contribute'] = """There are different ways to contribute:
 - Translate manual
 - Report bugs in the bug tracker"""%INFO['donate']
 
-WILDCARD = "Python (*.py;*.pyw;*.tpy)|*.py;*.pyw;*.tpy|All files (*)|*"
+WILDCARD = "Python (*.py;*.pyw;*.tpy)|*.py;*.pyw;*.tpy|Backup files (*.bak)|*.bak|All files (*)|*"
 WILDCARD_EXTENDED = WILDCARD+'|Python All(*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo)|*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo|Text (*.txt;*.rtf;*.htm;*.html;*.pdf)|*.txt;*.rtf;*.htm;*.html;*.pdf|Bitmap (*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic)|*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic|Vector (*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl)|*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl'
 
 

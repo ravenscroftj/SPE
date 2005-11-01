@@ -221,28 +221,60 @@ class Panel(wx.SplitterWindow):
         if self.fileName==NEWFILE or not(os.path.exists(os.path.dirname(self.fileName))):
             self.saveAs()
         else:
+            #backup file
+            backup  = self.fileName + ".bak"
+            try:
+                os.remove(backup)
+            except:
+                pass
+            try:
+                os.rename(self.fileName,backup)
+            except:
+                self.setStatus('Warning: could not create backup.')
+            #get & fix source
             self.source.assertEOL()
-            source=self.source.GetText()
+            source              = self.source.GetText()
             if self.parentPanel.getValue('StripTrailingSpaces'):
-                source='\n'.join([l.rstrip() for l in source.split('\n')])
+                source          = '\n'.join([l.rstrip() for l in source.split('\n')])
             if not self.dosLines:
                 #convert to Unix lines
-                content     = source.replace('\r\n','\n')
-            else:
-                content     = source
-            #Note that the mode here must be "wb" to allow
-            #line endings to be preserved.
+                source          = source.replace('\r\n','\n')
+            #find appropiate encoding
             if self.encoding:
-                file        = codecs.open(self.fileName,'wb',self.encoding)
-                try:
-                    content = content.decode(self.encoding)
-                except UnicodeDecodeError:
-                    #already unicode
-                    pass
+                encoding        = self.encoding
+            elif self.parentPanel.defaultEncoding == '<default>':
+                encoding        = sys.getdefaultencoding()
             else:
-                file        = open(self.fileName,'wb')
-            file.write(content)
-            file.close()
+                encoding        = self.parentPanel.defaultEncoding
+            if encoding == 'ascii':
+                try:
+                    str(source)
+                except:
+                    self.setStatus('Warning: SPE uses "utf8" instead of "ascii" codec.')
+                    encoding        = 'utf8'
+            #check source
+            try:
+                #assert it's unicode
+                sourceUnicode   = source.decode(encoding)
+            except:
+                #already unicode, pass silently
+                sourceUnicode   = source
+            try:
+                sourceUnicode.encode(encoding)
+            except Exception, message:
+                self.parentPanel.messageError('Error: SPE is unable to save with "%s" encoding:\n\n%s\n\nSPE made a backup as "%s".\nPlease change the encoding or save it with another program.'%(encoding,message,backup))
+                return
+            #save the file
+            try:
+                #Note that the mode here must be "wb" to allow
+                #line endings to be preserved.
+                file        = codecs.open(self.fileName,'wb',encoding)
+                file.write(sourceUnicode)
+                file.close()
+            except Exception, message:
+                self.parentPanel.messageError('Error: SPE is unable to save with "%s" encoding:\n\n%s\n\nSPE made a backup as "%s".\nPlease change the encoding or save it with another program.'%(encoding,message,backup))
+                return
+            #save succesfull
             self.notesSave(file=1)
             self.changed    = 0
             self.saved      = source
