@@ -14,7 +14,7 @@ import sm.wxp.smdi as smdi
 VALUES = ['AutoComplete','AutoReloadChangedFile','CallTips',
           'CheckFileOnSave','ConvertTabsToSpaces','Encoding','Mdi',
           'EdgeColumn','PythonDocs','RecentFileAmount','RedirectShell', 
-          'Redraw', 'SaveBeforeRun', 'Shortcuts', 'ShowShell',
+          'Redraw', 'Signature', 'SaveBeforeRun', 'Shortcuts', 'ShowShell',
           'StripTrailingSpaces', 'TabWidth','Terminal', 'TerminalRun',
           'TerminalRunExit', 'UpdateSidebar','UseTabs','ViewWhiteSpace',
           'IndentationGuides', 'ViewEdge','WebBrowser','WordChars',
@@ -31,10 +31,11 @@ class Create(wx.Dialog):
         self.notebook_1 = wx.Notebook(self, -1, style=0)
         self.Paths = wx.Panel(self.notebook_1, -1)
         self.Editor = wx.Panel(self.notebook_1, -1)
-        self.General_staticbox = wx.StaticBox(self.Editor, -1, _("General"))
+        self.GeneralEditor_staticbox = wx.StaticBox(self.Editor, -1, _("General"))
         self.tabsWhiteSpaces_staticbox = wx.StaticBox(self.Editor, -1, _("Tabs && white spaces"))
         self.Guides_staticbox = wx.StaticBox(self.Editor, -1, _("Guides"))
         self.AutoCompletion_staticbox = wx.StaticBox(self.Editor, -1, _("Auto complete"))
+        self.general_Label_staticbox = wx.StaticBox(self.Paths, -1, _("General"))
         self.terminal_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Terminal Emulator"))
         self.html_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Html"))
         self.General = wx.Panel(self.notebook_1, -1)
@@ -74,6 +75,9 @@ class Create(wx.Dialog):
         self.EdgeColumn = wx.SpinCtrl(self.Editor, -1, "79", min=0, max=100)
         self.AutoComplete = wx.CheckBox(self.Editor, -1, _("Active"))
         self.AutoCompleteIgnore = EditableListBox(self.Editor, -1, "Ignore")
+        self.signatureLabel = wx.StaticText(self.Paths, -1, _("Signature"))
+        self.Signature = wx.ComboBox(self.Paths, -1, choices=[], style=wx.CB_DROPDOWN)
+        self.browseSignature = wx.Button(self.Paths, -1, _("Browse"))
         self.label_terminal = wx.StaticText(self.Paths, -1, _("Open"))
         self.Terminal = wx.ComboBox(self.Paths, -1, choices=[_("<default>"), _("start \"Spe console - Press Ctrl+Break to stop\" /D\"%(path)s\""), _("cd \\\"%(path)s\\\"; /usr/bin/Eterm -e"), _("cd \\\"%(path)s\\\"; /usr/X11R6/bin/xterm -e"), _("cd \\\"%(path)s\\\"; /usr/bin/wterm -e"), _("cd \\\"%(path)s\\\"; /usr/bin/aterm -e"), _("cd \\\"%(path)s\\\"; /usr/bin/rxvt-xterm -e"), _("cd \\\"%(path)s\\\"; /usr/bin/gnome-terminal -e"), _("cd \\\"%(path)s\\\"; /usr/bin/open -a Terminal")], style=wx.CB_DROPDOWN)
         self.label_terminalRun = wx.StaticText(self.Paths, -1, _("Run"))
@@ -93,6 +97,8 @@ class Create(wx.Dialog):
 
         self.__set_properties()
         self.__do_layout()
+
+        self.Bind(wx.EVT_BUTTON, self.OnBrowseSignature, self.browseSignature)
         # end wxGlade
         self.parent=args[0]
         self.update()
@@ -120,6 +126,7 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
+        self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)
@@ -138,6 +145,8 @@ class Create(wx.Dialog):
         html_Sizer = wx.FlexGridSizer(4, 2, 4, 4)
         terminal_Label = wx.StaticBoxSizer(self.terminal_Label_staticbox, wx.HORIZONTAL)
         terminal_Sizer = wx.FlexGridSizer(4, 2, 4, 4)
+        general_Label = wx.StaticBoxSizer(self.general_Label_staticbox, wx.VERTICAL)
+        general_Label_Sizer = wx.FlexGridSizer(1, 3, 0, 0)
         grid_sizer_1 = wx.FlexGridSizer(3, 2, 4, 4)
         AutoCompletion = wx.StaticBoxSizer(self.AutoCompletion_staticbox, wx.VERTICAL)
         Guides = wx.StaticBoxSizer(self.Guides_staticbox, wx.VERTICAL)
@@ -145,7 +154,7 @@ class Create(wx.Dialog):
         tabsWhiteSpaces = wx.StaticBoxSizer(self.tabsWhiteSpaces_staticbox, wx.VERTICAL)
         grid_sizer_2 = wx.FlexGridSizer(4, 1, 4, 4)
         width = wx.BoxSizer(wx.HORIZONTAL)
-        General = wx.StaticBoxSizer(self.General_staticbox, wx.VERTICAL)
+        GeneralEditor = wx.StaticBoxSizer(self.GeneralEditor_staticbox, wx.VERTICAL)
         grid_general = wx.FlexGridSizer(3, 3, 4, 4)
         generalSizer = wx.FlexGridSizer(6, 1, 4, 4)
         grid_sizer_4 = wx.FlexGridSizer(3, 2, 4, 4)
@@ -171,7 +180,7 @@ class Create(wx.Dialog):
         generalSizer.Fit(self.General)
         generalSizer.SetSizeHints(self.General)
         generalSizer.AddGrowableCol(0)
-        General.Add((4, 4), 0, 0, 0)
+        GeneralEditor.Add((4, 4), 0, 0, 0)
         grid_general.Add(self.label_font, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.Font, 0, wx.EXPAND, 0)
         grid_general.Add(self.chooseFont, 0, 0, 0)
@@ -185,12 +194,12 @@ class Create(wx.Dialog):
         grid_general.Add(self.UpdateSidebar, 0, wx.EXPAND, 0)
         grid_general.Add((20, 20), 0, 0, 0)
         grid_general.AddGrowableCol(1)
-        General.Add(grid_general, 1, wx.EXPAND, 0)
-        General.Add((4, 4), 0, 0, 0)
-        General.Add(self.AutoReloadChangedFile, 0, 0, 0)
-        General.Add((4, 4), 0, 0, 0)
-        General.Add(self.SaveBeforeRun, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_1.Add(General, 1, wx.EXPAND, 0)
+        GeneralEditor.Add(grid_general, 1, wx.EXPAND, 0)
+        GeneralEditor.Add((4, 4), 0, 0, 0)
+        GeneralEditor.Add(self.AutoReloadChangedFile, 0, 0, 0)
+        GeneralEditor.Add((4, 4), 0, 0, 0)
+        GeneralEditor.Add(self.SaveBeforeRun, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_1.Add(GeneralEditor, 1, wx.EXPAND, 0)
         grid_sizer_2.Add((4, 4), 0, 0, 0)
         grid_sizer_2.Add(self.ViewWhiteSpace, 0, 0, 0)
         grid_sizer_2.Add(self.UseTabs, 0, 0, 0)
@@ -221,6 +230,12 @@ class Create(wx.Dialog):
         self.Editor.SetSizer(grid_sizer_1)
         grid_sizer_1.Fit(self.Editor)
         grid_sizer_1.SetSizeHints(self.Editor)
+        general_Label_Sizer.Add(self.signatureLabel, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
+        general_Label_Sizer.Add(self.Signature, 1, wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
+        general_Label_Sizer.Add(self.browseSignature, 0, wx.RIGHT|wx.TOP|wx.ADJUST_MINSIZE, 5)
+        general_Label_Sizer.AddGrowableCol(1)
+        general_Label.Add(general_Label_Sizer, 1, wx.EXPAND, 0)
+        paths_Sizer.Add(general_Label, 1, wx.EXPAND, 0)
         terminal_Sizer.Add(self.label_terminal, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         terminal_Sizer.Add(self.Terminal, 0, wx.RIGHT|wx.TOP|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5)
         terminal_Sizer.Add(self.label_terminalRun, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
@@ -333,6 +348,15 @@ class Create(wx.Dialog):
 
     def OnCancelButton(self, event):
         self.Close()
+
+    def OnBrowseSignature(self, event): # wxGlade: Create.<event_handler>
+        path=self.Signature.GetValue()
+        defaultDir, defaultFile = os.path.split(path)   
+        dlg = wx.FileDialog(self,defaultDir = defaultDir, defaultFile = defaultFile, style = wx.OPEN|wx.DD_NEW_DIR_BUTTON)
+        if dlg.ShowModal() == wx.ID_OK:
+            path        = dlg.GetPath()
+            self.Signature.SetValue(path)
+        dlg.Destroy()
 
 # end of class Create
 

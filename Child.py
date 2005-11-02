@@ -364,6 +364,13 @@ class Panel(wx.SplitterWindow):
         from dialogs import separatorDialog
         separatorDialog.create(self).ShowModal()
         
+    def insert_signature(self):
+        signature   = self.parentPanel.get('Signature')
+        if os.path.exists(signature):
+            self.source.ReplaceSelection(open(signature).read()+'\n')
+        else:
+            self.setStatus('SPE could not open signature %s!'%signature)
+
     def go_to_line(self,scroll=1):
         """Go to line dialog & action"""
         line=self.parentPanel.messageEntry('Enter line number:')

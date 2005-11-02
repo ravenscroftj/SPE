@@ -318,6 +318,10 @@ class Bar(wxgMenu.Bar):
         """Edit > Insert seperator..."""
         self.app.childActive.insert_separator()
 
+    def menu_insert_signature(self, event=None):
+        """Edit > Insert seperator..."""
+        self.app.childActive.insert_signature()
+
     def menu_preferences(self, event=None):
         """Edit > Preferences..."""
         self.parentPanel.preferences()

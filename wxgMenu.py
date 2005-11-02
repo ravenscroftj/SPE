@@ -13,7 +13,8 @@ SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
-AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR, PREFERENCES,
+AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR, 
+INSERT_SIGNATURE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR, SHELL,
@@ -38,14 +39,16 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(69)]
+[wx.NewId() for x in range(70)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
-wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE, wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
+wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE, 
+wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
+INSERT_SIGNATURE, 
 
 WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR,
@@ -244,7 +247,7 @@ class Bar(wx.MenuBar):
         self.file.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVEAS, _("Save &As...\tCtrl+Alt+S"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
-        self.file.Append(SAVE_UML_AS, _("Save Uml As..."), "", wx.ITEM_NORMAL)
+        self.file.Append(SAVE_UML_AS, _("Save Uml As...\tCtrl+Shift+S"), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML_SETUP, _("Page Uml Setup..."), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML_PREVIEW, _("Print Uml Preview..."), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML, _("Print Uml..."), "", wx.ITEM_NORMAL)
@@ -272,7 +275,9 @@ class Bar(wx.MenuBar):
         self.edit.Append(DEDENT, _("&Dedent\tShift+Tab"), "", wx.ITEM_NORMAL)
         self.edit.Append(COMMENT, _("Co&mment\tAlt+3"), "", wx.ITEM_NORMAL)
         self.edit.Append(UNCOMMENT, _("U&nComment\tAlt+4"), "", wx.ITEM_NORMAL)
+        self.edit.AppendSeparator()
         self.edit.Append(INSERT_SEPARATOR, _("Insert &separator...\tAlt+I"), "", wx.ITEM_NORMAL)
+        self.edit.Append(INSERT_SIGNATURE, _("Insert &signature\tCtrl+Shift+I"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(PREFERENCES, _("&Preferences...\tCtrl+Alt+P"), "", wx.ITEM_NORMAL)
         self.Append(self.edit, _("&Edit"))
@@ -386,6 +391,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_comment, id=COMMENT)
         self.Bind(wx.EVT_MENU, self.menu_uncomment, id=UNCOMMENT)
         self.Bind(wx.EVT_MENU, self.menu_insert_separator, id=INSERT_SEPARATOR)
+        self.Bind(wx.EVT_MENU, self.menu_insert_signature, id=INSERT_SIGNATURE)
         self.Bind(wx.EVT_MENU, self.menu_preferences, id=PREFERENCES)
         self.Bind(wx.EVT_MENU, self.menu_refresh, id=REFRESH)
         self.Bind(wx.EVT_MENU, self.menu_whitespace, id=WHITESPACE)
@@ -698,6 +704,10 @@ class Bar(wx.MenuBar):
 
     def menu_print_uml_preview(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_print_uml_preview' not implemented"
+        event.Skip()
+
+    def menu_insert_signature(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_insert_signature' not implemented"
         event.Skip()
 
 # end of class Bar
