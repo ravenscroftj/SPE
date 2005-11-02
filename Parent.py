@@ -559,7 +559,7 @@ class Panel(wx.Notebook):
             child=self.getChildByFileName(fileName)
             if child:
                 #opened already
-                child.Raise()
+                child.frame.Raise()
                 if lineno:child.scrollTo(lineno,col,select=select)
                 else:self.SetStatusText("'%s' is already open"%fileName,1)
             else:
