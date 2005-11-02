@@ -25,7 +25,7 @@ from sidebar.Browser import Browser
 ####Constants-------------------------------------------------------------------
 DEFAULT                 = "<default>"
 NEWFILE                 = 'unnamed'
-SPE_ALLOWED_EXTENSIONS  = ['.py','.pyw','.tpy','.txt','.htm','.html']
+SPE_ALLOWED_EXTENSIONS  = ['.py','.pyw','.tpy','.txt','.htm','.html','.bak']
 STYLE_LIST              = wx.LC_REPORT
 STYLE_NOTEBOOK          = wx.NO_BORDER
 STYLE_NOTES             = wx.TE_MULTILINE|wx.TE_DONTWRAP
@@ -876,6 +876,7 @@ and also give these details (copy & paste from shell):\n
         self.scrollTo(line,select='line')
             
     def onOpenFromBrowser(self, fname):
+        print os.path.splitext(fname)[-1]
         if os.path.splitext(fname)[-1] in SPE_ALLOWED_EXTENSIONS:
             self.parentPanel.openList([fname])
         else:
