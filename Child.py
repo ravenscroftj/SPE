@@ -1033,11 +1033,8 @@ and also give these details (copy & paste from shell):\n
             #find in source
             self.encoding   = encode_hit.group(1)
         else:
-            #check for utf8
-            if source.startswith('\xef\xbb\xbf'):
-                self.encoding = 'utf8'
             #get default values
-            elif self.parentPanel.defaultEncoding == '<default>':
+            if self.parentPanel.defaultEncoding == '<default>':
                 #wx.GetDefaultPyEncoding() when SPE was launched
                 self.encoding   = INFO['encoding']
             else:

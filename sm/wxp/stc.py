@@ -176,8 +176,10 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetSelBackground(1,'DARK TURQUOISE')
 
         #EVENTS
-        wx.EVT_KEY_DOWN(self, self.OnKeyDown)
-        wx.EVT_CHAR(self, self.OnChar)
+        self.Bind(wx_stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
+        self.Bind(wx_stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.Bind(wx.EVT_CHAR, self.OnChar)
 
     #---events
     def OnKeyDown(self, event):
