@@ -9,7 +9,7 @@ INFO['description']=\
 __doc__=INFO['doc']%INFO
 
 ####Modules---------------------------------------------------------------------
-import codecs, inspect, os, sys, re, time
+import codecs, inspect, os, sys, re, time, types
 
 import wx
 from wx.lib.evtmgr import eventManager
@@ -221,59 +221,79 @@ class Panel(wx.SplitterWindow):
         if self.fileName==NEWFILE or not(os.path.exists(os.path.dirname(self.fileName))):
             self.saveAs()
         else:
-            #backup file
-            backup  = self.fileName + ".bak"
-            try:
-                os.remove(backup)
-            except:
-                pass
-            try:
-                os.rename(self.fileName,backup)
-            except:
-                self.setStatus('Warning: could not create backup.')
             #get & fix source
             self.source.assertEOL()
-            source              = self.source.GetText()
+            if self.encoding:
+                previous        = wx.GetDefaultPyEncoding()
+                wx.SetDefaultPyEncoding(self.encoding)
+                source          = self.source.GetText()
+                wx.SetDefaultPyEncoding(previous)
+            else:
+                source          = self.source.GetText()
             if self.parentPanel.getValue('StripTrailingSpaces'):
                 source          = '\n'.join([l.rstrip() for l in source.split('\n')])
             if not self.dosLines:
                 #convert to Unix lines
                 source          = source.replace('\r\n','\n')
-            #find appropiate encoding
-            if self.encoding:
-                encoding        = self.encoding
-            elif self.parentPanel.defaultEncoding == '<default>':
-                encoding        = sys.getdefaultencoding()
-            else:
-                encoding        = self.parentPanel.defaultEncoding
-            if encoding == 'ascii':
-                try:
-                    str(source)
-                except:
-                    self.setStatus('Warning: SPE uses "utf8" instead of "ascii" codec.')
-                    encoding        = 'utf8'
-            #check source
-            try:
-                #assert it's unicode
-                sourceUnicode   = source.decode(encoding)
-            except:
-                #already unicode, pass silently
+                
+            #get encoding
+            self.getEncoding(source)
+            #convert source to unicode
+            if type(source) is types.UnicodeType:
                 sourceUnicode   = source
+            else:
+                sourceUnicode   = source.decode(self.encoding)
+                
+            #check if source can be encoded, to avoid overwriting with empty file
             try:
-                sourceUnicode.encode(encoding)
+                sourceUnicode.encode(self.encoding)
             except Exception, message:
-                self.parentPanel.messageError('Error: SPE is unable to save with "%s" encoding:\n\n%s\n\nSPE made a backup as "%s".\nPlease change the encoding or save it with another program.'%(encoding,message,backup))
+                self.parentPanel.messageError(\
+"""Error: SPE is unable to save with "%s" encoding:
+
+%s
+
+Please save your file by Copying&Pasting it into another program
+to make sure you don't loose data and contact %s.
+
+Please try then to change the encoding or save it again."""%(self.encoding,message,INFO['author_email']))
                 return
+
+            #backup file
+            if os.path.exists(self.fileName):
+                backup  = self.fileName + ".bak"
+                try:
+                    os.remove(backup)
+                except:
+                    pass
+                try:
+                    os.rename(self.fileName,backup)
+                except:
+                    self.setStatus('Warning: could not create backup.')
+                
             #save the file
             try:
                 #Note that the mode here must be "wb" to allow
                 #line endings to be preserved.
-                file        = codecs.open(self.fileName,'wb',encoding)
+                file        = codecs.open(self.fileName,'wb',self.encoding)
                 file.write(sourceUnicode)
                 file.close()
             except Exception, message:
-                self.parentPanel.messageError('Error: SPE is unable to save with "%s" encoding:\n\n%s\n\nSPE made a backup as "%s".\nPlease change the encoding or save it with another program.'%(encoding,message,backup))
+                #This is a serious bug (user looses its file) if it would happen
+                self.parentPanel.messageError(\
+"""Fatal Error: SPE is unable to save with "%s" encoding:
+
+%s
+
+SPE probably overwrote your file with an empty file, 
+but made a backup of the previous version as "%s".
+
+Please save your file by Copying&Pasting it into another program
+to make sure you don't loose data and contact %s.
+
+Please try then to change the encoding or save it again."""%(self.encoding,message,backup,INFO['author_email']))
                 return
+                
             #save succesfull
             self.notesSave(file=1)
             self.changed    = 0
@@ -296,13 +316,16 @@ class Panel(wx.SplitterWindow):
             self.updateSidebar()
     
     def saveAs(self):
-        defaultDir=os.path.dirname(self.fileName)
-        dlg = wx.FileDialog(self, "Save As - www.stani.be", defaultDir=defaultDir, 
-            wildcard=info.WILDCARD, 
-            style=wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
+        defaultDir      = os.path.dirname(self.fileName)
+        dlg             = wx.FileDialog(self, "Save As - www.stani.be", 
+            defaultDir  = defaultDir, 
+            wildcard    = info.WILDCARD, 
+            style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
-            paths = dlg.GetPaths()
-            self.save(paths[0])
+            path        = dlg.GetPaths()[0]
+            self.save(path)
+            self.browser.SetDefaultPath(os.path.dirname(path))
+            self.browser.ReCreateTree()
         dlg.Destroy()
         
     def saveUmlAs(self):
@@ -731,7 +754,7 @@ and also give these details (copy & paste from shell):\n
                     #get definition-----------------------------------------
                     if encode_hit:
                         l = encode_hit.group(1)
-                        self.encoding = l
+                        self.encoding = str(l)
                     else:
                         l = l.split('#')[0].strip()
                     i=1
@@ -918,19 +941,29 @@ and also give these details (copy & paste from shell):\n
     def revert(self,source=None):
         if not source:
             try:
-                source          = open(self.fileName).read()
+                sourceFile      = open(self.fileName,'rb')
+                source          = sourceFile.read()
+                sourceFile.close()
+                if self.parentPanel.getValue('ConvertTabsToSpaces'):
+                    source=source.replace('\t',' '.ljust(self.parentPanel.getValue('TabWidth')))
             except IOError:
                 source          = ''
+        self.getEncoding(source)
         try:
-            encode_hit          = RE_ENCODING.match(source)
-            if encode_hit:
-                self.encoding   = encode_hit.group(1)
-                source          = source.encode(self.encoding)
-        except UnicodeDecodeError, message:
-            self.SetStatusText("Unicode Decode Error for '%s' (%s)"%(self.fileName, message),1)
-        if self.parentPanel.getValue('ConvertTabsToSpaces'):
-            source=source.replace('\t',' '.ljust(self.parentPanel.getValue('TabWidth')))
-        self.source.SetText(source)
+            if source and self.encoding:
+                #read the source
+                sourceFile      = codecs.open(self.fileName,'rb',self.encoding)
+                source          = sourceFile.read()
+                sourceFile.close()
+                #set it with the right encoding
+                previous        = wx.GetDefaultPyEncoding()
+                wx.SetDefaultPyEncoding(self.encoding)
+                self.source.SetText(source)
+                wx.SetDefaultPyEncoding(previous)
+            else:
+                self.source.SetText(source)
+        except Exception, message:
+            self.SetStatusText("Unicode Error for '%s' (%s)"%(self.fileName, message),1)
         self.source.assertEOL()
         try:
             self.notesText=open(self.notesFile()).read()
@@ -993,6 +1026,30 @@ and also give these details (copy & paste from shell):\n
     def selectLine(self,line):
         source=self.source
         
+    def getEncoding(self,source):
+        encode_hit          = RE_ENCODING.match(source)
+        if encode_hit:
+            #find in source
+            self.encoding   = encode_hit.group(1)
+        else:
+            #check for utf8
+            if source.startswith('\xef\xbb\xbf'):
+                self.encoding = 'utf8'
+            #get default values
+            elif self.parentPanel.defaultEncoding == '<default>':
+                #wx.GetDefaultPyEncoding() when SPE was launched
+                self.encoding   = INFO['encoding']
+            else:
+                #as in preferences
+                self.encoding   = self.parentPanel.defaultEncoding
+        if self.encoding == 'ascii':
+            #avoid obvious trap
+            try:
+                str(source)
+            except:
+                self.setStatus('Warning: SPE uses "utf8" instead of "ascii" codec.')
+                self.encoding   = 'utf8'
+        self.encoding = str(self.encoding)
 
 class DropOpen(wx.FileDropTarget):
     """Opens a file when dropped on parent frame."""
