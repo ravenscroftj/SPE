@@ -161,7 +161,7 @@ class _StuntControlMethod:
         else:self.argKey=[(arguments,keywords)]
 
 class _StuntControl:
-    """Buffer to register all calls to dialog control methods. Usefull for threads.
+    """Buffer to register all calls to dialog control methods. Useful for threads.
 
     See Stunt class for more information.
     """

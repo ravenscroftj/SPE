@@ -89,8 +89,8 @@ class DropRun(wx.FileDropTarget):
 class Panel(Shell):
     def __init__(self,panel,*args,**kwds):
         Shell.__init__(self,parent=panel, introText=\
-"""Portions Copyright 2003,2004 www.stani.be - see credits in manual for further copyright information.
-Please donate if you find this program usefull (see help menu). Double click to jump to error source code.""")
+"""Portions Copyright 2003-2005 www.stani.be - see credits in manual for further copyright information.
+Please donate if you find this program useful (see help menu). Double click to jump to error source code.""")
         self.setStatusText=panel.SetActiveStatusText
         self.open=panel.openList
         self.interp.push('namespace={}')
