@@ -17,6 +17,7 @@ from wx.lib.evtmgr import eventManager
 import sm, sm.spy, sm.uml, sm.wxp
 from sm.wxp.stc import PythonSTC
 from sm.wxp.realtime import Tree, ListCtrl
+import view.documentation
 
 import _spe.help as help
 import _spe.plugins.Pycheck as Pycheck
@@ -172,10 +173,15 @@ class Panel(wx.SplitterWindow):
 
     def __source__(self,fileName,source):
         #notebook
-        self.main = wx.Notebook(id=-1, parent=self, size=wx.Size(5000, 5000),style=wx.NO_BORDER)#, pos=wx.Point(2, 2),size=wx.Size(198, 481))
-        self.mainIcons   = wx.ImageList(16,16)
-        self.sashIcon    = self.mainIcons.Add(self.parentPanel.icons['source.png'])
-        self.umlIcon     = self.mainIcons.Add(self.parentPanel.icons['uml.png'])
+        self.main               = wx.Notebook(id=-1, 
+                                    parent=self, 
+                                    size=wx.Size(5000, 5000),
+                                    style=wx.NO_BORDER)
+        self.main.childPanel    = self
+        self.mainIcons          = wx.ImageList(16,16)
+        self.sashIcon           = self.mainIcons.Add(self.parentPanel.icons['source.png'])
+        self.umlIcon            = self.mainIcons.Add(self.parentPanel.icons['uml.png'])
+        self.documentationIcon  = self.mainIcons.Add(self.parentPanel.icons['documentinfo.png'])
         self.main.AssignImageList(self.mainIcons)
         #self.mainSizer = wx.BoxSizer(wx.VERTICAL)
         #self.mainSizer.Add(self.main, 1, wx.ALL | wx.EXPAND , 10)
@@ -208,6 +214,10 @@ class Panel(wx.SplitterWindow):
         #uml
         self.uml    = sm.uml.Canvas(parent=self.main,style=wx.FULL_REPAINT_ON_RESIZE)
         self.main.AddPage(page=self.uml, text='Uml',imageId=self.umlIcon)
+        
+        #documentation
+        self.documentation  = view.documentation.Panel(parent=self.main,id=-1)
+        self.main.AddPage(page=self.documentation, text='PyDoc',imageId=self.documentationIcon)
         
         #events
         eventManager.Register(self.onKillFocus, wx.EVT_KILL_FOCUS, self.source)
@@ -846,6 +856,8 @@ and also give these details (copy & paste from shell):\n
                 self.source.SetFocus()
             elif tab == 1:
                 self.uml.DrawUml(classes=self.updateExplore(uml=1))
+            elif tab == 2:
+                self.documentation.main()
         else:
             tab = self.notebook.GetSelection()
         self.updateSidebarTab[tab]()

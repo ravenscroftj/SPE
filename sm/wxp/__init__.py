@@ -342,6 +342,7 @@ def frameApp(Frame,**keyw):
 import webbrowser
 
 try:
+    5/0
     from wx.lib.iewin import IEHtmlWindow as _HtmlWindow
     IE = 1
 except:
