@@ -14,8 +14,15 @@ class TreeItem:
         self.image              = {}
         self.textColour         = (0,0,0)
         self.confirmed          = 1
+        self.deleted            = 0
         self.wx                 = None
         
+    def DeleteChildren(self):
+        for child in self.children:
+            if child.children:
+                child.DeleteChildren();
+            child.deleted = 1;
+
 class Base:
     def GetPyData(self,item):
         return self.wx.GetPyData(item)
@@ -112,9 +119,11 @@ class Tree(Base):
         for id,item in self.items.items():
             if not item.confirmed:
                 try:
-                    self.wx.Delete(item.wx)
+                    if not item.deleted:
+                        item.DeleteChildren();
+                        self.wx.Delete(item.wx)
                 except:
-                    print 'Warning: Tree.clean: please contact s_t_a_n_i at yahoo.com'
+                    print 'Warning: Tree.clean: please contact spe.stani.be at gmail.com'
                 del self.items[id]
 ##        self.root.confirmed = 1
 ##        clear_id = []
