@@ -845,7 +845,7 @@ and also give these details (copy & paste from shell):\n
         #expand root of explore
         self.explore.Expand(self.root)
         #if self.parentPanel.exploreVisible: ...
-        self.explore.Clean()
+        self.explore.Update()
         return classes
         
     def updateMain(self,event=None):
@@ -888,7 +888,6 @@ and also give these details (copy & paste from shell):\n
         self.scrollTo(line,select='line')
             
     def onOpenFromBrowser(self, fname):
-        print os.path.splitext(fname)[-1]
         if os.path.splitext(fname)[-1] in SPE_ALLOWED_EXTENSIONS:
             self.parentPanel.openList([fname])
         else:
