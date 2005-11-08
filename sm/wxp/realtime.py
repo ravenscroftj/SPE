@@ -140,7 +140,7 @@ class Tree(Base):
             #recursive on its children
             self._Update(child)
         for abandoned in previousChildren:
-            self.Delete(item)
+            self.Delete(abandoned)
         parent.previousChildren = children
         
     def Collapse(self,item):
@@ -181,10 +181,18 @@ class Tree(Base):
             item.textColour = color
             item._update.append((self.wx.SetItemTextColour,color))
             
+    def SetItemText(self,item,text):
+        """Sets the text of a TreeItem"""
+        if item.text != text:
+            item.text = text
+            item._update.append((self.wx.SetItemText,text))
+            
     def CopyItemTo(self,frm,to):
         """Copy/steal wx control from an abandoned TreeItem to avoid creating a new wx control."""
         frm.wx  = to.wx
-        frm._update.append((self.wx.SetItemText,frm.text))
+        frm.previousChildren = to.previousChildren
+        if frm.text != to.text:
+            frm._update.append((self.wx.SetItemText,frm.text))
         return frm
         
     def UpdateItem(self,item):
