@@ -11,7 +11,7 @@ from wx.gizmos import EditableListBox
 import wx
 import sm.wxp.smdi as smdi
 
-VALUES = ['AutoComplete','AutoReloadChangedFile','CallTips',
+VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'CheckFileOnSave','ConvertTabsToSpaces','Encoding','Mdi',
           'EdgeColumn','PythonDocs','RecentFileAmount','RedirectShell', 
           'Redraw', 'Signature', 'SaveBeforeRun', 'Shortcuts', 'ShowShell',
@@ -39,6 +39,7 @@ class Create(wx.Dialog):
         self.terminal_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Terminal Emulator"))
         self.html_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Html"))
         self.General = wx.Panel(self.notebook_1, -1)
+        self.Backup = wx.CheckBox(self.General, -1, _("Create backup files"))
         self.RedirectShell = wx.CheckBox(self.General, -1, _("Redirect output to spe shell"))
         self.CheckFileOnSave = wx.CheckBox(self.General, -1, _("Check file for syntax errors on save"))
         self.ShowShell = wx.CheckBox(self.General, -1, _("Show shell"))
@@ -111,6 +112,7 @@ class Create(wx.Dialog):
         self.__fill()
         # begin wxGlade: Create.__set_properties
         self.SetTitle(_("Spe preferences"))
+        self.Backup.SetValue(1)
         self.RedirectShell.SetValue(1)
         self.CheckFileOnSave.SetValue(1)
         self.ShowShell.SetValue(1)
@@ -160,7 +162,8 @@ class Create(wx.Dialog):
         grid_sizer_4 = wx.FlexGridSizer(3, 2, 4, 4)
         sizer_1.Add((4, 4), 0, 0, 0)
         sizer_2.Add((4, 4), 0, 0, 0)
-        generalSizer.Add(self.RedirectShell, 0, wx.LEFT|wx.TOP, 4)
+        generalSizer.Add(self.Backup, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 4)
+        generalSizer.Add(self.RedirectShell, 0, wx.LEFT, 4)
         generalSizer.Add(self.CheckFileOnSave, 0, wx.LEFT, 4)
         generalSizer.Add(self.ShowShell, 0, wx.LEFT, 4)
         grid_sizer_4.Add(self.label_di, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)
@@ -235,7 +238,7 @@ class Create(wx.Dialog):
         general_Label_Sizer.Add(self.browseSignature, 0, wx.RIGHT|wx.TOP|wx.ADJUST_MINSIZE, 5)
         general_Label_Sizer.AddGrowableCol(1)
         general_Label.Add(general_Label_Sizer, 1, wx.EXPAND, 0)
-        paths_Sizer.Add(general_Label, 1, wx.EXPAND, 0)
+        paths_Sizer.Add(general_Label, 0, wx.EXPAND, 0)
         terminal_Sizer.Add(self.label_terminal, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         terminal_Sizer.Add(self.Terminal, 0, wx.RIGHT|wx.TOP|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5)
         terminal_Sizer.Add(self.label_terminalRun, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)

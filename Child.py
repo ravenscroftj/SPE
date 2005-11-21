@@ -16,7 +16,7 @@ from wx.lib.evtmgr import eventManager
 
 import sm, sm.spy, sm.uml, sm.wxp
 from sm.wxp.stc import PythonSTC
-from sm.wxp.realtime import Tree, ListCtrl
+from sm.wxp.realtime import TreeCtrl, ListCtrl
 import view.documentation
 
 import _spe.help as help
@@ -25,6 +25,7 @@ from sidebar.Browser import Browser
 
 ####Constants-------------------------------------------------------------------
 DEFAULT                 = "<default>"
+MAXINT                  = sys.maxint #for ListCtrl
 NEWFILE                 = 'unnamed'
 SPE_ALLOWED_EXTENSIONS  = ['.py','.pyw','.tpy','.txt','.htm','.html','.bak']
 STYLE_LIST              = wx.LC_REPORT
@@ -97,8 +98,8 @@ class Panel(wx.SplitterWindow):
         """Create notebook contents."""
         notebook = self.notebook = wx.Notebook(id=-1, parent=self, pos=wx.Point(2, 2),
               size=wx.Size(198, 481),style=STYLE_NOTEBOOK)
-        self.updateSidebarTab=[self.updateExplore,self.updateBrowser,self.updateTodo,self.updateIndex,self.doNothing,self.doNothing]
-        self.notebookLabel  = ['Explore','Browse','Todo','Index','Notes','Check']
+        self.updateSidebarTab=[self.updateExplore,self.updateTodo,self.updateIndex,self.doNothing,self.doNothing]
+        self.notebookLabel  = ['Explore','Todo','Index','Notes','Check']
         self.notebookIcons  = wx.ImageList(16,16)
         self.exploreIcon    = self.notebookIcons.Add(self.parentPanel.icons['explore.png'])
         self.browserIcon    = self.notebookIcons.Add(self.parentPanel.icons['browser.png'])
@@ -106,14 +107,15 @@ class Panel(wx.SplitterWindow):
         self.indexIcon      = self.notebookIcons.Add(self.parentPanel.icons['index.png'])
         self.notesIcon      = self.notebookIcons.Add(self.parentPanel.icons['notes.png'])
         self.pycheckerIcon  = self.notebookIcons.Add(self.parentPanel.icons['pychecker.png'])
-        if not info.DARWIN:
-            self.notebook.SetBackgroundColour(wx.Colour(255,255,255))
+        if info.LINUX:
+            #todo: check with linux users if this is really necessary?!
+            self.notebook.SetBackgroundColour(wx.WHITE)
         notebook.AssignImageList(self.notebookIcons)
         notebook.parentPanel=self.parentPanel
 
         #explore
-        explore     = self.explore = Tree(parent=self.notebook,style=STYLE_TREE)#wx.TreeCtrl
-        explore.SetBackgroundColour(wx.Colour(255,255,255))
+        explore     = self.explore = TreeCtrl(parent=self.notebook,style=STYLE_TREE)#wx.TreeCtrl
+        explore.SetBackgroundColour(wx.WHITE)
         self.root   = self.explore.AddRoot('Right click to locate')
         explore.SetPyData(self.root,0)
         explore.SetImageList(self.parentPanel.iconsList)
@@ -122,11 +124,7 @@ class Panel(wx.SplitterWindow):
         explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Expanded)
         explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Selected)
         explore.SetHelpText(help.CHILD_EXPLORE)
-        notebook.AddPage(page=self.explore.wx, text='Explore',imageId=self.exploreIcon)
-        #browser
-        browser         = self.browser = Browser(self.notebook, -1, os.path.dirname ( self._fileName ))
-        browser.open    = self.onOpenFromBrowser
-        notebook.AddPage (page=self.browser, text='', imageId=self.browserIcon)
+        notebook.AddPage(page=self.explore, text='Explore',imageId=self.exploreIcon)
         #todo
         todo            = self.todo = ListCtrl(parent=self.notebook,style=STYLE_LIST)
         todo.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, 
@@ -137,16 +135,16 @@ class Panel(wx.SplitterWindow):
                 heading='Task',width=500)
         todo.SetHelpText(help.CHILD_TODO)
         self.previousTodoHighlights = []
-        notebook.AddPage(page=self.todo.wx, text='',imageId=self.todoIcon)
+        notebook.AddPage(page=self.todo, text='',imageId=self.todoIcon)
         #index
         index = self.index = ListCtrl(parent=self.notebook,style=STYLE_LIST)
         index.SetImageList(self.parentPanel.iconsList,wx.IMAGE_LIST_SMALL)
-        index.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, 
+        index.InsertColumn(col=0, format=wx.LIST_FORMAT_RIGHT, 
                 heading='Line',width=50)
         index.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
                 heading='Entry',width=500)
         index.SetHelpText(help.CHILD_INDEX)
-        notebook.AddPage(page=self.index.wx, text='',imageId=self.indexIcon)
+        notebook.AddPage(page=self.index, text='',imageId=self.indexIcon)
         #notes
         self.notes = wx.TextCtrl(parent=self.notebook,id=-1,value=self.notesText,
             style=STYLE_NOTES)
@@ -155,6 +153,14 @@ class Panel(wx.SplitterWindow):
         #pyChecker
         self.pychecker          = Pycheck.Panel(self.notebook,page=5)
         self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)        
+        #browser
+        if not info.DARWIN:
+            #todo: the browser control doesn't work on mac
+            self.notebookLabel.append('Browse')
+            self.updateSidebarTab.append(self.updateBrowser)
+            browser         = self.browser = Browser(self.notebook, -1, os.path.dirname ( self._fileName ))
+            browser.open    = self.onOpenFromBrowser
+            notebook.AddPage (page=self.browser, text='', imageId=self.browserIcon)
         #events
         self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
         eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
@@ -183,10 +189,6 @@ class Panel(wx.SplitterWindow):
         self.umlIcon            = self.mainIcons.Add(self.parentPanel.icons['uml.png'])
         self.documentationIcon  = self.mainIcons.Add(self.parentPanel.icons['documentinfo.png'])
         self.main.AssignImageList(self.mainIcons)
-        #self.mainSizer = wx.BoxSizer(wx.VERTICAL)
-        #self.mainSizer.Add(self.main, 1, wx.ALL | wx.EXPAND , 10)
-        #self.SetAutoLayout(1)
-        #self.SetSizer(self.mainSizer)
         
         #sash
         self.sash = PythonSTC(parent=self.main,
@@ -270,7 +272,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 return
 
             #backup file
-            if os.path.exists(self.fileName):
+            if self.parentPanel.getValue('Backup') and os.path.exists(self.fileName):
                 backup  = self.fileName + ".bak"
                 try:
                     os.remove(backup)
@@ -582,21 +584,21 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             event.Skip()
         else:
             tab = self.notebook.GetSelection()
-        try:
-            self.updateSidebarTab[tab]()
-        except Exception, message:
-            if self.updateBug:
-                self.setStatus('BUG #4627: PLEASE RESTART SPE!')
-            else:
-                self.updateBug = True
-                message= """SPE bug: updateSidebar(%s)\n
-Bug #4627 has occured, which makes SPE unstable. Please save all files and
-restart SPE. If you are able to reconstruct this bug, leave a detailed comment
-at http://developer.berlios.de/bugs/?func=detailbug&bug_id=4627&group_id=4161
-and also give these details (copy & paste from shell):\n
-%s\n\n%s"""%(self.parentPanel.get('UpdateSidebar'),message,sm.spy.message(1))
-                print message
-                self.parentPanel.messageError(message)
+##        try:
+        self.updateSidebarTab[tab]()
+##        except Exception, message:
+##            if self.updateBug:
+##                self.setStatus('BUG #4627: PLEASE RESTART SPE!')
+##            else:
+##                self.updateBug = True
+##                message= """SPE bug: updateSidebar(%s)\n
+##Bug #4627 has occured, which makes SPE unstable. Please save all files and
+##restart SPE. If you are able to reconstruct this bug, leave a detailed comment
+##at http://developer.berlios.de/bugs/?func=detailbug&bug_id=4627&group_id=4161
+##and also give these details (copy & paste from shell):\n
+##%s\n\n%s"""%(self.parentPanel.get('UpdateSidebar'),message,sm.spy.message(1))
+##                print message
+##                self.parentPanel.messageError(message)
         
     def updateBrowser(self): 
         self.browser.update()
@@ -651,7 +653,9 @@ and also give these details (copy & paste from shell):\n
                 task                    = todo_hit.group(1)
                 urgency                 = task.count('!')
                 self.todoList.append((line,urgency,task))
-                item                    = self.todo.InsertStringItem(todoIndex, str(line+1), str(urgency), task)
+                item                    = self.todo.InsertStringItem(todoIndex, str(line+1))
+                self.todo.SetStringItem(item, 1, str(urgency))
+                self.todo.SetStringItem(item, 2, task)
                 self.todo.SetItemData(item,line+1)
                 #highlights
                 newMax                  = max(self.todoMax,urgency)
@@ -664,62 +668,68 @@ and also give these details (copy & paste from shell):\n
         #highlight most urgent todos
         for i in self.todoHighlights:
             if i not in self.previousTodoHighlights:
-                item=self.todo.GetItem(i)
-                item.SetBackgroundColour(wx.Colour(255,255,0))
-                self.todo.SetItem(item)
+                self.todo.SetItemBackgroundColour(i,wx.Colour(255,255,0))
+##                item=self.todo.GetItem(i)
+##                item.SetBackgroundColour(wx.Colour(255,255,0))
+##                self.todo.SetItem(item)
         for i in self.previousTodoHighlights:
             if i not in self.todoHighlights:
-                item=self.todo.GetItem(i)
-                item.SetBackgroundColour(wx.Colour(255,255,255))
-                self.todo.SetItem(item)
+                self.todo.SetItemBackgroundColour(i,wx.Colour(255,255,255))
+##                item=self.todo.GetItem(i)
+##                item.SetBackgroundColour(wx.Colour(255,255,255))
+##                self.todo.SetItem(item)
         self.previousTodoHighlights = self.todoHighlights
-        self.todo.Clean()
+        self.todo.Update()
         
     def updateIndex(self):
         """Update index tab in sidebar."""
         #get code
         try:
-            text=self.source.GetText().split('\n')
+            text            = self.source.GetText().split('\n')
         except:
             return
         #initialize
-        tryMode         = 0
-        hierarchyIndex  = 0
-        self.indexData  = []
+        tryMode             = 0
+        hierarchyIndex      = 0
+        self.indexData      = []
+        charIcon            = self.parentPanel.iconsListIndex['index_char.png']
         #loop through code
         for line in range(len(text)):
-            l           = text[line].split('#')[0].strip()
-            first       = l.split(' ')[0]
+            l               = text[line].split('#')[0].replace(':','').strip()
+            first           = l.split(' ')[0]
             if first=='try:':
-                tryMode         += 1
-            elif first[:6]=='except':
+                tryMode     += 1
+            elif first[:6]  =='except':
                 tryMode         = max(0,tryMode-1)
-            elif first[:7]=='finally':
+            elif first[:7]  == 'finally':
                 tryMode         = max(0,tryMode-1)
             elif first in ['class','def'] and l[:8]!='__init__':
-                if first=='class':
+                if first    == 'class':
                     colour  = wx.Colour(255,0,0)
-                    icon    = 'folder_tar.png'
+                    icon    = 'class.png'
+                    l       = l.replace('class ','')
                 else:
                     colour  = wx.Colour(0,0,255)
-                    icon    = 'kmail.png'
-                self.indexData.append((l.replace('_',' ').lstrip(),l,line+1,colour,
+                    icon    = 'def.png'
+                    l       = l.replace('def ','')
+                self.indexData.append((l.replace('_','').strip().upper(),l,line+1,colour,
                     self.parentPanel.iconsListIndex[icon],self.fileName))
         #make index tab
         self.indexData.sort()
-        firstLetter = ''
-        x           = 0
+        firstLetter         = ''
         self.index.DeleteAllItems()
         for element in self.indexData:
-            stripped,entry,line,colour,icon,fileName=element
-            if entry.split(' ')[1][0]!=firstLetter:
-                firstLetter=entry.split(' ')[1][0]
-                self.index.InsertStringItem(x, ' ', '%s (%s)'%(firstLetter.upper(),entry.split(' ')[0]))
-                x+=1
-            item=self.index.InsertImageStringItem(x, icon, str(line), entry)
+            stripped, entry, line, colour, icon, fileName = element
+            if stripped[0]!=firstLetter:
+                firstLetter = stripped[0]
+                item        = self.index.InsertImageStringItem(MAXINT, ' ', charIcon)
+                self.index.SetStringItem(item,1,firstLetter)
+                self.index.SetItemBackgroundColour(item,(230,230,230))
+            item            = self.index.InsertImageStringItem(MAXINT, str(line), icon)
+            self.index.SetStringItem(item, 1, entry)
             self.index.SetItemData(item,line-1)
             self.index.SetItemTextColour(item,colour)
-            x+=1
+        self.index.Update()
         #if self.parentPanel.indexVisible...
             
     def updateExplore(self,uml=0):
@@ -786,8 +796,7 @@ and also give these details (copy & paste from shell):\n
                         self.appendSeparators(separators,hierarchy,hierarchyIndex,uml)
                         separators      = []
                     if l:
-                        item                = self.explore.AppendItem(hierarchy[hierarchyIndex][1],l)
-                        self.explore.SetPyData(item,line)
+                        item                = self.explore.AppendItem(hierarchy[hierarchyIndex][1],l,data=line)
                         intensity=max(50,255-indentation*20)
                         if encode_hit:
                             colour              = wx.Colour(intensity-50,0,intensity-50)
@@ -874,12 +883,11 @@ and also give these details (copy & paste from shell):\n
         explore = self.explore
         for separator in separators:
             label,line,fore,back=separator
-            sep=explore.AppendItem(hierarchy[hierarchyIndex][1],label)
+            sep=explore.AppendItem(hierarchy[hierarchyIndex][1],label,data=line)
             explore.SetItemBold(sep)
             explore.SetItemTextColour(sep,fore)
             if back:explore.SetItemBackgroundColour(sep,back)
             explore.SetItemImage(sep,self.parentPanel.iconsListIndex['separator.png'])
-            explore.SetPyData(sep,line)
             if uml and self.umlClass: self.umlClass.append(label,t=sm.uml.SEPARATOR)
 
     def onSourceFromExplore(self,event):
