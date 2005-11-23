@@ -760,7 +760,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             sepa_hit    = RE_SEPARATOR.match(l)
             sepb_hit    = RE_SEPARATOR_HIGHLIGHT.match(l)
             encode_hit  = RE_ENCODING.match(l)
-            if first in ['class','def','import','from'] or encode_hit:
+            if first in ['class','def','import'] or encode_hit or (first == 'from' and 'import' in l):
                 if 1 or l.find('(')!=-1 or l.find(':') !=-1 or first in ['from','import'] or encode_hit:
                     #indentation--------------------------------------------
                     indentation         = max(0,len(text[line])-

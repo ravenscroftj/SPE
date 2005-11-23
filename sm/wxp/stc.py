@@ -204,7 +204,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             # smart indentation
             stripped    = txt[:pos-linePos].split('#')[0].strip()
             firstWord   = stripped.split(" ")[0]
-            if self.needsIndent(firstWord,lastChar=stripped[-1]):
+            if stripped and self.needsIndent(firstWord,lastChar=stripped[-1]):
                 padding += self.indentation
             elif self.needsDedent(firstWord):
                 padding  = padding[:-self.tabWidth]
