@@ -203,7 +203,7 @@ class Bar(wxgMenu.Bar):
         else:
             #maybe weird to remove it afterwards but keeps wxGlade intact
             self.Remove(BLENDER)
-        if app.mdi not in [smdi.MDI_SPLIT,smdi.SDI]:
+        if app.mdi not in [smdi.SDI]:#[smdi.MDI_SPLIT,smdi.SDI]:
             self.Remove(WINDOW)
             self.CHILD_MENUS.remove(wxgMenu.NEXT)
             self.CHILD_MENUS.remove(wxgMenu.PREVIOUS)

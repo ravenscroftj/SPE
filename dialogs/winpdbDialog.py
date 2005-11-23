@@ -105,7 +105,7 @@ class Create(wx.Dialog):
             options.chdir.SetValue(False)
             options.chdir.Disable()
         options.encryption.SetValue(info['encryption'])
-        options.verbose.SetValue(info['verbose'])
+        options.verbose.SetValue(bool(info['verbose']))
         options.encryption.Enable(self.app.fCrypto)
 
     def __do_layout(self):
@@ -144,9 +144,12 @@ class Create(wx.Dialog):
         options     = self.options
         gui         = info['gui']           = options.gui.GetValue()
         if gui:
-            parameters.append('"%s"'%os.path.join(path,'winpdb.py'))
+            debugger= '%s'%os.path.join(path,'winpdb.py')
         else:
-            parameters.append('"%s"'%os.path.join(path,'rpdb2.py'))
+            debugger= '%s'%os.path.join(path,'rpdb2.py')
+        if not os.path.exists(debugger):
+            debugger= '"%s"'%debugger
+        parameters.append(debugger)
         chdir       = info['chdir']         = options.chdir.GetValue()
         if chdir:
             parameters.append('-c')

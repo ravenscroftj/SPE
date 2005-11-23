@@ -503,8 +503,10 @@ class Panel(wx.Notebook):
                                PYTHON_EXEC,
                                PYTHON_EXEC]
                 args.extend(info['parameters'])
+                if not os.path.exists(name):
+                    name    = '"%s"'%name
                 if os.path.exists(name):
-                    args.append('"%s"'%name)
+                    args.append(name)
                     args.append(info['arguments'])
                 os.spawnl(*args)
                 self.SetStatusText('WinPdb Debugger is succesfully started.',1)
@@ -540,12 +542,12 @@ class Panel(wx.Notebook):
         self.SetStatusText('Kiki is succesfully started.',1)
 
     def design_a_gui_with_wxglade(self):
-        if wx.Platform == "__WXMAC__":
-            os.system('open -a /Applications/SPE-OSX/wxGladeOSX.app')
-        else:
             from plugins.wxGlade import __file__ as fileName
             path    = dirname(fileName)
-            os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,'"%s"'%os.path.join(path,'wxglade.py'))
+            glade   = '%s'%os.path.join(path,'wxglade.py')
+            if not os.path.exists(glade):
+                glade = '"%s"'%os.path.join(path,'wxglade.py')
+            os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,glade)
             self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):

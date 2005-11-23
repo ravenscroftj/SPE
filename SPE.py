@@ -61,7 +61,7 @@ parser      = OptionParser(usage="%prog [--debug] [ -w <WORKSPACE> | --workspace
 parser.add_option("-w","--workspace",help="open a workspace file")
 parser.add_option("-d","--debug",action="store_true",help="turn on debug output")
 opts, args  = parser.parse_args()
-print __debug, opts.debug
+
 if not __debug: 
     __debug = (opts.debug)
 if opts.workspace: 
