@@ -184,27 +184,32 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
     #---events
     def OnKeyDown(self, event):
         """"""
-        key = event.KeyCode()
+        key     = event.KeyCode()
         control = event.ControlDown()
         #shift=event.ShiftDown()
-        alt=event.AltDown()
+        alt     = event.AltDown()
         if key == wx.WXK_RETURN and not control and not alt and not self.AutoCompActive():
             #auto-indentation
             if self.CallTipActive():
                 self.CallTipCancel()
                 self.calltip=0
-            line = self.GetCurrentLine()
-            txt = self.GetLine(line)
-            pos=self.GetCurrentPos()
-            linePos=self.PositionFromLine(line)
+            line        = self.GetCurrentLine()
+            txt         = self.GetLine(line)
+            pos         = self.GetCurrentPos()
+            linePos     = self.PositionFromLine(line)
             self.CmdKeyExecute(wx_stc.STC_CMD_NEWLINE)
-            indent = self.GetLineIndentation(line)
-            padding = self.indentation * (indent/max(1,self.tabWidth))
-            newpos = self.GetCurrentPos()
-            if self.needsIndent(txt[:pos-linePos]):
+            indent      = self.GetLineIndentation(line)
+            padding     = self.indentation * (indent/max(1,self.tabWidth))
+            newpos      = self.GetCurrentPos()
+            # smart indentation
+            stripped    = txt[:pos-linePos].split('#')[0].strip()
+            firstWord   = stripped.split(" ")[0]
+            if self.needsIndent(firstWord,lastChar=stripped[-1]):
                 padding += self.indentation
+            elif self.needsDedent(firstWord):
+                padding  = padding[:-self.tabWidth]
             self.InsertText(newpos, padding)
-            newpos += len(padding)
+            newpos  += len(padding)
             self.SetCurrentPos(newpos)
             self.SetSelection(newpos, newpos)
         else:
@@ -577,20 +582,27 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                  except:
                     return None
                     
-    def needsIndent(self,txt):
-        " tests if a line needs extra indenting, ie if, while, def, etc "
-        # find the first token
-        stripped = txt.split('#')[0].rstrip()
-        l = stripped.lstrip().split(" ")[0]
+    def needsIndent(self,firstWord,lastChar):
+        "Tests if a line needs extra indenting, ie if, while, def, etc "
         # remove trailing : on token
-        if len(l) > 0:
-            if l[-1] == ":":
-                l = l[:-1]
+        if len(firstWord) > 0:
+            if firstWord[-1] == ":":
+                firstWord = firstWord[:-1]
         # control flow keywords
-        if l in ["for","if", "else", "def","class","elif", "try","except","finally","while"] and stripped[-1] == ':':
+        if firstWord in ["for","if", "else", "def","class","elif", "try","except","finally","while"] and lastChar == ':':
             return True
         else:
             return False
+
+    def needsDedent(self,firstWord):
+        "Tests if a line needs extra dedenting, ie break, return, etc "
+        # control flow keywords
+        if firstWord in ["break","return","continue","yield","raise"]:
+            return True
+        else:
+            return False
+
+
 
 
 

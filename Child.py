@@ -140,11 +140,15 @@ class Panel(wx.SplitterWindow):
         index = self.index = ListCtrl(parent=self.notebook,style=STYLE_LIST)
         index.SetImageList(self.parentPanel.iconsList,wx.IMAGE_LIST_SMALL)
         index.InsertColumn(col=0, format=wx.LIST_FORMAT_RIGHT, 
-                heading='Line',width=50)
+                heading='Line',width=60)
         index.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
                 heading='Entry',width=500)
         index.SetHelpText(help.CHILD_INDEX)
         notebook.AddPage(page=self.index, text='',imageId=self.indexIcon)
+        if info.WIN:
+            self.indexCharIcon  = self.parentPanel.iconsListIndex['index_char_win.png']
+        else:
+            self.indexCharIcon  = self.parentPanel.iconsListIndex['index_char.png']
         #notes
         self.notes = wx.TextCtrl(parent=self.notebook,id=-1,value=self.notesText,
             style=STYLE_NOTES)
@@ -548,7 +552,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Updates statusbar with current position."""
         
     def idle(self,event=None):
-        if self.frame.dead: return
+        if self.frame.dead or self.parentFrame.dead: return
         if self.eventChanged:
             if self.changed     == 0:
                 self.changed    = 1
@@ -568,7 +572,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if self.app.DEBUG:
             print 'Event:  Child: %s.onKillFocus(dead=%s)'%(self.__class__,self.frame.dead)
         try:
-            if not self.frame.dead and self.parentPanel.get('UpdateSidebar')=='when clicked':
+            if not (self.frame.dead or self.parentFrame.dead) and self.parentPanel.get('UpdateSidebar')=='when clicked':
                 self.source.SetSTCFocus(0)
                 self.updateSidebar()
             event.Skip()
@@ -692,7 +696,6 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         tryMode             = 0
         hierarchyIndex      = 0
         self.indexData      = []
-        charIcon            = self.parentPanel.iconsListIndex['index_char.png']
         #loop through code
         for line in range(len(text)):
             l               = text[line].split('#')[0].replace(':','').strip()
@@ -722,7 +725,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             stripped, entry, line, colour, icon, fileName = element
             if stripped[0]!=firstLetter:
                 firstLetter = stripped[0]
-                item        = self.index.InsertImageStringItem(MAXINT, ' ', charIcon)
+                item        = self.index.InsertImageStringItem(MAXINT, ' ', self.indexCharIcon)
                 self.index.SetStringItem(item,1,firstLetter)
                 self.index.SetItemBackgroundColour(item,(230,230,230))
             item            = self.index.InsertImageStringItem(MAXINT, str(line), icon)
@@ -921,7 +924,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else: return 1
 
     def checkTime(self):
-        if (not self.frame.dead) and os.path.exists(self.fileName):
+        if (not (self.frame.dead or self.parentFrame.dead)) and os.path.exists(self.fileName):
             try:
                 pos=self.source.GetCurrentPos()
                 fileTime=os.path.getmtime(self.fileName)

@@ -8,12 +8,13 @@ def _(x):
     return x
 
 MENUS =[
+ID_SAVE_WORKSPACE_AS,ID_OPEN_WORKSPACE,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
-AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR, 
+AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
@@ -21,8 +22,8 @@ END_OF_LINE_MARKER, SIDEBAR, SHELL,
 
 RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT, DEBUG,
 BROWSE_OBJECT_WITH_PYFILLING, TEST_REGULAR_EXPRESSION_WITH_KIKI,
-DESIGN_A_GUI_WITH_WXGLADE, DESIGN_A_GUI_WITH_XRC, CHECK_SOURCE_WITH_PYCHECKER, 
-OPEN_TERMINAL_EMULATOR, BROWSE_FOLDER, RUN_IN_TERMINAL_EMULATOR, 
+DESIGN_A_GUI_WITH_WXGLADE, DESIGN_A_GUI_WITH_XRC, CHECK_SOURCE_WITH_PYCHECKER,
+OPEN_TERMINAL_EMULATOR, BROWSE_FOLDER, RUN_IN_TERMINAL_EMULATOR,
 RUN_IN_TERMINAL_EMULATOR__EXIT,
 
 LOAD_IN_BLENDER, REFERENCE_IN_BLENDER, REDRAW_BLENDER_WINDOW,
@@ -39,16 +40,16 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(70)]
+[wx.NewId() for x in range(72)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
-wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE, 
+wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE,
 wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
-INSERT_SIGNATURE, 
+INSERT_SIGNATURE,
 
 WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR,
@@ -247,6 +248,9 @@ class Bar(wx.MenuBar):
         self.file.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVEAS, _("Save &As...\tCtrl+Alt+S"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
+        self.file.Append(ID_OPEN_WORKSPACE, _("Open &Workspace"), "", wx.ITEM_NORMAL)
+        self.file.Append(ID_SAVE_WORKSPACE_AS, _("Save Workspace As..."), "", wx.ITEM_NORMAL)
+        self.file.AppendSeparator()
         self.file.Append(SAVE_UML_AS, _("Save Uml As...\tCtrl+Shift+S"), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML_SETUP, _("Page Uml Setup..."), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML_PREVIEW, _("Print Uml Preview..."), "", wx.ITEM_NORMAL)
@@ -369,6 +373,8 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_open_files, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.menu_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.menu_save_as, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.menu_open_workspace, id=ID_OPEN_WORKSPACE)
+        self.Bind(wx.EVT_MENU, self.menu_save_workspace_as, id=ID_SAVE_WORKSPACE_AS)
         self.Bind(wx.EVT_MENU, self.menu_save_uml_as, id=SAVE_UML_AS)
         self.Bind(wx.EVT_MENU, self.menu_print_uml_setup, id=PRINT_UML_SETUP)
         self.Bind(wx.EVT_MENU, self.menu_print_uml_preview, id=PRINT_UML_PREVIEW)
@@ -708,6 +714,14 @@ class Bar(wx.MenuBar):
 
     def menu_insert_signature(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_insert_signature' not implemented"
+        event.Skip()
+
+    def menu_open_workspace(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_open_workspace' not implemented"
+        event.Skip()
+
+    def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_save_workspace_as' not implemented"
         event.Skip()
 
 # end of class Bar

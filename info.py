@@ -3,7 +3,7 @@ import os,sys
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
-LINUX                       = not (WIN or DARWIN)
+LINUX						= not (WIN or DARWIN)
 
 path                        = os.path.dirname(__file__)
 
@@ -29,7 +29,7 @@ INFO={
     'url'               : 'http://pythonide.stani.be',
     'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.7.5.g",
+    'version'           : "0.8.0._",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -85,7 +85,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """%INFO
 
 INFO['contribute'] = """There are different ways to contribute:
-    
+
 - %s (or convince your boss)
 - Let your company sponsor SPE (see manual)
 - SPE needs documentation writers and screenshot takers for manual
@@ -96,7 +96,8 @@ INFO['contribute'] = """There are different ways to contribute:
 - Report bugs in the bug tracker"""%INFO['donate']
 
 WILDCARD = "Python (*.py;*.pyw;*.tpy)|*.py;*.pyw;*.tpy|Backup files (*.bak)|*.bak|All files (*)|*"
-WILDCARD_EXTENDED = WILDCARD+'|Python All(*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo)|*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo|Text (*.txt;*.rtf;*.htm;*.html;*.pdf)|*.txt;*.rtf;*.htm;*.html;*.pdf|Bitmap (*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic)|*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic|Vector (*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl)|*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl'
+WORKSPACE_WILDCARD = "SPE Workspace (*.sws)|*.sws|All files (*)|*"
+WILDCARD_EXTENDED = WILDCARD+'|Python All(*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo)|*.py;*.pyw;*.tpy;*.pyc;*.pyd;*.pyo|Text (*.txt;*.rtf;*.htm;*.html;*.pdf;*.cfg)|*.txt;*.rtf;*.htm;*.html;*.pdf;*.cfg|Bitmap (*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic)|*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.png;*.pic|Vector (*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl)|*.dxf;*.dwg;*.svg;*.swf;*.vrml;*.wrl'
 
 
 __doc__=INFO['doc']%INFO

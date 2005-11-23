@@ -41,14 +41,14 @@ TOOL_LOAD_IN_BLENDER, TOOL_REFERENCE_IN_BLENDER,
 TOOL_DONATE
 ] = \
 [wx.NewId() for x in range(28)]
- 
-CHILD_TOOLS=[ 
+
+CHILD_TOOLS=[
 TOOL_SAVE, TOOL_SAVE_AS, TOOL_CLOSE,
 TOOL_REMEMBER_OPEN_FILES,
-TOOL_UNDO, TOOL_REDO, TOOL_CUT, TOOL_COPY, TOOL_PASTE, 
+TOOL_UNDO, TOOL_REDO, TOOL_CUT, TOOL_COPY, TOOL_PASTE,
 TOOL_FIND__REPLACE, TOOL_GO_TO_LINE, TOOL_BROWSE_SOURCE,
 TOOL_INDENT, TOOL_DEDENT, TOOL_COMMENT, TOOL_UNCOMMENT,
-TOOL_SIDEBAR, 
+TOOL_SIDEBAR,
 TOOL_RUN, TOOL_RUN_VERBOSE, TOOL_IMPORT,TOOL_CHECK_SOURCE_WITH_PYCHECKER,
 ]
 
@@ -163,7 +163,7 @@ class Bar(wxgMenu.Bar):
         parentFrame = self.parentFrame
         if hasattr(parentFrame,'palette'):
             parentFrame.palette.enable(status)
-            
+
     def Bind(self,*arg,**keyw):
         self.frame.Bind(*arg,**keyw)
 
@@ -203,7 +203,7 @@ class Bar(wxgMenu.Bar):
         else:
             #maybe weird to remove it afterwards but keeps wxGlade intact
             self.Remove(BLENDER)
-        if app.mdi not in [smdi.MDI_SPLIT,smdi.SDI]:    
+        if app.mdi not in [smdi.MDI_SPLIT,smdi.SDI]:
             self.Remove(WINDOW)
             self.CHILD_MENUS.remove(wxgMenu.NEXT)
             self.CHILD_MENUS.remove(wxgMenu.PREVIOUS)
@@ -212,7 +212,7 @@ class Bar(wxgMenu.Bar):
             self.Enable(wxgMenu.SHELL,0)
             if self.toolBar:
                 self.toolBar.EnableTool(TOOL_SHELL,0)
-            
+
     def menu_new(self, event=None):
         """File > New"""
         self.parentPanel.new()
@@ -228,16 +228,16 @@ class Bar(wxgMenu.Bar):
     def menu_save_as(self, event=None):
         """File > Save As..."""
         self.app.childActive.saveAs()
-        
+
     def menu_save_uml_as(self, event=None):
         self.app.childActive.saveUmlAs()
-        
+
     def menu_print_uml(self, event=None):
         self.app.childActive.printUml()
-        
+
     def menu_print_uml_preview(self, event=None):
         self.app.childActive.printUmlPreview()
-        
+
     def menu_print_uml_setup(self, event=None):
         self.app.childActive.printUmlSetup()
 
@@ -501,14 +501,14 @@ class Bar(wxgMenu.Bar):
         """Links > Python package index..."""
         self.link('http://www.python.org/pypi')
 
-    def menu_next(self, event=None): 
+    def menu_next(self, event=None):
         """Window > Next"""
         if self.app.mdi:
             self.parentFrame.ActivateNext()
         else: event.Skip()
 
-    def menu_previous(self, event=None): 
-        """Window > Previous"""        
+    def menu_previous(self, event=None):
+        """Window > Previous"""
         if self.app.mdi:
             self.parentFrame.ActivatePrevious()
         else: event.Skip()
@@ -555,47 +555,55 @@ class Bar(wxgMenu.Bar):
             wx.MessageBox("Stani's Python Editor: A Python IDE built on the wxPython toolkit.\n(c)www.stani.be")
         else:
             self.parentPanel.about()
-            
+
+
+    def menu_open_workspace(self, event): # wxGlade: Bar.<event_handler>
+        self.parentPanel.open_workspace()
+        event.Skip()
+
+    def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
+        self.parentPanel.save_workspace()
+        event.Skip()
 
 class PalettePanel(wxgMenu.Palette):
-    def evt_indent(self, event): 
+    def evt_indent(self, event):
         self.menuBar.menu_indent()
         self.app.childActive.source.SetFocus()
 
-    def evt_dedent(self, event): 
+    def evt_dedent(self, event):
         self.menuBar.menu_dedent()
         self.app.childActive.source.SetFocus()
 
-    def evt_comment(self, event): 
+    def evt_comment(self, event):
         self.menuBar.menu_comment()
         self.app.childActive.source.SetFocus()
 
-    def evt_uncomment(self, event): 
+    def evt_uncomment(self, event):
         self.menuBar.menu_uncomment()
         self.app.childActive.source.SetFocus()
 
-    def evt_run(self, event): 
+    def evt_run(self, event):
         self.menuBar.menu_run()
 
     def evt_import(self, event):
         self.menuBar.menu_import()
 
-    def evt_find(self, event): 
+    def evt_find(self, event):
         self.menuBar.menu_find__replace()
         self.app.childActive.source.SetFocus()
 
-    def evt_goto(self, event): 
+    def evt_goto(self, event):
         self.menuBar.menu_go_to_line()
         self.app.childActive.source.SetFocus()
 
-    def evt_browse_source(self, event): 
+    def evt_browse_source(self, event):
         self.menuBar.menu_browse_source()
         self.app.childActive.source.SetFocus()
 
-    def evt_shell(self, event): 
+    def evt_shell(self, event):
         self.menuBar.menu_shell()
 
-    def evt_check(self, event): 
+    def evt_check(self, event):
         self.menuBar.menu_check_source_with_pychecker()
         self.app.childActive.source.SetFocus()
 
@@ -628,7 +636,7 @@ class Palette(wx.MiniFrame):
         self.SetSizer(sizer_main)
         sizer_main.Fit(self)
         sizer_main.SetSizeHints(self)
-        
+
     def enable(self,status):
         for child in self.panel.GetChildren()[:-2]:
             child.Enable(status)

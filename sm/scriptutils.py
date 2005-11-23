@@ -13,7 +13,7 @@ INFO['description'] =\
 __doc__=INFO['doc']%INFO
 #_______________________________________________________________________________
 
-import string,os,sys
+import string,os,sys,types
 
 import __main__
 #---run: from pywin.framework.scriptutils (c)Mark Hammond-----------------------
@@ -31,12 +31,16 @@ def run(fileName=None,source=None,mainDict=__main__.__dict__,profiling=0):
                 osPath=os.getcwd()
                 os.chdir(path)
         if source:
-            source='__name__="__main__"\n'+str(source)
+            if type(source) == types.UnicodeType:
+                source = source.encode(sys.getdefaultencoding(),'replace')
+            source='__name__="__main__"\n%s'%source
             fileName=base='<source>'
         else:
             f=open(fileName,'r')
             source=f.read()
             f.close()
+            if type(source) == types.UnicodeType:
+                source = source.encode(sys.getdefaultencoding(),'replace')
         codeObject = compile(source.replace('\r\n','\n')+"\n", fileName, "exec")
         if profiling:
             import profile, pstats

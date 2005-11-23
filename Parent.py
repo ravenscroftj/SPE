@@ -1,4 +1,4 @@
-####(c)www.stani.be                                                                
+####(c)www.stani.be
 import _spe.info as info
 INFO=info.copy()
 
@@ -35,28 +35,24 @@ def dirname(fileName):
         return win32api.GetShortPathName(fileName)
     else:
         return fileName
-    
+
 import Child
 
 ####Constants-------------------------------------------------------------------
 DEFAULT         = "<default>"
-FOLDERS         = 'folders.txt'
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
 MAIL            = 'mailto:s_t_a_n_i@yahoo.com?subject=About spe...'
-NOTES           = 'notes.txt'
 PATH            = dirname(__file__)
 PLATFORM        = sys.platform
 PREFIX          = sys.prefix
-RECENT          = 'recent.txt'
-REMEMBER        = 'remember.txt'
 SIZE            = (600,400)
 SKIN            = 'default'
 TABS            = ['Shell','Locals','Session','Find','Browser','Recent','Todo','Index','Notes','Donate']
 TITLE           = 'SPE %s'
 UNNAMED         = 'unnamed'
 
-            
+
 
 ####Subclassed Parent class-----------------------------------------------------
 class Panel(wx.Notebook):
@@ -67,7 +63,9 @@ class Panel(wx.Notebook):
         self.__paths__(path)
         self.__settings__(openFiles,redirect,**settings)
         self.__findReplaceEvents__()
-        
+        self.workspace=ConfigParser.ConfigParser()
+        self.workspaceFile=""
+
     def __paths__(self,path,skin='default'):
         self.path           = path
         self.pathDoc        = os.path.join(self.path,       'doc')
@@ -81,7 +79,7 @@ class Panel(wx.Notebook):
         except:
             if not os.path.exists(INFO['userPath']):
                 print 'Warning: could not find or create user path (%s).'%INFO['userPath']
-            
+
     def __settings__(self,openFiles,redirect,redraw=None,Blender=None,**kwds):
         self.idleTime       = time.time()
         #arguments
@@ -97,10 +95,10 @@ class Panel(wx.Notebook):
         self.remember       = 0
         self.restartMessage = ''
         if PLATFORM == 'win32':
-            self.LIST_STYLE = wx.LC_SMALL_ICON# todo: verify this better |wx.LC_LIST 
+            self.LIST_STYLE = wx.LC_SMALL_ICON# todo: verify this better |wx.LC_LIST
         else:
             self.LIST_STYLE = wx.LC_LIST
-            
+
     def __findReplaceEvents__(self):
         self.findStr=''
         self.replaceStr=''
@@ -112,14 +110,14 @@ class Panel(wx.Notebook):
         wx.EVT_COMMAND_FIND_REPLACE(self, -1,self.onReplace)
         wx.EVT_COMMAND_FIND_REPLACE_ALL(self, -1,self.onReplaceAll)
         wx.EVT_COMMAND_FIND_CLOSE(self, -1,self.onFindClose)
-    
+
     #---finish
     def __finish__(self):
         self.__icons__()
         self.__sash__()
         self.__frame__()
         #self.app.childActive.source.SetFocus()
-        
+
     def __icons__(self):
         self.iconsList=wx.ImageList(16,16)
         self.icons={}
@@ -130,12 +128,12 @@ class Panel(wx.Notebook):
             self.icons[icon]=self.app.bitmap(icon)
             if self.icons[icon].GetHeight() == 16:
                 self.iconsListIndex[icon]=self.iconsList.Add(self.icons[icon])
-                
+
     def __sash__(self):
         if self.app.DEBUG: print 'Creating tabs...'
-        self.config = self.app.config 
+        self.config = self.app.config
         self.AssignImageList(self.iconsList)
-        tabs = [os.path.splitext(x)[0] for x in sm.osx.listdir(self.pathTabs,extensions=['.py']) if x[:1]!='_'] 
+        tabs = [os.path.splitext(x)[0] for x in sm.osx.listdir(self.pathTabs,extensions=['.py']) if x[:1]!='_']
         tabs.sort()
         tabs = TABS[:-1] + [x for x in tabs if x not in TABS] + [TABS[-1]]
         if not self.app.Blender:
@@ -165,7 +163,7 @@ class Panel(wx.Notebook):
         self.preferencesSave()
         self.__remember__(openFiles=self._openFiles)
         self.__menus__()
-                
+
     def __menus__(self):
         #parentInit.importMenus
         menuBar = self.frame.menuBar
@@ -175,48 +173,103 @@ class Panel(wx.Notebook):
             menuBar.check_view()
         if not self.app.children:
             menuBar.enable(0)
-        
+
     def __remember__(self,openFiles=[]):
         global RECENT,FOLDERS,NOTES,REMEMBER
+        self.__openWorkspace__()
+        try:
+            self.get("currentworkspace") #This will fail if there is no current workspace to get
+            self.loadWorkspace()
+        except:
+            self.rememberSet(0)
+        if len(openFiles)>0:
+            self.rememberSet(1)
+            self.openList(openFiles)
+        if len(self.app.children)==0: 
+            self.new(maximize = self.getValue("MaxChildren"))
 
+    #---Workspace
+    def __openWorkspace__(self):
+        self.workspace=ConfigParser.ConfigParser()
+        try:
+            file=self.get("currentworkspace")
+            self.workspace.read(file)
+            self.workspaceFile=file
+        except:
+            print 'Spe warning: could not find currentworkspace in config'
+    def loadWorkspace(self):
+        #Close all open children
+        for child in self.app.children: #this doesn't loop through all the children (leaves one left)
+            print child.fileName
+            child.frame.onFrameClose()
+
+        #load the Recent Files
         self.recent.files=[]
         try:
-            files=eval(self.userOpen(RECENT))
+            files=eval(self.getWorkspaceValue("Recent"))
             self.recent.add([file for file in files if file and os.path.exists(file)])
         except:
             pass
-        
+        #load the Folders
         try:
-            folders=eval(self.userOpen(FOLDERS))
+            folders=eval(self.getWorkspaceValue("Folders"))
             self.browser.depth.SetValue(folders[0])
             self.browser.add([file for file in folders[1:] if file])
         except:
             pass
-            
+        #load the Notes
         try:
-            notes=self.userOpen(NOTES)
+            notes=self.getWorkspaceValue("Notes")
             self.notes.SetValue(notes)
         except:
             pass
-            
+
+        #load the openfiles (the old 'remember.txt')
         fileList=[]
         try:
-            files=eval(self.userOpen(REMEMBER))
+            files=eval(self.getWorkspaceValue("OpenFiles"))
             fileList=[file for file in files if file]
         except:
             pass
-        fileList.extend([os.path.abspath(f) for f in openFiles])
+            
         if fileList:
             self.rememberSet(1)
             self.openList(fileList,
                 message     = 0,
-                select      = None, 
+                select      = None,
                 maximize    = self.getValue("MaxChildren"),
                 verbose     = True)
-        else:
-            self.rememberSet(0)
-            self.new(maximize = self.getValue("MaxChildren"))
-    
+    def saveWorkspace(self,filelocation=None):
+        fileList=[]
+        if self.app.children:
+            for child in self.app.children:
+                  if child.fileName != Child.NEWFILE:
+                      pos     = child.source.GetCurrentPos()
+                      lineno  = child.source.LineFromPosition(pos)
+                      col     = child.source.GetColumn(pos)
+                      fileList.append((child.fileName,lineno,col))
+        self.setWorkspaceValue("notes",self.notes.GetValue())
+        self.setWorkspaceValue("openfiles",str(fileList))
+        self.setWorkspaceValue("recent",str(self.recent.files[:self.getValue('RecentFileAmount')]))
+        self.setWorkspaceValue("folders",str([self.browser.depth.GetValue()]+self.browser.getFolders()[1:]))
+        if not filelocation: filelocation=self.workspaceFile
+        try:
+            file=open(filelocation,'w')
+            self.workspace.write(file)
+            file.close()
+        except Exception, message:
+            print 'Spe warning: could not save workspace options in',filelocation
+            print message
+    def getWorkspaceValue(self,type):
+        """        returns the value of the workspace config file key        """
+        return self.workspace.get(type.lower(),"1")
+
+    def setWorkspaceValue(self,type,value):
+        """        sets the workspace config file key to a specific value        """
+        if not self.workspace.has_section(type): self.workspace.add_section(type)
+        self.workspace.set(type.lower(),"1",value)
+
+
     ####Menu
     #---File
     def new(self,name=UNNAMED,source='',maximize=None):
@@ -231,16 +284,16 @@ class Panel(wx.Notebook):
             maximize    = maximize)
         self.frame.menuBar.enable(1)
         return child.panel
-        
+
     def open(self, event=None):
         """Open file(s) dialog."""
         try:
             defaultDir=dirname(self.app.childActive.fileName)
         except:
             defaultDir=''
-        dlg = wx.FileDialog(self, "Choose a file - www.stani.be", 
-            defaultDir=defaultDir, defaultFile="", 
-            wildcard=info.WILDCARD, 
+        dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
+            defaultDir=defaultDir, defaultFile="",
+            wildcard=info.WILDCARD,
             style=wx.OPEN|wx.MULTIPLE)
         if dlg.ShowModal() == wx.ID_OK:
             fileList = dlg.GetPaths()
@@ -250,12 +303,50 @@ class Panel(wx.Notebook):
                     child.frame.onFrameClose()
             self.openList(fileList)
         dlg.Destroy()
-        
+    def open_workspace(self):
+        """Open file dialog."""
+        try:
+            defaultDir=dirname(self.workspaceFile)
+        except:
+            defaultDir=''
+        dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
+            defaultDir=defaultDir, defaultFile="",
+            wildcard=info.WORKSPACE_WILDCARD,
+            style=wx.OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            file = dlg.GetPath()
+            try:
+                self.set("currentworkspace",file)
+                self.__openWorkspace__()
+                self.loadWorkspace()
+            except Exception,e:
+                self.message("Could not open workspace:%s\n%s"%(file,e))
+        dlg.Destroy()
+    def save_workspace(self):
+        """Save file dialog."""
+        try:
+            defaultDir=dirname(self.workspaceFile)
+            defaultFile=self.workspaceFile
+        except:
+            defaultDir=''
+            defaultFile=''
+        dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
+            defaultDir=defaultDir, defaultFile=defaultFile,
+            wildcard=info.WORKSPACE_WILDCARD,
+            style=wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            file = dlg.GetPath()
+            try:
+                self.set("currentworkspace",file)
+                self.saveWorkspace(file)
+            except Exception,e:
+                self.message("Could not save workspace:%s\n%s"%(file,e))
+        dlg.Destroy()
     #---Edit
     def browse_source(self, event=None):
         """Locate source file of word and open it."""
         fileName=self.app.childActive.source.getWordFileName(whole=1)
-        if fileName and fileName[0]!='"': 
+        if fileName and fileName[0]!='"':
             self.openList(fileName)
         else:
             if not fileName: fileName=''
@@ -277,17 +368,17 @@ class Panel(wx.Notebook):
         data.SetFindString(findStr)
         data.SetReplaceString(self.replaceStr)
         #dialog
-        self.findDialog = wx.FindReplaceDialog(self, data, "Find & Replace", 
+        self.findDialog = wx.FindReplaceDialog(self, data, "Find & Replace",
                 wx.FR_REPLACEDIALOG|wx.FR_NOUPDOWN)
-        self.findDialog.Show(1)    
+        self.findDialog.Show(1)
         self.findDialog.data = data  # save a reference to it...
-           
+
     def preferences(self):
         """Show preferences dialog box."""
         from dialogs import preferencesDialog
         prefs=preferencesDialog.Create(self,-1,'')
         prefs.ShowModal()
-        
+
     #---View
     def whitespace(self,event):
         """Toggle visibility white space."""
@@ -300,19 +391,19 @@ class Panel(wx.Notebook):
         for child in self.app.children:
             child.source.SetIndentationGuides(event.IsChecked())
         self.set('IndentationGuides',event.IsChecked())
-        
+
     def right_edge_indicator(self,event):
         """Toggle visibility right edge indicator."""
         for child in self.app.children:
             child.source.SetViewEdge(event.IsChecked())
         self.set('ViewEdge',event.IsChecked())
-        
+
     def end_of_line_marker(self,event):
         """Toggle visibility end of line marker."""
         for child in self.app.children:
             child.source.SetViewEOL(event.IsChecked())
         self.set('ViewEol',event.IsChecked())
-        
+
     def toggle_shell(self):
         """Show/hide shell"""
         frame               = self.frame
@@ -324,10 +415,12 @@ class Panel(wx.Notebook):
                 hidden      = 0
         elif hasattr(frame,'panelFrame'):
             hidden          = not frame.panelFrame.IsShown()
-        else: return
+        elif hasattr(frame,'split'):
+            return True
+        else: return False
         self.showShell(hidden,save=True)
         return hidden
-        
+
     def showShell(self,show,save=False):
         if save: self.set('ShowShell',show)
         frame = self.frame
@@ -347,14 +440,14 @@ class Panel(wx.Notebook):
         fileName=self.app.childActive.fileName
         if fileName[0]=='/': fileName = 'file://'+fileName
         webbrowser.open(dirname(fileName))
-        
+
     def run(self):
         """Run file"""
         child           = self.app.childActive
         if not self.getValue('SaveBeforeRun') or child.confirmSave():
             fileName    = child.fileName
             self.runFile(fileName,repr(self.getText()),separate=0)
-        
+
     def run_with_profile(self):
         """Run file with profile"""
         child           = self.app.childActive
@@ -368,7 +461,7 @@ class Panel(wx.Notebook):
         if not self.getValue('SaveBeforeRun') or child.confirmSave():
             fileName    = child.fileName
             self.runFile(fileName,repr(self.getText()),separate=1)
-        
+
     def run_verbose(self):
         """Run verbose"""
         child           = self.app.childActive
@@ -380,7 +473,7 @@ class Panel(wx.Notebook):
             self.shell.prompt()
             self.activateShell()
             self.busyHide()
-        
+
     def import_(self):
         """Import"""
         child           = self.app.childActive
@@ -410,7 +503,7 @@ class Panel(wx.Notebook):
                                PYTHON_EXEC,
                                PYTHON_EXEC]
                 args.extend(info['parameters'])
-                if os.path.exists(name): 
+                if os.path.exists(name):
                     args.append('"%s"'%name)
                     args.append(info['arguments'])
                 os.spawnl(*args)
@@ -427,12 +520,12 @@ class Panel(wx.Notebook):
         except:
             self.SetActiveStatusText('%s is not defined'%name,1)
             return
-        filling=FillingFrame(parent=self, id=-1, title='PyFilling', 
-                 pos=wx.DefaultPosition, size=wx.Size(600,300), 
-                 style=wx.DEFAULT_FRAME_STYLE, rootObject=object, 
+        filling=FillingFrame(parent=self, id=-1, title='PyFilling',
+                 pos=wx.DefaultPosition, size=wx.Size(600,300),
+                 style=wx.DEFAULT_FRAME_STYLE, rootObject=object,
                  rootLabel=str(object), rootIsNamespace=0, static=0)
         filling.Show(1)
-        
+
     def test_regular_expression_with_kiki(self):
         """Test regular expression with Kiki..."""
         if wx.Platform == "__WXMAC__":
@@ -495,14 +588,14 @@ class Panel(wx.Notebook):
                         self.messageHtml(wwwHelp)
                         self.SetStatusText(HELP_SORRY%library,1)
             else:
-                linux1=''.join([PREFIX, "/share/doc/python", str(sys.version_info[0]), 
+                linux1=''.join([PREFIX, "/share/doc/python", str(sys.version_info[0]),
                                 ".", str(sys.version_info[1]), "/html/%s/index.html"%what])
-                linux2=''.join([PREFIX, "/share/doc/python-docs-", 
-                                str(sys.version_info[0]), ".", str(sys.version_info[1]), ".", 
+                linux2=''.join([PREFIX, "/share/doc/python-docs-",
+                                str(sys.version_info[0]), ".", str(sys.version_info[1]), ".",
                                 str(sys.version_info[2]), "/html/%s/index.html"%what])
                 if os.path.exists(linux1):self.messageHtml(linux1)
                 elif os.path.exists(linux2):self.messageHtml(linux2)
-                else: 
+                else:
                     self.messageHtml(wwwHelp)
                     self.SetStatusText(HELP_SORRY%linux1,1)
         else:
@@ -540,7 +633,7 @@ class Panel(wx.Notebook):
             self.messageHtml(path)
         else:
             self.SetActiveStatusText('wxPython documentation could not be found. Check the path in the preferences dialog.')
-            
+
     def about(self):
         from dialogs import helpDialog
         helpDialog.create(self,self.path,'about.htm', replacements=INFO)
@@ -575,7 +668,7 @@ class Panel(wx.Notebook):
             col=1
         if len(self.app.children)>0:self.frame.menuBar.enable(1)
         return child
-        
+
     def runFile(self,fileName,source=None,separate=0,profiling=0):
         """
         separate: run in seperate namespace to avoid conflicts with the spe namespace
@@ -600,7 +693,7 @@ class Panel(wx.Notebook):
         #raise
         self.activateShell()
         #self.busyHide()
-        
+
     def activateShell(self):
         if self.app.mdi:
             self.showShell(True,save=True)
@@ -612,7 +705,7 @@ class Panel(wx.Notebook):
     #---smdi events
     def onActivate(self,event):
         """Check and update, if files are changed when parent frame is activated."""
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event:  Parent: %s.onActivate'%self.__class__
         try:
             reloaded=[]
@@ -622,12 +715,12 @@ class Panel(wx.Notebook):
             if reloaded: self.SetStatusText('Reloaded %s'%','.join(reloaded),1)
             if event: event.Skip()
         except Exception,m:
-            if self.app.DEBUG: 
+            if self.app.DEBUG:
                 print 'Warning: Parent: %s.onActivate failed\n%s\n%s\n'%(self.__class__,Exception,m)
 
     def onClose(self,event=None):
         """Called when the parent frame is closed."""
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event:  Parent: %s.onClose'%self.__class__
         for child in self.app.children:
             if not child.confirmSave():
@@ -638,17 +731,8 @@ class Panel(wx.Notebook):
         self.frame.dead = 1
         #if (not self.app.DEBUG) and self.getValue('RedirectShell'):
         self.redirect(0)
-        fileList=[]
         if self.remember and self.app.children:
             active=self.app.childActive
-            self.app.children.remove(active)
-            self.app.children.append(active)
-            for child in self.app.children :
-                if child.fileName!=Child.NEWFILE:
-                    pos     = child.source.GetCurrentPos()
-                    lineno  = child.source.LineFromPosition(pos)
-                    col     = child.source.GetColumn(pos)
-                    fileList.append((child.fileName,lineno,col))
             if self.app.mdi and active:
                 self.set('MaxChildren',active.frame.IsMaximized())
         #save the window size
@@ -662,21 +746,25 @@ class Panel(wx.Notebook):
             self.set("maximize","False")
         else:
             self.set("maximize","True")
-        try:
-            self.userSave(NOTES,self.notes.GetValue())
-            self.userSave(REMEMBER,str(fileList)) 
-            self.userSave(RECENT,str(self.recent.files[:self.getValue('RecentFileAmount')]))
-            self.userSave(FOLDERS,str([self.browser.depth.GetValue()]+self.browser.getFolders()[1:]))
-        except Exception, message:
-            self.messageEmail("""\
-Spe Warning: can't save user settings (%s).  
+        if self.remember:
+            try:
+                if not os.path.exists(self.workspaceFile): 
+                    self.workspaceFile=os.path.join(INFO['userPath'],'defaults.sws')
+                    f=open(self.workspaceFile,"w")
+                    f.close()
+                self.saveWorkspace()
+            except Exception, message:
+                self.messageEmail("""\
+Spe Warning: can't save user settings (%s).
 Please report these details and operating system to s_t_a_n_i@yahoo.com."""%message)
+        else:
+            self.set("currentworkspace","")
         return 1
-        
+
     def onClosePanelFrame(self,event=None):
         self.showShell(show=False,save=True)
         self.frame.menuBar.check_view()
-        
+
     def onIdle(self,event=None):
         """Called when the parent frame is idle."""
         #child
@@ -689,27 +777,27 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             if newTime-self.idleTime>self.getValue('Redraw'):
                 self.idleTime=newTime
                 self.redraw()
-                
+
     def onMove(self,event=None):
         """Called when the parent frame is moved."""
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event:  Parent: %s.onMove'%self.__class__
         if self.redraw:self.redraw()
-        
+
     def onSize(self,event=None):
         """Called when the parent frame is resized."""
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event:  Parent: %s.onSize'%self.__class__
         if self.redraw:self.redraw()
-        
+
     #---extra
     def onArgs(self,*args,**keyw):
         self.openList(*args,**keyw)
         self.shell.prompt()
-        
+
     def excepthook(self, type, value, traceback) :
         webbrowser.open('''mailto:s_t_a_n_i@yahoo.com?subject=SPE %s error report&body="%s %s\n%s"'''%(type,type,value,traceback))
-        
+
     def onFind(self,event,message=1):
         source=self.app.childActive.source
         try:
@@ -738,7 +826,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         source.SetSelection(position,position+len(self.findStr))
         #self.WarpPointer(0,0)
         return position
-        
+
     def onFindClose(self,event):
         event.GetDialog().Destroy()
         self.numberMessages=0
@@ -778,7 +866,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             self.numberMessages=1
             self.message("'%s' not found!"%event.GetFindString())
             self.numberMessages=0
-        
+
     ####Tabs
     def onTab(self,event):
         tab     = event.GetSelection()
@@ -790,8 +878,8 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             self.SetPageText(event.GetOldSelection(),'')
             self.SetPageText(tab,tabName)
         event.Skip()
-        
-        
+
+
     ####Sidebar
     def onTodoJump(self,event):
         file,line=self.todoList[event.GetData()]
@@ -803,7 +891,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             return child.todoMax
         except:
             return 1
-        
+
     def updateTodo(self):
         self.todo.DeleteAllItems()
         todoIndex=0
@@ -831,7 +919,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
     def onIndexJump(self,event):
         stripped,entry,line,colour,icon,file=self.indexList[event.GetData()]
         self.openList(file,line-1)
-        
+
     def updateIndex(self):
         self.index.DeleteAllItems()
         indexList= self.index.list = []
@@ -873,7 +961,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         else:
             self.messageError(BLENDER_MESSAGE)
             return 0
-            
+
     def redirect(self,value):
         self.shell.redirectStdin(value)
         self.shell.redirectStdout(value)
@@ -909,14 +997,14 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             if os.path.normcase(child.fileName)==fileName:
                 return child
         return None
-        
+
     def getFileNames(self):
         return [child.fileName for child in self.app.children]
-    
+
     def getText(self):
         """Get raw text of current script window."""
         return self.app.childActive.source.GetText()
-    
+
     #---messages
     def message(self,message,style=wx.OK | wx.ICON_INFORMATION):
         """Show a message with Ok button. (style offers other options)"""
@@ -924,7 +1012,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         answer = dlg.ShowModal()
         dlg.Destroy()
         return answer
-    
+
     def messageConfirm(self,message):
         """Show a confirm message (yes,no)"""
         answer=self.message(message,style=wx.YES_NO|wx.ICON_QUESTION)
@@ -932,7 +1020,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
 
     def messageIsOk(self,answer):
         return answer==wx.ID_OK or answer==wx.ID_YES
-        
+
     def messageCancel(self,message):
         """Show a yes,no or cancel message"""
         if self.app.DEBUG:
@@ -942,10 +1030,10 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
     def messageError(self,message):
         """Display error message."""
         self.message(message,style=wx.OK | wx.ICON_ERROR)
-        
+
     def messageEmail(self,message):
         webbrowser.open('mailto:s_t_a_n_i@yahoo.com?subject=SPE error (automatic report)&body=%s'%message)
-        
+
     def messageEntry(self,message,default=''):
         """Show entry dialog box for user input."""
         dlg = wx.TextEntryDialog(self, message,self.app.title, default)
@@ -970,8 +1058,8 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
             webbrowser.open(fileName, 1)
         else:
             os.system("%s '%s'"%(WebBrowser,fileName))
-            
-    #---preferences     
+
+    #---preferences
     def preferencesSave(self):
         self.preferencesUpdate()
         try:
@@ -981,7 +1069,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         except Exception, message:
             print 'Spe warning: could not save user options in',INFO['defaultsUser']
             print message
-            
+
     def preferencesUpdate(self):
         self.redirect((not self.app.DEBUG) and self.getValue('RedirectShell'))
         self.showShell(self.getValue('ShowShell'))
@@ -1010,11 +1098,12 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
 
     def set(self,name,value,save=1):
         self.config.set('DEFAULT',name,str(value))
-        if save: self.preferencesSave()       
+        if save: self.preferencesSave()
 
     def get(self,name):
         return self.config.get('DEFAULT',name)
-    
+
     def getValue(self,name):
         return eval(self.config.get('DEFAULT',name))
-          
+
+

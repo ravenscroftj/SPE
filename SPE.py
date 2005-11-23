@@ -19,7 +19,7 @@ If spe fails to start:
 import ConfigParser, sys, os, wx
 import sm.wxp.smdi as smdi
 import Menu,Parent,Child
-
+from optparse import OptionParser
 #---Blender
 print "Blender support",
 try:
@@ -51,13 +51,23 @@ IMAGE_PATH  = os.path.join(info.path,'skins','default')
 openFiles = []
 if DEBUG:
     __debug     = DEBUG
-elif 'argv' in dir(sys):
-    commandLine = sys.argv[1:]
-    __debug     =('--debug' in commandLine)
-    openFiles   = [x for x in commandLine if x[:2]!= '--']
 else:
     __debug=DEBUG
     openFiles   = []
+
+__workspace = None
+
+parser      = OptionParser(usage="%prog [--debug] [ -w <WORKSPACE> | --workspace=<WORKSPACE>] [file1.py file2.py ... ]",version="SPE v%s (c)2003-2005 www.stani.be"%INFO['version'])
+parser.add_option("-w","--workspace",help="open a workspace file")
+parser.add_option("-d","--debug",action="store_true",help="turn on debug output")
+opts, args  = parser.parse_args()
+print __debug, opts.debug
+if not __debug: 
+    __debug = (opts.debug)
+if opts.workspace: 
+    __workspace=opts.workspace
+else: 
+    openFiles=args
 
 ####Preferences
 config=ConfigParser.ConfigParser()
@@ -66,6 +76,13 @@ try:
     config.read(INFO['defaultsUser'])
 except:
     print 'Spe warning: could not load user options'
+   
+#---Workspace
+if __workspace is not None: 
+    config.set("DEFAULT","currentworkspace",__workspace)
+    fp=open(INFO['defaultsUser'],"w")
+    config.write(fp)
+    fp.close()
 
 #---Maximize    
 style   = smdi.STYLE_PARENTFRAME
@@ -175,6 +192,7 @@ if __debug:
         import time
         print "\nPress Ctrl+C to quit..."
         time.sleep(10)
+
 
 
 
