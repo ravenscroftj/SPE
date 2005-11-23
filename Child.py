@@ -81,6 +81,9 @@ class Panel(wx.SplitterWindow):
         #Otherwise assume Unix (\n)
         self.dosLines = (source.find('\r\n') >= 0)
         self.sashDelta      = 1
+        self.fileTime=0
+        if fileName and fileName != NEWFILE:
+            self.fileTime=os.path.getmtime(fileName)
         
         
     def __finish__(self):
@@ -988,6 +991,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         except Exception, message:
             self.SetStatusText("Unicode Error for '%s' (%s)"%(self.fileName, message),1)
         self.source.assertEOL()
+        if self.fileName != NEWFILE:
+            self.fileTime=os.path.getmtime(self.fileName)
         try:
             self.notesText=open(self.notesFile()).read()
         except:
