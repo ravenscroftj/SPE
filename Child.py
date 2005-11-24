@@ -200,9 +200,11 @@ class Panel(wx.SplitterWindow):
         self.main.AssignImageList(self.mainIcons)
         
         #sash
-        self.sash = PythonSTC(parent=self.main,
-            namespace=self.parentPanel.shell.interp.locals,
-            path=os.path.dirname(fileName),config=self.parentPanel.config)
+        self.sash   = PythonSTC(
+            parent      = self.main,
+            namespace   = self.parentPanel.shell.interp.locals,
+            path        = os.path.dirname(fileName),config=self.parentPanel.config,
+            menu        = self.parentFrame.menuBar.edit)
         self.sash.SetHelpText(help.CHILD_SOURCE)
         self.source = self.sash
         #todo: implement this again with sashview
@@ -211,16 +213,15 @@ class Panel(wx.SplitterWindow):
         #else:
         #    self.source = self.sash.view
         if fileName:
-            self.fileName=fileName
+            self.fileName   = fileName
             self.revert(source)
         else: 
-            self.fileName=NEWFILE
-            self.notesText=''
+            self.fileName   = NEWFILE
+            self.notesText  = ''
             self.frame.setTitle()
         self.name   = os.path.basename(self.fileName)
         self.source.EmptyUndoBuffer()
         self.source.Colourise(0, -1)
-        self.source.menu=self.parentFrame.menuBar.edit
         self.main.AddPage(page=self.sash, text='Source',imageId=self.sashIcon)
         
         #uml
@@ -233,7 +234,6 @@ class Panel(wx.SplitterWindow):
         
         #events
         eventManager.Register(self.onKillFocus, wx.EVT_KILL_FOCUS, self.source)
-        eventManager.Register(self.source.OnRightClick, wx.EVT_RIGHT_UP, self.source)
         eventManager.Register(self.updateMain,wx.EVT_NOTEBOOK_PAGE_CHANGED,self.main)
     ####Menu--------------------------------------------------------------------
     #---file
@@ -346,8 +346,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if dlg.ShowModal() == wx.ID_OK:
             path        = dlg.GetPaths()[0]
             self.save(path)
-            self.browser.SetDefaultPath(os.path.dirname(path))
-            self.browser.ReCreateTree()
+            if hasattr(self,'browser'):
+                self.browser.SetDefaultPath(os.path.dirname(path))
+                self.browser.ReCreateTree()
         dlg.Destroy()
         
     def saveUmlAs(self):
@@ -584,7 +585,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 warning = ''
                 e       = None
             except Exception, e:
-                warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,e.text.strip(),e.lineno,e.offset)
+                if type(e.text) in types.StringTypes:
+                    text    = ' (%s)'%e.text.strip()
+                else:
+                    text    = ''
+                warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,text.strip(),e.lineno,e.offset)
             if warning  != self.warning:
 ##                if e:
 ##                    self.source.markError(e.lineno,e.offset)

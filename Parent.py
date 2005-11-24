@@ -770,7 +770,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
     def onIdle(self,event=None):
         """Called when the parent frame is idle."""
         #child
-        child=self.app.childActive
+        child   = self.app.childActive
         if child:
             child.idle()
         #redraw

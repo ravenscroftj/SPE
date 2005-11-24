@@ -57,7 +57,7 @@ except NameError:
 
 class PythonBaseSTC(wx_stc.StyledTextCtrl):
     def __init__(self, parent, id=-1,namespace={},path=None,config=None,
-            ignore=None):
+            ignore=None,menu=None):
         wx_stc.StyledTextCtrl.__init__(self, parent, id,
                                   style = wx.FULL_REPAINT_ON_RESIZE|wx.NO_BORDER)
         #PASSING VALUES
@@ -67,7 +67,8 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if path and path not in sys.path: sys.path.append(path)
         
         #INITIALIZE
-        self.calltip=0 #calltip counter
+        self.calltip    = 0 #calltip counter
+        self.menu       = menu
         self.SetLexer(wx_stc.STC_LEX_PYTHON)
 
         #KEYBOARD SHORTCUTS (what are they doing here?)
@@ -180,6 +181,12 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.Bind(wx_stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.Bind(wx.EVT_CHAR, self.OnChar)
+        if self.menu:
+            self.UsePopUp(False)
+            if wx.Platform=='__WXMAC__':
+                self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick)
+            else:
+                self.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
     #---events
     def OnKeyDown(self, event):
@@ -339,10 +346,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
 
     def OnRightClick(self, event):
-        if self.menu:
-            self.PopupMenu(self.menu, event.GetPosition())
-        else:
-            event.Skip()
+        self.PopupMenu(self.menu, event.GetPosition())
 
     def SetViewEdge(self,check):
             if check:
