@@ -585,26 +585,28 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if self.parentPanel.get('UpdateSidebar')=='realtime':
                 self.updateSidebar()
             #check
-            source      = self.source.GetText().replace('\r\n','\n') + '\n'
-            try:
-                tree    = compiler.parse(source)
-                warning = ''
-                e       = None
-            except Exception, e:
-                if type(e.text) in types.StringTypes:
-                    text    = ' (%s)'%e.text.strip()
-                else:
-                    text    = ''
-                warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,text.strip(),e.lineno,e.offset)
-            if warning  != self.warning:
-##                if e:
-##                    self.source.markError(e.lineno,e.offset)
-                self.setStatus(warning)
-                if warning:
-                    self.setStatus('E!',0)
-                else:
-                    self.setStatus('',0)
-                self.warning = warning
+            if self.parentPanel.get('CheckSourceRealtime')=='compiler':
+                source      = self.source.GetText().replace('\r\n','\n') + '\n'
+                try:
+                    tree    = compiler.parse(source)
+                    warning = ''
+                    e       = None
+                except Exception, e:
+                    if type(e.text) in types.StringTypes:
+                        text    = ' (%s)'%e.text.strip()
+                    else:
+                        text    = ''
+                    warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,text.strip(),e.lineno,e.offset)
+                if warning  != self.warning:
+                    #todo: how to implement indicators?!!
+##                    if e:
+##                        self.source.markError(e.lineno,e.offset)
+                    self.setStatus(warning)
+                    if warning:
+                        self.setStatus('E!',0)
+                    else:
+                        self.setStatus('',0)
+                    self.warning = warning
                 
     def onKillFocus(self,event=None):
         if self.app.DEBUG:
