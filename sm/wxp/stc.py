@@ -491,6 +491,10 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         # End of line where string is not closed
         self.StyleSetSpec(wx_stc.STC_P_STRINGEOL, "fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % self.faces)
 
+##        #INDICATOR STYLES FOR ERRORS (self.errorMark)
+##        self.IndicatorSetStyle(0, wx_stc.STC_INDIC_SQUIGGLE)
+##        self.IndicatorSetForeground(0, wx.RED)
+
     #---get
     def getWord(self,whole=None):
         pos=self.GetCurrentPos()
@@ -581,6 +585,11 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     return self.namespace[word]
                  except:
                     return None
+                
+##    def markError(self,lineno,offset):
+##        self.StartStyling(self.PositionFromLine(lineno-1), wx_stc.STC_INDICS_MASK)
+##        self.SetStyling(offset, wx_stc.STC_INDIC0_MASK)
+##        print self.PositionFromLine(lineno-1), lineno, offset
                     
     def needsIndent(self,firstWord,lastChar):
         "Tests if a line needs extra indenting, ie if, while, def, etc "

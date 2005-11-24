@@ -645,7 +645,7 @@ class Status(wx.StatusBar):
     def __init__(self,parent=None,id=-1):
         wx.StatusBar.__init__(self,parent=parent,id=id)
         self.SetFieldsCount(4)
-        self.SetStatusText('spe',0)
+        self.SetStatusText('',0)
         self.SetStatusText(STATUS,1)
         self.SetStatusWidths([20, -1, 100, 100])
 

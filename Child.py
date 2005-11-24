@@ -9,7 +9,7 @@ INFO['description']=\
 __doc__=INFO['doc']%INFO
 
 ####Modules---------------------------------------------------------------------
-import codecs, inspect, os, sys, re, time, types
+import codecs, compiler, inspect, os, sys, re, time, types
 
 import wx
 from wx.lib.evtmgr import eventManager
@@ -62,6 +62,7 @@ class Panel(wx.SplitterWindow):
     ####Constructors------------------------------------------------------------
     def __init__(self,parent,name='',fileName='',source='',*args,**kwds):
         self._fileName      = fileName
+        self.name           = os.path.basename(fileName)
         self._source        = source
         #initialize
         self.changed        = 0
@@ -73,6 +74,7 @@ class Panel(wx.SplitterWindow):
         self.sidebarHidden  = False
         self.saved          = ''
         self.todoMax        = 1
+        self.warning        = ''
         #delete when fixed
         self.updateBug      = False
         #construct
@@ -215,6 +217,7 @@ class Panel(wx.SplitterWindow):
             self.fileName=NEWFILE
             self.notesText=''
             self.frame.setTitle()
+        self.name   = os.path.basename(self.fileName)
         self.source.EmptyUndoBuffer()
         self.source.Colourise(0, -1)
         self.source.menu=self.parentFrame.menuBar.edit
@@ -555,21 +558,42 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Updates statusbar with current position."""
         
     def idle(self,event=None):
-        if self.frame.dead or self.parentFrame.dead: return
+        #if dead, return immediately
+        if self.frame.dead or self.parentFrame.dead or not hasattr(self,'source'): 
+            return
+        #update line & column in status
+        pos = self.source.GetCurrentPos()
+        if pos!= self.position:
+            self.updateStatus(pos)
+        #only if source is changed...
         if self.eventChanged:
+            self.eventChanged   = False
+            #title
             if self.changed     == 0:
                 self.changed    = 1
                 self.frame.setTitle()
             elif self.changed   < 0:
                 self.changed+=1
-            self.eventChanged   = False
+            #sidebar
             if self.parentPanel.get('UpdateSidebar')=='realtime':
                 self.updateSidebar()
-        pos = self.source.GetCurrentPos()
-        if pos!= self.position:
-            self.updateStatus(pos)
-            #if not self.check():
-            #    self.parentPanel.shell.prompt()
+            #check
+            source      = self.source.GetText().replace('\r\n','\n') + '\n'
+            try:
+                tree    = compiler.parse(source)
+                warning = ''
+                e       = None
+            except Exception, e:
+                warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,e.text.strip(),e.lineno,e.offset)
+            if warning  != self.warning:
+##                if e:
+##                    self.source.markError(e.lineno,e.offset)
+                self.setStatus(warning)
+                if warning:
+                    self.setStatus('E!',0)
+                else:
+                    self.setStatus('',0)
+                self.warning = warning
                 
     def onKillFocus(self,event=None):
         if self.app.DEBUG:
@@ -591,21 +615,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             event.Skip()
         else:
             tab = self.notebook.GetSelection()
-##        try:
         self.updateSidebarTab[tab]()
-##        except Exception, message:
-##            if self.updateBug:
-##                self.setStatus('BUG #4627: PLEASE RESTART SPE!')
-##            else:
-##                self.updateBug = True
-##                message= """SPE bug: updateSidebar(%s)\n
-##Bug #4627 has occured, which makes SPE unstable. Please save all files and
-##restart SPE. If you are able to reconstruct this bug, leave a detailed comment
-##at http://developer.berlios.de/bugs/?func=detailbug&bug_id=4627&group_id=4161
-##and also give these details (copy & paste from shell):\n
-##%s\n\n%s"""%(self.parentPanel.get('UpdateSidebar'),message,sm.spy.message(1))
-##                print message
-##                self.parentPanel.messageError(message)
         
     def updateBrowser(self): 
         self.browser.update()
@@ -1002,7 +1012,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def setFileName(self,fileName):
         self.fileName   = fileName
-        self.name       = self.name = os.path.basename(self.fileName)
+        self.name       = os.path.basename(self.fileName)
         index           = self.frame.getIndex()
         mdi             = self.app.mdi
         if not mdi:index+= 1
