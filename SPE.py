@@ -18,6 +18,7 @@ SPE v%(version)s (c)2003-2005 www.stani.be
 
 If spe fails to start:
  - type "%(python)s SPE.py --debug > debug.txt 2>&1" at the command prompt
+   (or if you use tcsh: "%(python)s SPE.py --debug >& debug.txt")
  - send debug.txt with some info to spe.stani.be[at]gmail.com
  """%INFO
  

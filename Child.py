@@ -469,7 +469,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 os.system('start "Spe console - Press Ctrl+Break to stop" /D"%(path)s"'%params)
             elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'do script with command "cd %(path)s"' -e 'activate' -e 'end tell'"""%params)
+                os.system("""osascript -e 'tell application "Terminal"' -e 'do script "cd %(path)s"' -e 'activate' -e 'end tell'"""%params)
             else:
                 os.system("cd \"%(path)s\"; /usr/X11R6/bin/xterm &"%params)
         else:
@@ -485,7 +485,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
             elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script with command "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
+                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
             else:
                 os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
         else:
@@ -499,7 +499,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
             elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script with command "cd %(path)s;pythonw %(file)s;logout"' -e 'end tell'"""%params)
+                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
             else:
                 os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
         else:
