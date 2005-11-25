@@ -8,6 +8,8 @@ import wx
 
 import os,webbrowser
 
+import _spe.info as info
+
 def _(x):
     return x
 
@@ -137,26 +139,26 @@ class Create(wx.Dialog):
     def onDebug(self, event): # wxGlade: Create.<event_handler>
         from plugins.winpdb import __file__ as fileName
         path        = os.path.dirname(fileName)
-        info        = self.info
-        arguments   = info['arguments']     = self.arguments.GetValue()
-        if arguments: info['history'].insert(0,arguments)
-        parameters  = info['parameters']    = []
+        _info       = self.info
+        arguments   = _info['arguments']     = self.arguments.GetValue()
+        if arguments: _info['history'].insert(0,arguments)
+        parameters  = _info['parameters']    = []
         options     = self.options
-        gui         = info['gui']           = options.gui.GetValue()
+        gui         = _info['gui']           = options.gui.GetValue()
         if gui:
             debugger= '%s'%os.path.join(path,'winpdb.py')
         else:
             debugger= '%s'%os.path.join(path,'rpdb2.py')
-        if not os.path.exists(debugger):
+        if info.WIN:
             debugger= '"%s"'%debugger
         parameters.append(debugger)
-        chdir       = info['chdir']         = options.chdir.GetValue()
+        chdir       = _info['chdir']         = options.chdir.GetValue()
         if chdir:
             parameters.append('-c')
-        encryption  = info['encryption']    = options.encryption.GetValue()
+        encryption  = _info['encryption']    = options.encryption.GetValue()
         if not encryption:
             parameters.append('-t')
-        verbose     = info['verbose']       = options.verbose.GetValue()
+        verbose     = _info['verbose']       = options.verbose.GetValue()
         if verbose:
             parameters.append('--debug')
         self.EndModal(wx.ID_OK)

@@ -498,16 +498,18 @@ class Panel(wx.Notebook):
             name            = child.fileName
             debugDialog     = winpdbDialog.options(self,name)
             if debugDialog.ShowModal()!=wx.ID_CANCEL:
-                info        = self.app.debugInfo
+                _info       = self.app.debugInfo
                 args        = [os.P_NOWAIT,
                                PYTHON_EXEC,
                                PYTHON_EXEC]
-                args.extend(info['parameters'])
-                if not os.path.exists(name):
+                args.extend(_info['parameters'])
+                if info.WIN:
                     name    = '"%s"'%name
                 if os.path.exists(name):
                     args.append(name)
-                    args.append(info['arguments'])
+                    script_args = _info['arguments']
+                    if script_args:
+                        args.append(script_args)
                 os.spawnl(*args)
                 self.SetStatusText('WinPdb Debugger is succesfully started.',1)
                 return
@@ -545,7 +547,7 @@ class Panel(wx.Notebook):
             from plugins.wxGlade import __file__ as fileName
             path    = dirname(fileName)
             glade   = '%s'%os.path.join(path,'wxglade.py')
-            if not os.path.exists(glade):
+            if info.WIN:
                 glade = '"%s"'%os.path.join(path,'wxglade.py')
             os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,glade)
             self.SetStatusText('wxGlade is succesfully started.',1)
