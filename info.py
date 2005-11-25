@@ -39,6 +39,11 @@ INFO['defaultsUser'] = os.path.join(INFO['userPath'],'defaults.cfg')
 
 INFO['titleFull']    = "%(title)s %(version)s"%INFO
 
+if DARWIN:
+    INFO['python']      = 'pythonw'
+else:
+    INFO['python']      = 'python'
+    
 INFO['links']=\
 """Homepage : %s
 Donwloads: http://www.stani.be/python/spe/page_blender

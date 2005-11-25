@@ -1,8 +1,8 @@
-import info
-INFO=info.copy()
-INFO['description']=\
-"""This is the main spe application."""
-__doc__=INFO['doc']%INFO
+##import info
+##INFO=info.copy()
+##INFO['description']=\
+##"""This is the main spe application."""
+##__doc__=INFO['doc']%INFO
 
 def main():
     import SPE

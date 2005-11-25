@@ -7,19 +7,19 @@ except ImportError:
     sys.exit()
     
 import info
-INFO=info.copy()
+INFO    = info.copy()
 
 INFO['description']=\
 """This is the main SPE application created with SPE and wxGlade."""
-__doc__=INFO['doc']%INFO
+__doc__ = INFO['doc']%INFO
     
 print """
-SPE v%s (c)2003-2005 www.stani.be
+SPE v%(version)s (c)2003-2005 www.stani.be
 
 If spe fails to start:
- - type "python SPE.py --debug > debug.txt 2>&1" at the command prompt
+ - type "%(python)s SPE.py --debug > debug.txt 2>&1" at the command prompt
  - send debug.txt with some info to spe.stani.be[at]gmail.com
- """%(INFO['version'],)
+ """%INFO
  
 ####Import Modules
 
@@ -42,10 +42,10 @@ except ImportError:
 #---Crypto
 try:
     from Crypto.Cipher import DES
-    fCrypto = True
+    fCrypto     = True
     print "Encrypted debugging enabled.\n"
 except ImportError:
-    fCrypto = False
+    fCrypto     = False
     print """\nEncrypted debugging disabled. 
   If you prefer encrypted debugging, install the "Python Cryptography Toolkit"
   from http://www.amk.ca/python/code/crypto\n"""
