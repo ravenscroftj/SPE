@@ -18,7 +18,9 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'ShowShell','StripTrailingSpaces', 'TabWidth','Terminal', 
           'TerminalRun','TerminalRunExit', 'UpdateSidebar','UseTabs',
           'ViewWhiteSpace','IndentationGuides', 'ViewEdge','WebBrowser',
-          'WordChars','WxPythonDocs']
+          'WordChars','WxPythonDocs','globalRecent','globalFolders','globalNotes',
+          'globalFileList','SaveOnExit','CloseChildrenOnNewWorkspace',
+          'SaveWorkspaceOnFileSave','RememberLastWorkspace']
 
 def _(x):
     return x
@@ -31,6 +33,7 @@ class Create(wx.Dialog):
         self.notebook_1 = wx.Notebook(self, -1, style=0)
         self.Paths = wx.Panel(self.notebook_1, -1)
         self.Editor = wx.Panel(self.notebook_1, -1)
+        self.General = wx.Panel(self.notebook_1, -1)
         self.GeneralEditor_staticbox = wx.StaticBox(self.Editor, -1, _("General"))
         self.tabsWhiteSpaces_staticbox = wx.StaticBox(self.Editor, -1, _("Tabs && white spaces"))
         self.Guides_staticbox = wx.StaticBox(self.Editor, -1, _("Guides"))
@@ -38,7 +41,7 @@ class Create(wx.Dialog):
         self.general_Label_staticbox = wx.StaticBox(self.Paths, -1, _("General"))
         self.terminal_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Terminal Emulator"))
         self.html_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Html"))
-        self.General = wx.Panel(self.notebook_1, -1)
+        self.sizer_3_staticbox = wx.StaticBox(self.General, -1, _("Workspaces"))
         self.Backup = wx.CheckBox(self.General, -1, _("Create backup files"))
         self.RedirectShell = wx.CheckBox(self.General, -1, _("Redirect output to spe shell"))
         self.CheckFileOnSave = wx.CheckBox(self.General, -1, _("Check file for syntax errors on save"))
@@ -53,6 +56,15 @@ class Create(wx.Dialog):
         self.Encoding = wx.ComboBox(self.General, -1, choices=[_("<default>"), _("ascii, 646, us-ascii (English)"), _("cp037, IBM037, IBM039 (English)"), _("cp424, EBCDIC-CP-HE, IBM424 (Hebrew)"), _("cp437, 437, IBM437 (English)"), _("cp500, EBCDIC-CP-BE, EBCDIC-CP-CH, IBM500 (Western Europe)"), _("cp737 (Greek)"), _("cp775, IBM775 (Baltic languages)"), _("cp850, 850, IBM850 (Western Europe)"), _("cp852, 852, IBM852 (Central and Eastern Europe)"), _("cp855, 855, IBM855 (Bulgarian, Byelorussian, Macedonian, Russian, Serbian)"), _("cp856 (Hebrew)"), _("cp857, 857, IBM857 (Turkish)"), _("cp860, 860, IBM860 (Portuguese)"), _("cp861, 861, CP-IS, IBM861 (Icelandic)"), _("cp862, 862, IBM862 (Hebrew)"), _("cp863, 863, IBM863 (Canadian)"), _("cp864, IBM864 (Arabic)"), _("cp865, 865, IBM865 (Danish, Norwegian)"), _("cp869, 869, CP-GR, IBM869 (Greek)"), _("cp874 (Thai)"), _("cp875 (Greek)"), _("cp1006 (Urdu)"), _("cp1026, ibm1026 (Turkish)"), _("cp1140, ibm1140 (Western Europe)"), _("cp1250, windows-1250 (Central and Eastern Europe)"), _("cp1251, windows-1251 (Bulgarian, Byelorussian, Macedonian, Russian, Serbian)"), _("cp1252, windows-1252 (Western Europe)"), _("cp1253, windows-1253 (Greek)"), _("cp1254, windows-1254 (Turkish)"), _("cp1255, windows-1255 (Hebrew)"), _("cp1256, windows1256 (Arabic)"), _("cp1257, windows-1257 (Baltic languages)"), _("cp1258, windows-1258 (Vietnamese)"), _("latin_1, iso-8859-1, iso8859-1, 8859, cp819, latin, latin1, L1 (West Europe)"), _("iso8859_2, iso-8859-2, latin2, L2 (Central and Eastern Europe)"), _("iso8859_3, iso-8859-3, latin3, L3 (Esperanto, Maltese)"), _("iso8859_4, iso-8859-4, latin4, L4 (Baltic languagues)"), _("iso8859_5, iso-8859-5, cyrillic (Bulgarian, Byelorussian, Macedonian, Russian, Serbian)"), _("iso8859_6, iso-8859-6, arabic (Arabic)"), _("iso8859_7, iso-8859-7, greek, greek8 (Greek)"), _("iso8859_8, iso-8859-8, hebrew (Hebrew)"), _("iso8859_9, iso-8859-9, latin5, L5 (Turkish)"), _("iso8859_10, iso-8859-10, latin6, L6 (Nordic languages)"), _("iso8859_13, iso-8859-13 (Baltic languages)"), _("iso8859_14, iso-8859-14, latin8, L8 (Celtic languages)"), _("iso8859_15, iso-8859-15 (Western Europe)"), _("koi8_r (Russian)"), _("koi8_u (Ukrainian)"), _("mac_cyrillic, maccyrillic (Bulgarian, Byelorussian, Macedonian, Russian, Serbian)"), _("mac_greek, macgreek (Greek)"), _("mac_iceland, maciceland (Icelandic)"), _("mac_latin2, maclatin2, maccentraleurope (Central and Eastern Europe)"), _("mac_roman, macroman (Western Europe)"), _("mac_turkish, macturkish (Turkish)"), _("utf_16, U16, utf16 (all languages)"), _("utf_16_be, UTF-16BE (all languages (BMP only))"), _("utf_16_le, UTF-16LE (all languages (BMP only))"), _("utf_7, U7 (all languages)"), _("utf_8, U8, UTF, utf8 (all languages)")], style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.label_shortcuts = wx.StaticText(self.General, -1, _("Keyboard shortcuts*"))
         self.Shortcuts = wx.ComboBox(self.General, -1, choices=[_("<default>"), _("Windows"), _("Macintosh")], style=wx.CB_DROPDOWN)
+        self.SaveOnExit = wx.CheckBox(self.General, -1, _("Automatically Save Workspaces when exiting"))
+        self.CloseChildrenOnNewWorkspace = wx.CheckBox(self.General, -1, _("Close all children when opening a new workspace"))
+        self.SaveWorkspaceOnFileSave = wx.CheckBox(self.General, -1, _("Save Workspace when saving files"))
+        self.RememberLastWorkspace = wx.CheckBox(self.General, -1, _("Remember Last Workspace"))
+        self.label_globals = wx.StaticText(self.General, -1, _("Use the same in all workspaces:"))
+        self.globalRecent = wx.CheckBox(self.General, -1, _("Recent Files"))
+        self.globalFolders = wx.CheckBox(self.General, -1, _("Folders"))
+        self.globalNotes = wx.CheckBox(self.General, -1, _("Notes"))
+        self.globalFileList = wx.CheckBox(self.General, -1, _("Open File list"))
         self.label_font = wx.StaticText(self.Editor, -1, _("Font"))
         self.Font = wx.TextCtrl(self.Editor, -1, _("Courier New, 10"))
         self.chooseFont = wx.Button(self.Editor, -1, _("Choose"))
@@ -122,6 +134,13 @@ class Create(wx.Dialog):
         self.Mdi.SetSelection(0)
         self.Encoding.SetSelection(0)
         self.Shortcuts.SetSelection(0)
+        self.SaveOnExit.SetValue(1)
+        self.CloseChildrenOnNewWorkspace.SetValue(1)
+        self.SaveWorkspaceOnFileSave.SetValue(1)
+        self.RememberLastWorkspace.SetValue(1)
+        self.globalRecent.SetValue(1)
+        self.globalFolders.SetValue(1)
+        self.globalNotes.SetValue(1)
         self.CallTips.SetSelection(2)
         self.CheckSourceRealtime.SetSelection(1)
         self.UpdateSidebar.SetSelection(0)
@@ -163,6 +182,9 @@ class Create(wx.Dialog):
         GeneralEditor = wx.StaticBoxSizer(self.GeneralEditor_staticbox, wx.VERTICAL)
         grid_general = wx.FlexGridSizer(4, 3, 4, 4)
         generalSizer = wx.FlexGridSizer(6, 1, 4, 4)
+        sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.HORIZONTAL)
+        grid_sizer_5 = wx.FlexGridSizer(4, 2, 4, 4)
+        grid_sizer_3 = wx.FlexGridSizer(4, 1, 4, 4)
         grid_sizer_4 = wx.FlexGridSizer(3, 2, 4, 4)
         sizer_1.Add((4, 4), 0, 0, 0)
         sizer_2.Add((4, 4), 0, 0, 0)
@@ -182,6 +204,22 @@ class Create(wx.Dialog):
         grid_sizer_4.Add(self.Shortcuts, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
         grid_sizer_4.AddGrowableCol(1)
         generalSizer.Add(grid_sizer_4, 1, wx.EXPAND, 0)
+        grid_sizer_3.Add(self.SaveOnExit, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_3.Add(self.CloseChildrenOnNewWorkspace, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_3.Add(self.SaveWorkspaceOnFileSave, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_3.Add(self.RememberLastWorkspace, 0, wx.ADJUST_MINSIZE, 0)
+        sizer_3.Add(grid_sizer_3, 1, wx.EXPAND, 0)
+        sizer_3.Add((4, 4), 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add(self.label_globals, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add(self.globalRecent, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add(self.globalFolders, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add(self.globalNotes, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_5.Add(self.globalFileList, 0, wx.ADJUST_MINSIZE, 0)
+        sizer_3.Add(grid_sizer_5, 1, wx.EXPAND, 0)
+        generalSizer.Add(sizer_3, 0, wx.EXPAND, 0)
         self.General.SetAutoLayout(True)
         self.General.SetSizer(generalSizer)
         generalSizer.Fit(self.General)
@@ -351,7 +389,6 @@ class Create(wx.Dialog):
             else:
                 value=str(self.__dict__[name].GetValue())
         self.parent.set(name,value,save=0)
-        
 
     def OnCancelButton(self, event):
         self.Close()

@@ -20,6 +20,7 @@ from sm.wxp.realtime import TreeCtrl, ListCtrl
 import view.documentation
 
 import _spe.help as help
+from Menu import STATUS
 import _spe.plugins.Pycheck as Pycheck
 from sidebar.Browser import Browser
 
@@ -38,6 +39,8 @@ RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
 RE_ENCODING             = re.compile('# -[*]- coding[:=]\s*([-\w.]+)', re.IGNORECASE)
 UML_PAGE                = 1
+STATUS_TEXT_LINE_POS    = 3
+STATUS_TEXT_COL_POS     = STATUS_TEXT_LINE_POS+1
 
 ####Utilities-------------------------------------------------------------------
 def umlAdd(classes, umlClass):
@@ -83,14 +86,17 @@ class Panel(wx.SplitterWindow):
         #Otherwise assume Unix (\n)
         self.dosLines = (source.find('\r\n') >= 0)
         self.sashDelta      = 1
-        self.fileTime=0
-        if fileName and fileName != NEWFILE:
-            self.fileTime=os.path.getmtime(fileName)
+        if os.path.exists(fileName) and fileName != NEWFILE:
+            self.fileTime   = os.path.getmtime(fileName)
+        else:
+            self.fileTime   = 0
         
         
     def __finish__(self):
+        if self._fileName not in self.parentPanel.workspace['openfiles']:
+            self.name   = '~'+self.name
         frame = self.frame
-        frame.setTitle(page=os.path.basename(self._fileName),extra=self._fileName)
+        frame.setTitle(page=self.name,extra=self._fileName)
         frame.SetIcon(sm.wxp.bitmap2Icon(self.app.bitmap('icon_py.png')))
         self.__source__(self._fileName,self._source)
         self.__sideBar__()
@@ -160,7 +166,7 @@ class Panel(wx.SplitterWindow):
         self.notes.SetHelpText(help.CHILD_NOTES)
         self.notebook.AddPage(page=self.notes, text='',imageId=self.notesIcon)
         #pyChecker
-        self.pychecker          = Pycheck.Panel(self.notebook,page=5)
+        self.pychecker          = Pycheck.Panel(self.notebook,page=4)
         self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)        
         #browser
         if not info.DARWIN:
@@ -601,10 +607,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     #todo: how to implement indicators?!!
 ##                    if e:
 ##                        self.source.markError(e.lineno,e.offset)
-                    self.setStatus(warning)
                     if warning:
+                        self.setStatus(warning)
                         self.setStatus('E!',0)
                     else:
+                        self.setStatus(STATUS)
                         self.setStatus('',0)
                     self.warning = warning
                 
@@ -642,13 +649,13 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             column          = source.GetColumn(pos)
             if line != self.line:
                 self.line   = line
-                self.SetStatusText('Line %05d'%(line+1),2)
+                self.SetStatusText('Line %05d'%(line+1),STATUS_TEXT_LINE_POS)
             if column != self.column:
                 self.column=column
-                self.SetStatusText('Column %03d'%column,3)
+                self.SetStatusText('Column %03d'%column,STATUS_TEXT_COL_POS)
         else:
-            self.SetStatusText('',2)
-            self.SetStatusText('',3)
+            self.SetStatusText('',STATUS_TEXT_LINE_POS)
+            self.SetStatusText('',STATUS_TEXT_COL_POS)
        
     def updateTodo(self):
         """Update todo tab in sidebar."""
@@ -1014,8 +1021,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         except Exception, message:
             self.SetStatusText("Unicode Error for '%s' (%s)"%(self.fileName, message),1)
         self.source.assertEOL()
-        if self.fileName != NEWFILE:
-            self.fileTime=os.path.getmtime(self.fileName)
+        if os.path.exists(self.fileName) and self.fileName != NEWFILE:
+            self.fileTime   = os.path.getmtime(self.fileName)
+        else:
+            self.fileTime   = 0
         try:
             self.notesText=open(self.notesFile()).read()
         except:
@@ -1026,6 +1035,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def setFileName(self,fileName):
         self.fileName   = fileName
         self.name       = os.path.basename(self.fileName)
+        if child.fileName not in self.parentPanel.workspace['openfiles']:
+            self.name   = '~'+self.name
         index           = self.frame.getIndex()
         mdi             = self.app.mdi
         if not mdi:index+= 1

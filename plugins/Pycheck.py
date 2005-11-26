@@ -2,12 +2,19 @@
 import os
 import wx
 from wx.lib.evtmgr import eventManager
+import _spe.info as info
 
+if info.WIN:
+    QUOTE       = '"'
+else:
+    QUOTE       = ''
 COLOR           = (wx.Colour(220,220,220),wx.Colour(255,255,255))
 IGNORE          = ['Warnings...']
 METHOD_NAMES    = ['byte code','compiler package']
-METHOD_PATHS    = ['%s" --stdlib --blacklist --varlist'%os.path.join('pychecker','checker.py'),
-    '%s" --incremental'%os.path.join('pychecker2','main.py')]
+METHOD_PATHS    = [\
+    '%s%s%s --stdlib --blacklist --varlist'%(QUOTE,os.path.join('pychecker','checker.py'),QUOTE),
+    '%s%s%s --incremental'%(QUOTE,os.path.join('pychecker2','main.py'),QUOTE)
+    ]
 
 #----------------------------------------------------------------------
 
@@ -49,26 +56,37 @@ class Panel(wx.ListCtrl):
 
     def check(self):
         if not self.process:
-            if self.panel.confirmSave('File must be saved to be analyzed by Pychecker.') :
+            if self.panel.confirmSave('File must be saved to be analyzed by Pychecker.'):
+                #update wx ListCtrl
                 self.DeleteAllItems()
+                self.InsertStringItem(0,'')
+                self.SetStringItem(0,1,'%s checking...'%METHOD_NAMES[self.methodIndex])
+                self.SetItemBackgroundColour(0,wx.Colour(255,200,200))
                 self.focus()
+                #register idle event
                 eventManager.Register(self.OnIdle, wx.EVT_IDLE, self)
+                #initialize
                 import pychecker
                 self.index          = 1
                 self.methodIndex    = 1
                 self.started        = 1
                 fileName            = self.panel.fileName
-                os.chdir(os.path.dirname(fileName))
-                cmd                 = 'python -u "%s "%s"'%\
-                    (os.path.join(self.panel.parentPanel.pathPlugins,
-                    METHOD_PATHS[self.methodIndex]),fileName)
-                #print cmd
+                path                = os.path.dirname(fileName)
+                #start process
                 self.process = wx.Process(self)
                 self.process.Redirect()
+                #change path
+                os.chdir(path)
+                cmd                 = 'cd %s'%os.path.dirname(fileName)
+                #cmd                 = 'cd %s%s%s'%(QUOTE,os.path.dirname(fileName),QUOTE)
+                #wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
+                #run pychecker
+                cmd                 = 'python -u %s %s%s%s'%\
+                    (os.path.join(self.panel.parentPanel.pathPlugins,METHOD_PATHS[self.methodIndex]),
+                     QUOTE,
+                     fileName,
+                     QUOTE)
                 pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
-                self.InsertStringItem(0,'')
-                self.SetStringItem(0,1,'%s checking...'%METHOD_NAMES[self.methodIndex])
-                self.SetItemBackgroundColour(0,wx.Colour(255,200,200))
         else:
             self.panel.parentPanel.message('Sorry, only one pycheck at a time.')
 

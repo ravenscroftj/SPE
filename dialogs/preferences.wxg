@@ -253,6 +253,153 @@
                                             </object>
                                         </object>
                                     </object>
+                                    <object class="sizeritem">
+                                        <flag>wxEXPAND</flag>
+                                        <border>0</border>
+                                        <option>0</option>
+                                        <object class="wxStaticBoxSizer" name="sizer_3" base="EditStaticBoxSizer">
+                                            <orient>wxHORIZONTAL</orient>
+                                            <label>Workspaces</label>
+                                            <object class="sizeritem">
+                                                <flag>wxEXPAND</flag>
+                                                <border>0</border>
+                                                <option>1</option>
+                                                <object class="wxFlexGridSizer" name="grid_sizer_3" base="EditFlexGridSizer">
+                                                    <hgap>4</hgap>
+                                                    <rows>4</rows>
+                                                    <cols>1</cols>
+                                                    <vgap>4</vgap>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="SaveOnExit" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Automatically Save Workspaces when exiting</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="CloseChildrenOnNewWorkspace" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Close all children when opening a new workspace</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="SaveWorkspaceOnFileSave" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Save Workspace when saving files</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="RememberLastWorkspace" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Remember Last Workspace</label>
+                                                        </object>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                                <flag>wxADJUST_MINSIZE</flag>
+                                                <border>0</border>
+                                                <option>0</option>
+                                                <object class="spacer" name="spacer" base="EditSpacer">
+                                                    <height>4</height>
+                                                    <width>4</width>
+                                                </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                                <flag>wxEXPAND</flag>
+                                                <border>0</border>
+                                                <option>1</option>
+                                                <object class="wxFlexGridSizer" name="grid_sizer_5" base="EditFlexGridSizer">
+                                                    <hgap>4</hgap>
+                                                    <rows>4</rows>
+                                                    <cols>2</cols>
+                                                    <vgap>4</vgap>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxStaticText" name="label_globals" base="EditStaticText">
+                                                            <attribute>1</attribute>
+                                                            <label>Use the same in all workspaces:</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="globalRecent" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Recent Files</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="spacer" name="spacer" base="EditSpacer">
+                                                            <height>5</height>
+                                                            <width>5</width>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="globalFolders" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Folders</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="spacer" name="spacer" base="EditSpacer">
+                                                            <height>5</height>
+                                                            <width>5</width>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="globalNotes" base="EditCheckBox">
+                                                            <checked>1</checked>
+                                                            <label>Notes</label>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="spacer" name="spacer" base="EditSpacer">
+                                                            <height>5</height>
+                                                            <width>5</width>
+                                                        </object>
+                                                    </object>
+                                                    <object class="sizeritem">
+                                                        <flag>wxADJUST_MINSIZE</flag>
+                                                        <border>0</border>
+                                                        <option>0</option>
+                                                        <object class="wxCheckBox" name="globalFileList" base="EditCheckBox">
+                                                            <label>Open File list</label>
+                                                        </object>
+                                                    </object>
+                                                </object>
+                                            </object>
+                                        </object>
+                                    </object>
                                 </object>
                             </object>
                             <object class="wxPanel" name="Editor" base="EditPanel">
@@ -1011,3 +1158,4 @@
         </object>
     </object>
 </application>
+

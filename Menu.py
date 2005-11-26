@@ -15,7 +15,7 @@ import os, wx
 import wxgMenu
 import sm.wxp.smdi as smdi
 
-STATUS          = "(c) www.stani.be - Press F1 anywhere to see local help tips."
+STATUS          = "(c) www.stani.be - The name of the current workspace is displayed at the right."
 
 ArtIDs = [ wx.ART_FILE_OPEN,
            wx.ART_PRINT,
@@ -224,6 +224,7 @@ class Bar(wxgMenu.Bar):
     def menu_save(self, event=None):
         """File > Save"""
         self.app.childActive.save()
+        self.app.parentPanel.save()
 
     def menu_save_as(self, event=None):
         """File > Save As..."""
@@ -557,12 +558,16 @@ class Bar(wxgMenu.Bar):
             self.parentPanel.about()
 
 
-    def menu_open_workspace(self, event): # wxGlade: Bar.<event_handler>
+    def menu_open_workspace(self, event):
         self.parentPanel.open_workspace()
         event.Skip()
 
-    def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
+    def menu_save_workspace(self, event):
         self.parentPanel.save_workspace()
+        event.Skip()
+        
+    def menu_save_workspace_as(self, event):
+        self.parentPanel.save_workspace_as()
         event.Skip()
 
 class PalettePanel(wxgMenu.Palette):
@@ -644,8 +649,8 @@ class Palette(wx.MiniFrame):
 class Status(wx.StatusBar):
     def __init__(self,parent=None,id=-1):
         wx.StatusBar.__init__(self,parent=parent,id=id)
-        self.SetFieldsCount(4)
+        self.SetFieldsCount(5)
         self.SetStatusText('',0)
         self.SetStatusText(STATUS,1)
-        self.SetStatusWidths([20, -1, 100, 100])
+        self.SetStatusWidths([20, -1, 90, 90, 90])
 

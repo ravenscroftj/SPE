@@ -8,7 +8,8 @@ def _(x):
     return x
 
 MENUS =[
-ID_SAVE_WORKSPACE_AS,ID_OPEN_WORKSPACE,
+OPEN_WORKSPACE, SAVE_WORKSPACE, SAVE_WORKSPACE_AS, 
+
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 REMEMBER_OPEN_FILES,
@@ -40,7 +41,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(72)]
+[wx.NewId() for x in range(73)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -248,8 +249,9 @@ class Bar(wx.MenuBar):
         self.file.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVEAS, _("Save &As...\tCtrl+Alt+S"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
-        self.file.Append(ID_OPEN_WORKSPACE, _("Open &Workspace"), "", wx.ITEM_NORMAL)
-        self.file.Append(ID_SAVE_WORKSPACE_AS, _("Save Workspace As..."), "", wx.ITEM_NORMAL)
+        self.file.Append(OPEN_WORKSPACE, _("Open &Workspace"), "", wx.ITEM_NORMAL)
+        self.file.Append(SAVE_WORKSPACE, _("Save workspace"), "", wx.ITEM_NORMAL)
+        self.file.Append(SAVE_WORKSPACE_AS, _("Save Workspace As..."), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
         self.file.Append(SAVE_UML_AS, _("Save Uml As...\tCtrl+Shift+S"), "", wx.ITEM_NORMAL)
         self.file.Append(PRINT_UML_SETUP, _("Page Uml Setup..."), "", wx.ITEM_NORMAL)
@@ -373,8 +375,9 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_open_files, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.menu_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.menu_save_as, id=wx.ID_SAVEAS)
-        self.Bind(wx.EVT_MENU, self.menu_open_workspace, id=ID_OPEN_WORKSPACE)
-        self.Bind(wx.EVT_MENU, self.menu_save_workspace_as, id=ID_SAVE_WORKSPACE_AS)
+        self.Bind(wx.EVT_MENU, self.menu_open_workspace, id=OPEN_WORKSPACE)
+        self.Bind(wx.EVT_MENU, self.menu_save_workspace, id=SAVE_WORKSPACE)
+        self.Bind(wx.EVT_MENU, self.menu_save_workspace_as, id=SAVE_WORKSPACE_AS)
         self.Bind(wx.EVT_MENU, self.menu_save_uml_as, id=SAVE_UML_AS)
         self.Bind(wx.EVT_MENU, self.menu_print_uml_setup, id=PRINT_UML_SETUP)
         self.Bind(wx.EVT_MENU, self.menu_print_uml_preview, id=PRINT_UML_PREVIEW)
@@ -722,6 +725,10 @@ class Bar(wx.MenuBar):
 
     def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_save_workspace_as' not implemented"
+        event.Skip()
+
+    def menu_save_workspace(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_save_workspace' not implemented"
         event.Skip()
 
 # end of class Bar

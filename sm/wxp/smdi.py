@@ -870,7 +870,7 @@ class Child(Framework):
                     child.frame.bindTabs()
                     c += 1
         if childActive:
-            self.app.childActive.frame.Activate()
+            childActive.frame.Activate()
         if mdi!=MDI_SPLIT:
             self.Destroy()
         if debug: 
@@ -1049,9 +1049,9 @@ class MdiSplitChildFrame(Child,wx.Panel):
     
     def IsMaximized(self):
         return True
-    
-    #def Raise(self):
-    #    self.tabs.SetSelection(self.getIndex())
+
+    def Activate(self):
+        self.parentFrame.tabs.SetSelection(self.getIndex())
 
 class SdiChildFrame(TabPlatform,Child,wx.Frame):
     def __init__(self,parentFrame,

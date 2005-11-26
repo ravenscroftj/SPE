@@ -57,11 +57,11 @@ DEBUG       = 0
 IMAGE_PATH  = os.path.join(info.path,'skins','default')
 
 ####Command line arguments
-openFiles = []
+openFiles   = []
 if DEBUG:
     __debug     = DEBUG
 else:
-    __debug=DEBUG
+    __debug     = DEBUG
     openFiles   = []
 
 __workspace = None
@@ -86,6 +86,18 @@ try:
 except:
     print 'Spe warning: could not load user options'
    
+# if there is a preference in the user's defaults that is not in
+# the regular defaults file,  add it
+baseConfig=ConfigParser.ConfigParser()
+baseConfig.read(os.path.join(info.path,"defaults.cfg"))
+print os.path.join(info.path,"defaults.cfg")
+for section in baseConfig.sections():
+    for option in baseConfig.options(section):
+        if not config.has_option(section,option):
+            config.set(section,option,baseConfig.get(section,option))
+
+
+
 #---Workspace
 if __workspace is not None: 
     config.set("DEFAULT","currentworkspace",__workspace)

@@ -34,23 +34,24 @@ INFO={
 }
 
 
-INFO['defaults']     = os.path.join(INFO['location'],'defaults.cfg')
-INFO['defaultsUser'] = os.path.join(INFO['userPath'],'defaults.cfg')
+INFO['defaults']            = os.path.join(INFO['location'],'defaults.cfg')
+INFO['defaultsUser']        = os.path.join(INFO['userPath'],'defaults.cfg')
+INFO['defaultWorkspace']    = os.path.join(INFO['userPath'],'defaults.sws')
 
-INFO['titleFull']    = "%(title)s %(version)s"%INFO
+INFO['titleFull']           = "%(title)s %(version)s"%INFO
 
 if DARWIN:
-    INFO['python']      = 'pythonw'
+    INFO['python']          = 'pythonw'
 else:
-    INFO['python']      = 'python'
+    INFO['python']          = 'python'
     
-INFO['links']=\
+INFO['links']               =\
 """Homepage : %s
 Donwloads: http://www.stani.be/python/spe/page_blender
 Forum    : http://www.stani.be/python/spe/page_forum
 Lists    : http://www.stani.be/python/spe/page_mailman"""%INFO['url']
 
-INFO['description']=\
+INFO['description']         =\
 """Stani's Python Editor
 
 Spe is a python IDE with auto-indentation, auto completion, call tips, syntax
@@ -64,12 +65,12 @@ Wanted: wxpython programmers to extend spe's features, feel free to do a proposa
 
 For more information, see spe/doc/manual.html"""%INFO
 
-INFO['requirements']=\
+INFO['requirements']        =\
 """Python   v%(pyVersion)s      required
 wxPython v%(wxVersion)s required
 Blender  v%(blenderVersion)s     optional"""%INFO
 
-INFO['copyright']=\
+INFO['copyright']           =\
 """Copyright (C)%(author)s (%(date)s)
 
 This library is released under the GPL, except from the sm.* library.
@@ -89,7 +90,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """%INFO
 
-INFO['contribute'] = """There are different ways to contribute:
+INFO['contribute']          = """There are different ways to contribute:
 
 - %s (or convince your boss)
 - Let your company sponsor SPE (see manual)

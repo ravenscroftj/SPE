@@ -18,9 +18,12 @@ import wx
 import wx.stc
 from wx.lib.evtmgr import eventManager
 
-BLENDER_MESSAGE = 'Spe must be launched within Blender for this feature.'
-PYTHON_EXEC     = (r'%s'%sys.executable).replace('Program Files','progra~1')
-
+BLENDER_MESSAGE             = 'Spe must be launched within Blender for this feature.'
+##PYTHON_EXEC               = (r'%s'%sys.executable).replace('Program Files','progra~1')
+PYTHON_EXEC                 = sys.executable
+if info.WIN:
+    PYTHON_EXEC             = '"%s"'%PYTHON_EXEC
+STATUS_TEXT_WORKSPACE_POS = 2 # Todo: can this be done more dynamic?
 try:
     import win32api
     PYTHON_EXEC = win32api.GetShortPathName(sys.executable)
@@ -51,6 +54,10 @@ SKIN            = 'default'
 TABS            = ['Shell','Locals','Session','Find','Browser','Recent','Todo','Index','Notes','Donate']
 TITLE           = 'SPE %s'
 UNNAMED         = 'unnamed'
+RECENT          = 'recent.txt'
+FOLDERS         = 'folders.txt'
+NOTES           = 'notes.txt'
+REMEMBER        = 'remember.txt'
 
 
 
@@ -63,8 +70,12 @@ class Panel(wx.Notebook):
         self.__paths__(path)
         self.__settings__(openFiles,redirect,**settings)
         self.__findReplaceEvents__()
-        self.workspace=ConfigParser.ConfigParser()
-        self.workspaceFile=""
+        # Todo: make this a real class instead of this lazy one
+        self.workspace={ 'config' : ConfigParser.ConfigParser() ,
+                           'file' : "" ,
+                      'openfiles' : [],
+                  'defaultconfig' : ConfigParser.ConfigParser()
+                       }
 
     def __paths__(self,path,skin='default'):
         self.path           = path
@@ -175,13 +186,13 @@ class Panel(wx.Notebook):
             menuBar.enable(0)
 
     def __remember__(self,openFiles=[]):
-        global RECENT,FOLDERS,NOTES,REMEMBER
-        self.__openWorkspace__()
+        
+        self.__openWorkspace__()  #this prepares the currentworkspace to be used
         try:
             self.get("currentworkspace") #This will fail if there is no current workspace to get
-            self.loadWorkspace()
         except:
-            self.rememberSet(0)
+            pass # Open default workspace?
+        self.loadWorkspace()
         if len(openFiles)>0:
             self.rememberSet(1)
             self.openList(openFiles)
@@ -189,49 +200,124 @@ class Panel(wx.Notebook):
             self.new(maximize = self.getValue("MaxChildren"))
 
     #---Workspace
+    def _createNewDefaultWorkspace(self):
+        #if not os.path.exists(self.workspace['file']): 
+        file=os.path.join(INFO['userPath'],'defaults.sws')
+        if not os.path.isfile(file): 
+            new_cf=ConfigParser.ConfigParser()
+
+            # Recent
+            new_cf.add_section("recent")
+            try:
+                new_cf.set("recent","1",self.userOpen(RECENT))
+                print self.userOpen(RECENT)
+            except:
+                new_cf.set("recent","1","")
+
+            # Folders
+            new_cf.add_section("folders")
+            try:
+                new_cf.set("folders","1",self.userOpen(FOLDERS))
+            except:
+                new_cf.set("folders","1","")
+
+            # Notes
+            new_cf.add_section("notes")
+            try:
+                new_cf.set("notes","1",self.userOpen(NOTES))
+            except:
+                new_cf.set("notes","1","")
+
+            # OpenFiles
+            new_cf.add_section("openfiles")
+            try:
+                new_cf.set("openfiles","1",self.userOpen(REMEMBER))
+            except:
+                new_cf.set("openfiles","1","")
+            f=open(file,"w")
+            new_cf.write(f)
+            f.close()
+            return file
     def __openWorkspace__(self):
-        self.workspace=ConfigParser.ConfigParser()
+        #read the default workspace for the 'global' items
+        file=INFO['defaultWorkspace']
+        if not os.path.isfile(file):
+            self._createNewDefaultWorkspace()
+        self.workspace['defaultconfig']=ConfigParser.ConfigParser()
+        self.workspace['defaultconfig'].read(file)
+        
+        #read the specific workspace for the 'local' items
+        self.workspace['config']=ConfigParser.ConfigParser()
         try:
             file=self.get("currentworkspace")
-            self.workspace.read(file)
-            self.workspaceFile=file
+            self.workspace['config'].read(file)
+            self.workspace['file']=file
         except:
-            print 'Spe warning: could not find currentworkspace in config'
+            self.workspace['config']=self.workspace['defaultconfig']
+            self.workspace['file']=file
+        try:
+            openFiles=eval(self.getWorkspaceValue("OpenFiles"))
+            self.workspace['openfiles']=[]
+            for i in openFiles: 
+                self.workspace['openfiles'].append(i[0])
+        except Exception,e:
+            print "Error opening workspace file %s: %s"%(file,e)
+            
+    def applyWorkspaceTab(self,child):
+        """ this function will change the child tab to indicate that it is part of the workspace """
+        self.name   = os.path.basename(child.fileName)
+        try:
+            child.frame.setTitle(self.name)
+        except Exception, e:
+            print e
+            
     def loadWorkspace(self):
-        #Close all open children
-        for child in self.app.children: #this doesn't loop through all the children (leaves one left)
-            print child.fileName
-            child.frame.onFrameClose()
-
+        try:
+            if self.getValue('CloseChildrenOnNewWorkspace'):
+                #Close all open children
+                for child in self.app.children: #this doesn't loop through all the children (leaves one left)
+                    child.frame.onFrameClose()
+        except:
+            pass
+            
         #load the Recent Files
         self.recent.files=[]
+        default=False
+        if self.getValue('globalRecent'): default=True
         try:
-            files=eval(self.getWorkspaceValue("Recent"))
+            files=eval(self.getWorkspaceValue("Recent",default))
             self.recent.add([file for file in files if file and os.path.exists(file)])
         except:
             pass
+            
         #load the Folders
+        default=False
+        if self.getValue('globalFolders'): default=True
         try:
-            folders=eval(self.getWorkspaceValue("Folders"))
+            folders=eval(self.getWorkspaceValue("Folders",default))
             self.browser.depth.SetValue(folders[0])
             self.browser.add([file for file in folders[1:] if file])
         except:
             pass
+            
         #load the Notes
+        default=False
+        if self.getValue('globalNotes'): default=True
         try:
-            notes=self.getWorkspaceValue("Notes")
+            notes=self.getWorkspaceValue("Notes",default)
             self.notes.SetValue(notes)
         except:
             pass
 
         #load the openfiles (the old 'remember.txt')
         fileList=[]
+        default=False
+        if self.getValue('globalFileList'): default=True
         try:
-            files=eval(self.getWorkspaceValue("OpenFiles"))
+            files=eval(self.getWorkspaceValue("OpenFiles",default))
             fileList=[file for file in files if file]
         except:
             pass
-            
         if fileList:
             self.rememberSet(1)
             self.openList(fileList,
@@ -239,35 +325,48 @@ class Panel(wx.Notebook):
                 select      = None,
                 maximize    = self.getValue("MaxChildren"),
                 verbose     = True)
+        self.setWorkspaceStatusBarText(self.workspace['file'])
+                
+    def setWorkspaceStatusBarText(self,file):
+        self.SetActiveStatusText(os.path.basename(file)[:-4],STATUS_TEXT_WORKSPACE_POS)
+        
     def saveWorkspace(self,filelocation=None):
         fileList=[]
         if self.app.children:
+            self.workspace['openfiles']=[]
             for child in self.app.children:
-                  if child.fileName != Child.NEWFILE:
-                      pos     = child.source.GetCurrentPos()
-                      lineno  = child.source.LineFromPosition(pos)
-                      col     = child.source.GetColumn(pos)
-                      fileList.append((child.fileName,lineno,col))
+                if child.fileName != Child.NEWFILE:
+                    pos     = child.source.GetCurrentPos()
+                    lineno  = child.source.LineFromPosition(pos)
+                    col     = child.source.GetColumn(pos)
+                    fileList.append((child.fileName,lineno,col))
+                    self.workspace['openfiles'].append(child.fileName)
+                    self.applyWorkspaceTab(child)
         self.setWorkspaceValue("notes",self.notes.GetValue())
         self.setWorkspaceValue("openfiles",str(fileList))
         self.setWorkspaceValue("recent",str(self.recent.files[:self.getValue('RecentFileAmount')]))
         self.setWorkspaceValue("folders",str([self.browser.depth.GetValue()]+self.browser.getFolders()[1:]))
-        if not filelocation: filelocation=self.workspaceFile
+        if not filelocation: filelocation=self.workspace['file']
         try:
             file=open(filelocation,'w')
-            self.workspace.write(file)
+            self.workspace['config'].write(file)
             file.close()
+            self.workspace['file']=filelocation
+            self.setWorkspaceStatusBarText(filelocation)
         except Exception, message:
             print 'Spe warning: could not save workspace options in',filelocation
             print message
-    def getWorkspaceValue(self,type):
+    def getWorkspaceValue(self,type,default=False):
         """        returns the value of the workspace config file key        """
-        return self.workspace.get(type.lower(),"1")
+        if default:
+            return self.workspace['defaultconfig'].get(type.lower(),"1")
+        else:
+            return self.workspace['config'].get(type.lower(),"1")
 
     def setWorkspaceValue(self,type,value):
         """        sets the workspace config file key to a specific value        """
-        if not self.workspace.has_section(type): self.workspace.add_section(type)
-        self.workspace.set(type.lower(),"1",value)
+        if not self.workspace['config'].has_section(type): self.workspace['config'].add_section(type)
+        self.workspace['config'].set(type.lower(),"1",value)
 
 
     ####Menu
@@ -303,10 +402,11 @@ class Panel(wx.Notebook):
                     child.frame.onFrameClose()
             self.openList(fileList)
         dlg.Destroy()
+        
     def open_workspace(self):
         """Open file dialog."""
         try:
-            defaultDir=dirname(self.workspaceFile)
+            defaultDir=dirname(self.workspace['file'])
         except:
             defaultDir=''
         dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
@@ -322,11 +422,19 @@ class Panel(wx.Notebook):
             except Exception,e:
                 self.message("Could not open workspace:%s\n%s"%(file,e))
         dlg.Destroy()
+        
     def save_workspace(self):
         """Save file dialog."""
         try:
-            defaultDir=dirname(self.workspaceFile)
-            defaultFile=self.workspaceFile
+            self.saveWorkspace()
+        except Exception,e:
+            self.message("Could not save workspace:%s\n%s"%(file,e))
+        
+    def save_workspace_as(self):
+        """Save file dialog."""
+        try:
+            defaultDir=dirname(self.workspace['file'])
+            defaultFile=self.workspace['file']
         except:
             defaultDir=''
             defaultFile=''
@@ -342,6 +450,13 @@ class Panel(wx.Notebook):
             except Exception,e:
                 self.message("Could not save workspace:%s\n%s"%(file,e))
         dlg.Destroy()
+        
+    def save(self):
+        try:
+            if self.getValue('SaveWorkspaceOnFileSave'):
+                self.saveWorkspace()
+        except:
+            pass
     #---Edit
     def browse_source(self, event=None):
         """Locate source file of word and open it."""
@@ -503,9 +618,9 @@ class Panel(wx.Notebook):
                                PYTHON_EXEC,
                                PYTHON_EXEC]
                 args.extend(_info['parameters'])
-                if info.WIN:
-                    name    = '"%s"'%name
                 if os.path.exists(name):
+                    if info.WIN:
+                        name    = '"%s"'%name
                     args.append(name)
                     script_args = _info['arguments']
                     if script_args:
@@ -666,8 +781,12 @@ class Panel(wx.Notebook):
                 except:
                     source='' # todo: make this an option
                 child=self.new(name=fileName,source=source,maximize=maximize)
+                #if this file is in the workspace, then change the name
                 self.recent.add([fileName])
                 if lineno:child.scrollTo(lineno,col,select=select)
+##                if child.fileName in self.workspace['openfiles']:
+##                    #this is a workspace file and should 
+##                    self.applyWorkspaceTab(child)
             lineno=None
             col=1
         if len(self.app.children)>0:self.frame.menuBar.enable(1)
@@ -750,19 +869,16 @@ class Panel(wx.Notebook):
             self.set("maximize","False")
         else:
             self.set("maximize","True")
-        if self.remember:
-            try:
-                if not os.path.exists(self.workspaceFile): 
-                    self.workspaceFile=os.path.join(INFO['userPath'],'defaults.sws')
-                    f=open(self.workspaceFile,"w")
-                    f.close()
+        try:
+            if self.getValue('SaveOnExit'):
                 self.saveWorkspace()
-            except Exception, message:
-                self.messageEmail("""\
+            if self.remember:
+                self.saveWorkspace(INFO['defaultWorkspace'])
+        except Exception, message:
+            self.messageEmail("""\
 Spe Warning: can't save user settings (%s).
 Please report these details and operating system to s_t_a_n_i@yahoo.com."""%message)
-        else:
-            self.set("currentworkspace","")
+        if not self.getValue('RememberLastWorkspace'): self.set('currentworkspace',"")
         return 1
 
     def onClosePanelFrame(self,event=None):
