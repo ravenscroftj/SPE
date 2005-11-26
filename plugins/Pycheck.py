@@ -12,8 +12,8 @@ COLOR           = (wx.Colour(220,220,220),wx.Colour(255,255,255))
 IGNORE          = ['Warnings...']
 METHOD_NAMES    = ['byte code','compiler package']
 METHOD_PATHS    = [\
-    '%s%s%s --stdlib --blacklist --varlist'%(QUOTE,os.path.join('pychecker','checker.py'),QUOTE),
-    '%s%s%s --incremental'%(QUOTE,os.path.join('pychecker2','main.py'),QUOTE)
+    '%s%s --stdlib --blacklist --varlist'%(os.path.join('pychecker','checker.py'),QUOTE),
+    '%s%s --incremental'%(os.path.join('pychecker2','main.py'),QUOTE)
     ]
 
 #----------------------------------------------------------------------
@@ -77,12 +77,13 @@ class Panel(wx.ListCtrl):
                 self.process.Redirect()
                 #change path
                 os.chdir(path)
-                cmd                 = 'cd %s'%os.path.dirname(fileName)
+                #cmd                 = 'cd %s'%os.path.dirname(fileName)
                 #cmd                 = 'cd %s%s%s'%(QUOTE,os.path.dirname(fileName),QUOTE)
                 #wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
                 #run pychecker
-                cmd                 = 'python -u %s %s%s%s'%\
-                    (os.path.join(self.panel.parentPanel.pathPlugins,METHOD_PATHS[self.methodIndex]),
+                cmd                 = 'python -u %s%s %s%s%s'%\
+                    (QUOTE,
+                     os.path.join(self.panel.parentPanel.pathPlugins,METHOD_PATHS[self.methodIndex]),
                      QUOTE,
                      fileName,
                      QUOTE)

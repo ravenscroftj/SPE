@@ -90,7 +90,6 @@ except:
 # the regular defaults file,  add it
 baseConfig=ConfigParser.ConfigParser()
 baseConfig.read(os.path.join(info.path,"defaults.cfg"))
-print os.path.join(info.path,"defaults.cfg")
 for section in baseConfig.sections():
     for option in baseConfig.options(section):
         if not config.has_option(section,option):
