@@ -1035,7 +1035,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def setFileName(self,fileName):
         self.fileName   = fileName
         self.name       = os.path.basename(self.fileName)
-        if child.fileName not in self.parentPanel.workspace['openfiles']:
+        if fileName not in self.parentPanel.workspace['openfiles']:
             self.name   = '~'+self.name
         index           = self.frame.getIndex()
         mdi             = self.app.mdi
