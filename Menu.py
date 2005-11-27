@@ -54,49 +54,55 @@ TOOL_RUN, TOOL_RUN_VERBOSE, TOOL_IMPORT,TOOL_CHECK_SOURCE_WITH_PYCHECKER,
 
 BLENDER_TOOLS = [TOOL_LOAD_IN_BLENDER, TOOL_REFERENCE_IN_BLENDER]
 
+def _(x):
+    if '|' in x and info.DARWIN:
+        return x.replace('Ctrl','Cmd')
+    else:
+        return x
+
 class Tool(wx.ToolBar):
     def __init__(self,parent=None,app=None,id=-1,menu=None,**kwds):
         self.app = app
         wx.Bitmap = app.bitmap
         wx.ToolBar.__init__(self,parent=parent,id=id,**kwds)
         parent.SetToolBar(self)
-        self.AddLabelTool(TOOL_NEW, "", wx.Bitmap("skins/default/filenew.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "New | Ctrl+N", "")
-        self.AddLabelTool(TOOL_OPEN_FILES, "", wx.Bitmap("skins/default/fileopen.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open files... | Ctrl+O", "")
-        self.AddLabelTool(TOOL_SAVE, "", wx.Bitmap("skins/default/filesave.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save | Ctrl+S", "")
-        self.AddLabelTool(TOOL_SAVE_AS, "", wx.Bitmap("skins/default/filesaveas.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save as... | Ctrl+Alt+S", "")
-        self.AddLabelTool(TOOL_CLOSE, "", wx.Bitmap("skins/default/fileclose.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Close | Ctrl+F4", "")
-        self.AddLabelTool(TOOL_EXIT, "", wx.Bitmap("skins/default/exit.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Exit | Alt+F4", "")
-        self.AddLabelTool(TOOL_REMEMBER_OPEN_FILES, "", wx.Bitmap("skins/default/remember.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "Remember open files", "")
+        self.AddLabelTool(TOOL_NEW, "", wx.Bitmap("skins/default/filenew.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("New | Ctrl+N"), "")
+        self.AddLabelTool(TOOL_OPEN_FILES, "", wx.Bitmap("skins/default/fileopen.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Open files... | Ctrl+O"), "")
+        self.AddLabelTool(TOOL_SAVE, "", wx.Bitmap("skins/default/filesave.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save | Ctrl+S"), "")
+        self.AddLabelTool(TOOL_SAVE_AS, "", wx.Bitmap("skins/default/filesaveas.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save as... | Ctrl+Alt+S"), "")
+        self.AddLabelTool(TOOL_CLOSE, "", wx.Bitmap("skins/default/fileclose.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Close | Ctrl+F4"), "")
+        self.AddLabelTool(TOOL_EXIT, "", wx.Bitmap("skins/default/exit.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Exit | Alt+F4"), "")
+        self.AddLabelTool(TOOL_REMEMBER_OPEN_FILES, "", wx.Bitmap("skins/default/remember.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Remember open files"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_UNDO, "", wx.Bitmap("skins/default/undo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Undo | Ctrl+Z", "")
-        self.AddLabelTool(TOOL_REDO, "", wx.Bitmap("skins/default/redo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Redo | Ctrl+Y", "")
+        self.AddLabelTool(TOOL_UNDO, "", wx.Bitmap("skins/default/undo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Undo | Ctrl+Z"), "")
+        self.AddLabelTool(TOOL_REDO, "", wx.Bitmap("skins/default/redo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Redo | Ctrl+Y"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_CUT, "", wx.Bitmap("skins/default/editcut.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Cut | Ctrl+X", "")
-        self.AddLabelTool(TOOL_COPY, "", wx.Bitmap("skins/default/editcopy.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Copy | Ctrl+C", "")
-        self.AddLabelTool(TOOL_PASTE, "", wx.Bitmap("skins/default/editpaste.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Paste | Ctrl+V", "")
+        self.AddLabelTool(TOOL_CUT, "", wx.Bitmap("skins/default/editcut.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Cut | Ctrl+X"), "")
+        self.AddLabelTool(TOOL_COPY, "", wx.Bitmap("skins/default/editcopy.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Copy | Ctrl+C"), "")
+        self.AddLabelTool(TOOL_PASTE, "", wx.Bitmap("skins/default/editpaste.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Paste | Ctrl+V"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_FIND__REPLACE, "", wx.Bitmap("skins/default/viewmag.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Find & replace... | Ctrl+F", "")
-        self.AddLabelTool(TOOL_GO_TO_LINE, "", wx.Bitmap("skins/default/goto.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Go to line... | Ctrl+G", "")
-        self.AddLabelTool(TOOL_BROWSE_SOURCE, "", wx.Bitmap("skins/default/thumbnail.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Browse source | Ctrl+Enter", "")
+        self.AddLabelTool(TOOL_FIND__REPLACE, "", wx.Bitmap("skins/default/viewmag.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Find & replace... | Ctrl+F"), "")
+        self.AddLabelTool(TOOL_GO_TO_LINE, "", wx.Bitmap("skins/default/goto.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Go to line... | Ctrl+G"), "")
+        self.AddLabelTool(TOOL_BROWSE_SOURCE, "", wx.Bitmap("skins/default/thumbnail.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Browse source | Ctrl+Enter"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_INDENT, "", wx.Bitmap("skins/default/indent.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Indent | Tab", "")
-        self.AddLabelTool(TOOL_DEDENT, "", wx.Bitmap("skins/default/dedent.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Dedent | Shift+Tab", "")
-        self.AddLabelTool(TOOL_COMMENT, "", wx.Bitmap("skins/default/comment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Comment | Alt+3", "")
-        self.AddLabelTool(TOOL_UNCOMMENT, "", wx.Bitmap("skins/default/uncomment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Uncomment | Alt+4", "")
+        self.AddLabelTool(TOOL_INDENT, "", wx.Bitmap("skins/default/indent.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Indent | Tab"), "")
+        self.AddLabelTool(TOOL_DEDENT, "", wx.Bitmap("skins/default/dedent.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Dedent | Shift+Tab"), "")
+        self.AddLabelTool(TOOL_COMMENT, "", wx.Bitmap("skins/default/comment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Comment | Alt+3"), "")
+        self.AddLabelTool(TOOL_UNCOMMENT, "", wx.Bitmap("skins/default/uncomment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Uncomment | Alt+4"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_SIDEBAR, "", wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "View sidebar | F11", "")
-        self.AddLabelTool(TOOL_SHELL, "", wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Show/hide shell | F12", "")
+        self.AddLabelTool(TOOL_SIDEBAR, "", wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("View sidebar | F11"), "")
+        self.AddLabelTool(TOOL_SHELL, "", wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Show/hide shell | F12"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/exec.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Run | F9", "")
-        self.AddLabelTool(TOOL_RUN_VERBOSE, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Run verbose | Ctrl+Alt+R", "")
-        self.AddLabelTool(TOOL_IMPORT, "", wx.Bitmap("skins/default/tar.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Import | F10", "")
-        self.AddLabelTool(TOOL_CHECK_SOURCE_WITH_PYCHECKER, "", wx.Bitmap("skins/default/pychecker.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Check source with pychecker | Ctrl+Alt+C", "")
+        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/exec.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run | F9"), "")
+        self.AddLabelTool(TOOL_RUN_VERBOSE, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run verbose | Ctrl+Alt+R"), "")
+        self.AddLabelTool(TOOL_IMPORT, "", wx.Bitmap("skins/default/tar.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Import | F10"), "")
+        self.AddLabelTool(TOOL_CHECK_SOURCE_WITH_PYCHECKER, "", wx.Bitmap("skins/default/pychecker.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Check source with pychecker | Ctrl+Alt+C"), "")
         self.AddSeparator()
         if app.Blender:
-            self.AddLabelTool(TOOL_LOAD_IN_BLENDER, "", wx.Bitmap("skins/default/blender.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Load in Blender | Ctrl+B", "")
-            self.AddLabelTool(TOOL_REFERENCE_IN_BLENDER, "", wx.Bitmap("skins/default/blenderRef.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Reference in Blender | Ctrl+Alt+B", "")
+            self.AddLabelTool(TOOL_LOAD_IN_BLENDER, "", wx.Bitmap("skins/default/blender.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Load in Blender | Ctrl+B"), "")
+            self.AddLabelTool(TOOL_REFERENCE_IN_BLENDER, "", wx.Bitmap("skins/default/blenderRef.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Reference in Blender | Ctrl+Alt+B"), "")
             self.AddSeparator()
-        self.AddLabelTool(TOOL_DONATE, "", wx.Bitmap("skins/default/donate.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Please donate, if you enjoy SPE.", "")
+        self.AddLabelTool(TOOL_DONATE, "", wx.Bitmap("skins/default/donate.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Please donate, if you enjoy SPE."), "")
         self.Realize()
 
     def __events__(self):

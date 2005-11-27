@@ -356,6 +356,7 @@ class Panel(wx.Notebook):
         except Exception, message:
             print 'Spe warning: could not save workspace options in',filelocation
             print message
+            
     def getWorkspaceValue(self,type,default=False):
         """        returns the value of the workspace config file key        """
         if default:
@@ -647,15 +648,12 @@ class Panel(wx.Notebook):
 
     def test_regular_expression_with_kiki(self):
         """Test regular expression with Kiki..."""
-        if wx.Platform == "__WXMAC__":
-            os.system('open -a /Applications/SPE-OSX/KikiOSX.app')
-        else:
-            try:
-                self.kiki.Raise()
-            except:
-                from plugins.kiki import kiki
-                INFO['kikiPath']=dirname(kiki.__file__)
-                self.kiki=kiki.speCreate(self,info=INFO)
+        try:
+            self.kiki.Raise()
+        except:
+            from plugins.kiki import kiki
+            INFO['kikiPath']=dirname(kiki.__file__)
+            self.kiki=kiki.speCreate(self,info=INFO)
         self.SetStatusText('Kiki is succesfully started.',1)
 
     def design_a_gui_with_wxglade(self):
