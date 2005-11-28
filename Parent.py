@@ -45,7 +45,7 @@ import Child
 DEFAULT         = "<default>"
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
-MAIL            = 'mailto:s_t_a_n_i@yahoo.com?subject=About spe...'
+MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
 PATH            = dirname(__file__)
 PLATFORM        = sys.platform
 PREFIX          = sys.prefix
@@ -434,15 +434,16 @@ class Panel(wx.Notebook):
     def save_workspace_as(self):
         """Save file dialog."""
         try:
-            defaultDir=dirname(self.workspace['file'])
-            defaultFile=self.workspace['file']
+            defaultFile = self.workspace['file']
         except:
-            defaultDir=''
-            defaultFile=''
-        dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
-            defaultDir=defaultDir, defaultFile=defaultFile,
-            wildcard=info.WORKSPACE_WILDCARD,
-            style=wx.SAVE)
+            defaultFile = ''
+        if info.WIN: 
+           defaultFile  = defaultFile.replace("/","\\")
+        dlg             = wx.FileDialog(self, "Save Workspace As - www.stani.be", 
+            defaultFile = defaultFile,
+            defaultDir  = dirname(defaultFile), 
+            wildcard    = info.WORKSPACE_WILDCARD, 
+            style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
             file = dlg.GetPath()
             try:
@@ -451,7 +452,7 @@ class Panel(wx.Notebook):
             except Exception,e:
                 self.message("Could not save workspace:%s\n%s"%(file,e))
         dlg.Destroy()
-        
+                
     def save(self):
         try:
             if self.getValue('SaveWorkspaceOnFileSave'):
@@ -472,7 +473,7 @@ class Panel(wx.Notebook):
         """Find and Replace dialog and action."""
         #dialog already open, if yes give focus
         if self.findDialog:
-            self.findDialog.SetFocus()
+            self.findDialog.Raise()
             return
         #find string
         findStr = self.app.childActive.source.GetSelectedText()
@@ -875,7 +876,7 @@ class Panel(wx.Notebook):
         except Exception, message:
             self.messageEmail("""\
 Spe Warning: can't save user settings (%s).
-Please report these details and operating system to s_t_a_n_i@yahoo.com."""%message)
+Please report these details and operating system to %s."""%(message,INFO['author_email']))
         if not self.getValue('RememberLastWorkspace'): self.set('currentworkspace',"")
         return 1
 
@@ -914,7 +915,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         self.shell.prompt()
 
     def excepthook(self, type, value, traceback) :
-        webbrowser.open('''mailto:s_t_a_n_i@yahoo.com?subject=SPE %s error report&body="%s %s\n%s"'''%(type,type,value,traceback))
+        webbrowser.open('''mailto:%s?subject=SPE %s error report&body="%s %s\n%s"'''%(INFO['author_email'],type,type,value,traceback))
 
     def onFind(self,event,message=1):
         source=self.app.childActive.source
@@ -1150,7 +1151,7 @@ Please report these details and operating system to s_t_a_n_i@yahoo.com."""%mess
         self.message(message,style=wx.OK | wx.ICON_ERROR)
 
     def messageEmail(self,message):
-        webbrowser.open('mailto:s_t_a_n_i@yahoo.com?subject=SPE error (automatic report)&body=%s'%message)
+        webbrowser.open('mailto:%s?subject=SPE error (automatic report)&body=%s'%(INFO['author_email'],message))
 
     def messageEntry(self,message,default=''):
         """Show entry dialog box for user input."""

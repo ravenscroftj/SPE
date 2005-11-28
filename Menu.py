@@ -56,7 +56,7 @@ BLENDER_TOOLS = [TOOL_LOAD_IN_BLENDER, TOOL_REFERENCE_IN_BLENDER]
 
 def _(x):
     if '|' in x and info.DARWIN:
-        return x.replace('Ctrl','Cmd')
+        return x.replace('Ctrl','Cmd').replace('Alt+F4','Cmd+Q')
     else:
         return x
 
@@ -69,8 +69,8 @@ class Tool(wx.ToolBar):
         self.AddLabelTool(TOOL_NEW, "", wx.Bitmap("skins/default/filenew.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("New | Ctrl+N"), "")
         self.AddLabelTool(TOOL_OPEN_FILES, "", wx.Bitmap("skins/default/fileopen.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Open files... | Ctrl+O"), "")
         self.AddLabelTool(TOOL_SAVE, "", wx.Bitmap("skins/default/filesave.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save | Ctrl+S"), "")
-        self.AddLabelTool(TOOL_SAVE_AS, "", wx.Bitmap("skins/default/filesaveas.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save as... | Ctrl+Alt+S"), "")
-        self.AddLabelTool(TOOL_CLOSE, "", wx.Bitmap("skins/default/fileclose.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Close | Ctrl+F4"), "")
+        self.AddLabelTool(TOOL_SAVE_AS, "", wx.Bitmap("skins/default/filesaveas.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save as... | Shift+Ctrl+S"), "")
+        self.AddLabelTool(TOOL_CLOSE, "", wx.Bitmap("skins/default/fileclose.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Close | Ctrl+W"), "")
         self.AddLabelTool(TOOL_EXIT, "", wx.Bitmap("skins/default/exit.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Exit | Alt+F4"), "")
         self.AddLabelTool(TOOL_REMEMBER_OPEN_FILES, "", wx.Bitmap("skins/default/remember.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Remember open files"), "")
         self.AddSeparator()

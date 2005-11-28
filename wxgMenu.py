@@ -305,7 +305,7 @@ class Bar(wx.MenuBar):
         self.tools.Append(RUN_VERBOSE, _("Run &verbose\tCtrl+Alt+R"), "", wx.ITEM_NORMAL)
         self.tools.Append(IMPORT, _("&Import\tF10"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
-        self.tools.Append(DEBUG, _("&Debug with winpdb...\tCtrl+D"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DEBUG, _("&Debug with winpdb...\tCtrl+Alt+D"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(BROWSE_OBJECT_WITH_PYFILLING, _("&Browse object with PyFilling...\tCtrl+Alt+F"), "", wx.ITEM_NORMAL)
         self.tools.Append(TEST_REGULAR_EXPRESSION_WITH_KIKI, _("Test regular expression with &Kiki...\tCtrl+K"), "", wx.ITEM_NORMAL)

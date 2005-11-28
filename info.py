@@ -29,7 +29,7 @@ INFO={
     'url'               : 'http://pythonide.stani.be',
     'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.0.a",
+    'version'           : "0.8.0.b",
     'wxVersion'         : "2.6.1.0.",
 }
 

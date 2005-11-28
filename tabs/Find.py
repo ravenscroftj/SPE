@@ -9,11 +9,13 @@ INFO=_spe.info.copy()
 
 INFO['description']=\
 """This a demonstration of how to make a tab plugin for spe with wxGlade:
-Just design a wxPanel and send it to s_t_a_n_i@yahoo.com
+Just design a wxPanel and send it to %(author_email)s
 
-This tab uses the FindReplaceEngine, copyrighted by Tim Hochberg."""
+This tab uses the FindReplaceEngine, copyrighted by Tim Hochberg."""%INFO
 
 __doc__=INFO['doc']%INFO
+
+def _(x): return x
 
 ####wxGlade---------------------------------------------------------------------
 
@@ -25,52 +27,58 @@ class wxgPanel(wx.Panel):
         kwds["style"] = wx.TAB_TRAVERSAL
         wx.Panel.__init__(self, *args, **kwds)
         self.results = wx.Notebook(self, -1, style=wx.NB_BOTTOM)
-        self.find = wx.Button(self, -1, "Find in files")
-        self.clear = wx.Button(self, -1, "Clear Results")
-        self.patternLabel = wx.StaticText(self, -1, "What")
-        self.pattern = wx.TextCtrl(self, -1, "")
-        self.pathLabel = wx.StaticText(self, -1, "Path")
-        self.path = wx.TextCtrl(self, -1, "")
-        self.browse = wx.BitmapButton(self, -1, wx.NullBitmap)
-        self.pathDepthLabel = wx.StaticText(self, -1, "Path depth")
+        self.find = wx.Button(self, -1, _("Find in files"))
+        self.clear = wx.Button(self, -1, _("Clear"))
+        self.label_1 = wx.StaticText(self, -1, _("Depth"))
         self.pathDepth = wx.SpinCtrl(self, -1, "5", min=0, max=100)
-        self.label_16 = wx.StaticText(self, -1, "Extensions")
-        self.extensions = wx.TextCtrl(self, -1, ".py,.pyw")
-        self.case = wx.CheckBox(self, -1, "Match case")
-        self.wildcards = wx.CheckBox(self, -1, "Wildcards")
-        self.word = wx.CheckBox(self, -1, "Whole words")
-        self.regex = wx.CheckBox(self, -1, "Regular expressions")
-        self.text_ctrl_1 = wx.TextCtrl(self.results, -1, "Tip: Leave the 'Path' field empty to search in all open files.\n\nBesides from being usefull, this tab is an example how to extend spe with wxGlade. Just design a panel (or frame) and send it to s_t_a_n_i@yahoo.com Than I'll integrate in the next spe release. For more information see in spe/tabs the files Find.wxg (open in wxGlade) and spe/tabs/Find.py (open in spe).", style=wx.TE_MULTILINE|wx.TE_READONLY)
+        self.patternLabel = wx.StaticText(self, -1, _("What"))
+        self.pattern = wx.TextCtrl(self, -1, "", style=wx.TE_PROCESS_ENTER)
+        self.pathLabel = wx.StaticText(self, -1, _("Path"))
+        self.current = wx.BitmapButton(self, -1, wx.NullBitmap)
+        self.browse = wx.BitmapButton(self, -1, wx.NullBitmap)
+        self.path = wx.TextCtrl(self, -1, "")
+        self.label_16 = wx.StaticText(self, -1, _("Extensions"))
+        self.extensions = wx.TextCtrl(self, -1, _(".py,.pyw"))
+        self.case = wx.CheckBox(self, -1, _("Match case"))
+        self.wildcards = wx.CheckBox(self, -1, _("Wildcards"))
+        self.word = wx.CheckBox(self, -1, _("Whole words"))
+        self.regex = wx.CheckBox(self, -1, _("Regular expressions"))
+        self.text_ctrl_1 = wx.TextCtrl(self.results, -1, _("Tip: Leave the 'Path' field empty to search in all open files.\n\nBesides from being usefull, this tab is an example how to extend spe with wxGlade. Just design a panel (or frame) and send it to spe.stani.be@gmail.com Than I'll integrate in the next spe release. For more information see in spe/tabs the files Find.wxg (open in wxGlade) and spe/tabs/Find.py (open in spe)."), style=wx.TE_MULTILINE|wx.TE_READONLY)
 
         self.__set_properties()
         self.__do_layout()
+
+        self.Bind(wx.EVT_BUTTON, self.onCurrentButton, self.current)
         # end wxGlade
 
     def __set_properties(self):
         # begin wxGlade: wxgPanel.__set_properties
-        self.SetMinSize((706, 290))
         self.pattern.SetMinSize((178, -1))
+        self.current.SetMinSize((23, 23))
         self.browse.SetMinSize((23, 23))
-        self.pathDepth.SetMinSize((178, -1))
         # end wxGlade
 
     def __do_layout(self):
         # begin wxGlade: wxgPanel.__do_layout
         sizerHor = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizerVerForm = wx.BoxSizer(wx.VERTICAL)
         sizerFGoptions = wx.FlexGridSizer(2, 2, 4, 4)
         sizerFGfields = wx.FlexGridSizer(4, 2, 4, 4)
-        sizer_10 = wx.BoxSizer(wx.HORIZONTAL)
-        sizerFGfields.Add(self.find, 0, 0, 0)
-        sizerFGfields.Add(self.clear, 0, wx.FIXED_MINSIZE, 0)
+        sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
+        sizerFGfields.Add(self.find, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        sizer_2.Add(self.clear, 0, wx.ALIGN_CENTER_VERTICAL|wx.FIXED_MINSIZE, 0)
+        sizer_2.Add(self.label_1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
+        sizer_2.Add(self.pathDepth, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 0)
+        sizerFGfields.Add(sizer_2, 1, wx.EXPAND, 0)
         sizerFGfields.Add(self.patternLabel, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         sizerFGfields.Add(self.pattern, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 0)
-        sizerFGfields.Add(self.pathLabel, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        sizer_10.Add(self.path, 1, 0, 0)
-        sizer_10.Add(self.browse, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        sizerFGfields.Add(sizer_10, 0, wx.EXPAND, 0)
-        sizerFGfields.Add(self.pathDepthLabel, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        sizerFGfields.Add(self.pathDepth, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 0)
+        sizer_3.Add(self.pathLabel, 1, wx.ALIGN_CENTER_VERTICAL, 0)
+        sizer_3.Add(self.current, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        sizer_3.Add(self.browse, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        sizerFGfields.Add(sizer_3, 1, wx.EXPAND, 0)
+        sizerFGfields.Add(self.path, 0, wx.EXPAND, 0)
         sizerFGfields.Add(self.label_16, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         sizerFGfields.Add(self.extensions, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 0)
         sizerFGfields.AddGrowableCol(1)
@@ -81,11 +89,18 @@ class wxgPanel(wx.Panel):
         sizerFGoptions.Add(self.regex, 0, 0, 2)
         sizerVerForm.Add(sizerFGoptions, 0, wx.TOP, 4)
         sizerHor.Add(sizerVerForm, 0, wx.ALL|wx.EXPAND, 4)
-        self.results.AddPage(self.text_ctrl_1, "Results")
-        sizerHor.Add(self.results, 1, wx.ALL|wx.EXPAND, 4)
+        self.results.AddPage(self.text_ctrl_1, _("Results"))
+        sizer_1.Add(self.results, 1, wx.ALL|wx.EXPAND, 4)
+        sizerHor.Add(sizer_1, 1, wx.EXPAND, 0)
         self.SetAutoLayout(True)
         self.SetSizer(sizerHor)
+        sizerHor.Fit(self)
+        sizerHor.SetSizeHints(self)
         # end wxGlade
+
+    def onCurrentButton(self, event): # wxGlade: wxgPanel.<event_handler>
+        print "Event handler `onCurrentButton' not implemented"
+        event.Skip()
 
 # end of class wxgPanel
 
@@ -104,6 +119,7 @@ class Panel(wxgPanel):
         wxgPanel.__init__(self,parent=panel,id=-1)
         self.panel = panel
         self.browse.SetBitmapLabel(panel.app.bitmap('fileopen.png'))
+        self.current.SetBitmapLabel(panel.app.bitmap('down.png'))
         self.used=0
         self.data=[]
         self.SetHelpText(_spe.help.FIND)
@@ -113,12 +129,13 @@ class Panel(wxgPanel):
         self.pattern.Bind(wx.EVT_TEXT_ENTER,self.onFindButton)
 
     #---events
+    def onCurrentButton(self, event):
+        """When current is clicked, use current path."""
+        self.path.SetValue(os.path.dirname(self.panel.app.childActive.fileName))
+
     def onBrowseButton(self,event):
         """When browse is clicked, show dir select dialog."""
-        #try:
-        path    = os.path.dirname(self.panel.app.childActive.fileName)
-        #except:
-        #    path    = self.path.GetValue()
+        path        = self.path.GetValue()
         dlg         = wx.DirDialog(self,defaultPath=path)
         if dlg.ShowModal() == wx.ID_OK:
             dir     = dlg.GetPath()
@@ -141,6 +158,7 @@ class Panel(wxgPanel):
             names   = sm.osx.listdirR(path,pathDepth,extensions)
         else:
             names   = self.panel.getFileNames()
+        print names
         results     = engine.findAllInFiles(names,self,pattern,path=path)
 
     #---Clear Results Event added by Sam Widmer

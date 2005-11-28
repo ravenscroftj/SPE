@@ -31,7 +31,9 @@ NEWFILE                 = 'unnamed'
 SPE_ALLOWED_EXTENSIONS  = ['.py','.pyw','.tpy','.txt','.htm','.html','.bak']
 STYLE_LIST              = wx.LC_REPORT
 STYLE_NOTEBOOK          = wx.NO_BORDER
-STYLE_NOTES             = wx.TE_MULTILINE|wx.TE_DONTWRAP
+STYLE_NOTES             = wx.TE_MULTILINE
+if not info.DARWIN:
+    STYLE_NOTES         |= wx.TE_DONTWRAP
 STYLE_SPLIT             = wx.SP_NOBORDER|wx.FULL_REPAINT_ON_RESIZE
 STYLE_TREE              = wx.TR_HAS_BUTTONS
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
