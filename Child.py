@@ -95,10 +95,12 @@ class Panel(wx.SplitterWindow):
         
         
     def __finish__(self):
-        if self._fileName not in self.parentPanel.workspace['openfiles']:
-            self.name   = '~'+self.name
         frame = self.frame
-        frame.setTitle(page=self.name,extra=self._fileName)
+        if self._fileName not in self.parentPanel.workspace['openfiles']:
+            #self.name   = '~'+self.name
+            frame.setTitle(page=self.name,extra=self._fileName)
+        else:
+            frame.setTitle(page=self.name,extra=self._fileName,colour=wx.WHITE)
         frame.SetIcon(sm.wxp.bitmap2Icon(self.app.bitmap('icon_py.png')))
         self.__source__(self._fileName,self._source)
         self.__sideBar__()
@@ -335,7 +337,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             else:
                 self.SetStatusText("File '%s' saved"%self.fileName,1)
             if fileName:
-                self.frame.setTitle(os.path.basename(fileName),fileName)
+                self.frame.setTitle(os.path.basename(fileName),fileName,colour=wx.WHITE)
             else:
                 self.frame.setTitle()
         if os.path.exists(self.fileName):
@@ -1037,8 +1039,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def setFileName(self,fileName):
         self.fileName   = fileName
         self.name       = os.path.basename(self.fileName)
-        if fileName not in self.parentPanel.workspace['openfiles']:
-            self.name   = '~'+self.name
+##        if fileName not in self.parentPanel.workspace['openfiles']:
+##            self.name   = '~'+self.name
         index           = self.frame.getIndex()
         mdi             = self.app.mdi
         if not mdi:index+= 1

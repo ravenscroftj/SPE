@@ -158,7 +158,6 @@ class Panel(wxgPanel):
             names   = sm.osx.listdirR(path,pathDepth,extensions)
         else:
             names   = self.panel.getFileNames()
-        print names
         results     = engine.findAllInFiles(names,self,pattern,path=path)
 
     #---Clear Results Event added by Sam Widmer

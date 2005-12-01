@@ -266,10 +266,11 @@ class Panel(wx.Notebook):
     def applyWorkspaceTab(self,child):
         """ this function will change the child tab to indicate that it is part of the workspace """
         self.name   = os.path.basename(child.fileName)
-        try:
-            child.frame.setTitle(self.name)
-        except Exception, e:
-            print e
+        if not (self.frame.dead or child.frame.dead):
+            try:
+                child.frame.setTitle(self.name,colour=wx.WHITE)
+            except Exception, e:
+                print e
             
     def loadWorkspace(self):
         try:

@@ -96,6 +96,8 @@ import  os, sys, pprint
 import  wx
 from    wx.lib.evtmgr import eventManager
 import  singleApp
+import NotebookCtrl
+wx_Notebook = NotebookCtrl.NotebookCtrl
 #import sm.spy
 
 ####Constants
@@ -147,7 +149,7 @@ STYLE_NOTEBOOK              = FULL_REPAINT_ON_RESIZE|wx.CLIP_CHILDREN|wx.NO_BORD
 STYLE_PARENTFRAME           = wx.DEFAULT_FRAME_STYLE #| wx.MAXIMIZE
 STYLE_SPLIT                 = wx.SP_NOBORDER
 STYLE_TOOLBAR               = wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
-TABSASH_HEIGHT              = 28
+TABSASH_HEIGHT              = 30
 TITLE                       = 'www.stani.be'
 UNNAMED                     = 'unnamed'
 
@@ -207,24 +209,46 @@ class DummyPage(wx.StaticText):
     def __init__(self,tabs):
         wx.StaticText.__init__(self, tabs, wx.ID_ANY, "SPE bug: This shouldn't be visible")
         
-class NotebookPlus(wx.Notebook):
+##class NotebookPlus(wx.Notebook):
+##    def __init__(self,app,*args,**keyw):
+##        wx.Notebook.__init__(self,*args,**keyw)
+##        self.app = app
+##        self.Bind(wx.EVT_MIDDLE_UP,self.onFrameMiddleClick)
+##        self.Bind(wx.EVT_LEFT_DCLICK,self.onFrameMiddleClick)
+##        
+##    def onFrameMiddleClick(self,event):
+##        """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
+##        mousePos    = event.GetPosition()
+##        index, other = self.HitTest(mousePos)
+##        if self.app.mdi in [SDI,MDI_TABS]: #no parent tab
+##            zero = 0
+##        else:
+##            zero = -1
+##        if index>zero:
+##            self.app.children[index-zero-1].frame.onFrameClose()
+
+class NotebookPlus(NotebookCtrl.NotebookCtrl):
     def __init__(self,app,*args,**keyw):
-        wx.Notebook.__init__(self,*args,**keyw)
         self.app = app
-        self.Bind(wx.EVT_MIDDLE_UP,self.onFrameMiddleClick)
-        self.Bind(wx.EVT_LEFT_DCLICK,self.onFrameMiddleClick)
+        keyw['size'] = wx.Size(26,26)
+        if keyw.has_key('style'):
+            del keyw['style']
+        NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
+        self.SetDrawX(True, 2)
+        self.SetUseFocusIndicator(False)
+        self.SetHighlightSelection(True)
+        self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         
-    def onFrameMiddleClick(self,event):
+    def onClosing(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
-        mousePos    = event.GetPosition()
-        index, other = self.HitTest(mousePos)
+        index = event.GetSelection()
         if self.app.mdi in [SDI,MDI_TABS]: #no parent tab
             zero = 0
         else:
             zero = -1
         if index>zero:
             self.app.children[index-zero-1].frame.onFrameClose()
-            
+        
             
 ####Foundation Classes
 class Framework:
@@ -449,10 +473,12 @@ class Framework:
 class Tabs(Framework):
     #---events            
     def bindTabs(self):
-        eventManager.Register(self.onFrameTab, self.app.EVENT_NOTEBOOK, self.tabs)
+        self.tabs.Bind(self.app.EVENT_NOTEBOOK, self.onFrameTab)
+        #eventManager.Register(self.onFrameTab, self.app.EVENT_NOTEBOOK, self.tabs)
         
     def unbindTabs(self):
-        eventManager.DeregisterWindow(self.tabs)
+        self.tabs.Unbind(self.app.EVENT_NOTEBOOK)
+        #eventManager.DeregisterWindow(self.tabs)
         
     def raiseTab(self,index):
         if index > -1:
@@ -476,11 +502,15 @@ class Tabs(Framework):
 #---SDI Platform dependent
 class TabWin32(Tabs):
     """SDI Implementation for windows (see also App.SetMdi)"""
+##    def onFrameTab(self,event):
+##        """When a tab is changed (EVT_MOUSE_LEFT&HitTest)."""
+##        mousePos    = event.GetPosition()
+##        index, other = self.tabs.HitTest(mousePos)
+##        self.raiseTab(index)
+        
     def onFrameTab(self,event):
-        """When a tab is changed (EVT_MOUSE_LEFT&HitTest)."""
-        mousePos    = event.GetPosition()
-        index, other = self.tabs.HitTest(mousePos)
-        self.raiseTab(index)
+        self.raiseTab(event.GetSelection())
+        event.Skip()
                 
 class TabUnix(Tabs):
     """SDI Implementation for windows (see also App.SetMdi)"""
@@ -547,7 +577,7 @@ class Parent(Framework):
         return False
     
     #---other
-    def setTitle(self,page='',extra='',draw=True):
+    def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
             t           = self.app.title
             if page:
@@ -598,7 +628,7 @@ class MdiParentFrame(Parent,wx.MDIParentFrame):
         if hasattr(self.panel,'onClosePanelFrame'):
             self.panel.onClosePanelFrame(event)
             
-    def setTitle(self,page='',extra='',draw=True):
+    def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
             self.SetTitle(self.app.title)
             
@@ -727,10 +757,12 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         self.bindTabs()
         
     def bindTabs(self,event=None):
-        eventManager.Register(self.onFrameTab, wx.EVT_NOTEBOOK_PAGE_CHANGED, self.tabs)
+        self.tabs.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED, self.onFrameTab)
+        #eventManager.Register(self.onFrameTab, wx.EVT_NOTEBOOK_PAGE_CHANGED, self.tabs)
     
     def unbindTabs(self):
-        eventManager.DeregisterWindow(self.tabs)
+        self.tabs.Unbind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED)
+        #eventManager.DeregisterWindow(self.tabs)
         
     def onFrameTab(self,event):
         index = event.GetSelection()
@@ -775,7 +807,7 @@ class SdiParentFrame(TabPlatform,Parent,wx.Frame):
         self.tabs.AddPage(self.panel, page)
         self.__layoutTabs__()
         
-    def setTitle(self,page='',extra='',draw=True):
+    def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
             self.SetTitle(self.app.title)
         
@@ -877,7 +909,7 @@ class Child(Framework):
             print 'Event>: Child: %s.Close returns True'%self.__class__
         return True    
             
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         if new:
             #parameters
             if page:    self.pageTitle  = page
@@ -930,11 +962,14 @@ class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
         self.tabs       = self.parentFrame.tabs
         Child.__finish__(self)
                 
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new,draw)
         self.parentFrame.setTitle(self._pageTitle,draw=draw)
         if new and draw:
-            self.tabs.SetPageText(self.getIndex(),self._pageTitle)
+            index = self.getIndex()
+            self.tabs.SetPageText(index,self._pageTitle)
+            if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
+                self.tabs.SetPageColour(index,colour)
         
     def onFrameActivate(self, event):
         if event.GetActive():
@@ -981,10 +1016,13 @@ class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
     def __finish__(self):
         Child.__finish__(self)
         
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
         if new and draw:
-            self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
+            index   = self.getIndex()+1
+            self.tabs.SetPageText(index,self._pageTitle)
+            if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
+                self.tabs.SetPageColour(index,colour)
         
     def onFrameActivate(self, event):
         if event.GetActive():
@@ -1039,10 +1077,13 @@ class MdiSplitChildFrame(Child,wx.Panel):
         tabs.AddPage(page=self, text=self.page,select=(mdi not in [SDI,MDI_TABS]))
         parentFrame.bindTabs()       
 
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
         if new and draw:
-            self.tabs.SetPageText(self.getIndex(),self._pageTitle)
+            index   = self.getIndex()
+            self.tabs.SetPageText(index,self._pageTitle)
+            if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
+                self.tabs.SetPageColour(index,colour)
             
     def SetIcon(self,*args,**keyw):
         pass
@@ -1202,7 +1243,7 @@ class App(wx.App):#singleApp.SingleInstanceApp
         elif    self.mdi == MDI_SASH_TABS:
             self.ParentFrame        = MdiSashTabsParentFrame
             self.ChildFrame         = MdiSashTabsChildFrame
-            self.EVENT_NOTEBOOK     = wx.EVT_NOTEBOOK_PAGE_CHANGED
+            #self.EVENT_NOTEBOOK     = wx.EVT_NOTEBOOK_PAGE_CHANGED
         elif    self.mdi == MDI:
             self.ParentFrame        = MdiParentFrame
             self.ChildFrame         = MdiChildFrame
@@ -1213,15 +1254,16 @@ class App(wx.App):#singleApp.SingleInstanceApp
             self.ParentFrame        = MdiSplitParentFrame
             self.ChildFrame         = MdiSplitChildFrame
         
-        #Tabs: notebook event is platformdependent
-        if WIN:
-            #Under Windows, GetSelection() will return the same value as
-            #GetOldSelection() when called from EVT_NOTEBOOK_PAGE_CHANGING handler and
-            #not the page which is going to be selected
-            #Therefore on Windows a combination of mouse click and hittest must be used.
-            self.EVENT_NOTEBOOK = wx.EVT_LEFT_DOWN
-        else:
-            self.EVENT_NOTEBOOK = wx.EVT_NOTEBOOK_PAGE_CHANGING
+        self.EVENT_NOTEBOOK = NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED
+##        #Tabs: notebook event is platformdependent
+##        if WIN:
+##            #Under Windows, GetSelection() will return the same value as
+##            #GetOldSelection() when called from EVT_NOTEBOOK_PAGE_CHANGING handler and
+##            #not the page which is going to be selected
+##            #Therefore on Windows a combination of mouse click and hittest must be used.
+##            self.EVENT_NOTEBOOK = wx.EVT_LEFT_DOWN
+##        else:
+##            self.EVENT_NOTEBOOK = wx.EVT_NOTEBOOK_PAGE_CHANGING
 
 
 ####Test app
