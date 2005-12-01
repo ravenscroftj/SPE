@@ -494,7 +494,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if terminal==DEFAULT:
             if info.WIN:
                 if info.WIN98:
-                    os.system('start command /k c:\\python23\\python.exe') 
+                    os.system('start command /k %s'%info.PYTHON_EXEC) 
                 else:
                     os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
             elif info.DARWIN:
@@ -511,7 +511,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if terminal==DEFAULT:
             if info.WIN:
                 if info.WIN98:
-                    os.system('start command /k c:\\python23\\python.exe /c')
+                    os.system('start command /k %s /c'%info.PYTHON_EXEC)
                 else:
                     os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
             elif info.DARWIN:
