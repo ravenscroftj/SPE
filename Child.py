@@ -1107,7 +1107,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         source=self.source
         
     def getEncoding(self,source):
-        if source.startswith('\xef\xbb\xbf'):
+        if source.startswith(u'\xef\xbb\xbf'):
             self.encoding = "utf8"
             return
         first2lines         = "".join(source.split("\n")[:2])

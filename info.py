@@ -24,6 +24,8 @@ if WIN:
         PYTHON_EXEC         = (r'%s'%PYTHON_EXEC).replace('Program Files','progra~1')
         PYTHON_COM          = False
     PYTHON_EXEC             = '"%s"'%PYTHON_EXEC
+else:
+    PYTHON_COM              = False
 
 path                        = os.path.dirname(__file__)
 
