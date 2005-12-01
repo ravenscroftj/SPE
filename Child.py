@@ -39,7 +39,7 @@ STYLE_TREE              = wx.TR_HAS_BUTTONS
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
-RE_ENCODING             = re.compile('# -[*]- coding[:=]\s*([-\w.]+)', re.IGNORECASE)
+RE_ENCODING             = re.compile('coding[:=]\s*([-\w.]+)', re.IGNORECASE)
 UML_PAGE                = 1
 STATUS_TEXT_LINE_POS    = 3
 STATUS_TEXT_COL_POS     = STATUS_TEXT_LINE_POS+1
@@ -493,7 +493,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         terminal=self.parentPanel.get('TerminalRun')
         if terminal==DEFAULT:
             if info.WIN:
-                os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
+                if info.WIN98:
+                    os.system('start command /k c:\\python23\\python.exe') 
+                else:
+                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
             elif info.DARWIN:
                 os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
             else:
@@ -507,7 +510,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         terminal=self.parentPanel.get('TerminalRunExit')
         if terminal==DEFAULT:
             if info.WIN:
-                os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
+                if info.WIN98:
+                    os.system('start command /k c:\\python23\\python.exe /c')
+                else:
+                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
             elif info.DARWIN:
                 os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
             else:
@@ -796,7 +802,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             first       = l.split(' ')[0]
             sepa_hit    = RE_SEPARATOR.match(l)
             sepb_hit    = RE_SEPARATOR_HIGHLIGHT.match(l)
-            encode_hit  = RE_ENCODING.match(l)
+            encode_hit  = False
+            if line < 3:
+                if line == 0 and l.startswith(u'\xef\xbb\xbf'):
+                    self.encoding = "utf8"
+                    encode_hit = True
+                else:
+                    enc = RE_ENCODING.search(l)
+                    if enc:
+                        self.encoding = str(enc.group(1))
+                        encode_hit = True
             if first in ['class','def','import'] or encode_hit or (first == 'from' and 'import' in l):
                 if 1 or l.find('(')!=-1 or l.find(':') !=-1 or first in ['from','import'] or encode_hit:
                     #indentation--------------------------------------------
@@ -813,8 +828,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                         self.umlClass    = None
                     #get definition-----------------------------------------
                     if encode_hit:
-                        l = encode_hit.group(1)
-                        self.encoding = str(l)
+                        l = self.encoding
                     else:
                         l = l.split('#')[0].strip()
                     i=1
@@ -1093,7 +1107,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         source=self.source
         
     def getEncoding(self,source):
-        encode_hit          = RE_ENCODING.match(source)
+        if source.startswith('\xef\xbb\xbf'):
+            self.encoding = "utf8"
+            return
+        first2lines         = "".join(source.split("\n")[:2])
+        encode_hit          = RE_ENCODING.search(first2lines)
         if encode_hit:
             #find in source
             self.encoding   = encode_hit.group(1)

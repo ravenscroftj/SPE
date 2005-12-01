@@ -19,25 +19,7 @@ import wx.stc
 from wx.lib.evtmgr import eventManager
 
 BLENDER_MESSAGE             = 'Spe must be launched within Blender for this feature.'
-##PYTHON_EXEC               = (r'%s'%sys.executable).replace('Program Files','progra~1')
-PYTHON_EXEC                 = sys.executable
-if info.WIN:
-    PYTHON_EXEC             = '"%s"'%PYTHON_EXEC
-STATUS_TEXT_WORKSPACE_POS = 2 # Todo: can this be done more dynamic?
-try:
-    import win32api
-    PYTHON_EXEC = win32api.GetShortPathName(sys.executable)
-    PYTHON_COM = True
-except ImportError:
-    PYTHON_EXEC     = (r'%s'%sys.executable).replace('Program Files','progra~1')
-    PYTHON_COM = False
-
-def dirname(fileName):
-    fileName    = os.path.dirname(fileName)
-    if PYTHON_COM:
-        return win32api.GetShortPathName(fileName)
-    else:
-        return fileName
+STATUS_TEXT_WORKSPACE_POS   = 2 # Todo: can this be done more dynamic?
 
 import Child
 
@@ -46,7 +28,7 @@ DEFAULT         = "<default>"
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
 MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
-PATH            = dirname(__file__)
+PATH            = info.dirname(__file__)
 PLATFORM        = sys.platform
 PREFIX          = sys.prefix
 SIZE            = (600,400)
@@ -389,7 +371,7 @@ class Panel(wx.Notebook):
     def open(self, event=None):
         """Open file(s) dialog."""
         try:
-            defaultDir=dirname(self.app.childActive.fileName)
+            defaultDir=info.dirname(self.app.childActive.fileName)
         except:
             defaultDir=''
         dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
@@ -408,7 +390,7 @@ class Panel(wx.Notebook):
     def open_workspace(self):
         """Open file dialog."""
         try:
-            defaultDir=dirname(self.workspace['file'])
+            defaultDir=info.dirname(self.workspace['file'])
         except:
             defaultDir=''
         dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
@@ -442,7 +424,7 @@ class Panel(wx.Notebook):
            defaultFile  = defaultFile.replace("/","\\")
         dlg             = wx.FileDialog(self, "Save Workspace As - www.stani.be", 
             defaultFile = defaultFile,
-            defaultDir  = dirname(defaultFile), 
+            defaultDir  = info.dirname(defaultFile), 
             wildcard    = info.WORKSPACE_WILDCARD, 
             style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
@@ -555,9 +537,15 @@ class Panel(wx.Notebook):
     #---Tools
     def browse_folder(self):
         """Browse folder"""
-        fileName=self.app.childActive.fileName
-        if fileName[0]=='/': fileName = 'file://'+fileName
-        webbrowser.open(dirname(fileName))
+        child           = self.app.childActive
+        if hasattr(child,'fileName'):
+            path        = info.dirname(child.fileName)
+            if not os.path.exists(path):
+                path    = os.getcwd()
+        else:
+            path    = os.getcwd()
+        if path[0] == '/': path = 'file://'+path
+        webbrowser.open(path)
 
     def run(self):
         """Run file"""
@@ -618,8 +606,8 @@ class Panel(wx.Notebook):
             if debugDialog.ShowModal()!=wx.ID_CANCEL:
                 _info       = self.app.debugInfo
                 args        = [os.P_NOWAIT,
-                               PYTHON_EXEC,
-                               PYTHON_EXEC]
+                               info.info.PYTHON_EXEC,
+                               info.PYTHON_EXEC]
                 args.extend(_info['parameters'])
                 if os.path.exists(name):
                     if info.WIN:
@@ -654,17 +642,17 @@ class Panel(wx.Notebook):
             self.kiki.Raise()
         except:
             from plugins.kiki import kiki
-            INFO['kikiPath']=dirname(kiki.__file__)
+            INFO['kikiPath']=info.dirname(kiki.__file__)
             self.kiki=kiki.speCreate(self,info=INFO)
         self.SetStatusText('Kiki is succesfully started.',1)
 
     def design_a_gui_with_wxglade(self):
             from plugins.wxGlade import __file__ as fileName
-            path    = dirname(fileName)
+            path    = info.dirname(fileName)
             glade   = '%s'%os.path.join(path,'wxglade.py')
             if info.WIN:
                 glade = '"%s"'%os.path.join(path,'wxglade.py')
-            os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,glade)
+            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
             self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
@@ -672,7 +660,7 @@ class Panel(wx.Notebook):
             os.system('open -a /Applications/SPE-OSX/XRCed.app')
         else:
             from wx.tools.XRCed.xrced import __file__ as fileName
-            os.spawnl(os.P_NOWAIT,PYTHON_EXEC,PYTHON_EXEC,'"%s"'%fileName)
+            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,'"%s"'%fileName)
             self.SetStatusText('XRC editor is succesfully started.',1)
 
     #---Links
@@ -738,8 +726,8 @@ class Panel(wx.Notebook):
     def wxwindows_documentation(self):
         WxPythonDocs=self.get('WxPythonDocs')
         if WxPythonDocs==DEFAULT:
-            WxPythonDocs    = os.path.join(dirname(wx.__file__),'docs')
-        WxPythonDocs2       = os.path.join(dirname(WxPythonDocs),'docs')
+            WxPythonDocs    = os.path.join(info.dirname(wx.__file__),'docs')
+        WxPythonDocs2       = os.path.join(info.dirname(WxPythonDocs),'docs')
         WxPythonDocs3        = 'C:\\Program Files\\wxPython2.5 Docs and Demos\\docs'
         path = None
         for dir in [WxPythonDocs,WxPythonDocs2,WxPythonDocs3]:

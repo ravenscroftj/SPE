@@ -5,6 +5,26 @@ WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
 LINUX						= not (WIN or DARWIN)
 
+if WIN:
+    windowsVer = sys.getwindowsversion()
+    if (windowsVer[3] == 1 ):
+        WIN98   = True
+    else:
+        WIN98   = False
+else:
+    WIN98       = False
+    
+PYTHON_EXEC                 = sys.executable
+if WIN:
+    try:
+        import win32api
+        PYTHON_EXEC         = win32api.GetShortPathName(PYTHON_EXEC)
+        PYTHON_COM          = True
+    except ImportError:
+        PYTHON_EXEC         = (r'%s'%PYTHON_EXEC).replace('Program Files','progra~1')
+        PYTHON_COM          = False
+    PYTHON_EXEC             = '"%s"'%PYTHON_EXEC
+
 path                        = os.path.dirname(__file__)
 
 #---Append sm
@@ -29,7 +49,7 @@ INFO={
     'url'               : 'http://pythonide.stani.be',
     'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.0.b",
+    'version'           : "0.8.0.c",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -110,6 +130,13 @@ __doc__=INFO['doc']%INFO
 
 def copy():
     return INFO.copy()
+
+def dirname(fileName):
+    fileName    = os.path.dirname(fileName)
+    if PYTHON_COM:
+        return win32api.GetShortPathName(fileName)
+    else:
+        return fileName
 
 #---wx
 try:

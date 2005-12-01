@@ -111,14 +111,14 @@ MDI_SPLIT           = 5
 #descriptions
 SDI_MAC             = "single with tabs (mac, linux, windows)"
 MDI_SASH_WIN        = "multiple with sash (windows)"
-MDI_SASH_TABS_LINUX = "multiple with sash & tabs (linux default)"
+MDI_SASH_TABS_LINUX = "multiple with sash & tabs (linux)"
 MDI_SASH_TABS_WIN   = "multiple with sash & tabs (windows default)"
 MDI_WIN             = "multiple with palette (windows)"
-MDI_MAC             = "single with palette (mac default)"
+MDI_MAC             = "single with palette (mac)"
 MDI_TABS_LINUX      = "multiple with tabs (linux)"
 MDI_TABS_WIN        = "multiple with tabs (windows)"
 MDI_TABS_MAC        = "single with tabs (mac)"
-MDI_SPLIT_ALL       = "multiple with sash & tabs (mac,windows,linux)"
+MDI_SPLIT_ALL       = "multiple with sash & tabs (mac default,linux default,windows)"
 
 DEFAULT             = "<default>"
 DI                  = {SDI_MAC                  : SDI,
@@ -982,7 +982,7 @@ class MdiChildFrame(MdiSashTabsChildFrame, Child):
     def addPageToParent(self,panel,mdi):
         pass
 
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new,draw)
         self.parentFrame.setTitle(self._pageTitle,draw=draw)
         
@@ -1149,7 +1149,7 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
         tabs.AddPage(page=panel,text=page,select=True)
         self.__layoutTabs__()        
         
-    def setTitle(self,page='',extra='',new=True,draw=True):
+    def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
         if new and draw:
             self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
@@ -1231,7 +1231,7 @@ class App(wx.App):#singleApp.SingleInstanceApp
             elif DARWIN:#mac osx
                 mdiName = MDI_SPLIT_ALL 
             else:
-                mdiName = MDI_SASH_TABS_LINUX
+                mdiName = MDI_SPLIT_ALL#MDI_SASH_TABS_LINUX
 
         self.mdi    = DI[mdiName]
         if      self.mdi == SDI:
