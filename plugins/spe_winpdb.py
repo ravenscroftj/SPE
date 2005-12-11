@@ -94,9 +94,12 @@ class SessionManager(CSimpleSessionManager):
         
     def script_about_to_terminate_callback(self):
         #print "script_about_to_terminate_callback"
-        self._ask_to_launch_debugger(   status  = 'Terminating "%s"'%self.command_line,
-                                        message = 'The script has finished execution.',
-                                        showDialog  = self.runner.exitPrevious)
+        child               = self.app.childActive
+        child.setStatus('Terminating "%s"'%self.command_line)
+        self.request_go()
+##        self._ask_to_launch_debugger(   status  = 'Terminating "%s"'%self.command_line,
+##                                        message = 'The script has finished execution.',
+##                                        showDialog  = self.runner.exitPrevious)
             
     def script_terminated_callback(self):
         #print "script_terminated_callback"
@@ -146,7 +149,7 @@ class Runner:
     argumentsPrevious   = []
     dlg_arguments       = ''
     exceptionPrevious   = True
-    exitPrevious        = False
+    #exitPrevious        = False
     running             = False
     
     def __init__(self,app):
@@ -176,19 +179,19 @@ class Runner:
         runWinPdbDialog     = RunWinPdbDialog(fileName,
                                 self.argumentsPrevious,
                                 self.exceptionPrevious,
-                                self.exitPrevious,
+                                #self.exitPrevious,
                                 parent=self.app.parentFrame,
                                 id=-1)
         answer              = runWinPdbDialog.ShowModal()
         dlg_arguments       = runWinPdbDialog.arguments.GetValue()
         dlg_exception       = runWinPdbDialog.exception.GetValue()
-        dlg_exit            = runWinPdbDialog.exit.GetValue()
+        #dlg_exit            = runWinPdbDialog.exit.GetValue()
         runWinPdbDialog.Destroy()
         if answer == wx.ID_OK:
             self.argumentsPrevious.append(self.dlg_arguments)
             self.dlg_arguments      = dlg_arguments
             self.exceptionPrevious  = dlg_exception
-            self.exitPrevious       = dlg_exit
+            #self.exitPrevious       = dlg_exit
             command_line            = fileName
             if self.dlg_arguments:
                 command_line        += ' ' + self.dlg_arguments
