@@ -146,10 +146,10 @@ class Create(wx.Dialog):
         options     = self.options
         gui         = _info['gui']           = options.gui.GetValue()
         if gui:
-            debugger= '%s'%os.path.join(path,'winpdb.py')
+            debugger= os.path.join(path,'winpdb.py')
         else:
-            debugger= '%s'%os.path.join(path,'rpdb2.py')
-        if info.WIN:
+            debugger= os.path.join(path,'rpdb2.py')
+        if info.WIN and ' ' in debugger:
             debugger= '"%s"'%debugger
         parameters.append(debugger)
         chdir       = _info['chdir']         = options.chdir.GetValue()
@@ -172,7 +172,7 @@ class Create(wx.Dialog):
 
 # end of class Create
 
-def options(parent, name=''):
+def dialog(parent, name=''):
     return Create(parent=parent,id=-1,name=name)
 
 

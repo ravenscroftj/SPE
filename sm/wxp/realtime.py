@@ -38,7 +38,7 @@ class Ctrl:
                 dataId      = ''
         else:
             dataId          = ''
-        id                  = '%s%s|%%d'%(base,dataId)
+        id                  = ('%s%s|%%d'%(base,dataId)).encode('ascii','replace')
         nr                  = 0
         othersId            = [other.id for other in others]
         while id%nr in othersId:
@@ -165,6 +165,8 @@ class TreeCtrl(Ctrl,wx.TreeCtrl):
         wx.TreeCtrl.__init__(self,*args, **kwargs)
         self._DeleteItem    = self.Delete
         self._wxDeleteItem  = wx.TreeCtrl.Delete
+        self._style         = kwargs['style']
+        self._hideRoot      = self._style & wx.TR_HIDE_ROOT
         
     def _copyItemTo(self,frm,to):
         """Copy/steal wx control from an abandoned TreeItem to avoid creating a new wx control."""
@@ -188,10 +190,10 @@ class TreeCtrl(Ctrl,wx.TreeCtrl):
 
     def AddRoot(self,text):
         self.root           = TreeItem(text=text,id=text)
-        self.root._update.append((wx.TreeCtrl.Expand,))
-        self.SetPyData(self.root,1)
         self.items[text]    = self.root
         self.root.wx        = wx.TreeCtrl.AddRoot(self,text)
+        if not self._hideRoot: 
+            self.root._update.append((wx.TreeCtrl.Expand,))
         return self.root
         
     def AppendItem(self,parent,text,data=None):
@@ -242,7 +244,7 @@ class TreeCtrl(Ctrl,wx.TreeCtrl):
            
     def Expand(self,item):
         """Expands a TreeItem."""
-        if not wx.TreeCtrl.IsExpanded(self,item.wx):
+        if not ((self._hideRoot and item == self.root) or wx.TreeCtrl.IsExpanded(self,item.wx)):
             wx.TreeCtrl.Expand(self,item.wx)
             
     def SetItemBold(self,item,bold=True):

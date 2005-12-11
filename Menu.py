@@ -30,26 +30,27 @@ WINDOW  = 5
 
 
 TOOLS=[
-TOOL_NEW,TOOL_OPEN_FILES, TOOL_SAVE, TOOL_SAVE_AS, TOOL_CLOSE, TOOL_EXIT,
+TOOL_NEW,TOOL_OPEN_FILES, TOOL_SAVE, TOOL_SAVE_AS, TOOL_SAVE_WORKSPACE,
 TOOL_REMEMBER_OPEN_FILES,
-TOOL_UNDO, TOOL_REDO, TOOL_CUT, TOOL_COPY, TOOL_PASTE,
+TOOL_UNDO, TOOL_REDO,
 TOOL_FIND__REPLACE, TOOL_GO_TO_LINE, TOOL_BROWSE_SOURCE,
 TOOL_INDENT, TOOL_DEDENT, TOOL_COMMENT, TOOL_UNCOMMENT,
 TOOL_SIDEBAR, TOOL_SHELL,
-TOOL_RUN, TOOL_RUN_VERBOSE, TOOL_IMPORT,TOOL_CHECK_SOURCE_WITH_PYCHECKER,
+TOOL_RUN, TOOL_RUN_DEBUG, TOOL_DEBUG, TOOL_IMPORT,
+TOOL_CHECK_SOURCE_WITH_PYCHECKER,
 TOOL_LOAD_IN_BLENDER, TOOL_REFERENCE_IN_BLENDER,
 TOOL_DONATE
 ] = \
-[wx.NewId() for x in range(28)]
+[wx.NewId() for x in range(25)]
 
 CHILD_TOOLS=[
-TOOL_SAVE, TOOL_SAVE_AS, TOOL_CLOSE,
+TOOL_SAVE, TOOL_SAVE_AS, TOOL_SAVE_WORKSPACE,
 TOOL_REMEMBER_OPEN_FILES,
-TOOL_UNDO, TOOL_REDO, TOOL_CUT, TOOL_COPY, TOOL_PASTE,
+TOOL_UNDO, TOOL_REDO,
 TOOL_FIND__REPLACE, TOOL_GO_TO_LINE, TOOL_BROWSE_SOURCE,
 TOOL_INDENT, TOOL_DEDENT, TOOL_COMMENT, TOOL_UNCOMMENT,
 TOOL_SIDEBAR,
-TOOL_RUN, TOOL_RUN_VERBOSE, TOOL_IMPORT,TOOL_CHECK_SOURCE_WITH_PYCHECKER,
+TOOL_RUN, TOOL_RUN_DEBUG, TOOL_DEBUG, TOOL_IMPORT,TOOL_CHECK_SOURCE_WITH_PYCHECKER,
 ]
 
 BLENDER_TOOLS = [TOOL_LOAD_IN_BLENDER, TOOL_REFERENCE_IN_BLENDER]
@@ -65,21 +66,17 @@ class Tool(wx.ToolBar):
         self.app = app
         wx.Bitmap = app.bitmap
         wx.ToolBar.__init__(self,parent=parent,id=id,**kwds)
+        self.SetToolBitmapSize((16,16))
         parent.SetToolBar(self)
         self.AddLabelTool(TOOL_NEW, "", wx.Bitmap("skins/default/filenew.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("New | Ctrl+N"), "")
         self.AddLabelTool(TOOL_OPEN_FILES, "", wx.Bitmap("skins/default/fileopen.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Open files... | Ctrl+O"), "")
         self.AddLabelTool(TOOL_SAVE, "", wx.Bitmap("skins/default/filesave.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save | Ctrl+S"), "")
         self.AddLabelTool(TOOL_SAVE_AS, "", wx.Bitmap("skins/default/filesaveas.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save as... | Shift+Ctrl+S"), "")
-        self.AddLabelTool(TOOL_CLOSE, "", wx.Bitmap("skins/default/fileclose.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Close | Ctrl+W"), "")
-        self.AddLabelTool(TOOL_EXIT, "", wx.Bitmap("skins/default/exit.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Exit | Alt+F4"), "")
+        self.AddLabelTool(TOOL_SAVE_WORKSPACE, "", wx.Bitmap("skins/default/workspace_save.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Save workspace"), "")
         self.AddLabelTool(TOOL_REMEMBER_OPEN_FILES, "", wx.Bitmap("skins/default/remember.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Remember open files"), "")
         self.AddSeparator()
         self.AddLabelTool(TOOL_UNDO, "", wx.Bitmap("skins/default/undo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Undo | Ctrl+Z"), "")
         self.AddLabelTool(TOOL_REDO, "", wx.Bitmap("skins/default/redo.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Redo | Ctrl+Y"), "")
-        self.AddSeparator()
-        self.AddLabelTool(TOOL_CUT, "", wx.Bitmap("skins/default/editcut.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Cut | Ctrl+X"), "")
-        self.AddLabelTool(TOOL_COPY, "", wx.Bitmap("skins/default/editcopy.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Copy | Ctrl+C"), "")
-        self.AddLabelTool(TOOL_PASTE, "", wx.Bitmap("skins/default/editpaste.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Paste | Ctrl+V"), "")
         self.AddSeparator()
         self.AddLabelTool(TOOL_FIND__REPLACE, "", wx.Bitmap("skins/default/viewmag.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Find & replace... | Ctrl+F"), "")
         self.AddLabelTool(TOOL_GO_TO_LINE, "", wx.Bitmap("skins/default/goto.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Go to line... | Ctrl+G"), "")
@@ -90,12 +87,13 @@ class Tool(wx.ToolBar):
         self.AddLabelTool(TOOL_COMMENT, "", wx.Bitmap("skins/default/comment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Comment | Alt+3"), "")
         self.AddLabelTool(TOOL_UNCOMMENT, "", wx.Bitmap("skins/default/uncomment.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Uncomment | Alt+4"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_SIDEBAR, "", wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("View sidebar | F11"), "")
-        self.AddLabelTool(TOOL_SHELL, "", wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Show/hide shell | F12"), "")
+        self.AddLabelTool(TOOL_SIDEBAR, "", wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("View sidebar | F11"), "")
+        self.AddLabelTool(TOOL_SHELL, "", wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Show/hide shell | F12"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/exec.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run | F9"), "")
-        self.AddLabelTool(TOOL_RUN_VERBOSE, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run verbose | Ctrl+Alt+R"), "")
-        self.AddLabelTool(TOOL_IMPORT, "", wx.Bitmap("skins/default/tar.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Import | F10"), "")
+        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run... | F9"), "")
+        self.AddLabelTool(TOOL_RUN_DEBUG, "", wx.Bitmap("skins/default/run_debug.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Run/Stop with WinPdb | F9"), "")
+        self.AddLabelTool(TOOL_DEBUG, "", wx.Bitmap("skins/default/debug.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Debug with WinPdb... | Ctrl+Shift+D"), "")
+        self.AddLabelTool(TOOL_IMPORT, "", wx.Bitmap("skins/default/import.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Import | F10"), "")
         self.AddLabelTool(TOOL_CHECK_SOURCE_WITH_PYCHECKER, "", wx.Bitmap("skins/default/pychecker.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Check source with pychecker | Ctrl+Alt+C"), "")
         self.AddSeparator()
         if app.Blender:
@@ -110,16 +108,11 @@ class Tool(wx.ToolBar):
         wx.EVT_TOOL(self,TOOL_OPEN_FILES, self.menuBar.menu_open_files)
         wx.EVT_TOOL(self,TOOL_SAVE, self.menuBar.menu_save)
         wx.EVT_TOOL(self,TOOL_SAVE_AS, self.menuBar.menu_save_as)
-        wx.EVT_TOOL(self,TOOL_CLOSE, self.menuBar.menu_close)
-        wx.EVT_TOOL(self,TOOL_EXIT, self.menuBar.menu_exit)
+        wx.EVT_TOOL(self,TOOL_SAVE_WORKSPACE, self.menuBar.menu_save_workspace)
         wx.EVT_TOOL(self,TOOL_REMEMBER_OPEN_FILES, self.menuBar.menu_remember_open_files)
         #
         wx.EVT_TOOL(self,TOOL_UNDO, self.menuBar.menu_undo)
         wx.EVT_TOOL(self,TOOL_REDO, self.menuBar.menu_redo)
-        #
-        wx.EVT_TOOL(self,TOOL_CUT, self.menuBar.menu_cut)
-        wx.EVT_TOOL(self,TOOL_COPY, self.menuBar.menu_copy)
-        wx.EVT_TOOL(self,TOOL_PASTE, self.menuBar.menu_paste)
         #
         wx.EVT_TOOL(self,TOOL_FIND__REPLACE, self.menuBar.menu_find__replace)
         wx.EVT_TOOL(self,TOOL_GO_TO_LINE, self.menuBar.menu_go_to_line)
@@ -134,7 +127,8 @@ class Tool(wx.ToolBar):
         wx.EVT_TOOL(self,TOOL_SHELL, self.menuBar.menu_shell)
         #
         wx.EVT_TOOL(self,TOOL_RUN, self.menuBar.menu_run)
-        wx.EVT_TOOL(self,TOOL_RUN_VERBOSE, self.menuBar.menu_run_verbose)
+        wx.EVT_TOOL(self,TOOL_RUN_DEBUG, self.menuBar.menu_run_debug)
+        wx.EVT_TOOL(self,TOOL_DEBUG, self.menuBar.menu_debug)
         wx.EVT_TOOL(self,TOOL_IMPORT, self.menuBar.menu_import)
         wx.EVT_TOOL(self,TOOL_CHECK_SOURCE_WITH_PYCHECKER, self.menuBar.menu_check_source_with_pychecker)
         #
@@ -143,6 +137,20 @@ class Tool(wx.ToolBar):
             wx.EVT_TOOL(self,TOOL_REFERENCE_IN_BLENDER, self.menuBar.menu_reference_in_blender)
         #
         wx.EVT_TOOL(self,TOOL_DONATE, self.menuBar.menu_donate)
+        wx.EVT_TOOL_ENTER(self,-1,self.onToolEnter)
+        
+    def onToolEnter(self,event):
+        if event.GetSelection == -1:
+            wx.CallAfter(self.skip,self)
+            
+##    def ToggleTool(*arg,**keyw):
+##        print arg,keyw
+##        wx.ToolBar.ToggleTool(*arg,**keyw)
+##
+    def skip(self):
+        child               = self.app.childActive
+        child.statusBar.throbber.Play()
+
 # end of class Tool
 
 class Bar(wxgMenu.Bar):
@@ -158,6 +166,8 @@ class Bar(wxgMenu.Bar):
             app.SetMacAboutMenuItemId(wxgMenu.ABOUT)
             app.SetMacPreferencesMenuItemId(wxgMenu.PREFERENCES)
             app.SetMacExitMenuItemId(wx.ID_EXIT)
+        #Disable highlight
+        self.Bind(wx.EVT_MENU_HIGHLIGHT_ALL,self.skip)
 
     #---parentPanel
     def enable(self,status):
@@ -172,6 +182,10 @@ class Bar(wxgMenu.Bar):
 
     def Bind(self,*arg,**keyw):
         self.frame.Bind(*arg,**keyw)
+        
+    def skip(self,event):
+        child               = self.app.childActive
+        child.statusBar.throbber.Play()
 
     def link(self,x,doc=None):
         self.parentPanel.messageHtml(x,doc=doc)
@@ -187,17 +201,20 @@ class Bar(wxgMenu.Bar):
         #self.Check(LINE_NUMBERS, 1)
         #self.Check(FOLDING, 1)
 
-    def check_sidebar(self,event=None):
+    def check_sidebar(self,show=True):
         if self.app.childActive:
-            sideBar=self.app.childActive.IsSplit()
-            self.Check(wxgMenu.SIDEBAR,sideBar)
+            self.Check(wxgMenu.SIDEBAR,show)
             if self.toolBar:
-                self.toolBar.ToggleTool(TOOL_SIDEBAR,sideBar)
+                self.toolBar.ToggleTool(TOOL_SIDEBAR,show)
 
     def check_remember(self,bool):
         self.file.Check(wxgMenu.REMEMBER_OPEN_FILES,bool)
         if self.toolBar:
             self.toolBar.ToggleTool(TOOL_REMEMBER_OPEN_FILES,bool)
+
+    def check_run(self,bool):
+        if self.toolBar:
+            self.toolBar.ToggleTool(TOOL_RUN_DEBUG,bool)
 
     #---events
     def __events__(self):
@@ -329,6 +346,14 @@ class Bar(wxgMenu.Bar):
         """Edit > Insert seperator..."""
         self.app.childActive.insert_signature()
 
+    def menu_execute(self, event): # wxGlade: Bar.<event_handler>
+        """Edit > Execute"""
+        self.parentPanel.execute()
+
+    def menu_execute_verbose(self, event): # wxGlade: Bar.<event_handler>
+        """Edit > Execute verbose"""
+        self.parentPanel.execute_verbose()
+
     def menu_preferences(self, event=None):
         """Edit > Preferences..."""
         self.parentPanel.preferences()
@@ -370,19 +395,17 @@ class Bar(wxgMenu.Bar):
 
     def menu_run(self, event=None):
         """Tools > Run"""
-        self.parentPanel.run()
+        self.app.childActive.run()
 
-    def menu_run_with_profile(self, event=None):
-        """Tools > Run with profile"""
-        self.parentPanel.run_with_profile()
+    def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_without_arguments' not implemented"
+        self.app.childActive.run_with_arguments(exit=False)
+        
+    def menu_run_without_arguments_exit(self,event):
+        self.app.childActive.run_with_arguments(exit=True)        
 
-    def menu_run_in_separate_namespace(self, event=None):
-        """Tools > Run in separate namespace"""
-        self.parentPanel.run_in_separate_namespace()
-
-    def menu_run_verbose(self, event=None):
-        """Tools > Run verbose"""
-        self.parentPanel.run_verbose()
+    def menu_run_debug(self, event): # wxGlade: Bar.<event_handler>
+        self.parentPanel.run_debug()
 
     def menu_import(self, event=None):
         """Tools > Import"""
@@ -652,11 +675,47 @@ class Palette(wx.MiniFrame):
         for child in self.panel.GetChildren()[:-2]:
             child.Enable(status)
 
+from wx.animate import GIFAnimationCtrl
+
 class Status(wx.StatusBar):
     def __init__(self,parent=None,id=-1):
         wx.StatusBar.__init__(self,parent=parent,id=id)
         self.SetFieldsCount(5)
-        self.SetStatusText('',0)
-        self.SetStatusText(STATUS,1)
         self.SetStatusWidths([20, -1, 90, 90, 90])
-
+        self.throbber   = Throbber(self,'throbber_still.gif')
+        self.throbber.Play()
+        self.SetStatusText(STATUS,1)
+        
+class Throbber(GIFAnimationCtrl):
+    def __init__(self,statusBar,fileName,position=0):
+        GIFAnimationCtrl.__init__(self,statusBar,-1,info.imageFile(fileName))
+        self._statusBar = statusBar
+        self._fileName  = fileName
+        self._position  = position
+        self._running   = False
+        #backgroundcolour
+        player          = self.GetPlayer()
+        player.UseBackgroundColour(True)
+        #position
+        rect            = statusBar.GetFieldRect(0)
+        self.SetPosition((rect.x+(rect.width-16)/2, rect.y+(rect.height-16)/2))
+        
+    def LoadFile(self,fileName):
+        if fileName != self._fileName and not self._running:
+            GIFAnimationCtrl.LoadFile(self,info.imageFile(fileName))
+            self._fileName  = fileName
+            return True
+        return False
+    
+    def run(self):
+        self.playFile('throbber.gif')
+        self._running   = True
+        
+    def stop(self):
+        self._running   = False
+        self.playFile('throbber_still.gif')
+        #wx.FutureCall(1000,self.Stop)
+        
+    def playFile(self,fileName):
+        self.LoadFile(fileName)
+        self.Play()

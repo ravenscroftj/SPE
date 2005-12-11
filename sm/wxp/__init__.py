@@ -67,7 +67,6 @@ def fileDialog(defaultPath='',defaultFile='',message='www.stani.be',
 ##    if changeDir:       style|=wx.CHANGE_DIR 
     dlg=wx.FileDialog(None, message = message, defaultDir = defaultPath,
         defaultFile = defaultFile, wildcard = wildcard, style = style)
-    print 'ok'
     print dlg.ShowModal
     if dlg.ShowModal() == wx.ID_OK:path=dlg.GetFileName()
     else:path=''

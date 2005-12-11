@@ -352,6 +352,7 @@ class Framework:
         """Create statusbar (to be overwritten)."""
         if self.noMenu:
             self.panel.SetStatusText    = self.parentFrame.SetStatusText
+            self.panel.statusBar        = self.parentFrame.statusBar
         else:
             self.panel.SetStatusText    = self.SetStatusText
             if self.app.StatusBar:

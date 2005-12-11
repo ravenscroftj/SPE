@@ -35,7 +35,7 @@ STYLE_NOTES             = wx.TE_MULTILINE
 if not info.DARWIN:
     STYLE_NOTES         |= wx.TE_DONTWRAP
 STYLE_SPLIT             = wx.SP_NOBORDER|wx.FULL_REPAINT_ON_RESIZE
-STYLE_TREE              = wx.TR_HAS_BUTTONS
+STYLE_TREE              = wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
@@ -66,22 +66,24 @@ class Source(PythonSTC):
 class Panel(wx.SplitterWindow):
     ####Constructors------------------------------------------------------------
     def __init__(self,parent,name='',fileName='',source='',*args,**kwds):
-        self._fileName      = fileName
-        self.name           = os.path.basename(fileName)
-        self._source        = source
+        self._fileName          = fileName
+        self.name               = os.path.basename(fileName)
+        self._source            = source
         #initialize
-        self.changed        = 0
-        self.column         = 1
-        self.eventChanged   = False
-        self.line           = 1
-        self.position       = 0
-        self.sashPosition   = self.minSashPosition = [285,310][info.DARWIN]
-        self.sidebarHidden  = False
-        self.saved          = ''
-        self.todoMax        = 1
-        self.warning        = ''
+        self.argumentsPrevious  = []
+        self.changed            = 0
+        self.column             = 1
+        self.eventChanged       = False
+        self.exitPrevious       = True
+        self.line               = 1
+        self.position           = 0
+        self.sashPosition       = self.minSashPosition = [285,310][info.DARWIN]
+        self.sidebarHidden      = False
+        self.saved              = ''
+        self.todoMax            = 1
+        self.warning            = ''
         #delete when fixed
-        self.updateBug      = False
+        self.updateBug          = False
         #construct
         wx.SplitterWindow.__init__(self, id=-1, parent=parent,style=STYLE_SPLIT)
         #Remember if this file contains DOS line endings (\r\n)
@@ -132,12 +134,12 @@ class Panel(wx.SplitterWindow):
         explore     = self.explore = TreeCtrl(parent=self.notebook,style=STYLE_TREE)#wx.TreeCtrl
         explore.SetBackgroundColour(wx.WHITE)
         self.root   = self.explore.AddRoot('Right click to locate')
-        explore.SetPyData(self.root,0)
+        #explore.SetPyData(self.root,0)
         explore.SetImageList(self.parentPanel.iconsList)
-        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'])
-        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_SelectedExpanded)
-        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Expanded)
-        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Selected)
+##        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'])
+##        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_SelectedExpanded)
+##        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Expanded)
+##        explore.SetItemImage(self.root,self.parentPanel.iconsListIndex['note.png'],wx.TreeItemIcon_Selected)
         explore.SetHelpText(help.CHILD_EXPLORE)
         notebook.AddPage(page=self.explore, text='Explore',imageId=self.exploreIcon)
         #todo
@@ -184,6 +186,7 @@ class Panel(wx.SplitterWindow):
         self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
         eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
+        eventManager.Register(self.onToggleExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.todo)
@@ -448,15 +451,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             else: event.Skip()
         
     def toggle_sidebar(self,event):
-        pos = self.GetSashPosition()
-        if pos > 5:
-            self.hideSidebar(pos)
-        else:
+        pos     = self.GetSashPosition()
+        show    = pos <= 5
+        if show:
             self.showSidebar()
-        if self.frame.menuBar:
-            self.frame.menuBar.check_sidebar(event)
         else:
-            self.parentFrame.menuBar.check_sidebar(event)
+            self.hideSidebar(pos)
+        if self.frame.menuBar:
+            self.frame.menuBar.check_sidebar(show)
+        else:
+            self.parentFrame.menuBar.check_sidebar(show)
             
     def hideSidebar(self,pos):
         self.sidebarHidden  = True
@@ -485,41 +489,72 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else:
             os.system(terminal%params)
 
-    def run_in_terminal_emulator(self):
+    def run(self):
+        from _spe.dialogs.runDialog import RunDialog
+        runDialog           = RunDialog(self.fileName,
+                                self.argumentsPrevious,
+                                self.exitPrevious,
+                                parent=self.app.parentFrame,
+                                id=-1)
+        answer              = runDialog.ShowModal()
+        arguments           = runDialog.arguments.GetValue()
+        exit                = runDialog.exit.GetValue()
+        runDialog.Destroy()
+        if answer == wx.ID_OK:
+            self.argumentsPrevious.append(arguments)
+            self.exitPrevious   = exit
+            self.run_with_arguments(arguments,exit)
+        
+    def run_with_arguments(self,arguments='',exit=False):
         """Run in terminal emulator"""
         # todo: input stuff from preferences dialog box!
-        path,fileName=os.path.split(self.fileName)
-        params = {'file':fileName,'path':path}
-        terminal=self.parentPanel.get('TerminalRun')
-        if terminal==DEFAULT:
+        path, fileName  = os.path.split(self.fileName)
+        params          = { 'file':         fileName,
+                            'path':         path,
+                            'arguments':    arguments,
+                            'python':       info.PYTHON_EXEC}
+        if exit:
+            terminal=self.parentPanel.get('TerminalRunExit')
+        else:
+            terminal        = self.parentPanel.get('TerminalRun')
+        if terminal == DEFAULT:
             if info.WIN:
                 if info.WIN98:
-                    os.system('start command /k %s'%info.PYTHON_EXEC) 
+                    if exit:
+                        os.system('start command /k %(python)s "%(file)s /c'%params)
+                    else:
+                        os.system('start command /k %(python)s "%(file)s"'%params) 
                 else:
-                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
+                    if exit:
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
+                    else:
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
             elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
+                if exit:
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
+                else:
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
             else:
-                os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
+                os.system("python %(file)s'"%params)
         else:
             os.system(terminal%params)
             
-    def run_in_terminal_emulator_exit(self):
-        path,fileName=os.path.split(self.fileName)
-        params = {'file':fileName,'path':path}
-        terminal=self.parentPanel.get('TerminalRunExit')
-        if terminal==DEFAULT:
-            if info.WIN:
-                if info.WIN98:
-                    os.system('start command /k %s /c'%info.PYTHON_EXEC)
-                else:
-                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
-            elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
-            else:
-                os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
-        else:
-            os.system(terminal%params)
+##    def run_in_terminal_emulator_exit(self):
+##        path,fileName=os.path.split(self.fileName)
+##        params = {'file':fileName,'path':path}
+##        terminal=self.parentPanel.get('TerminalRunExit')
+##        if terminal==DEFAULT:
+##            if info.WIN:
+##                if info.WIN98:
+##                    os.system('start command /k %s /c'%info.PYTHON_EXEC)
+##                else:
+##                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
+##            elif info.DARWIN:
+##                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
+##            else:
+##                os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
+##        else:
+##            os.system(terminal%params)
         
     def check_source_with_pychecker(self): 
         """Check source with pychecker"""
@@ -608,21 +643,24 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     warning = ''
                     e       = None
                 except Exception, e:
-                    if type(e.text) in types.StringTypes:
-                        text    = ' (%s)'%e.text.strip()
+                    if hasattr(e,'text'):
+                        if type(e.text) in types.StringTypes:
+                            text    = e.text.strip()
+                        else:
+                            text    = ''
+                        warning = '%s: %s at line %s, col %s: %s'%(self.name,e.msg,e.lineno,e.offset,text)
                     else:
-                        text    = ''
-                    warning = '%s: %s (%s) at line %s, column %s'%(self.name,e.msg,text.strip(),e.lineno,e.offset)
+                        warning = repr(e)
                 if warning  != self.warning:
                     #todo: how to implement indicators?!!
 ##                    if e:
 ##                        self.source.markError(e.lineno,e.offset)
                     if warning:
                         self.setStatus(warning)
-                        self.setStatus('E!',0)
+                        self.statusBar.throbber.playFile('warning.gif')
                     else:
                         self.setStatus(STATUS)
-                        self.setStatus('',0)
+                        self.statusBar.throbber.stop()
                     self.warning = warning
                 
     def onKillFocus(self,event=None):
@@ -804,10 +842,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             sepb_hit    = RE_SEPARATOR_HIGHLIGHT.match(l)
             encode_hit  = False
             if line < 3:
-                if line == 0 and l.startswith(u'\xef\xbb\xbf'):
-                    self.encoding = "utf8"
-                    encode_hit = True
-                else:
+##                if line == 0 and l.startswith(u'\xef\xbb\xbf'):
+##                    self.encoding = "utf8"
+##                    encode_hit = True
+##                else:
                     enc = RE_ENCODING.search(l)
                     if enc:
                         self.encoding = str(enc.group(1))
@@ -906,7 +944,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         self.appendSeparators(separators,hierarchy,hierarchyIndex,uml)
         if uml: umlAdd(classes,self.umlClass)
         #expand root of explore
-        self.explore.Expand(self.root)
+        #self.explore.Expand(self.root)
         #if self.parentPanel.exploreVisible: ...
         self.explore.Update()
         return classes
@@ -948,6 +986,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Jump to source line by clicking class or function in explore."""
         line=self.explore.GetPyData(event.GetItem())
         self.scrollTo(line,select='line')
+            
+    def onToggleExplore(self,event):
+        """Toggle item between collapse and expand."""
+        line=self.explore.Toggle(event.GetItem())
             
     def onOpenFromBrowser(self, fname):
         if os.path.splitext(fname)[-1] in SPE_ALLOWED_EXTENSIONS:
@@ -1107,9 +1149,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         source=self.source
         
     def getEncoding(self,source):
-        if source.startswith(u'\xef\xbb\xbf'):
-            self.encoding = "utf8"
-            return
+##        if source.startswith(u'\xef\xbb\xbf'):
+##            self.encoding = "utf8"
+##            return
         first2lines         = "".join(source.split("\n")[:2])
         encode_hit          = RE_ENCODING.search(first2lines)
         if encode_hit:

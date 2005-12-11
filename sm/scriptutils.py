@@ -25,29 +25,29 @@ def run(fileName=None,source=None,mainDict=__main__.__dict__,profiling=0):
     osPath=None
     try:
         if fileName:
-            path,base=os.path.split(fileName)
+            path, base              = os.path.split(fileName)
             if path:
                 if path not in sys.path:sys.path.append(path)
-                osPath=os.getcwd()
+                osPath              = os.getcwd()
                 os.chdir(path)
         if source:
             if type(source) == types.UnicodeType:
-                source = source.encode(sys.getdefaultencoding(),'replace')
-            source='__name__="__main__"\n%s'%source
-            fileName=base='<source>'
+                source              = source.encode(sys.getdefaultencoding(),'replace')
+            source                  = '__name__="__main__"\n%s'%source
+            fileName                = base = '<source>'
         else:
-            f=open(fileName,'r')
-            source=f.read()
+            f                       = open(fileName,'r')
+            source                  = f.read()
             f.close()
             if type(source) == types.UnicodeType:
-                source = source.encode(sys.getdefaultencoding(),'replace')
-        codeObject = compile(source.replace('\r\n','\n')+"\n", fileName, "exec")
+                source              = source.encode(sys.getdefaultencoding(),'replace')
+        codeObject                  = compile(source.replace('\r\n','\n')+"\n", fileName, "exec")
         if profiling:
             import profile, pstats
-            prof = profile.Profile()
-            mainDict['codeObject']=codeObject
-            prof = prof.runctx('exec codeObject in mainDict', locals(), mainDict)
-            stats=pstats.Stats(prof)
+            prof                    = profile.Profile()
+            mainDict['codeObject']  = codeObject
+            prof                    = prof.runctx('exec codeObject in mainDict', locals(), mainDict)
+            stats                   = pstats.Stats(prof)
             stats.sort_stats('cum','time').print_stats()
         else:
             exec codeObject in mainDict
@@ -108,9 +108,9 @@ def importMod(pathName,mainDict=None):
         exec codeObj in mainDict
         if bNeedReload:
             reload(sys.modules[modName])
-        print 'Successfully ' + what + "ed module '"+modName+"'"
+        print 'Successfully ' + what + 'ed module "'+modName+'"'
     except Exception,message:
-        print 'Failed to ' + what + " module '"+modName+"' (%s)"%message
+        print 'Failed to ' + what + ' module "'+modName+'" (%s)'%message
 
 def GetPackageModuleName(fileName):
     """Given a filename, return (module name, new path).

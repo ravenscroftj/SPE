@@ -34,8 +34,8 @@ class wxgPanel(wx.Panel):
         self.patternLabel = wx.StaticText(self, -1, _("What"))
         self.pattern = wx.TextCtrl(self, -1, "", style=wx.TE_PROCESS_ENTER)
         self.pathLabel = wx.StaticText(self, -1, _("Path"))
-        self.current = wx.BitmapButton(self, -1, wx.NullBitmap)
-        self.browse = wx.BitmapButton(self, -1, wx.NullBitmap)
+        self.current = wx.BitmapButton(self, -1, wx.NullBitmap,style=wx.NO_BORDER)
+        self.browse = wx.BitmapButton(self, -1, wx.NullBitmap,style=wx.NO_BORDER)
         self.path = wx.TextCtrl(self, -1, "")
         self.label_16 = wx.StaticText(self, -1, _("Extensions"))
         self.extensions = wx.TextCtrl(self, -1, _(".py,.pyw"))
@@ -152,7 +152,7 @@ class Panel(wxgPanel):
         word        = self.word.GetValue()
         regex       = self.regex.GetValue()
 
-        self.panel.SetStatusText('Collecting filenames ...')
+        self.panel.SetStatusText('Collecting filenames ...',1)
         engine      = FindReplace(case=case, word=word, regex=regex, wrap=1, reverse=0)
         if path:
             names   = sm.osx.listdirR(path,pathDepth,extensions)
@@ -209,7 +209,7 @@ class Panel(wxgPanel):
         self.results.InsertPage(0,report, pattern, select=1)
         self.results.Refresh()
         self.results.SetSelection(0)
-        self.panel.SetStatusText('"%s" was found %s times in %s files.'%(pattern,row,len(results)))
+        self.panel.SetStatusText('"%s" was found %s times in %s files.'%(pattern,row,len(results)),1)
 
 # end of class Panel
 
@@ -546,7 +546,7 @@ class FindReplace(FindReplaceEngine):
                 results[names[i]] = self._findAllInSource(open(filename).read(), pattern, 0)#(lineNo+1, index+1, line)
                 if not dlg.Update(i, "Searching in file '%s'"%filename):
                     try:
-                        view.panel.SetStatusText("Search aborted")
+                        view.panel.SetStatusText("Search aborted",1)
                     except:
                         pass
 

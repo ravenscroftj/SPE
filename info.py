@@ -23,7 +23,8 @@ if WIN:
     except ImportError:
         PYTHON_EXEC         = (r'%s'%PYTHON_EXEC).replace('Program Files','progra~1')
         PYTHON_COM          = False
-    PYTHON_EXEC             = '"%s"'%PYTHON_EXEC
+    if ' ' in PYTHON_EXEC:
+        PYTHON_EXEC         = '"%s"'%PYTHON_EXEC
 else:
     PYTHON_COM              = False
 
@@ -41,17 +42,18 @@ INFO={
     'date'              : "27-10-2005",
     'donate'            : "If you enjoy SPE, consider a (small) donation.",
     'doc'               : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
+    'forums'            : '',
     'license'           : 'GPL',
     'location'          : path,
     'pyVersion'         : "2.3",
     'pyVersionC'        : sys.version.split(' ')[0],
     'scripts'           : ['spe','spe_wininst.py'],
+    'skinLocation'      : os.path.join(path,'skins','default'),
     'smLocation'        : os.path.join(path,'sm'),
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
-    'forums'            : '',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.0.c",
+    'version'           : "0.8.1.a",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -139,6 +141,9 @@ def dirname(fileName):
         return win32api.GetShortPathName(fileName)
     else:
         return fileName
+
+def imageFile(fileName):
+    return os.path.join(INFO['skinLocation'],fileName)
 
 #---wx
 try:

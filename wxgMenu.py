@@ -16,12 +16,12 @@ REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
-INSERT_SIGNATURE, PREFERENCES,
+INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR, SHELL,
 
-RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT, DEBUG,
+RUN, RUN_WITHOUT_ARGUMENTS, RUN_WITHOUT_ARGUMENTS_EXIT, IMPORT, RUN_DEBUG, DEBUG,
 BROWSE_OBJECT_WITH_PYFILLING, TEST_REGULAR_EXPRESSION_WITH_KIKI,
 DESIGN_A_GUI_WITH_WXGLADE, DESIGN_A_GUI_WITH_XRC, CHECK_SOURCE_WITH_PYCHECKER,
 OPEN_TERMINAL_EMULATOR, BROWSE_FOLDER, RUN_IN_TERMINAL_EMULATOR,
@@ -41,7 +41,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(73)]
+[wx.NewId() for x in range(74)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -50,12 +50,12 @@ SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE,
 wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
-INSERT_SIGNATURE,
+INSERT_SIGNATURE, EXECUTE, 
 
 WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR,
 
-RUN, RUN_WITH_PROFILE, RUN_IN_SEPARATE_NAMESPACE, RUN_VERBOSE, IMPORT, DEBUG,
+RUN, RUN_WITHOUT_ARGUMENTS, IMPORT, RUN_DEBUG, DEBUG,
 CHECK_SOURCE_WITH_PYCHECKER,
 
 NEXT,PREVIOUS]
@@ -79,10 +79,10 @@ class Palette(wx.Panel):
         self.indent = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/indent.png", wx.BITMAP_TYPE_ANY))
         self.comment = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/comment.png", wx.BITMAP_TYPE_ANY))
         self.uncomment = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/uncomment.png", wx.BITMAP_TYPE_ANY))
-        self.run = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/exec.png", wx.BITMAP_TYPE_ANY))
-        self.imprt = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/tar.png", wx.BITMAP_TYPE_ANY))
+        self.run = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY))
+        self.imprt = wx.BitmapButton(self, -1, wx.Bitmap("skins\\default\\import.png", wx.BITMAP_TYPE_ANY))
         self.sidebar = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY))
-        self.run_verbose = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY))
+        self.run_verbose = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/debug.png", wx.BITMAP_TYPE_ANY))
         self.shell = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY))
         self.donate = wx.BitmapButton(self, -1, wx.Bitmap("skins/default/donate.png", wx.BITMAP_TYPE_ANY))
 
@@ -271,6 +271,8 @@ class Bar(wx.MenuBar):
         self.edit.Append(wx.ID_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
         self.edit.Append(wx.ID_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
+        self.edit.Append(EXECUTE, _("&Execute in shell\tCtrl+Shift+E"), "", wx.ITEM_NORMAL)
+        self.edit.AppendSeparator()
         self.edit.Append(wx.ID_REPLACE, _("&Find && replace...\tCtrl+F"), "", wx.ITEM_NORMAL)
         self.edit.Append(wx.ID_FIND, _("Find &Next\tF3"), "", wx.ITEM_NORMAL)
         self.edit.Append(GO_TO_LINE, _("&Go to line...\tCtrl+G"), "", wx.ITEM_NORMAL)
@@ -300,12 +302,13 @@ class Bar(wx.MenuBar):
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
         self.tools.Append(RUN, _("&Run\tF9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_WITH_PROFILE, _("Run with &profile\tCtrl+P"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_IN_SEPARATE_NAMESPACE, _("Run in &separate namespace\tCtrl+R"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_VERBOSE, _("Run &verbose\tCtrl+Alt+R"), "", wx.ITEM_NORMAL)
-        self.tools.Append(IMPORT, _("&Import\tF10"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without &arguments\tShift+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_WITHOUT_ARGUMENTS_EXIT, _("Run without &arguments && exit\tCtrl+Shift+F9"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
-        self.tools.Append(DEBUG, _("&Debug with winpdb...\tCtrl+Alt+D"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_DEBUG, _("Run/Stop with &WinPdb\tCtrl+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DEBUG, _("&Debug with winpdb...\tAlt+F9"), "", wx.ITEM_NORMAL)
+        self.tools.AppendSeparator()
+        self.tools.Append(IMPORT, _("&Import in shell\tF10"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(BROWSE_OBJECT_WITH_PYFILLING, _("&Browse object with PyFilling...\tCtrl+Alt+F"), "", wx.ITEM_NORMAL)
         self.tools.Append(TEST_REGULAR_EXPRESSION_WITH_KIKI, _("Test regular expression with &Kiki...\tCtrl+K"), "", wx.ITEM_NORMAL)
@@ -313,10 +316,8 @@ class Bar(wx.MenuBar):
         self.tools.Append(DESIGN_A_GUI_WITH_XRC, _("Design a gui with &XRC...\tCtrl+Alt+X"), "", wx.ITEM_NORMAL)
         self.tools.Append(CHECK_SOURCE_WITH_PYCHECKER, _("&Check source with PyChecker\tCtrl+Alt+C"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
-        self.tools.Append(BROWSE_FOLDER, _("Browse &folder\tShift+F9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(OPEN_TERMINAL_EMULATOR, _("&Open terminal emulator...\tAlt+F9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_IN_TERMINAL_EMULATOR, _("Run in &terminal emulator...\tCtrl+F9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_IN_TERMINAL_EMULATOR__EXIT, _("Run in terminal emulator && e&xit...\tCtrl+Alt+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(BROWSE_FOLDER, _("Browse &folder\tCtrl+Shift+F"), "", wx.ITEM_NORMAL)
+        self.tools.Append(OPEN_TERMINAL_EMULATOR, _("Open &terminal...\tCtrl+Shift+T"), "", wx.ITEM_NORMAL)
         self.Append(self.tools, _("&Tools"))
         self.blender = wx.Menu()
         self.blender.Append(LOAD_IN_BLENDER, _("&Load in blender\tCtrl+B"), "", wx.ITEM_NORMAL)
@@ -390,6 +391,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_cut, id=wx.ID_CUT)
         self.Bind(wx.EVT_MENU, self.menu_copy, id=wx.ID_COPY)
         self.Bind(wx.EVT_MENU, self.menu_paste, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU, self.menu_execute, id=EXECUTE)
         self.Bind(wx.EVT_MENU, self.menu_find__replace, id=wx.ID_REPLACE)
         self.Bind(wx.EVT_MENU, self.menu_find_next, id=wx.ID_FIND)
         self.Bind(wx.EVT_MENU, self.menu_go_to_line, id=GO_TO_LINE)
@@ -410,11 +412,11 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_sidebar, id=SIDEBAR)
         self.Bind(wx.EVT_MENU, self.menu_shell, id=SHELL)
         self.Bind(wx.EVT_MENU, self.menu_run, id=RUN)
-        self.Bind(wx.EVT_MENU, self.menu_run_with_profile, id=RUN_WITH_PROFILE)
-        self.Bind(wx.EVT_MENU, self.menu_run_in_separate_namespace, id=RUN_IN_SEPARATE_NAMESPACE)
-        self.Bind(wx.EVT_MENU, self.menu_run_verbose, id=RUN_VERBOSE)
-        self.Bind(wx.EVT_MENU, self.menu_import, id=IMPORT)
+        self.Bind(wx.EVT_MENU, self.menu_run_without_arguments, id=RUN_WITHOUT_ARGUMENTS)
+        self.Bind(wx.EVT_MENU, self.menu_run_without_arguments_exit, id=RUN_WITHOUT_ARGUMENTS_EXIT)
+        self.Bind(wx.EVT_MENU, self.menu_run_debug, id=RUN_DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_debug, id=DEBUG)
+        self.Bind(wx.EVT_MENU, self.menu_import, id=IMPORT)
         self.Bind(wx.EVT_MENU, self.menu_browse_object_with_pyfilling, id=BROWSE_OBJECT_WITH_PYFILLING)
         self.Bind(wx.EVT_MENU, self.menu_test_regular_expression_with_kiki, id=TEST_REGULAR_EXPRESSION_WITH_KIKI)
         self.Bind(wx.EVT_MENU, self.menu_design_a_gui_with_wxglade, id=DESIGN_A_GUI_WITH_WXGLADE)
@@ -422,8 +424,6 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_check_source_with_pychecker, id=CHECK_SOURCE_WITH_PYCHECKER)
         self.Bind(wx.EVT_MENU, self.menu_browse_folder, id=BROWSE_FOLDER)
         self.Bind(wx.EVT_MENU, self.menu_open_terminal_emulator, id=OPEN_TERMINAL_EMULATOR)
-        self.Bind(wx.EVT_MENU, self.menu_run_in_terminal_emulator, id=RUN_IN_TERMINAL_EMULATOR)
-        self.Bind(wx.EVT_MENU, self.menu_run_in_terminal_emulator__exit, id=RUN_IN_TERMINAL_EMULATOR__EXIT)
         self.Bind(wx.EVT_MENU, self.menu_load_in_blender, id=LOAD_IN_BLENDER)
         self.Bind(wx.EVT_MENU, self.menu_reference_in_blender, id=REFERENCE_IN_BLENDER)
         self.Bind(wx.EVT_MENU, self.menu_blender_python_manual, id=BLENDER_PYTHON_MANUAL)
@@ -479,6 +479,15 @@ class Bar(wx.MenuBar):
     def menu_save_as(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
+    def menu_open_workspace(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_save_workspace(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
     def menu_close(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
@@ -530,6 +539,18 @@ class Bar(wx.MenuBar):
     def menu_insert_separator(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
+    def menu_insert_signature(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_insert_signature' not implemented"
+        event.Skip()
+
+    def menu_execute(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_execute' not implemented"
+        event.Skip()
+
+    def menu_execute_verbose(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_execute_verbose' not implemented"
+        event.Skip()
+
     def menu_preferences(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
@@ -555,15 +576,6 @@ class Bar(wx.MenuBar):
         event.Skip()
 
     def menu_run(self, event): # wxGlade: Bar.<event_handler>
-        event.Skip()
-
-    def menu_run_with_profile(self, event): # wxGlade: Bar.<event_handler>
-        event.Skip()
-
-    def menu_run_in_separate_namespace(self, event): # wxGlade: Bar.<event_handler>
-        event.Skip()
-
-    def menu_run_verbose(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
     def menu_import(self, event): # wxGlade: Bar.<event_handler>
@@ -715,20 +727,16 @@ class Bar(wx.MenuBar):
         print "Event handler `menu_print_uml_preview' not implemented"
         event.Skip()
 
-    def menu_insert_signature(self, event): # wxGlade: Bar.<event_handler>
-        print "Event handler `menu_insert_signature' not implemented"
+    def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_without_arguments' not implemented"
         event.Skip()
 
-    def menu_open_workspace(self, event): # wxGlade: Bar.<event_handler>
-        print "Event handler `menu_open_workspace' not implemented"
+    def menu_run_debug(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_debug' not implemented"
         event.Skip()
 
-    def menu_save_workspace_as(self, event): # wxGlade: Bar.<event_handler>
-        print "Event handler `menu_save_workspace_as' not implemented"
-        event.Skip()
-
-    def menu_save_workspace(self, event): # wxGlade: Bar.<event_handler>
-        print "Event handler `menu_save_workspace' not implemented"
+    def menu_run_without_arguments_exit(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_without_arguments_exit' not implemented"
         event.Skip()
 
 # end of class Bar

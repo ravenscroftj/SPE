@@ -10,7 +10,7 @@ __doc__=INFO['doc']%INFO
 ####Importing modules-----------------------------------------------------------
 
 #---general modules
-import ConfigParser,os,string,sys,time,types,webbrowser, pprint
+import ConfigParser,os,string,sys,thread,time,types,webbrowser, pprint
 import _spe,sm.scriptutils,sm.wxp
 
 #---wxPython
@@ -87,6 +87,7 @@ class Panel(wx.Notebook):
         self.kiki           = None
         self.remember       = 0
         self.restartMessage = ''
+        self.runner         = None
         if PLATFORM == 'win32':
             self.LIST_STYLE = wx.LC_SMALL_ICON# todo: verify this better |wx.LC_LIST
         else:
@@ -473,6 +474,17 @@ class Panel(wx.Notebook):
         self.findDialog.Show(1)
         self.findDialog.data = data  # save a reference to it...
 
+    def execute(self):
+        """Execute"""
+        child   = self.app.childActive
+        source  = child.source
+        code    = source.GetSelectedText()
+        if not code.strip():
+            child.setStatus('As there is no code selected, SPE will run the whole script.')
+            code = source.GetText()
+        self.shell.Execute(code)
+        #thread.start_new_thread(self.shell.Execute,(code,))
+
     def preferences(self):
         """Show preferences dialog box."""
         from dialogs import preferencesDialog
@@ -547,57 +559,35 @@ class Panel(wx.Notebook):
         if path[0] == '/': path = 'file://'+path
         webbrowser.open(path)
 
-    def run(self):
+    def run_debug(self):
         """Run file"""
-        child           = self.app.childActive
-        if not self.getValue('SaveBeforeRun') or child.confirmSave():
-            fileName    = child.fileName
-            self.runFile(fileName,repr(self.getText()),separate=0)
-
-    def run_with_profile(self):
-        """Run file with profile"""
-        child           = self.app.childActive
-        if not self.getValue('SaveBeforeRun') or child.confirmSave():
-            fileName    = child.fileName
-            self.runFile(fileName,repr(self.getText()),separate=0,profiling=1)
-
-    def run_in_separate_namespace(self):
-        """Run in separate namespace"""
-        child           = self.app.childActive
-        if not self.getValue('SaveBeforeRun') or child.confirmSave():
-            fileName    = child.fileName
-            self.runFile(fileName,repr(self.getText()),separate=1)
-
-    def run_verbose(self):
-        """Run verbose"""
-        child           = self.app.childActive
-        if not self.getValue('SaveBeforeRun') or child.confirmSave():
-            self.busyShow()
-            for command in self.getText().split('\n'):
-                self.shell.run(command,prompt=0)
-            if self.redraw:self.redraw()
-            self.shell.prompt()
-            self.activateShell()
-            self.busyHide()
-
+        if not self.runner:
+            from _spe.plugins.spe_winpdb import Runner
+            self.runner = Runner(self.app)
+        self.runner.switch()
+            
     def import_(self):
         """Import"""
-        child           = self.app.childActive
+        child                   = self.app.childActive
         if not self.getValue('SaveBeforeRun') or child.confirmSave():
             self.busyShow()
-            name=child.fileName
-            self.shell.write("Importing '%s' ..."%name)
-            self.shell.waiting = 1
-            self.shell.interp.push('import sm.scriptutils')
-            self.shell.interp.push('sm.scriptutils.importMod(r"%s",mainDict=locals())'\
-                    %name)
-            self.shell.waiting = 0
+            name                = child.fileName
+            self.shell.write('Importing "%s" ...'%name)
+            self.shell.waiting  = 1
+            sm.scriptutils.importMod(name,mainDict=self.shell.locals)
+            self.shell.waiting  = 0
             self.shell.prompt()
-            if self.redraw:self.redraw()
+            if self.redraw: self.redraw()
             self.activateShell()
             self.busyHide()
 
     def debug(self):
+        if not self.runner:
+            from _spe.plugins.spe_winpdb import Runner
+            self.runner = Runner(self.app)
+        self.runner.debug()
+            
+        return
         child   = self.app.childActive
         if child.confirmSave():
             from dialogs import winpdbDialog
@@ -606,11 +596,11 @@ class Panel(wx.Notebook):
             if debugDialog.ShowModal()!=wx.ID_CANCEL:
                 _info       = self.app.debugInfo
                 args        = [os.P_NOWAIT,
-                               info.info.PYTHON_EXEC,
+                               info.PYTHON_EXEC,
                                info.PYTHON_EXEC]
                 args.extend(_info['parameters'])
                 if os.path.exists(name):
-                    if info.WIN:
+                    if info.WIN and ' ' in name:
                         name    = '"%s"'%name
                     args.append(name)
                     script_args = _info['arguments']
@@ -635,6 +625,7 @@ class Panel(wx.Notebook):
                  style=wx.DEFAULT_FRAME_STYLE, rootObject=object,
                  rootLabel=str(object), rootIsNamespace=0, static=0)
         filling.Show(1)
+        wx.FutureCall(1000,filling.Raise)
 
     def test_regular_expression_with_kiki(self):
         """Test regular expression with Kiki..."""
@@ -650,8 +641,8 @@ class Panel(wx.Notebook):
             from plugins.wxGlade import __file__ as fileName
             path    = info.dirname(fileName)
             glade   = '%s'%os.path.join(path,'wxglade.py')
-            if info.WIN:
-                glade = '"%s"'%os.path.join(path,'wxglade.py')
+            if info.WIN and ' ' in glade:
+                glade = '"%s"'%glade
             os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
             self.SetStatusText('wxGlade is succesfully started.',1)
 
@@ -659,8 +650,10 @@ class Panel(wx.Notebook):
         if wx.Platform == "__WXMAC__":
             os.system('open -a /Applications/SPE-OSX/XRCed.app')
         else:
-            from wx.tools.XRCed.xrced import __file__ as fileName
-            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,'"%s"'%fileName)
+            from wx.tools.XRCed.xrced import __file__ as xrced
+            if info.WIN and ' ' in xrced:
+                xrced   = '"%s"'%xrced
+            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,xrced)
             self.SetStatusText('XRC editor is succesfully started.',1)
 
     #---Links
@@ -786,22 +779,21 @@ class Panel(wx.Notebook):
         """
         self.shell.write("Running '%s' ..."%fileName)
         #self.busyShow()
-        self.shell.waiting = 1
+        self.shell.waiting  = 1
         self.shell.interp.push('import sm.scriptutils')
         if separate:
-            nameSpace='namespace["%s"]'%fileName
+            nameSpace       = 'namespace["%s"]'%fileName
             self.shell.interp.push('%s={"__fileName__":"%s"}'%(nameSpace,fileName))
         else:
-            nameSpace='locals()'
+            nameSpace       = 'locals()'
         try:
-            runCommand='sm.scriptutils.run(fileName=r"%s",source=%s,mainDict=%s,profiling=%s)'\
+            runCommand      = 'sm.scriptutils.run(fileName=r"%s",source=%s,mainDict=%s,profiling=%s)'\
                 %(fileName,source,nameSpace,profiling)
             self.shell.interp.push(runCommand)
         except Exception,message:
             print '\n(Spe internal warning: %s!)'%message
         self.shell.prompt()
         if self.redraw:self.redraw()
-        #raise
         self.activateShell()
         #self.busyHide()
 

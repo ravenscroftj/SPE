@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: ISO-8859-1 -*-
+
 __author__  = 'www.stani.be'
 __license__ = 'GPL'
 __doc__ = """
-This module was orignally developed for SPE - Stani's Python Editor
+This module was originally developed for SPE - Stani's Python Editor
+Pleave leave this header intact.
 
 Homepage:   http://pythonide.stani.be
 Email:      spe.stani.be@gmail.com
