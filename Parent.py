@@ -528,7 +528,7 @@ class Panel(wx.Notebook):
         elif hasattr(frame,'panelFrame'):
             hidden          = not frame.panelFrame.IsShown()
         elif hasattr(frame,'split'):
-            return True
+            hidden          = not frame.split.IsSplit()
         else: return False
         self.showShell(hidden,save=True)
         return hidden
@@ -545,6 +545,11 @@ class Panel(wx.Notebook):
         elif hasattr(frame,'panelFrame'):
             frame.panelFrame.Show(show)
             frame.panelFrame.Activate()
+        elif hasattr(frame,'split'):
+            if show:
+                frame.split.SplitHorizontally(frame.tabs, self, -200)
+            else:
+                frame.split.Unsplit()
 
     #---Tools
     def browse_folder(self):
