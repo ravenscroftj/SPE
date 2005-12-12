@@ -51,12 +51,6 @@ class SessionManager(CSimpleSessionManager):
         self.app                = runner.app
         self.encrypted          = runner.app.fCrypto
         CSimpleSessionManager.__init__(self,fAllowUnencrypted = not self.encrypted)
-        #assing method for check run tool button
-        child                   = self.app.childActive
-        if child.frame.menuBar:
-            self._check_run     = child.frame.menuBar.check_run
-        else:
-            self._check_run     = child.parentFrame.menuBar.check_run
         
     def _ask_to_launch_debugger(self,status,message,showDialog):
         if self.debugger: return 
@@ -107,10 +101,6 @@ class SessionManager(CSimpleSessionManager):
         self.detach()
         
     #---public
-    def cancel(self):
-        """Cancel running a script. (feedback on toolbar)"""
-        self._check_run(False)
-        
     def debug(self):
         """Attach WinPdb to the running script."""
         #todo: encrypted
@@ -158,63 +148,14 @@ class Runner:
         self.session    = None
         self.title      = 'SPE - Run file'
         if app.fCrypto:
-            self.title  += ' (encrypted)'
-        
-    def switch(self):
-        "Run/stop file"
-        #todo: update toolbar
-        child           = self.app.childActive
-        if self.running:
-            self.stop()
+            self.title  += ' (encrypted)'        
+        #assing method for check run tool button
+        child                   = self.app.childActive
+        if child.frame.menuBar:
+            self._check_run     = child.frame.menuBar.check_run
         else:
-            if child.confirmSave():
-                self.run(child)
-            else:
-                self.session.cancel()
-            
-    def run(self,child):
-        """Show dialog for arguments and launch script."""
-        fileName            = child.fileName
-        from _spe.dialogs.runWinPdbDialog import RunWinPdbDialog
-        runWinPdbDialog     = RunWinPdbDialog(fileName,
-                                self.argumentsPrevious,
-                                self.exceptionPrevious,
-                                #self.exitPrevious,
-                                parent=self.app.parentFrame,
-                                id=-1)
-        answer              = runWinPdbDialog.ShowModal()
-        dlg_arguments       = runWinPdbDialog.arguments.GetValue()
-        dlg_exception       = runWinPdbDialog.exception.GetValue()
-        #dlg_exit            = runWinPdbDialog.exit.GetValue()
-        runWinPdbDialog.Destroy()
-        if answer == wx.ID_OK:
-            self.argumentsPrevious.append(self.dlg_arguments)
-            self.dlg_arguments      = dlg_arguments
-            self.exceptionPrevious  = dlg_exception
-            #self.exitPrevious       = dlg_exit
-            command_line            = fileName
-            if self.dlg_arguments:
-                command_line        += ' ' + self.dlg_arguments
-            self.session            = SessionManager(self)
-            self.session.launch(command_line)
-        elif self.session: self.session.cancel()
-        
-    def stop(self):
-        """Stop script."""
-        try:
-            self.session.stop_debuggee()
-        except Exception, message:
-            if message:
-                child       = self.app.childActive
-                child.setStatus('WinPdb unhandled exception while stopping debuggee: "%s".'%message,1)
-        
-    def debug(self):
-        """Debug running script or current script."""
-        if self.running:
-            self.session.debug()
-        else:
-            self._debug_childActive()
-        
+            self._check_run     = child.parentFrame.menuBar.check_run
+
     def _debug_childActive(self):
         child               = self.app.childActive
         if child.confirmSave():
@@ -241,5 +182,66 @@ class Runner:
                 child.setStatus('WinPdb Debugger was cancelled.',1)
         else:
             child.setStatus('File must be saved before WinPdb Debugger is launched.',1)
+
+    def switch(self):
+        "Run/stop file"
+        #todo: update toolbar
+        child           = self.app.childActive
+        if self.running:
+            self.stop()
+        else:
+            if child.confirmSave():
+                self.run(child)
+            else:
+                self.cancel()
+            
+    def run(self,child):
+        """Show dialog for arguments and launch script."""
+        fileName            = child.fileName
+        from _spe.dialogs.runWinPdbDialog import RunWinPdbDialog
+        runWinPdbDialog     = RunWinPdbDialog(fileName,
+                                self.argumentsPrevious,
+                                self.exceptionPrevious,
+                                #self.exitPrevious,
+                                parent=self.app.parentFrame,
+                                id=-1)
+        answer              = runWinPdbDialog.ShowModal()
+        dlg_arguments       = runWinPdbDialog.arguments.GetValue()
+        dlg_exception       = runWinPdbDialog.exception.GetValue()
+        #dlg_exit            = runWinPdbDialog.exit.GetValue()
+        runWinPdbDialog.Destroy()
+        if answer == wx.ID_OK:
+            self.argumentsPrevious.append(self.dlg_arguments)
+            self.dlg_arguments      = dlg_arguments
+            self.exceptionPrevious  = dlg_exception
+            #self.exitPrevious       = dlg_exit
+            command_line            = fileName
+            if self.dlg_arguments:
+                command_line        += ' ' + self.dlg_arguments
+            self.session            = SessionManager(self)
+            self.session.launch(command_line)
+        else: self.cancel()
+        
+    def stop(self):
+        """Stop script."""
+        try:
+            self.session.stop_debuggee()
+        except Exception, message:
+            if message:
+                child       = self.app.childActive
+                child.setStatus('WinPdb unhandled exception while stopping debuggee: "%s".'%message,1)
+        
+    def debug(self):
+        """Debug running script or current script."""
+        if self.running:
+            self.session.debug()
+        else:
+            self._debug_childActive()
                 
+    def cancel(self):
+        """Cancel running a script. (feedback on toolbar)"""
+        self._check_run(False)
+        child       = self.app.childActive
+        child.setStatus('Running the script with WinPdb was cancelled.',1)
+        
 
