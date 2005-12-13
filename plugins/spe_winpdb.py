@@ -74,7 +74,7 @@ class SessionManager(CSimpleSessionManager):
     def _feedback_terminate(self):
         #print "_feedback_terminate"
         self.runner.running = False
-        self._check_run(False)
+        self.runner._check_run(False)
         child               = self.app.childActive
         child.setStatus('Terminated "%s"'%self.command_line)
         child.statusBar.throbber.stop()
@@ -130,7 +130,7 @@ class SessionManager(CSimpleSessionManager):
         child               = self.app.childActive
         child.statusBar.throbber.run()
         child.setStatus('Running "%s"'%command_line)
-        self._check_run(True)
+        self.runner._check_run(True)
         self.runner.running = True
         thread.start_new_thread(CSimpleSessionManager.launch,(self,fchdir,command_line))
                 
