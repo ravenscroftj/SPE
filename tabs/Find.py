@@ -164,9 +164,9 @@ class Panel(wxgPanel):
     def onClearButton(self,event):
         if self.results.GetPageCount() > 1:
             curpage = self.results.GetSelection()
-            self.results.RemovePage(curpage)
+            self.results.DeletePage(curpage)
         else:
-            self.results.RemovePage(0)
+            self.results.DeletePage(0)
             txtctl = wx.TextCtrl(self.results, -1, "", style = wx.TE_MULTILINE)
             self.results.AddPage(txtctl, "Results")
             

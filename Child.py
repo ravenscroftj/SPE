@@ -81,6 +81,7 @@ class Panel(wx.SplitterWindow):
         self.sidebarHidden      = False
         self.saved              = ''
         self.todoMax            = 1
+        self.toggleExploreSelection = False
         self.warning            = ''
         #delete when fixed
         self.updateBug          = False
@@ -186,7 +187,10 @@ class Panel(wx.SplitterWindow):
         self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
         eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
-        eventManager.Register(self.onToggleExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
+        if not info.DARWIN:
+            #Mac has already always triangles
+            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
+        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.todo)
@@ -623,6 +627,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         pos = self.source.GetCurrentPos()
         if pos!= self.position:
             self.updateStatus(pos)
+        if self.toggleExploreSelection:
+            self.toggleExploreSelection = False
+            self.onToggleExploreSelection()
         #only if source is changed...
         if self.eventChanged:
             self.eventChanged   = False
@@ -989,8 +996,15 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             
     def onToggleExplore(self,event):
         """Toggle item between collapse and expand."""
-        line=self.explore.Toggle(event.GetItem())
+        self.explore.Toggle(event.GetItem())
             
+    def onToggleExploreTree(self,event):
+        event.Skip()
+        self.toggleExploreSelection = True
+        
+    def onToggleExploreSelection(self):
+        self.explore.Toggle(self.explore.GetSelection())
+        
     def onOpenFromBrowser(self, fname):
         if os.path.splitext(fname)[-1] in SPE_ALLOWED_EXTENSIONS:
             self.parentPanel.openList([fname])

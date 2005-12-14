@@ -19,7 +19,8 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'TerminalRun','TerminalRunExit', 'UpdateSidebar','UseTabs',
           'ViewWhiteSpace','IndentationGuides', 'ViewEdge','WebBrowser',
           'WordChars','WxPythonDocs','globalRecent','globalFolders','globalNotes',
-          'globalFileList','SaveOnExit','CloseChildrenOnNewWorkspace',
+          'globalFileList','SaveOnExit','SingleInstanceApp',
+          'CloseChildrenOnNewWorkspace',
           'SaveWorkspaceOnFileSave','RememberLastWorkspace']
 
 def _(x):
@@ -46,6 +47,7 @@ class Create(wx.Dialog):
         self.RedirectShell = wx.CheckBox(self.General, -1, _("Redirect output to spe shell"))
         self.CheckFileOnSave = wx.CheckBox(self.General, -1, _("Check file for syntax errors on save"))
         self.ShowShell = wx.CheckBox(self.General, -1, _("Show shell"))
+        self.SingleInstanceApp = wx.CheckBox(self.General, -1, _("Run SPE as a single instance application (through a xml-rpc server)"))
         self.label_di = wx.StaticText(self.General, -1, _("Document Interface*"))
         self.Mdi = wx.ComboBox(self.General, -1, choices=[_("<default>")], style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.label_recent = wx.StaticText(self.General, -1, _("Amount of recent files"))
@@ -151,7 +153,7 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
-        #self.Signature.SetSelection(-1)
+        self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)
@@ -181,7 +183,7 @@ class Create(wx.Dialog):
         width = wx.BoxSizer(wx.HORIZONTAL)
         GeneralEditor = wx.StaticBoxSizer(self.GeneralEditor_staticbox, wx.VERTICAL)
         grid_general = wx.FlexGridSizer(4, 3, 4, 4)
-        generalSizer = wx.FlexGridSizer(6, 1, 4, 4)
+        generalSizer = wx.FlexGridSizer(9, 1, 4, 4)
         sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.HORIZONTAL)
         grid_sizer_5 = wx.FlexGridSizer(4, 2, 4, 4)
         grid_sizer_3 = wx.FlexGridSizer(4, 1, 4, 4)
@@ -192,6 +194,7 @@ class Create(wx.Dialog):
         generalSizer.Add(self.RedirectShell, 0, wx.LEFT, 4)
         generalSizer.Add(self.CheckFileOnSave, 0, wx.LEFT, 4)
         generalSizer.Add(self.ShowShell, 0, wx.LEFT, 4)
+        generalSizer.Add(self.SingleInstanceApp, 0, wx.LEFT|wx.ADJUST_MINSIZE, 4)
         grid_sizer_4.Add(self.label_di, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)
         grid_sizer_4.Add(self.Mdi, 0, wx.EXPAND, 0)
         grid_sizer_4.Add(self.label_recent, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)

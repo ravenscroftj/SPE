@@ -1156,8 +1156,13 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
             self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
         
 ####Application
+singleInstance = True #set to true for single instance app or set to false for multiple instance app
+if singleInstance:
+    wxApp = singleApp.SingleInstanceApp
+else:
+    wxApp = wx.App
 
-class App(wx.App):#singleApp.SingleInstanceApp
+class App(wxApp):
     def __init__(self, ParentPanel, ChildPanel, MenuBar, ToolBar, StatusBar,
             Palette=None, mdi=DEFAULT, debug=0, title='name',
             panelFrameTitle='panel',size=wx.Size(800,400),
@@ -1195,8 +1200,11 @@ class App(wx.App):#singleApp.SingleInstanceApp
                 setattr(self,key,attributes[key])
         #start
         print "Launching application..."
-        wx.App.__init__(self,redirect=not debug)
-        #singleApp.SingleInstanceApp.__init__(self,name=title,redirect=not debug)
+        keyw                = {'redirect':not debug}
+        if singleInstance:
+            keyw['name']    = title
+        wxApp.__init__(self,**keyw)
+
         
     def OnArgs(self, evt):
         if hasattr(self.parentPanel,'onArgs'):
@@ -1205,21 +1213,22 @@ class App(wx.App):#singleApp.SingleInstanceApp
         self.GetTopWindow().Iconize(False)
 
     def OnInit(self):
-##        if self.active:
-##            return False
-##        else:
-##            self.Bind(singleApp.EVT_POST_ARGS, self.OnArgs)
-            wx.InitAllImageHandlers()
-            self.parentFrame = self.ParentFrame(self,
-                size    = self.size,
-                page    = self.title,
-                pos     = self.pos,
-                style   = self.style,
-                **self.attributes)
-            self.parentPanel = self.parentFrame.panel
-            self.parentFrame.Show(True)
-            self.SetTopWindow(self.parentFrame)
-            return True
+        if singleInstance:
+	        if self.active:
+	            return False
+	        else:
+	            self.Bind(singleApp.EVT_POST_ARGS, self.OnArgs)
+        wx.InitAllImageHandlers()
+        self.parentFrame = self.ParentFrame(self,
+            size    = self.size,
+            page    = self.title,
+            pos     = self.pos,
+            style   = self.style,
+            **self.attributes)
+        self.parentPanel = self.parentFrame.panel
+        self.parentFrame.Show(True)
+        self.SetTopWindow(self.parentFrame)
+        return True
         
     def SetMdi(self,mdiName=DEFAULT):
         """Defines parent and children frame classes."""

@@ -86,7 +86,7 @@ try:
 except:
     print 'Spe warning: could not load user options'
    
-# if there is a preference in the user's defaults that is not in
+# If there is a preference in the user's defaults that is not in
 # the regular defaults file,  add it
 baseConfig=ConfigParser.ConfigParser()
 baseConfig.read(os.path.join(info.path,"defaults.cfg"))
@@ -100,7 +100,7 @@ for section in baseConfig.sections():
 #---Workspace
 if __workspace is not None: 
     config.set("DEFAULT","currentworkspace",__workspace)
-    fp=open(INFO['defaultsUser'],"w")
+    fp  = open(INFO['defaultsUser'],"w")
     config.write(fp)
     fp.close()
 
@@ -129,6 +129,15 @@ mdi         = config.get('DEFAULT','Mdi')
 if not smdi.DI.has_key(mdi):
     mdi     = smdi.DEFAULT
     config.set('DEFAULT','Mdi',mdi)
+    
+#---Single Instance Application
+try:
+    smdi.SINGLE_INSTANCE_APP = eval(config.get('DEFAULT','SingleInstanceApp'))
+except:
+    smdi.SINGLE_INSTANCE_APP = False
+    
+if smdi.SINGLE_INSTANCE_APP:
+    print "SPE runs as a single instance application (see Preferences).", smdi.SINGLE_INSTANCE_APP
         
 ####Shortcuts
 class Translate:

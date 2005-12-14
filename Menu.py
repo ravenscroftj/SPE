@@ -398,7 +398,6 @@ class Bar(wxgMenu.Bar):
         self.app.childActive.run()
 
     def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
-        print "Event handler `menu_run_without_arguments' not implemented"
         self.app.childActive.run_with_arguments(exit=False)
         
     def menu_run_without_arguments_exit(self,event):
