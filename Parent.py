@@ -457,6 +457,7 @@ class Panel(wx.Notebook):
         """Find and Replace dialog and action."""
         #dialog already open, if yes give focus
         if self.findDialog:
+            self.findDialog.Show(1)
             self.findDialog.Raise()
             return
         #find string
