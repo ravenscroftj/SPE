@@ -494,6 +494,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             os.system(terminal%params)
 
     def run(self):
+        if not self.confirmSave():
+            return
         from _spe.dialogs.runDialog import RunDialog
         runDialog           = RunDialog(self.fileName,
                                 self.argumentsPrevious,
@@ -507,10 +509,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if answer == wx.ID_OK:
             self.argumentsPrevious.append(arguments)
             self.exitPrevious   = exit
-            self.run_with_arguments(arguments,exit)
+            self.run_with_arguments(arguments,exit,confirm=False)
         
-    def run_with_arguments(self,arguments='',exit=False):
+    def run_with_arguments(self,arguments='',exit=False, confirm=True):
         """Run in terminal emulator"""
+        if confirm and not self.confirmSave():
+            return
         # todo: input stuff from preferences dialog box!
         path, fileName  = os.path.split(self.fileName)
         params          = { 'file':         fileName,

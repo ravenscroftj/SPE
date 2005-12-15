@@ -480,6 +480,8 @@ class Panel(wx.Notebook):
         source  = child.source
         code    = source.GetSelectedText()
         if not code.strip():
+            if self.getValue('SaveBeforeRun') and not child.confirmSave():
+                return
             child.setStatus('As there is no code selected, SPE will run the whole script.')
             code = source.GetText()
         self.shell.Execute(code)
@@ -550,6 +552,16 @@ class Panel(wx.Notebook):
                 frame.split.SplitHorizontally(frame.tabs, self, -200)
             else:
                 frame.split.Unsplit()
+
+##    def showToolbar(self,show,save=False):
+##        if save: self.set('ShowToolbar',show)
+##        frame = self.frame
+##        if hasattr(frame,'toolBar'):
+##            if show:
+##                frame.sash.SetDefaultSize(wx.Size(1000,200))
+##            else:
+##                frame.sash.SetDefaultSize(wx.Size(1000,1))
+##            wx.LayoutAlgorithm().LayoutMDIFrame(frame)
 
     #---Tools
     def browse_folder(self):

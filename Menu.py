@@ -195,6 +195,7 @@ class Bar(wxgMenu.Bar):
         self.Check(wxgMenu.INDENTATION_GUIDES, self.parentPanel.getValue('IndentationGuides'))
         self.Check(wxgMenu.RIGHT_EDGE_INDICATOR, self.parentPanel.getValue('ViewEdge'))
         self.Check(wxgMenu.SHELL, self.parentPanel.getValue('ShowShell'))
+        #self.Check(wxgMenu.TOOLBAR, self.parentPanel.getValue('ShowToolbar'))
         if self.app.mdi and self.toolBar:
             self.toolBar.ToggleTool(TOOL_SHELL,self.parentPanel.getValue('ShowShell'))
         # TODO: Implement view line numbers and view folding
@@ -215,6 +216,23 @@ class Bar(wxgMenu.Bar):
     def check_run(self,bool):
         if self.toolBar:
             self.toolBar.ToggleTool(TOOL_RUN_DEBUG,bool)
+            
+    def check_toolbar(self,show=True):
+        if self.toolBar:
+            self.parentPanel.set('ShowShell',show)
+            self.Check(wxgMenu.TOOLBAR,show)
+            if show:
+                self.frame.SetToolBar(self.toolBar)
+                self.toolBar.Show()
+            else:
+                self.frame.SetToolBar(None)
+                self.toolBar.Destroy()
+                self.toolBar = None
+                #self.toolBar.Hide()
+        if hasattr(self.frame,'sash'):
+            wx.LayoutAlgorithm().LayoutMDIFrame(frame)
+        else:
+            self.frame.Layout()
 
     #---events
     def __events__(self):
@@ -389,6 +407,10 @@ class Bar(wxgMenu.Bar):
         if self.toolBar:
             self.toolBar.ToggleTool(TOOL_SHELL,hidden)
 
+    def menu_toolbar(self, event): 
+        show = not self.parentPanel.getValue('ShowToolbar')
+        self.check_toolbar(show)
+        
     def menu_browse_folder(self, event=None):
         """Tools > Browse folder"""
         self.parentPanel.browse_folder()
@@ -397,7 +419,7 @@ class Bar(wxgMenu.Bar):
         """Tools > Run"""
         self.app.childActive.run()
 
-    def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+    def menu_run_without_arguments(self, event):
         self.app.childActive.run_with_arguments(exit=False)
         
     def menu_run_without_arguments_exit(self,event):

@@ -21,7 +21,7 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'WordChars','WxPythonDocs','globalRecent','globalFolders','globalNotes',
           'globalFileList','SaveOnExit','SingleInstanceApp',
           'CloseChildrenOnNewWorkspace',
-          'SaveWorkspaceOnFileSave','RememberLastWorkspace']
+          'SaveWorkspaceOnFileSave','RememberLastWorkspace']#'ShowToolbar',
 
 def _(x):
     return x
@@ -79,7 +79,7 @@ class Create(wx.Dialog):
         self.label_sidebar = wx.StaticText(self.Editor, -1, _("Update sidebar"))
         self.UpdateSidebar = wx.ComboBox(self.Editor, -1, choices=[_("realtime"), _("when clicked"), _("when manually refreshed (F5)")], style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.AutoReloadChangedFile = wx.CheckBox(self.Editor, -1, _("Auto reload changed file"))
-        self.SaveBeforeRun = wx.CheckBox(self.Editor, -1, _("Check if file is saved before run"))
+        self.SaveBeforeRun = wx.CheckBox(self.Editor, -1, _("Check if file is saved before code is executed in shell"))
         self.ViewWhiteSpace = wx.CheckBox(self.Editor, -1, _("Show whitespaces"))
         self.UseTabs = wx.CheckBox(self.Editor, -1, _("Use tabs"))
         self.ConvertTabsToSpaces = wx.CheckBox(self.Editor, -1, _("Convert tabs to spaces on open"))

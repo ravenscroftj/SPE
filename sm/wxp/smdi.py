@@ -264,6 +264,15 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             return 0
         else:
             return -1
+        
+    def setIcons(self,bitmaps):
+        #todo: here this should go somewhere else!!
+        pageIcons      = []  
+        for bitmap in bitmaps:
+            self.pageIcons.append(self.notebookIcons.Add(bitmap))
+            
+        self.notebookIcons  = wx.ImageList(16,16)
+        self.AssignImageList(self.notebookIcons)
             
 ####Foundation Classes
 class Framework:
@@ -831,17 +840,18 @@ class SdiParentFrame(TabPlatform,Parent,wx.Frame):
 class Child(Framework):
     #---initialize
     def __init__(self,parentFrame,page='',extra='',parent=None,**options):
-        app             = parentFrame.app
-        self.pageTitle  = ''
-        self._pageTitle  = '?'
-        self.extraTitle = ''
-        self._extraTitle = ''
+        app                 = parentFrame.app
+        self.pageTitle      = ''
+        self._pageTitle     = '?'
+        self.pageIcons      = []
+        self.extraTitle     = ''
+        self._extraTitle    = ''
         Framework.__init__(self,
-            app         = app,
-            Panel       = app.ChildPanel,
-            parentFrame = parentFrame,
-            page        = page,
-            extra       = extra,
+            app             = app,
+            Panel           = app.ChildPanel,
+            parentFrame     = parentFrame,
+            page            = page,
+            extra           = extra,
             **options)
     
     def __finish__(self):
@@ -931,16 +941,20 @@ class Child(Framework):
             if page:    self.pageTitle  = page
             if extra:   self.extraTitle = extra
             #go
-            m               = ['','*'][self.panel.changed]
             if self.pageTitle:
-                self._pageTitle   =  '%s%s'%(self.pageTitle,m)
+                m               = ['','*'][self.panel.changed and not self.pageIcons]
+                self._pageTitle =  '%s%s'%(self.pageTitle,m)
             else:
-                self._pageTitle   =  ''
+                self._pageTitle =  ''
         if draw:
             if self.app.mdiName == SDI or WIN:
                 self.SetTitle(self.extraTitle)
             else:
                 self.SetTitle(self.pageTitle)
+            self.setIcon()
+            
+    def setIcon(self):
+        pass
         
 class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
     def __init__(self,parentFrame,

@@ -19,7 +19,7 @@ AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
-END_OF_LINE_MARKER, SIDEBAR, SHELL,
+END_OF_LINE_MARKER, SIDEBAR, SHELL, TOOLBAR,
 
 RUN, RUN_WITHOUT_ARGUMENTS, RUN_WITHOUT_ARGUMENTS_EXIT, IMPORT, RUN_DEBUG, DEBUG,
 BROWSE_OBJECT_WITH_PYFILLING, TEST_REGULAR_EXPRESSION_WITH_KIKI,
@@ -41,7 +41,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(74)]
+[wx.NewId() for x in range(75)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -297,7 +297,7 @@ class Bar(wx.MenuBar):
         self.view.Append(RIGHT_EDGE_INDICATOR, _("Ri&ght edge indicator"), "", wx.ITEM_CHECK)
         self.view.Append(END_OF_LINE_MARKER, _("&End-of-line marker"), "", wx.ITEM_CHECK)
         self.view.AppendSeparator()
-        self.view.Append(SIDEBAR, _("&Sidebar\tF11"), "", wx.ITEM_CHECK)
+        self.view.Append(SIDEBAR, _("&Sidebar\tCtrl+F12"), "", wx.ITEM_CHECK)
         self.view.Append(SHELL, _("S&hell\tF12"), "", wx.ITEM_CHECK)
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
@@ -737,6 +737,10 @@ class Bar(wx.MenuBar):
 
     def menu_run_without_arguments_exit(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_run_without_arguments_exit' not implemented"
+        event.Skip()
+
+    def menu_toolbar(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_toolbar' not implemented"
         event.Skip()
 
 # end of class Bar

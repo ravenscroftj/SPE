@@ -190,7 +190,7 @@ class Runner:
         if self.running:
             self.stop()
         else:
-            if child.confirmSave():
+            if child.confirmSave(): 
                 self.run(child)
             else:
                 self.cancel()
