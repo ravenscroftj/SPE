@@ -132,13 +132,10 @@ if not smdi.DI.has_key(mdi):
     
 #---Single Instance Application
 try:
-    smdi.SINGLE_INSTANCE_APP = eval(config.get('DEFAULT','SingleInstanceApp'))
+    singleInstance = eval(config.get('DEFAULT','SingleInstanceApp'))
 except:
-    smdi.SINGLE_INSTANCE_APP = False
-    
-if smdi.SINGLE_INSTANCE_APP:
-    print "SPE runs as a single instance application (see Preferences).", smdi.SINGLE_INSTANCE_APP
-        
+    singleInstance = False
+            
 ####Shortcuts
 class Translate:
     def __init__(self,keys):
@@ -206,6 +203,7 @@ app = smdi.App(\
         pos             = wx.Point(posX,posY),
         shortcuts       = shortcuts,
         imagePath       = IMAGE_PATH,
+        singleInstance  = singleInstance,
         style           = style)
 
 app.MainLoop()

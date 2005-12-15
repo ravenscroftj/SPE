@@ -95,6 +95,7 @@ Todo:
 import  os, sys, pprint
 import  wx
 from    wx.lib.evtmgr import eventManager
+import singleApp
 import NotebookCtrl
 wx_Notebook = NotebookCtrl.NotebookCtrl
 #import sm.spy
@@ -1185,17 +1186,13 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
             self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
         
 ####Application
-if SINGLE_INSTANCE_APP:
-    import singleApp
-    wxApp = singleApp.SINGLE_INSTANCE_APPApp
-else:
-    wxApp = wx.App
 
-class App(wxApp):
+class App(singleApp.SingleInstanceApp):
     def __init__(self, ParentPanel, ChildPanel, MenuBar, ToolBar, StatusBar,
             Palette=None, mdi=DEFAULT, debug=0, title='name',
             panelFrameTitle='panel',size=wx.Size(800,400),
             imagePath = None, pos=wx.Point(wx.ID_ANY,wx.ID_ANY),
+            singleInstance = False,
             style=STYLE_PARENTFRAME,**attributes):
         #passing arguments
         global CHILDPANEL
@@ -1212,6 +1209,8 @@ class App(wxApp):
         self.size           = size
         self.imagePath      = imagePath
         self.pos            = pos
+        self.singleInstance = singleInstance
+        self.active         = True
         self.style          = style
         #initialization
         self.children       = []
@@ -1228,11 +1227,12 @@ class App(wxApp):
             else:
                 setattr(self,key,attributes[key])
         #start
-        print "Launching application..."
-        keyw                = {'redirect':not debug}
-        if SINGLE_INSTANCE_APP:
-            keyw['name']    = title
-        wxApp.__init__(self,**keyw)
+        if singleInstance:
+            print "Launching single instance application (with xml-rpc server) ..."
+            singleApp.SingleInstanceApp.__init__(self,redirect=not debug,name=title)
+        else:
+            print "Launching application..."
+            wx.App.__init__(self,redirect=not debug)
 
         
     def OnArgs(self, evt):
@@ -1242,11 +1242,10 @@ class App(wxApp):
         self.GetTopWindow().Iconize(False)
 
     def OnInit(self):
-        if SINGLE_INSTANCE_APP:
-	        if self.active:
-	            return False
-	        else:
-	            self.Bind(singleApp.EVT_POST_ARGS, self.OnArgs)
+        if self.singleInstance:
+            if self.active:
+                return False
+            self.Bind(singleApp.EVT_POST_ARGS, self.OnArgs)
         wx.InitAllImageHandlers()
         self.parentFrame = self.ParentFrame(self,
             size    = self.size,
