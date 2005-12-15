@@ -1,4 +1,4 @@
-import os,sys
+import os,sys 
 
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')

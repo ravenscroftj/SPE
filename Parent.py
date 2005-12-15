@@ -455,13 +455,16 @@ class Panel(wx.Notebook):
 
     def find_replace(self, event=None):
         """Find and Replace dialog and action."""
+        #find string
+        findStr = self.app.childActive.source.GetSelectedText()
+        if findStr and self.findDialog:
+            self.findDialog.Destroy()
+            self.findDialog = None
         #dialog already open, if yes give focus
         if self.findDialog:
             self.findDialog.Show(1)
             self.findDialog.Raise()
             return
-        #find string
-        findStr = self.app.childActive.source.GetSelectedText()
         if not findStr:
                 findStr = self.findStr
         self.numberMessages=0

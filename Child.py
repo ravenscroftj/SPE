@@ -429,10 +429,22 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         
     def insert_signature(self):
         signature   = self.parentPanel.get('Signature')
-        if os.path.exists(signature):
-            self.source.ReplaceSelection(open(signature).read()+'\n')
+        if not os.path.exists(signature):
+            dlg = wx.FileDialog(self, 
+                message="SPE - Choose a signature file", 
+                #defaultDir  = os.getcwd(), 
+                #defaultFile = "", 
+                wildcard    = "Python source (*.py)|*.py|Text (*.txt)|*.txt|All files (*.*)|*.*", 
+                style       = wx.OPEN | wx.FILE_MUST_EXIST
+                )
+            answer      = dlg.ShowModal()
+            signature   = dlg.GetPath()
+            dlg.Destroy()
+            if answer == wx.ID_CANCEL: return
         else:
             self.setStatus('SPE could not open signature %s!'%signature)
+            return
+        self.source.ReplaceSelection(open(signature).read()+'\n')
 
     def go_to_line(self,scroll=1):
         """Go to line dialog & action"""

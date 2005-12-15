@@ -191,7 +191,8 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
     #---events
     def OnLeftDown(self,event):
-        self.SetSelectionEnd(0)
+        if not event.ShiftDown():
+            self.SetSelectionEnd(0)
         event.Skip()
         
     def OnKeyDown(self, event):
