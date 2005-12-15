@@ -340,6 +340,9 @@ class Bar(wxgMenu.Bar):
         """Edit > Auto complete"""
         self.app.childActive.source.autoComplete()
 
+    def menu_show_docstring(self, event=None): 
+        self.app.childActive.source.showCallTip()
+
     def menu_indent(self, event=None):
         """Edit > Indent"""
         self.app.childActive.source.CmdKeyExecute(wx.stc.STC_CMD_TAB)

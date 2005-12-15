@@ -237,7 +237,6 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         # GF No keyboard needs control or alt to make '(', ')' or '.'
         # GF Shift is not included as it is needed in some keyboards.
         elif chr(key) in ['(',')','.'] and not control and not alt:
-            pos         = self.GetCurrentPos()
             CallTips    = self.get('CallTips').lower()
             if key == ord('(') and CallTips!='disable':
                 # ( start tips
@@ -245,47 +244,14 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     self.calltip    += 1
                     self.AddText('(')
                 else:
-                    #prepare
-                    obj=self.getWordObject()
-                    self.AddText('(')
-                    if not obj: return
-                    #classes, methods & functions
-                    if type(obj) in [types.ClassType,types.TypeType] and hasattr(obj,'__init__'):
-                        init    = obj.__init__
-                        tip     = getargspec(init).strip()
-                        if tip == '(self, *args, **kwargs)':
-                            tip = ""
-                        else:
-                            tip = "%s\n"%tip
-                        doci    = init.__doc__
-                        if doci:
-                            doc = '%s\n'%(doci.strip())
-                        else:
-                            doc = ""
-                        tip = getargspec(init)
-                    else:
-                        doc = ""
-                        tip = getargspec(obj)
-                    #normal docstring
-                    _doc    = obj.__doc__
-                    #compose
-                    if _doc: doc += _doc
-                    if doc:
-                        if CallTips == 'first paragraph only':
-                            tip += doc.split('\n')[0]
-                        else:
-                            tip += doc
-                    if tip:
-                        self.calltip=1
-                        tip+='\n(Press ESC to close)'
-                        self.CallTipSetBackground('#FFFFE1')
-                        self.CallTipShow(pos, tip.replace('\r\n','\n'))
+                    self.showCallTip('(')
             elif key == ord(')'):
                 # ) end tips
                 self.AddText(')')
                 if self.calltip:
-                    self.calltip-=1
-                    if not self.calltip:self.CallTipCancel()
+                    self.calltip    -=1
+                    if not self.calltip:
+                        self.CallTipCancel()
             elif key == ord('.') and self.getint('AutoComplete'):
                 # . Code completion
                 self.autoComplete(object=1)
@@ -506,15 +472,21 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
     #---get
     def getWord(self,whole=None):
-        pos=self.GetCurrentPos()
-        line = self.GetCurrentLine()
-        linePos=self.PositionFromLine(line)
-        txt = self.GetLine(line)
-        start=self.WordStartPosition(pos,1)
+        for delta in (0,-1,1):
+            word    = self._getWord(whole=whole,delta=delta)
+            if word: return word
+        return ''
+
+    def _getWord(self,whole=None,delta=0):
+        pos     = self.GetCurrentPos()+delta
+        line    = self.GetCurrentLine()
+        linePos = self.PositionFromLine(line)
+        txt     = self.GetLine(line)
+        start   = self.WordStartPosition(pos,1)
         if whole:
-            end=self.WordEndPosition(pos,1)
+            end = self.WordEndPosition(pos,1)
         else:
-            end=pos
+            end = pos
         return txt[start-linePos:end-linePos]
 
     def getWords(self,word=None,whole=None):
@@ -555,6 +527,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
     def autoComplete(self,object=0):
         word    = self.getWord()
+        if not word: return
         if object:
             self.AddText('.')
             word+='.'
@@ -585,14 +558,23 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                 self.get('AutoCompleteIgnore').index(word)
                 return None
             except:
-                 try:
-                    mod= __import__(word)
+                try:
                     components = word.split('.')
+                    try:
+                        mod= __import__(word)
+                    except:
+                        if len(components) < 2:
+                            return None
+                        mod = '.'.join(components[:-1])
+                        try:
+                            mod= __import__(mod)
+                        except:
+                            return None
                     for comp in components[1:]:
                         mod = getattr(mod, comp)
                     self.namespace[word]=mod
-                    return self.namespace[word]
-                 except:
+                    return mod
+                except:
                     return None
                 
 ##    def markError(self,lineno,offset):
@@ -619,6 +601,44 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             return True
         else:
             return False
+
+    def showCallTip(self,text=''):
+        #prepare
+        obj                 = self.getWordObject()
+        self.AddText(text)
+        if not obj: return
+        #classes, methods & functions
+        if type(obj) in [types.ClassType,types.TypeType] and hasattr(obj,'__init__'):
+            init            = obj.__init__
+            tip             = getargspec(init).strip()
+            if tip == '(self, *args, **kwargs)':
+                tip         = ""
+            else:
+                tip         = "%s\n"%tip
+            doci            = init.__doc__
+            if doci:
+                doc         = '%s\n'%(doci.strip())
+            else:
+                doc         = ""
+            tip             = getargspec(init)
+        else:
+            doc             = ""
+            tip             = getargspec(obj)
+        #normal docstring
+        _doc                = obj.__doc__
+        #compose
+        if _doc: doc        += _doc
+        if doc:
+            if self.get('CallTips').lower() == 'first paragraph only':
+                tip         += doc.split('\n')[0]
+            else:
+                tip         += doc
+        if tip:
+            pos             = self.GetCurrentPos()
+            self.calltip    = 1
+            tip+='\n(Press ESC to close)'
+            self.CallTipSetBackground('#FFFFE1')
+            self.CallTipShow(pos, tip.replace('\r\n','\n'))
 
 
 

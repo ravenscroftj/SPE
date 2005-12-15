@@ -15,7 +15,7 @@ SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
-AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
+AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
@@ -41,7 +41,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(75)]
+[wx.NewId() for x in range(76)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -278,6 +278,7 @@ class Bar(wx.MenuBar):
         self.edit.Append(GO_TO_LINE, _("&Go to line...\tCtrl+G"), "", wx.ITEM_NORMAL)
         self.edit.Append(BROWSE_SOURCE, _("&Browse source\tCtrl+Enter"), "", wx.ITEM_NORMAL)
         self.edit.Append(AUTO_COMPLETE, _("&Auto complete\tCtrl+Space"), "", wx.ITEM_NORMAL)
+        self.edit.Append(SHOW_DOCSTRING, _("&Show docstring\tCtrl+Shift+Space"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(INDENT, _("&Indent"), "", wx.ITEM_NORMAL)
         self.edit.Append(DEDENT, _("&Dedent\tShift+Tab"), "", wx.ITEM_NORMAL)
@@ -397,6 +398,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_go_to_line, id=GO_TO_LINE)
         self.Bind(wx.EVT_MENU, self.menu_browse_source, id=BROWSE_SOURCE)
         self.Bind(wx.EVT_MENU, self.menu_auto_complete, id=AUTO_COMPLETE)
+        self.Bind(wx.EVT_MENU, self.menu_show_docstring, id=SHOW_DOCSTRING)
         self.Bind(wx.EVT_MENU, self.menu_indent, id=INDENT)
         self.Bind(wx.EVT_MENU, self.menu_dedent, id=DEDENT)
         self.Bind(wx.EVT_MENU, self.menu_comment, id=COMMENT)
@@ -741,6 +743,10 @@ class Bar(wx.MenuBar):
 
     def menu_toolbar(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_toolbar' not implemented"
+        event.Skip()
+
+    def menu_show_docstring(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_show_docstring' not implemented"
         event.Skip()
 
 # end of class Bar
