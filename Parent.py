@@ -749,6 +749,7 @@ class Panel(wx.Notebook):
         """Open a list of files."""
         if type(fileList)!=types.ListType:
             fileList=[fileList]
+        child = None
         for fileName in fileList:
             if type(fileName)==types.TupleType:
                 fileName, lineno, col = fileName

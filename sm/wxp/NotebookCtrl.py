@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 11 Nov 2005, 21.50 CET
+# Latest Revision: 13 Dec 2005, 23.50 CET
 #
 #
 # TODO List/Caveats
@@ -47,24 +47,33 @@ Supported Customizations For NotebookCtrl Include:
 - Drawing Focus Indicator In Each Tab (Like wx.Notebook);
 - Ctrl-Tab Keyboard Navigation Between Pages;
 - Tab With Animated Icons (Animation On Tabs);
-- Drag And Drop Tabs In NotebookCtrl;
+- Drag And Drop Tabs In NotebookCtrl (Plus A Visual Arrow Effect To Indicate
+  Dropping Position);
+- Drag And Drop Event;
 - ToolTips On Individual Tabs, With Customizable ToolTip Time Popup And ToolTip
-  Window Size For Individual Tabs.
-
+  Window Size For Individual Tabs;
+- Possibility To Hide The TabCtrl There Is Only One Tab (Thus Maximizing The
+  Corresponding Window);
+- Possibility To Convert The Tab Image Into A Close Button While Mouse Is Hovering
+  On The Tab Image;
+- Popup Menus On Tabs (Popup Menus Specific To Each Tab);
+- Showing Pages In "Column Mode", Which Means That All Pages Will Be Shown In
+  NotebookCtrl While The Tabs Are Hidden.
+  
 
 Usage:
 
 NotebookCtrl Construction Is Quite Similar To wx.Notebook:
 
 NotebookCtrl.__init__(self, parent, id, pos=wx.DefaultPosition,
-                      size=wx.DefaultSize, style=NotebookCtrlStyle)
+                      size=wx.DefaultSize, style=style)
 
 See NotebookCtrl __init__() Method For The Definition Of Non Standard (Non
 wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 11 Nov 2005, 21.50 CET
+Latest Revision: Andrea Gavana @ 13 Dec 2005, 23.50 CET
 
 """
 
@@ -76,7 +85,6 @@ Latest Revision: Andrea Gavana @ 11 Nov 2005, 21.50 CET
 import wx
 import textwrap
 import cStringIO, zlib
-from wx.lib.gestures import MouseGestures
 
 # HitTest Results 
 NC_HITTEST_NOWHERE = 0   # Not On Tab 
@@ -96,6 +104,12 @@ NC_FIXED_WIDTH = 4
 NC_DEFAULT_STYLE = NC_TOP | wx.NO_BORDER
 # Also wx.STATIC_BORDER Is Supported
 
+# Patch To Make NotebookCtrl Working Also On MacOS: Thanks To Stani ;-)
+if wx.Platform == '__WXMAC__':
+    DEFAULT_SIZE = wx.Size(26, 26)
+else:
+    DEFAULT_SIZE = wx.DefaultSize
+
 # NotebookoCtrl Events:
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGED: Event Fired When You Switch Page;
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGING: Event Fired When You Are About To Switch
@@ -103,10 +117,13 @@ NC_DEFAULT_STYLE = NC_TOP | wx.NO_BORDER
 # event.Skip() In Your Event Handler;
 # wxEVT_NOTEBOOKCTRL_PAGE_CLOSING: Event Fired When A Page Is Closing, But
 # You Can Still "Veto" The Page Changing By Avoiding To Call event.Skip()
-# In Your Event Handler.
+# In Your Event Handler;
+# wxEVT_NOTEBOOKCTRL_PAGE_DND: Event Fired When A Drag And Drop Action On
+# Tabs Ends.
 wxEVT_NOTEBOOKCTRL_PAGE_CHANGED = wx.NewEventType()
 wxEVT_NOTEBOOKCTRL_PAGE_CHANGING = wx.NewEventType()
 wxEVT_NOTEBOOKCTRL_PAGE_CLOSING = wx.NewEventType()
+wxEVT_NOTEBOOKCTRL_PAGE_DND = wx.NewEventType()
 
 #-----------------------------------#
 #        NotebookCtrlEvent
@@ -115,6 +132,7 @@ wxEVT_NOTEBOOKCTRL_PAGE_CLOSING = wx.NewEventType()
 EVT_NOTEBOOKCTRL_PAGE_CHANGED = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CHANGED, 1)
 EVT_NOTEBOOKCTRL_PAGE_CHANGING = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CHANGING, 1)
 EVT_NOTEBOOKCTRL_PAGE_CLOSING = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CLOSING, 1)
+EVT_NOTEBOOKCTRL_PAGE_DND = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_DND, 1)
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrlEvent
@@ -135,28 +153,52 @@ class NotebookCtrlEvent(wx.PyCommandEvent):
 
 
     def SetSelection(self, nSel):
-        """ Sets Event Position. """
+        """ Sets Event Selection. """
         
         self._selection = nSel
         
 
     def SetOldSelection(self, nOldSel):
-        """ Sets Old Event Position. """
+        """ Sets Old Event Selection. """
         
         self._oldselection = nOldSel
 
 
     def GetSelection(self):
-        """ Returns Event Position. """
+        """ Returns Event Selection. """
         
         return self._selection
         
 
     def GetOldSelection(self):
-        """ Returns Old Event Position """
+        """ Returns Old Event Selection """
         
         return self._oldselection
 
+
+    def SetOldPosition(self, pos):
+        """ Sets Old Event Position. """
+        
+        self._oldposition = pos        
+
+
+    def SetNewPosition(self, pos):
+        """ Sets New Event Position. """
+        
+        self._newposition = pos
+        
+
+    def GetOldPosition(self):
+        """ Returns Old Event Position. """
+
+        return self._oldposition
+
+
+    def GetNewPosition(self):
+        """ Returns New Event Position. """
+
+        return self._newposition    
+    
 
 # ---------------------------------------------------------------------------- #
 # Class TabbedPage
@@ -180,6 +222,7 @@ class TabbedPage:
         self._tooltip = ""
         self._tooltiptime = 500
         self._winsize = 150
+        self._menu = None
     
 
 # ---------------------------------------------------------------------------- #
@@ -234,7 +277,7 @@ class NotebookSpinButton(wx.SpinButton):
 class TabCtrl(wx.PyControl):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=NC_DEFAULT_STYLE,
+                 size=DEFAULT_SIZE, style=NC_DEFAULT_STYLE,
                  validator=wx.DefaultValidator, name="TabCtrl"):
         """
         Default Class Constructor.
@@ -255,6 +298,8 @@ class TabCtrl(wx.PyControl):
         self._spacetabs = 2
         self._xrect = wx.Rect()
         self._xrefreshed = False
+        self._imageconverted = False
+        self._convertimage = False
         self._disabledcolour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT)
         
         self._hover = False
@@ -264,8 +309,11 @@ class TabCtrl(wx.PyControl):
         self._isdragging = False
         self._tabID = -1
         self._enabledragging = False
+        self._olddragpos = -1
+        self._isleaving = False
         self._highlight = False
         self._usefocus = True
+        self._hideonsingletab = False
 
         self._insidetab = -1        
         self._showtooltip = False
@@ -282,6 +330,8 @@ class TabCtrl(wx.PyControl):
         self._drawx = False
         self._drawxstyle = 1
 
+        self._pmenu = None
+        
         self.SetDefaultPage()        
         
         self.SetBestSize((-1, 28))
@@ -303,6 +353,7 @@ class TabCtrl(wx.PyControl):
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnMouseRightUp)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -310,6 +361,17 @@ class TabCtrl(wx.PyControl):
 
         self.Bind(wx.EVT_TIMER, self.AnimateTab)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
+
+
+    def OnLeaveWindow(self, event):
+
+        if self._enabledragging:
+            if self._isdragging:
+                self._isleaving = True
+                self.Refresh()
+                
+        event.Skip()
         
 
     def OnKeyDown(self, event):
@@ -353,7 +415,7 @@ class TabCtrl(wx.PyControl):
         if select or self.GetSelection() == -1:
            self._selection = self.GetPageCount() - 1
         
-        self.Refresh() 
+        self.Refresh()
  
 
     def InsertPage(self, nPage, text, select=False, img=-1):
@@ -428,8 +490,8 @@ class TabCtrl(wx.PyControl):
         self._somethingchanged = True
         self._firsttime = True
         self.Refresh()
-        self._firsttime = False
-        self.Refresh()
+##        self._firsttime = False
+##        self.Refresh()
          
 
     def SetSelection(self, nPage):
@@ -859,7 +921,14 @@ class TabCtrl(wx.PyControl):
         """ Globally Enables/Disables Tab ToolTips. """
 
         self._showtooltip = show
-        if not show:
+        if show:
+            try:
+                wx.PopupWindow(self)
+                self.TransientTipWindow = TransientTipWindow
+            except NotImplementedError:
+                self.TransientTipWindow = macTransientTipWindow
+
+        else:
             if self._istooltipshown:
                 self._tipwindow.Destroy()
                 self._istooltipshown = False
@@ -944,7 +1013,7 @@ class TabCtrl(wx.PyControl):
         nbsize.append(self._initrect[-1][0] + self._initrect[-1][2])
         nbsize.append(self._initrect[-1][1] + self._initrect[-1][3])
         clsize = self.GetClientSize()
-        
+
         if nbsize[0] > clsize[0]:
             if not hasattr(self, "_spinbutton"):
                 self._spinbutton = NotebookSpinButton(self, pos=(10000,10000))
@@ -1005,14 +1074,23 @@ class TabCtrl(wx.PyControl):
             flags = wx.NB_HITTEST_NOWHERE
 
         if point.x <= 0 or point.x >= size.x:
-            return wx.NOT_FOUND
+            if flags:
+                return wx.NOT_FOUND, flags
+            else:
+                return wx.NOT_FOUND
      
         if not mirror and \
            (point.y <= size.y - height or point.y >= size.y):
-            return wx.NOT_FOUND
+            if flags:
+                return wx.NOT_FOUND, flags
+            else:
+                return wx.NOT_FOUND
         
         if mirror and (point.y <= 0 or point.y >= height + self._padding.y*2):
-            return wx.NOT_FOUND 
+            if flags:
+                return wx.NOT_FOUND, flags
+            else:
+                return wx.NOT_FOUND
 
         posx = 3
         maxwidth = max(self._maxtabwidths)
@@ -1250,6 +1328,81 @@ class TabCtrl(wx.PyControl):
         return -1
 
 
+    def SetImageToCloseButton(self, convert=True):
+        """ Set Whether The Tab Icon Should Be Converted To The Close Button Or Not. """
+        
+        self._convertimage = convert
+
+        
+    def GetImageToCloseButton(self):
+        """ Get Whether The Tab Icon Should Be Converted To The Close Button Or Not. """
+        
+        return self._convertimage        
+
+
+    def ConvertImageToCloseButton(self, page):
+        """ Globally Converts The Page Image To The "Opera" Style Close Button. """
+
+        bmpindex = self.GetPageImage(page)
+        if  bmpindex < 0:
+            return
+
+        tabrect = self._tabrect[page]
+        size = self.GetSize()
+
+        maxfont = self._maxfont
+
+        dc = wx.ClientDC(self)        
+
+        dc.SetFont(maxfont) 
+        pom, height = dc.GetTextExtent("Aq")
+        
+        bmp = self._imglist.GetBitmap(bmpindex)
+                
+        bmpposx = tabrect.x + self._padding.x
+        bmpposy = size.y - (height + 2*self._padding.y + bmp.GetHeight())/2 - 1
+
+        ypos = size.y - height - self._padding.y*2
+        ysize = height + self._padding.y*2 + 3
+
+        if page == self.GetSelection():
+            bmpposx = bmpposx + 1
+            bmpposy = bmpposy - 1
+            ypos = ypos - 3                    
+            ysize = ysize + 2
+            
+        colour = self.GetPageColour(page)
+        bmprect = wx.Rect(bmpposx, bmpposy, bmp.GetWidth()+self._padding.x, bmp.GetHeight())
+        
+        dc.SetBrush(wx.Brush(colour))
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.DrawRectangleRect(bmprect)
+        
+        colour = self.GetPageTextColour(page)
+        
+        r = colour.Red()
+        g = colour.Green()
+        b = colour.Blue()
+
+        hr, hg, hb = min(255,r+64), min(255,g+64), min(255,b+64)
+                
+        colour = wx.Colour(hr, hg, hb)
+        back_colour = wx.WHITE
+
+        yypos = ypos+(ysize-height-self._padding.y/2)/2
+
+        xrect = wx.Rect(bmprect.x+(bmprect.width - self._padding.x - height)/2,
+                        yypos, height, height)
+       
+        # Opera Style
+        dc.SetPen(wx.Pen(colour, 1))
+        dc.SetBrush(wx.Brush(colour))
+        dc.DrawRoundedRectangleRect(xrect, 2)
+        dc.SetPen(wx.Pen(back_colour, 2))
+        dc.DrawLine(xrect[0]+2, xrect[1]+2, xrect[0]+xrect[2]-3, xrect[1]+xrect[3]-3)
+        dc.DrawLine(xrect[0]+2, xrect[1]+xrect[3]-3, xrect[0]+xrect[2]-3, xrect[1]+2)
+        
+
     def RedrawClosingX(self, pt, insidex, drawx, highlight=False):
         """ Redraw The Closing "X" Accordingly To The Mouse "Hovering" Position. """
         
@@ -1284,6 +1437,73 @@ class TabCtrl(wx.PyControl):
             dc.DrawLine(xrect[0]+2, xrect[1]+xrect[3]-3, xrect[0]+xrect[2]-3, xrect[1]+2)
     
 
+    def HideOnSingleTab(self, hide=True):
+        """ Hides The TabCtrl When There Is Only One Tab In NotebookCtrl. """
+        
+        self._hideonsingletab = hide
+        
+
+    def SetPagePopupMenu(self, nPage, menu):
+        """ Sets A Popup Menu Specific To A Single Tab. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPagePopupMenu: (" + str(nPage) + ")"
+        
+        self._pages[nPage]._menu = menu
+
+
+    def GetPagePopupMenu(self, nPage):
+        """ Returns The Popup Menu Associated To A Single Tab. """
+
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPagePopupMenu: (" + str(nPage) + ")"        
+        
+        return self._pages[nPage]._menu
+
+
+    def DrawInsertionMark(self, dc, nPage):
+        """
+        Draw An Insertion Arrow To Let The User Understand Where A Dragged Tab Will
+        Be Dropped (Between Which Tabs).
+        """
+        
+        if nPage < 0:
+            return
+            
+        colour = wx.BLACK
+
+        rect = self._tabrect[nPage]
+        
+        x1 = rect.x - 2
+        y1 = rect.y - 1
+        x2 = x1
+        y2 = y1 + rect.height/2
+        x3 = rect.x - 5
+        y3 = y2
+        x4 = rect.x
+        y4 = y2 + rect.height/4
+        x5 = rect.x + 4
+        y5 = y2
+        x6 = rect.x + 1
+        y6 = y2
+        x7 = rect.x + 1
+        y7 = y1
+
+        if nPage > self._tabID:
+            x1 = x1 + rect.width
+            x2 = x2 + rect.width
+            x3 = x3 + rect.width
+            x4 = x4 + rect.width
+            x5 = x5 + rect.width
+            x6 = x6 + rect.width
+            x7 = x7 + rect.width
+        
+        dc.SetPen(wx.Pen(wx.BLACK, 1))
+        dc.SetBrush(wx.Brush(self.GetPageTextColour(nPage)))
+        dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5, y5),
+                        (x6, y6), (x7, y7)])
+        
+
     def OnMouseMotion(self, event):
         """ Handles The wx.EVT_MOTION Event For TabCtrl. """
 
@@ -1291,7 +1511,7 @@ class TabCtrl(wx.PyControl):
         
         if self._enabledragging:
             
-            if event.Dragging():
+            if event.Dragging() and not event.RightIsDown() and not event.MiddleIsDown():
                 
                 tolerance = 2
                 
@@ -1304,7 +1524,14 @@ class TabCtrl(wx.PyControl):
 
                 self.SetCursor(self._dragcursor)
                 self._isdragging = True
+                self._isleaving = False
+                newpos = self.HitTest(pt)
 
+                if newpos >= 0 and newpos != self._olddragpos:
+                    
+                    self._olddragpos = newpos
+                    self.Refresh()
+                    
             else:
 
                 self._isdragging = False
@@ -1326,7 +1553,20 @@ class TabCtrl(wx.PyControl):
                             if self.IsPageEnabled(insidetab):
                                 self.RedrawClosingX(pt, insidetab, drawx[1])
                                 self._xrefreshed = True
-
+            else:
+                if self.GetImageToCloseButton():
+                    page, flags = self.HitTest(pt, 1)
+                    if page >= 0:
+                        if self.IsPageEnabled(page):
+                            if flags == NC_HITTEST_ONICON:
+                                if not self._imageconverted:
+                                    self.ConvertImageToCloseButton(page)
+                                    self._imageconverted = True
+                            else:
+                                if self._imageconverted:
+                                    self.Refresh()
+                                    self._imageconverted = False
+                            
         if self._showtooltip:
             if not event.Dragging():
                 if not event.LeftDown():
@@ -1367,8 +1607,8 @@ class TabCtrl(wx.PyControl):
         """ Called When The Timer For The ToolTip Expires. Used Internally. """
 
         self._istooltipshown = True
-        self._tipwindow = TransientTipWindow(self, self._currenttip,
-                                             self._currentwinsize)
+        self._tipwindow = self.TransientTipWindow(self, self._currenttip,
+                                                 self._currentwinsize)
 
         xsize, ysize = self._tipwindow.GetSize()
         xpos, ypos = self.ClientToScreen(self._mousepos)
@@ -1402,10 +1642,8 @@ class TabCtrl(wx.PyControl):
         if page != wx.NOT_FOUND:
 
             if self.IsPageEnabled(page):
-                if flags != NC_HITTEST_ONX:
-                    self.SetSelection(page)
-                    self._tabID = page
-                else:
+                
+                if flags == NC_HITTEST_ONX or (flags == NC_HITTEST_ONICON and self.GetImageToCloseButton()):
                     eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_CLOSING, self.GetId())
                     eventOut.SetOldSelection(self._selection)
                     eventOut.SetSelection(page)
@@ -1414,7 +1652,10 @@ class TabCtrl(wx.PyControl):
                     if not self.GetEventHandler().ProcessEvent(eventOut):
                         self._parent.DeletePage(page)
                         self._parent.bsizer.Layout()
-                        
+
+                else:
+                    self.SetSelection(page)
+                    self._tabID = page
 
         event.Skip()
 
@@ -1435,16 +1676,31 @@ class TabCtrl(wx.PyControl):
 
         if id >= 0 and id != self._tabID: 
 
-            self._parent.Freeze()
+            self._isdragging = False
+            self._olddragpos = -1
+            eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_DND, self.GetId())
+            eventOut.SetOldPosition(self._tabID)
+            eventOut.SetNewPosition(id)
+            eventOut.SetEventObject(self)
+            self.GetEventHandler().ProcessEvent(eventOut)
             
-            text = self.GetPageText(self._tabID)
-            image = self.GetPageImage(self._tabID)
-            font1 = self.GetPageTextFont(self._tabID)
-            font2 = self.GetPageTextSecondaryFont(self._tabID)
-            fontcolour = self.GetPageTextColour(self._tabID)
-            pagecolour = self.GetPageColour(self._tabID)
-            enabled = self.IsPageEnabled(self._tabID)
-            tooltip, ontime, winsize = self.GetPageToolTip(self._tabID)
+            self._parent.Freeze()
+
+            try:
+                text = self.GetPageText(self._tabID)
+                image = self.GetPageImage(self._tabID)
+                font1 = self.GetPageTextFont(self._tabID)
+                font2 = self.GetPageTextSecondaryFont(self._tabID)
+                fontcolour = self.GetPageTextColour(self._tabID)
+                pagecolour = self.GetPageColour(self._tabID)
+                enabled = self.IsPageEnabled(self._tabID)
+                tooltip, ontime, winsize = self.GetPageToolTip(self._tabID)
+                menu = self.GetPagePopupMenu(self._tabID)
+            except:
+                self._parent.Thaw()
+                self._tabID = -1 
+                self.SetCursor(wx.STANDARD_CURSOR)
+                return
             
             isanimated = 0
             if self._timers[self._tabID].IsRunning():
@@ -1453,11 +1709,8 @@ class TabCtrl(wx.PyControl):
                 
             self.StopAnimation(self._tabID)
             animatedimages = self.GetAnimationImages(self._tabID)
-            
-            if not hasattr(self, "_pagerange"):                    
-                pagerange = range(self.GetPageCount())
-            else:
-                pagerange = self._pagerange
+                        
+            pagerange = range(self.GetPageCount())
                 
             newrange = []
                     
@@ -1505,9 +1758,15 @@ class TabCtrl(wx.PyControl):
             self.DeletePage(self._tabID)
             
             if enabled:
-                self.InsertPage(id, text, True, image)
+                if id == self.GetPageCount():
+                    self.AddPage(text, True, image)
+                else:
+                    self.InsertPage(id, text, True, image)
             else:
-                self.InsertPage(id, text, False, image)
+                if id == self.GetPageCount():
+                    self.AddPage(text, False, image)
+                else:
+                    self.InsertPage(id, text, False, image)
 
             self.SetPageImage(id, image)
             self.SetPageText(id, text)
@@ -1517,6 +1776,8 @@ class TabCtrl(wx.PyControl):
             self.SetPageColour(id, pagecolour)
             self.EnablePage(id, enabled)
             self.SetPageToolTip(id, tooltip, ontime, winsize)
+            self.SetPagePopupMenu(id, menu)
+            
             if isanimated and len(animatedimages) > 1:
                 self.SetAnimationImages(id, animatedimages)
                 self.StartAnimation(id, timer)
@@ -1534,9 +1795,11 @@ class TabCtrl(wx.PyControl):
                 
             self._parent.bsizer.Layout()
             
-            self._pagerange = newrange
             self._parent.Thaw()
 
+        self._isdragging = False
+        self._olddragpos = -1
+        self.Refresh()
         self._tabID = -1 
         self.SetCursor(wx.STANDARD_CURSOR)
         
@@ -1552,6 +1815,21 @@ class TabCtrl(wx.PyControl):
             event.Skip()
              
 
+    def OnMouseRightUp(self, event):
+        """ Handles The wx.EVT_RIGHT_UP Event For TabCtrl. """
+        
+        pt = event.GetPosition()
+        id = self.HitTest(pt)
+
+        if id >= 0:
+            if self.IsPageEnabled(id):
+                menu = self.GetPagePopupMenu(id)
+                if menu:
+                    self.PopupMenu(menu, pt)
+
+        event.Skip()                    
+
+        
     def GetAllTextExtents(self, dc):
         """ Returns All Tabs Text Extents. Used Internally. """
 
@@ -1841,10 +2119,12 @@ class TabCtrl(wx.PyControl):
             
         self.UpdateSpinButton()
 
+        if self._enabledragging:
+            if self._isdragging and not self._isleaving:
+                self.DrawInsertionMark(dc, self._olddragpos)
+                
         dc.EndDrawing()
-        
-##        event.Skip()        
-
+      
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrl
@@ -1854,10 +2134,10 @@ class TabCtrl(wx.PyControl):
 class NotebookCtrl(wx.Panel):
 
     def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 notebookctrlstyle=NC_DEFAULT_STYLE):
+                 style=NC_DEFAULT_STYLE):
         """
         Default Class Constructor. Non-Default Parameter Is:
-        - notebookctrlstyle: Style For The NotebookCtrl, Which May Be:
+        - style: Style For The NotebookCtrl, Which May Be:
           a) NC_TOP: NotebookCtrl Placed On Top (Default);
           b) NC_BOTTOM: NotebookCtrl Placed At The Bottom;
           c) NC_FIXED_WIDTH: All Tabs Have The Same Width;
@@ -1868,23 +2148,24 @@ class NotebookCtrl(wx.Panel):
         wx.Panel.__init__(self, parent, -1, style=wx.NO_FULL_REPAINT_ON_RESIZE |
                           wx.CLIP_CHILDREN)
         
-        self.nb = TabCtrl(self, -1, pos, size, notebookctrlstyle)
+        self.nb = TabCtrl(self, -1, pos, size, style)
 
         self._notebookpages = []
 
-        if notebookctrlstyle & NC_TOP == 0 and notebookctrlstyle & NC_BOTTOM == 0:
-            notebookctrlstyle = notebookctrlstyle | NC_TOP
+        if style & NC_TOP == 0 and style & NC_BOTTOM == 0:
+            style = style | NC_TOP
             
-        if notebookctrlstyle & wx.NO_BORDER == 0 and \
-           notebookctrlstyle & wx.STATIC_BORDER == 0:
-            notebookctrlstyle = notebookctrlstyle | wx.NO_BORDER
+        if style & wx.NO_BORDER == 0 and \
+           style & wx.STATIC_BORDER == 0:
+            style = style | wx.NO_BORDER
         
-        self._style = notebookctrlstyle
+        self._style = style
+        self._showcolumns = False
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.bsizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        if notebookctrlstyle & NC_TOP:
+        if style & NC_TOP:
             self.sizer.Add((0, 5), 0)                
             self.sizer.Add(self.nb, 0, wx.EXPAND)
             self.sizer.Add(self.bsizer, 1, wx.EXPAND)
@@ -1927,7 +2208,8 @@ class NotebookCtrl(wx.Panel):
         """ Handles The wx.EVT_MOTION Event For NotebookCtrl. """
 
         if self.nb._enabledragging:
-            if event.Dragging():
+            
+            if event.Dragging() and not event.RightIsDown() and not event.MiddleIsDown():
                 
                 tolerance = 2
                 pt = event.GetPosition()
@@ -1950,8 +2232,12 @@ class NotebookCtrl(wx.Panel):
                 pt = event.GetPosition()
                 self.nb._insidetab = self.nb.GetInsideTab(pt)
                 if  self.nb._insidetab < 0:
-                    self.nb._tipwindow.Destroy()
-                    self.nb._istooltipshown = False
+                    try:
+                        self.nb._tipwindow.Destroy()
+                        self.nb._istooltipshown = False
+                    except:
+                        self.nb._istooltipshown = False
+                        
                     self.nb.Refresh()
                     
         event.Skip()
@@ -1990,15 +2276,41 @@ class NotebookCtrl(wx.Panel):
                 self.bsizer.Layout()
 
         if self.GetPageCount() == 1:
+
+            if self.nb._hideonsingletab:
+                
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+
+            else:
+                
+                self.nb.Show(True)
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, True)
+                    self.sizer.Show(1, True)
+                else:
+                    self.sizer.Show(1, True)
+                    self.sizer.Show(2, True)
+
+        else:
+            
             self.nb.Show(True)
             if self._style & NC_TOP:
                 self.sizer.Show(0, True)
+                self.sizer.Show(1, True)
             else:
                 self.sizer.Show(1, True)
-
-            self.sizer.Layout()
+                self.sizer.Show(2, True)
+                    
+        self.sizer.Layout()
             
         self.Thaw()
+
+        self.ShowColumnMode(self._showcolumns)
         
 
     def InsertPage(self, nPage, page, text, select=False, img=-1):
@@ -2048,15 +2360,41 @@ class NotebookCtrl(wx.Panel):
         self.bsizer.Layout()
 
         if self.GetPageCount() == 1:
+
+            if self.nb._hideonsingletab:
+                
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+
+            else:
+                
+                self.nb.Show(True)
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, True)
+                    self.sizer.Show(1, True)
+                else:
+                    self.sizer.Show(1, True)
+                    self.sizer.Show(2, True)
+
+        else:
+            
             self.nb.Show(True)
             if self._style & NC_TOP:
                 self.sizer.Show(0, True)
+                self.sizer.Show(1, True)
             else:
                 self.sizer.Show(1, True)
-
-            self.sizer.Layout()        
-        
+                self.sizer.Show(2, True)
+                    
+        self.sizer.Layout()
+                        
         self.Thaw()
+
+        self.ShowColumnMode(self._showcolumns)
 
         
     def GetPage(self, nPage):
@@ -2134,7 +2472,42 @@ class NotebookCtrl(wx.Panel):
 
             self.sizer.Layout()      
 
+        if self.GetPageCount() == 1:
+            
+            if self.nb._hideonsingletab:
+                
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+
+            else:
+                
+                self.nb.Show(True)
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, True)
+                    self.sizer.Show(1, True)
+                else:
+                    self.sizer.Show(1, True)
+                    self.sizer.Show(2, True)
+
+        else:
+            
+            self.nb.Show(True)
+            if self._style & NC_TOP:
+                self.sizer.Show(0, True)
+                self.sizer.Show(1, True)
+            else:
+                self.sizer.Show(1, True)
+                self.sizer.Show(2, True)
+                    
+        self.sizer.Layout()
+
         self.Thaw()
+
+        self.ShowColumnMode(self._showcolumns)        
 
 
     def SetSelection(self, nPage):
@@ -2152,6 +2525,8 @@ class NotebookCtrl(wx.Panel):
             return
 
         self.nb.SetSelection(nPage)
+
+        self.ShowColumnMode(self._showcolumns)        
        
 
     def GetPageCount(self):
@@ -2315,6 +2690,60 @@ class NotebookCtrl(wx.Panel):
         """
 
         return self.nb.GetDrawX()
+    
+
+    def SetImageToCloseButton(self, convert=True):
+        """ Set Whether The Tab Icon Should Be Converted To The Close Button Or Not. """
+        
+        self.nb.SetImageToCloseButton(convert)
+
+        
+    def GetImageToCloseButton(self):
+        """ Get Whether The Tab Icon Should Be Converted To The Close Button Or Not. """
+        
+        return self.nb._convertimage
+
+
+    def HideOnSingleTab(self, hide=True):
+        """ Hides The TabCtrl When There Is Only One Tab In NotebookCtrl. """
+        
+        self.nb.HideOnSingleTab(hide)
+        
+        if self.GetPageCount() == 1:
+            if hide:
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+            else:
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, True)
+                    self.sizer.Show(1, True)
+                else:
+                    self.sizer.Show(1, True)
+                    self.sizer.Show(2, True)
+
+            self.sizer.Layout()
+            
+
+    def SetPagePopupMenu(self, nPage, menu):
+        """ Sets A Popup Menu Specific To A Single Tab. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPagePopupMenu: (" + str(nPage) + ")"
+        
+        self.nb.SetPagePopupMenu(nPage, menu)
+
+
+    def GetPagePopupMenu(self, nPage):
+        """ Returns The Popup Menu Associated To A Single Tab. """
+
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPagePopupMenu: (" + str(nPage) + ")"        
+        
+        return self.nb.GetPagePopupMenu(nPage)
     
 
     def SetPageToolTip(self, nPage, tooltip="", timer=500, winsize=150):
@@ -2494,6 +2923,51 @@ class NotebookCtrl(wx.Panel):
         return self.nb.GetPageColour(nPage)
 
 
+    def ShowColumnMode(self, show=True):
+        
+        self.Freeze()
+        
+        selection = self.GetSelection()
+        
+        if show:
+            if self._style & NC_TOP:
+                self.sizer.Show(0, False)
+                self.sizer.Show(1, False)
+                for ii in xrange(self.GetPageCount()):
+                    self.bsizer.Show(ii, True)
+            else:
+                self.sizer.Show(1, False)
+                self.sizer.Show(2, False)
+                for ii in xrange(self.GetPageCount()):
+                    self.bsizer.Show(ii, True)
+        else:
+            if self._style & NC_TOP:
+                self.sizer.Show(0, True)
+                self.sizer.Show(1, True)
+                for ii in xrange(self.GetPageCount()):
+                    self.bsizer.Show(ii, False)
+            else:
+                self.sizer.Show(1, True)
+                self.sizer.Show(2, True)
+                for ii in xrange(self.GetPageCount()):
+                    self.bsizer.Show(ii, False)
+
+            if selection < 0:
+                self.bsizer.Layout()
+                self.sizer.Layout()
+                return
+            else:
+                self.bsizer.Show(selection, True)
+                self.bsizer.Layout()
+
+        self._showcolumns = show
+        
+        self.bsizer.Layout()
+        self.sizer.Layout()
+
+        self.Thaw()        
+
+
     def HitTest(self, point, flags=0):
         """
         Standard NotebookCtrl HitTest() Method. If Called With 2 Outputs, It
@@ -2513,12 +2987,9 @@ class NotebookCtrl(wx.Panel):
 # Class TransientTipWindow
 # Auxiliary Help Class. Used To Build The Tip Window.
 # ---------------------------------------------------------------------------- #
-
-class TransientTipWindow(wx.PopupWindow):
+class _PopupWindow:
     
-    def __init__(self, parent, tip, winsize):
-        
-        wx.PopupWindow.__init__(self, parent, flags=wx.SIMPLE_BORDER)
+    def _Fill(self,tip,winsize):
         panel = wx.Panel(self, -1)
         panel.SetBackgroundColour(wx.Colour(255,255,230))
 
@@ -2546,13 +3017,49 @@ class TransientTipWindow(wx.PopupWindow):
             
         panel.SetSize((sx+6, sy+6))
         self.SetSize(panel.GetSize())
-        
 
+class TransientTipWindow(_PopupWindow,wx.PopupWindow):
+    
+    def __init__(self, parent, tip, winsize):
+        wx.PopupWindow.__init__(self, parent, flags=wx.SIMPLE_BORDER)
+        self._Fill(tip,winsize)
+        
     def ProcessLeftDown(self, evt):
         return False
-
 
     def OnDismiss(self):
         return False
 
-
+class macPopupWindow(wx.Frame):
+    def __init__(self,parent,flags):
+        wx.Frame.__init__(self,parent,id=-1,style=flags|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP  )
+        self._hideOnActivate    = False
+        #Get the parent frame: could be improved maybe?
+        self._parentFrame       = parent
+        while True:
+            parent = self._parentFrame.GetParent()
+            if parent:
+                self._parentFrame = parent
+            else:
+                break
+        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
+            
+    def Show(self,show=True):
+        wx.Frame.Show(self,show)
+        if show:
+            self._parentFrame.Raise()
+            self._hideOnActivate    = True
+            
+    def OnActivate(self, evt):
+        """Let the user hide the tooltip by clicking on it. 
+        NotebookCtrl will destroy it later."""
+        if self._hideOnActivate:
+            wx.Frame.Show(self,False)
+        
+            
+class macTransientTipWindow(_PopupWindow,macPopupWindow):
+    
+    def __init__(self, parent, tip, winsize):
+        macPopupWindow.__init__(self, parent, flags=wx.SIMPLE_BORDER)
+        self._Fill(tip,winsize)
+    

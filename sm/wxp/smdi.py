@@ -95,7 +95,6 @@ Todo:
 import  os, sys, pprint
 import  wx
 from    wx.lib.evtmgr import eventManager
-import  singleApp
 import NotebookCtrl
 wx_Notebook = NotebookCtrl.NotebookCtrl
 #import sm.spy
@@ -144,6 +143,7 @@ if DARWIN:
 FULL_REPAINT_ON_RESIZE      = wx.FULL_REPAINT_ON_RESIZE
 POS                         = (10,10)
 SIZE                        = (600,400)
+SINGLE_INSTANCE_APP         = False
 STYLE_CHILDFRAME            = wx.DEFAULT_FRAME_STYLE
 STYLE_NOTEBOOK              = FULL_REPAINT_ON_RESIZE|wx.CLIP_CHILDREN|wx.NO_BORDER
 STYLE_PARENTFRAME           = wx.DEFAULT_FRAME_STYLE #| wx.MAXIMIZE
@@ -237,18 +237,33 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         self.SetDrawX(True, 2)
         self.SetUseFocusIndicator(False)
         self.SetHighlightSelection(True)
+        self.EnableDragAndDrop(True)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
+        self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
         
     def onClosing(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
-        index = event.GetSelection()
-        if self.app.mdi in [SDI,MDI_TABS]: #no parent tab
-            zero = 0
-        else:
-            zero = -1
+        index   = event.GetSelection()
+        zero    = self.getZero()
         if index>zero:
             self.app.children[index-zero-1].frame.onFrameClose()
+            
+    def onDragAndDrop(self, event):
+        old     = event.GetOldPosition()
+        new     = event.GetNewPosition()
+        zero    = self.getZero()
+        if new != zero: #child can not be before parent if this is a tab
+            children                = self.app.children
+            child                   = children[old-zero-1]
+            children.remove(child)
+            children.insert(new-zero-1,child)
+            event.Skip()
         
+    def getZero(self):
+        if self.app.mdi in [SDI,MDI_TABS]: #no parent tab
+            return 0
+        else:
+            return -1
             
 ####Foundation Classes
 class Framework:
@@ -1156,9 +1171,9 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
             self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
         
 ####Application
-singleInstance = True #set to true for single instance app or set to false for multiple instance app
-if singleInstance:
-    wxApp = singleApp.SingleInstanceApp
+if SINGLE_INSTANCE_APP:
+    import singleApp
+    wxApp = singleApp.SINGLE_INSTANCE_APPApp
 else:
     wxApp = wx.App
 
@@ -1201,7 +1216,7 @@ class App(wxApp):
         #start
         print "Launching application..."
         keyw                = {'redirect':not debug}
-        if singleInstance:
+        if SINGLE_INSTANCE_APP:
             keyw['name']    = title
         wxApp.__init__(self,**keyw)
 
@@ -1213,7 +1228,7 @@ class App(wxApp):
         self.GetTopWindow().Iconize(False)
 
     def OnInit(self):
-        if singleInstance:
+        if SINGLE_INSTANCE_APP:
 	        if self.active:
 	            return False
 	        else:
