@@ -180,6 +180,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.Bind(wx_stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
         self.Bind(wx_stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_CHAR, self.OnChar)
         if self.menu:
             self.UsePopUp(False)
@@ -189,6 +190,11 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                 self.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
     #---events
+    def OnLeftDown(self,event):
+        pos         = self.GetCurrentPos()
+        self.SetSelection(pos,pos)
+        event.Skip()
+        
     def OnKeyDown(self, event):
         """"""
         key     = event.KeyCode()
