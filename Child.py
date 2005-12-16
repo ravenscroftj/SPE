@@ -546,16 +546,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                         os.system('start command /k %(python)s "%(file)s"'%params) 
                 else:
                     if exit:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" %(python)s "%(file)s"'%params)
                     else:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"'%params)
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B %(python)s "%(file)s"'%params)
             elif info.DARWIN:
                 if exit:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s;exit"' -e 'end tell'"""%params)
                 else:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s"' -e 'end tell'"""%params)
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s"' -e 'end tell'"""%params)
             else:
-                os.system("python %(file)s'"%params)
+                os.system("%(python)s %(file)s'"%params)
         else:
             os.system(terminal%params)
             

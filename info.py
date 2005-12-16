@@ -25,6 +25,9 @@ if WIN:
         PYTHON_COM          = False
     if ' ' in PYTHON_EXEC:
         PYTHON_EXEC         = '"%s"'%PYTHON_EXEC
+elif DARWIN:
+    PYTHON_EXEC.replace('ython','ythonw')
+    PYTHON_COM              = False
 else:
     PYTHON_COM              = False
 

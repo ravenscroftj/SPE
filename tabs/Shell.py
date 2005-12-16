@@ -19,7 +19,7 @@ Please donate if you find this program useful (see help menu). Double click to j
 
 class Shell(wx.py.shell.Shell):
     def __init__(self,app,**keyw):
-        self.locals = keyw['locals']  = {'SPE.app':app}
+        self.locals = keyw['locals']  = {'SPE.app':app,'__name__':'__main__'}
         wx.py.shell.Shell.__init__(self,**keyw)
         self.SetUseAntiAliasing(True)
         self.Bind(wx.EVT_LEFT_DCLICK,self.jumpToSource) 

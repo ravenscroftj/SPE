@@ -372,9 +372,9 @@ class Panel(wx.Notebook):
     def open(self, event=None):
         """Open file(s) dialog."""
         try:
-            defaultDir=info.dirname(self.app.childActive.fileName)
+            defaultDir  = info.dirname(self.app.childActive.fileName)
         except:
-            defaultDir=''
+            defaultDir  = ''
         dlg = wx.FileDialog(self, "Choose a file - www.stani.be",
             defaultDir=defaultDir, defaultFile="",
             wildcard=info.WILDCARD,
