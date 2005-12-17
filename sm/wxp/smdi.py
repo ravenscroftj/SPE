@@ -231,16 +231,19 @@ class DummyPage(wx.StaticText):
 class NotebookPlus(NotebookCtrl.NotebookCtrl):
     def __init__(self,app,*args,**keyw):
         self.app = app
-        keyw['size'] = wx.Size(26,26)
+        keyw['size'] = wx.Size(25,25)
+        keyw['margin'] = 0
         if keyw.has_key('style'):
             del keyw['style']
         NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
         self.SetDrawX(True, 2)
+        self.SetPadding(wx.Point(3,4))
         self.SetUseFocusIndicator(False)
         self.SetHighlightSelection(True)
         self.EnableDragAndDrop(True)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
+        #self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DCLICK, self.OnLeftDClick)
         
     def onClosing(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
@@ -274,6 +277,15 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             
         self.notebookIcons  = wx.ImageList(16,16)
         self.AssignImageList(self.notebookIcons)
+        
+    def OnLeftDClick(self, event):
+
+        nPage = event.GetSelection()
+        self.ReparentToFrame(nPage, False)
+        
+        event.Skip()
+
+
             
 ####Foundation Classes
 class Framework:

@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 13 Dec 2005, 23.50 CET
+# Latest Revision: 15 Dec 2005, 23.50 CET
 #
 #
 # TODO List/Caveats
@@ -57,23 +57,32 @@ Supported Customizations For NotebookCtrl Include:
 - Possibility To Convert The Tab Image Into A Close Button While Mouse Is Hovering
   On The Tab Image;
 - Popup Menus On Tabs (Popup Menus Specific To Each Tab);
-- Showing Pages In "Column Mode", Which Means That All Pages Will Be Shown In
-  NotebookCtrl While The Tabs Are Hidden.
-  
+- Showing Pages In "Column/Row Mode", Which Means That All Pages Will Be Shown In
+  NotebookCtrl While The Tabs Are Hidden. They Can Be Shown In Columns (Default)
+  Or In Rows;
+- Possibility To Hide Tabs On User Request, Thus Showing Only The Current Panel;
+- Multiple Tabs Selection (Hold Ctrl Key Down And Left Mouse Click), Useful When
+  You Use The Show All The Panels In Columns/Rows. In This Case, Only The Selected
+  Tabs Are Shown In Columns/Rows;
+- Events For Mouse Events (Left Double Click, Middle Click, Right Click);
+- Possibility To Reparent A NotebookCtrl Page To A Freshly Created Frame As A Simple
+  Panel Or To A New NotebookCtrl Created Inside That New Frame.
+- Possibility To Add A Custom Panel To Show A Logo Or HTML Information Or Whatever
+  You Like When There Are No Tabs In NotebookCtrl.
 
 Usage:
 
 NotebookCtrl Construction Is Quite Similar To wx.Notebook:
 
 NotebookCtrl.__init__(self, parent, id, pos=wx.DefaultPosition,
-                      size=wx.DefaultSize, style=style)
+                      size=wx.DefaultSize, style=style, sizer=nbsizer)
 
 See NotebookCtrl __init__() Method For The Definition Of Non Standard (Non
 wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 13 Dec 2005, 23.50 CET
+Latest Revision: Andrea Gavana @ 15 Dec 2005, 23.50 CET
 
 """
 
@@ -124,6 +133,9 @@ wxEVT_NOTEBOOKCTRL_PAGE_CHANGED = wx.NewEventType()
 wxEVT_NOTEBOOKCTRL_PAGE_CHANGING = wx.NewEventType()
 wxEVT_NOTEBOOKCTRL_PAGE_CLOSING = wx.NewEventType()
 wxEVT_NOTEBOOKCTRL_PAGE_DND = wx.NewEventType()
+wxEVT_NOTEBOOKCTRL_PAGE_DCLICK = wx.NewEventType()
+wxEVT_NOTEBOOKCTRL_PAGE_RIGHT = wx.NewEventType()
+wxEVT_NOTEBOOKCTRL_PAGE_MIDDLE = wx.NewEventType()
 
 #-----------------------------------#
 #        NotebookCtrlEvent
@@ -133,6 +145,10 @@ EVT_NOTEBOOKCTRL_PAGE_CHANGED = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CHANGED
 EVT_NOTEBOOKCTRL_PAGE_CHANGING = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CHANGING, 1)
 EVT_NOTEBOOKCTRL_PAGE_CLOSING = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_CLOSING, 1)
 EVT_NOTEBOOKCTRL_PAGE_DND = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_DND, 1)
+EVT_NOTEBOOKCTRL_PAGE_DCLICK = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_DCLICK, 1)
+EVT_NOTEBOOKCTRL_PAGE_RIGHT = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_RIGHT, 1)
+EVT_NOTEBOOKCTRL_PAGE_MIDDLE = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_MIDDLE, 1)
+
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrlEvent
@@ -322,7 +338,9 @@ class TabCtrl(wx.PyControl):
         self._tiptimer = wx.PyTimer(self.OnShowToolTip)
         self._xvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
         self._yvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
-        
+
+        self._selectedtabs = []        
+
         self._timers = []
         
         self._dragcursor = wx.StockCursor(wx.CURSOR_HAND)
@@ -351,9 +369,12 @@ class TabCtrl(wx.PyControl):
             self._focusindpen.SetCap(wx.CAP_BUTT)
 
         self.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnMouseLeftDClick)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseLeftUp)
         self.Bind(wx.EVT_RIGHT_UP, self.OnMouseRightUp)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.OnMouseRightDown)
+        self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMouseMiddleDown)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -465,7 +486,7 @@ class TabCtrl(wx.PyControl):
         self.Refresh()
          
 
-    def DeletePage(self, nPage):
+    def DeletePage(self, nPage, oncontinue=True):
         """ Deletes The Page nPage, And The Associated Window. """
         
         if nPage < 0 or nPage >= self.GetPageCount():
@@ -479,7 +500,13 @@ class TabCtrl(wx.PyControl):
             self._timers[nPage].Stop()
             
         self._timers[nPage].Destroy()
-    
+
+        if not oncontinue:
+            self._somethingchanged = True
+            self._firsttime = True
+            self.Refresh()
+            return
+        
         if nPage < self._selection:
             self._selection = self._selection - 1
         elif self._selection == nPage and self._selection == self.GetPageCount():
@@ -490,8 +517,6 @@ class TabCtrl(wx.PyControl):
         self._somethingchanged = True
         self._firsttime = True
         self.Refresh()
-##        self._firsttime = False
-##        self.Refresh()
          
 
     def SetSelection(self, nPage):
@@ -921,11 +946,14 @@ class TabCtrl(wx.PyControl):
         """ Globally Enables/Disables Tab ToolTips. """
 
         self._showtooltip = show
+        
         if show:
             try:
                 wx.PopupWindow(self)
                 self.TransientTipWindow = TransientTipWindow
+            
             except NotImplementedError:
+                
                 self.TransientTipWindow = macTransientTipWindow
 
         else:
@@ -1474,34 +1502,21 @@ class TabCtrl(wx.PyControl):
 
         rect = self._tabrect[nPage]
         
-        x1 = rect.x - 2
+        x1 = rect.x - 4
         y1 = rect.y - 1
-        x2 = x1
-        y2 = y1 + rect.height/2
-        x3 = rect.x - 5
-        y3 = y2
-        x4 = rect.x
-        y4 = y2 + rect.height/4
-        x5 = rect.x + 4
-        y5 = y2
-        x6 = rect.x + 1
-        y6 = y2
-        x7 = rect.x + 1
-        y7 = y1
+        x2 = rect.x
+        y2 = y1 + 5
+        x3 = rect.x + 3
+        y3 = y1
 
         if nPage > self._tabID:
             x1 = x1 + rect.width
             x2 = x2 + rect.width
             x3 = x3 + rect.width
-            x4 = x4 + rect.width
-            x5 = x5 + rect.width
-            x6 = x6 + rect.width
-            x7 = x7 + rect.width
         
         dc.SetPen(wx.Pen(wx.BLACK, 1))
         dc.SetBrush(wx.Brush(self.GetPageTextColour(nPage)))
-        dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5, y5),
-                        (x6, y6), (x7, y7)])
+        dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3)])
         
 
     def OnMouseMotion(self, event):
@@ -1608,7 +1623,7 @@ class TabCtrl(wx.PyControl):
 
         self._istooltipshown = True
         self._tipwindow = self.TransientTipWindow(self, self._currenttip,
-                                                 self._currentwinsize)
+                                                  self._currentwinsize)
 
         xsize, ysize = self._tipwindow.GetSize()
         xpos, ypos = self.ClientToScreen(self._mousepos)
@@ -1642,23 +1657,55 @@ class TabCtrl(wx.PyControl):
         if page != wx.NOT_FOUND:
 
             if self.IsPageEnabled(page):
-                
-                if flags == NC_HITTEST_ONX or (flags == NC_HITTEST_ONICON and self.GetImageToCloseButton()):
-                    eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_CLOSING, self.GetId())
-                    eventOut.SetOldSelection(self._selection)
-                    eventOut.SetSelection(page)
-                    eventOut.SetEventObject(self)
-                    
-                    if not self.GetEventHandler().ProcessEvent(eventOut):
-                        self._parent.DeletePage(page)
-                        self._parent.bsizer.Layout()
 
+                if event.m_controlDown:
+                    if page in self._selectedtabs:
+                        self._selectedtabs.remove(page)
+                    else:
+                        self._selectedtabs.append(page)
+                    self.Refresh()
                 else:
-                    self.SetSelection(page)
-                    self._tabID = page
+                    self._selectedtabs = []
+                    if flags == NC_HITTEST_ONX or (flags == NC_HITTEST_ONICON and self.GetImageToCloseButton()):
+                        eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_CLOSING, self.GetId())
+                        eventOut.SetOldSelection(self._selection)
+                        eventOut.SetSelection(page)
+                        eventOut.SetEventObject(self)
+                        
+                        if not self.GetEventHandler().ProcessEvent(eventOut):
+                            self._parent.DeletePage(page)
+                            self._parent.bsizer.Layout()
+
+                    else:
+                        self.SetSelection(page)
+                        self._tabID = page
 
         event.Skip()
 
+
+    def OnMouseLeftDClick(self, event):
+        """ Handles The wx.EVT_LEFT_DCLICK Event For TabCtrl. """
+        
+        pos = event.GetPosition()        
+        page = self.HitTest(pos)
+        self._selectedtabs = []
+
+        if page == wx.NOT_FOUND:
+            return
+
+        if not self.IsPageEnabled(page):
+            return
+
+        eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_DCLICK, self.GetId())
+        eventOut.SetOldSelection(self._selection)
+        eventOut.SetSelection(page)
+        eventOut.SetEventObject(self)
+                
+        if not self.GetEventHandler().ProcessEvent(eventOut):
+            return
+
+        event.Skip()        
+        
 
     def OnMouseLeftUp(self, event):
         """ Handles The wx.EVT_LEFT_UP Event For TabCtrl. """
@@ -1682,7 +1729,13 @@ class TabCtrl(wx.PyControl):
             eventOut.SetOldPosition(self._tabID)
             eventOut.SetNewPosition(id)
             eventOut.SetEventObject(self)
-            self.GetEventHandler().ProcessEvent(eventOut)
+            
+            if self.GetEventHandler().ProcessEvent(eventOut):
+                self._tabID = -1
+                self._olddragpos = -1
+                self.SetCursor(wx.STANDARD_CURSOR)
+                self.Refresh()
+                return
             
             self._parent.Freeze()
 
@@ -1712,32 +1765,10 @@ class TabCtrl(wx.PyControl):
                         
             pagerange = range(self.GetPageCount())
                 
-            newrange = []
+            newrange = pagerange[:]
+            newrange.remove(self._tabID)
+            newrange.insert(id, self._tabID)
                     
-            if id < self._tabID:
-
-                for ii in xrange(id):
-                    newrange.append(pagerange[ii])                
-
-                newrange.append(pagerange[self._tabID])
-                
-                for ii in xrange(id, len(pagerange)):
-                    if ii != self._tabID:
-                        newrange.append(pagerange[ii])
-
-            else:
-
-                for ii in xrange(self._tabID):
-                    newrange.append(pagerange[ii])
-                    
-                for ii in xrange(self._tabID+1, id+1):
-                    newrange.append(pagerange[ii])
-
-                newrange.append(pagerange[self._tabID])
-
-                for ii in xrange(id+1, self.GetPageCount()):
-                    newrange.append(pagerange[ii])
-
             newpages = []
             counter = self.GetPageCount() - 1
             
@@ -1821,13 +1852,65 @@ class TabCtrl(wx.PyControl):
         pt = event.GetPosition()
         id = self.HitTest(pt)
 
+        self._selectedtabs = []        
+
         if id >= 0:
             if self.IsPageEnabled(id):
                 menu = self.GetPagePopupMenu(id)
                 if menu:
                     self.PopupMenu(menu, pt)
 
-        event.Skip()                    
+        event.Skip()
+
+
+    def OnMouseRightDown(self, event):
+        """ Handles The wx.EVT_RIGHT_DOWN Event For TabCtrl. """
+
+        pos = event.GetPosition()        
+        page = self.HitTest(pos)
+
+        self._selectedtabs = []
+        
+        if page == wx.NOT_FOUND:
+            return
+
+        if not self.IsPageEnabled(page):
+            return
+        
+        eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_RIGHT, self.GetId())
+        eventOut.SetOldSelection(self._selection)
+        eventOut.SetSelection(page)
+        eventOut.SetEventObject(self)
+                
+        if not self.GetEventHandler().ProcessEvent(eventOut):
+            return
+
+        event.Skip()
+
+
+    def OnMouseMiddleDown(self, event):
+        """ Handles The wx.EVT_MIDDLE_DOWN Event For TabCtrl. """
+
+        pos = event.GetPosition()        
+        page = self.HitTest(pos)
+
+        self._selectedtabs = []        
+
+        if page == wx.NOT_FOUND:
+            return
+
+        if not self.IsPageEnabled(page):
+            return
+        
+        eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_MIDDLE, self.GetId())
+        eventOut.SetOldSelection(self._selection)
+        eventOut.SetSelection(page)
+        eventOut.SetEventObject(self)
+                
+        if not self.GetEventHandler().ProcessEvent(eventOut):
+            return
+
+        event.Skip()
 
         
     def GetAllTextExtents(self, dc):
@@ -1910,7 +1993,7 @@ class TabCtrl(wx.PyControl):
 
         if usefocus:
             focusindpen = self._focusindpen
-            
+    
         dc.BeginDrawing() 
 
         #background 
@@ -1987,7 +2070,7 @@ class TabCtrl(wx.PyControl):
             dc.SetFont(thefont)
             dc.SetTextForeground(thecolour)
             dc.SetBrush(thebrush)
-            
+
             width, pom = dc.GetTextExtent(text)
 
             incrtext = self._incrtext[ii]
@@ -2099,14 +2182,22 @@ class TabCtrl(wx.PyControl):
                 else:
                     dc.SetPen(wx.Pen(thecolour))
                     dc.SetBrush(wx.Brush(thecolour))
-                    xxpos = xpos+xsize-height-self._padding.x/2
+                    xxpos = xpos+xsize-height-self._padding.x
                     yypos = ypos+(ysize-height-self._padding.y/2)/2
                     dc.DrawRoundedRectangle(xxpos, yypos, height, height, 2)
                     dc.SetPen(wx.Pen(back_colour, 2))
                     dc.DrawLine(xxpos+2, yypos+2, xxpos+height-3, yypos+height-3)
                     dc.DrawLine(xxpos+2, yypos+height-3, xxpos+height-3, yypos+2)
                     Xrect.append(wx.Rect(xxpos, yypos, height, height))
-                       
+
+
+            if ii in self._selectedtabs:
+                dc.SetPen(wx.Pen(thecolour, 1, wx.DOT_DASH))
+                dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                dc.DrawRoundedRectangle(xpos+self._padding.x/2+1, ypos+self._padding.y/2+1,
+                                        xsize-self._padding.x-2,
+                                        ysize-self._padding.y-2-2, 2)
+                
             posx = posx + newwidth + space + self._padding.x + self._spacetabs + incrtext + xxspace
             if self._firsttime:
                 self._initrect.append(tabrect[ii])
@@ -2134,15 +2225,24 @@ class TabCtrl(wx.PyControl):
 class NotebookCtrl(wx.Panel):
 
     def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=NC_DEFAULT_STYLE):
+                 style=NC_DEFAULT_STYLE, sizer=wx.HORIZONTAL, margin=2):
         """
-        Default Class Constructor. Non-Default Parameter Is:
+        Default Class Constructor. Non-Default Parameters Are:
+        
         - style: Style For The NotebookCtrl, Which May Be:
           a) NC_TOP: NotebookCtrl Placed On Top (Default);
           b) NC_BOTTOM: NotebookCtrl Placed At The Bottom;
           c) NC_FIXED_WIDTH: All Tabs Have The Same Width;
           d) wx.NO_BORDER: Shows No Border For The Control (Default, Looks Better);
           e) wx.STATIC_BORDER: Shows A Static Border On The Control.
+          
+        - sizer: The Sizer Orientation For The Sizer That Holds All The Panels:
+          Changing This Style Is Only Useful When You Use The Tile Method.
+          In This Case, If sizer=wx.HORIZONTAL, All The Panels Will Be Shown In Columns,
+          While If sizer=wx.VERTICAL All The Panels Will Be Shown In Rows.
+
+        - margin: An Integer Number Of Pixels That Add Space Above TabCtrl If style=NC_TOP,
+          Or Below It If style=NC_BOTTOM
         """
         
         wx.Panel.__init__(self, parent, -1, style=wx.NO_FULL_REPAINT_ON_RESIZE |
@@ -2161,18 +2261,21 @@ class NotebookCtrl(wx.Panel):
         
         self._style = style
         self._showcolumns = False
-
+        self._showtabs = True
+        self._sizerstyle = sizer
+        self._custompanel = None
+        
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.bsizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.bsizer = wx.BoxSizer(sizer)
 
         if style & NC_TOP:
-            self.sizer.Add((0, 5), 0)                
+            self.sizer.Add((0, margin), 0)                
             self.sizer.Add(self.nb, 0, wx.EXPAND)
             self.sizer.Add(self.bsizer, 1, wx.EXPAND)
         else:
             self.sizer.Add(self.bsizer, 1, wx.EXPAND)
             self.sizer.Add(self.nb, 0, wx.EXPAND)
-            self.sizer.Add((0, 5), 0)
+            self.sizer.Add((0, margin), 0)
 
         self.SetSizer(self.sizer)
         self.sizer.Layout()  
@@ -2255,6 +2358,12 @@ class NotebookCtrl(wx.Panel):
         self.Freeze()
         
         oldselection = self.nb.GetSelection()
+
+        if self.GetPageCount() == 0:
+            if self.GetCustomPage() is not None:
+                self.bsizer.Detach(self._custompanel)
+                self._custompanel.Show(False)
+                self.bsizer.Layout()
         
         self.bsizer.Add(page, 1, wx.EXPAND | wx.ALL, 2)
                     
@@ -2277,6 +2386,8 @@ class NotebookCtrl(wx.Panel):
 
         if self.GetPageCount() == 1:
 
+            self.bsizer.Show(page, True)
+            
             if self.nb._hideonsingletab:
                 
                 if self._style & NC_TOP:
@@ -2287,7 +2398,6 @@ class NotebookCtrl(wx.Panel):
                     self.sizer.Show(2, False)
 
             else:
-                
                 self.nb.Show(True)
                 if self._style & NC_TOP:
                     self.sizer.Show(0, True)
@@ -2305,12 +2415,14 @@ class NotebookCtrl(wx.Panel):
             else:
                 self.sizer.Show(1, True)
                 self.sizer.Show(2, True)
-                    
+
+        self.bsizer.Layout()                    
         self.sizer.Layout()
             
         self.Thaw()
 
-        self.ShowColumnMode(self._showcolumns)
+        self.Tile(self._showcolumns)
+        self.ShowTabs(self._showtabs)
         
 
     def InsertPage(self, nPage, page, text, select=False, img=-1):
@@ -2329,7 +2441,12 @@ class NotebookCtrl(wx.Panel):
         self.Freeze()
         
         oldselection = self.nb.GetSelection()
-            
+
+        if self.GetPageCount() == 0:
+            if self.GetCustomPage() is not None:
+                self.bsizer.Detach(self._custompanel)
+                self._custompanel.Show(False)
+                
         if oldselection >= 0:
             self.bsizer.Show(oldselection, False)
             self.bsizer.Layout()
@@ -2394,7 +2511,8 @@ class NotebookCtrl(wx.Panel):
                         
         self.Thaw()
 
-        self.ShowColumnMode(self._showcolumns)
+        self.Tile(self._showcolumns)
+        self.ShowTabs(self._showtabs)
 
         
     def GetPage(self, nPage):
@@ -2411,25 +2529,35 @@ class NotebookCtrl(wx.Panel):
 
         self.Freeze()
 
-        counter = self.GetPageCount() - 1        
-        self.nb.DeleteAllPages()
+        counter = self.GetPageCount() - 1
         
         for ii in xrange(self.GetPageCount()):
             self.bsizer.Detach(counter-ii)
             panels = self.GetPage(counter-ii)
             panels.Destroy()
 
+        self.nb.DeleteAllPages()
         self._notebookpages = []
-        self.bsizer.Layout()
         self.nb._selection = -1
 
         self.nb.Show(False)
+
+        custom = self.GetCustomPage()
+            
+        if custom is not None:
+            self.SetCustomPage(custom)
+            custom.Show(True)
+            
+        self.bsizer.Layout()
+        
         if self._style & NC_TOP:
             self.sizer.Show(0, False)
+            self.sizer.Show(1, False)
         else:
             self.sizer.Show(1, False)
+            self.sizer.Show(2, False)
 
-        self.sizer.Layout()            
+        self.sizer.Layout()
 
         self.Thaw()
          
@@ -2467,10 +2595,21 @@ class NotebookCtrl(wx.Panel):
             self.nb.Show(False)
             if self._style & NC_TOP:
                 self.sizer.Show(0, False)
+                self.sizer.Show(1, False)
             else:
                 self.sizer.Show(1, False)
+                self.sizer.Show(2, False)
 
-            self.sizer.Layout()      
+            custom = self.GetCustomPage()
+            
+            if custom is not None:
+                self.bsizer.Add(custom, 1, wx.EXPAND | wx.ALL, 2)
+                custom.Show(True)
+                
+            self.bsizer.Layout()
+            self.sizer.Layout()
+            self.Thaw()
+            return
 
         if self.GetPageCount() == 1:
             
@@ -2507,7 +2646,8 @@ class NotebookCtrl(wx.Panel):
 
         self.Thaw()
 
-        self.ShowColumnMode(self._showcolumns)        
+        self.Tile(self._showcolumns)
+        self.ShowTabs(self._showtabs)
 
 
     def SetSelection(self, nPage):
@@ -2526,7 +2666,8 @@ class NotebookCtrl(wx.Panel):
 
         self.nb.SetSelection(nPage)
 
-        self.ShowColumnMode(self._showcolumns)        
+        self.Tile(self._showcolumns)
+        self.ShowTabs(self._showtabs)
        
 
     def GetPageCount(self):
@@ -2767,7 +2908,7 @@ class NotebookCtrl(wx.Panel):
         if nPage < 0 or nPage >= self.GetPageCount():
             raise "\nERROR: Invalid Notebook Page In GetPageToolTip: (" + str(nPage) + ")"
         
-        return self.nb.GetPageToolTip()
+        return self.nb.GetPageToolTip(nPage)
 
 
     def EnableToolTip(self, show=True):
@@ -2809,7 +2950,7 @@ class NotebookCtrl(wx.Panel):
         if nPage < 0 or nPage >= self.GetPageCount():
             raise "\nERROR: Invalid Notebook Page In GetPageText: (" + str(nPage) + ")"
         
-        return self.nb.GetPageText()
+        return self.nb.GetPageText(nPage)
 
 
     def SetPageText(self, nPage, text):
@@ -2923,23 +3064,68 @@ class NotebookCtrl(wx.Panel):
         return self.nb.GetPageColour(nPage)
 
 
-    def ShowColumnMode(self, show=True):
+    def Tile(self, show=True, orient=None):
+        """ Shows Pages In Column/Row Mode (One Panel After The Other In Columns/Rows). """
         
+        if self._style & NC_TOP:
+            if not self.sizer.GetItem(0).IsShown() == show and orient is None:
+                return
+        else:
+            if not self.sizer.GetItem(2).IsShown() == show and orient is None:
+                return
+
         self.Freeze()
         
+        if orient is not None and show:
+            origorient = self.bsizer.GetOrientation()
+            if origorient != orient:
+                for ii in xrange(self.GetPageCount()-1, -1, -1):
+                    self.bsizer.Detach(ii)
+
+                self.sizer.Detach(self.bsizer)
+                self.bsizer.Destroy()
+                self.bsizer = wx.BoxSizer(orient)
+                
+                for ii in xrange(self.GetPageCount()):
+                    self.bsizer.Add(self._notebookpages[ii], 1, wx.EXPAND | wx.ALL, 2)
+
+                if self._style & NC_TOP:
+                    self.sizer.Add(self.bsizer, 1, wx.EXPAND)
+                else:
+                    self.sizer.Insert(0, self.bsizer, 1, wx.EXPAND)
+        
+                self.bsizer.Layout()
+                self.sizer.Layout()
+                
         selection = self.GetSelection()
         
         if show:
             if self._style & NC_TOP:
                 self.sizer.Show(0, False)
                 self.sizer.Show(1, False)
-                for ii in xrange(self.GetPageCount()):
-                    self.bsizer.Show(ii, True)
+                if len(self.nb._selectedtabs) > 0:
+                    for ii in xrange(self.GetPageCount()):
+                        if ii in self.nb._selectedtabs:
+                            self.bsizer.Show(ii, True)
+                        else:
+                            self.bsizer.Show(ii, False)
+                else:
+                    for ii in xrange(self.GetPageCount()):
+                        if self.IsPageEnabled(ii):
+                            self.bsizer.Show(ii, True)
+                        else:
+                            self.bsizer.Show(ii, False)
             else:
                 self.sizer.Show(1, False)
                 self.sizer.Show(2, False)
-                for ii in xrange(self.GetPageCount()):
-                    self.bsizer.Show(ii, True)
+                if len(self.nb._selectedtabs) > 0:
+                    for ii in xrange(self.GetPageCount()):
+                        if ii in self.nb._selectedtabs:
+                            self.bsizer.Show(ii, True)
+                else:
+                    for ii in xrange(self.GetPageCount()):
+                        if self.IsPageEnabled(ii):
+                            self.bsizer.Show(ii, True)
         else:
             if self._style & NC_TOP:
                 self.sizer.Show(0, True)
@@ -2968,6 +3154,260 @@ class NotebookCtrl(wx.Panel):
         self.Thaw()        
 
 
+    def ShowTabs(self, show=True):
+        """ Shows/Hides Tabs On Request. """
+        
+        if self._style & NC_TOP:
+            if self.sizer.GetItem(0).IsShown() == show:
+                return
+        else:
+            if self.sizer.GetItem(2).IsShown() == show:
+                return
+
+        if self.GetPageCount() == 0:
+            return
+        
+        self.Freeze()
+        
+        if not show:
+                
+            if self._style & NC_TOP:
+                self.sizer.Show(0, False)
+                self.sizer.Show(1, False)
+            else:
+                self.sizer.Show(1, False)
+                self.sizer.Show(2, False)
+
+        else:
+            
+            if self._style & NC_TOP:
+                self.sizer.Show(0, True)
+                self.sizer.Show(1, True)
+            else:
+                self.sizer.Show(1, True)
+                self.sizer.Show(2, True)
+
+        self._showtabs = show
+        
+        self.sizer.Layout()
+        
+        self.Thaw()
+
+
+    def GetIndex(self, page):
+        """ Returns The Page Index (Position) Based On The NotebookCtrl Page Passed. """
+
+        if page in self._notebookpages:
+            return self._notebookpages.index(page)
+
+        return -1
+    
+
+    def ReparentPage(self, nPage, newParent):
+        """ Reparents The NotebookCtrl Page nPage To A New Parent. """
+        
+        if nPage < 0 or (self.GetSelection() >= 0 and nPage >= self.GetPageCount()):
+            raise "\nERROR: Invalid Notebook Page In ReparentPage: (" + str(nPage) + ")"
+        
+        page = self.GetPage(nPage)
+        page.Reparent(newParent)
+        
+
+    def ReparentToFrame(self, nPage, createNotebook=False):
+        """ Reparents The NotebookCtrl Page nPage To A New Frame. """
+        
+        if nPage < 0 or (self.GetSelection() >= 0 and nPage >= self.GetPageCount()):
+            raise "\nERROR: Invalid Notebook Page In ReparentToFrame: (" + str(nPage) + ")"
+        
+        self.Freeze()
+
+        infos = self.GetPageInfo(nPage)
+        panel = self.GetPage(nPage)
+        text = infos["text"]
+        oldparent = panel.GetParent()
+
+        frame = NCFrame(None, -1, text, nb=self, infos=infos, panel=panel, oldparent=oldparent)
+        
+        if createNotebook:
+            nb = NotebookCtrl(frame, -1, style=self._style, sizer=self._sizerstyle)
+            nb.SetImageList(infos["imagelist"])
+            self.ReparentToNotebook(nPage, nb)
+        else:
+            self.ReparentPage(nPage, frame)
+            
+            self.nb.DeletePage(nPage, False)
+
+            self.bsizer.Detach(nPage)
+            self.bsizer.Layout()
+            self.sizer.Layout()
+
+            self._notebookpages.pop(nPage)
+            
+            self.AdvanceSelection()
+
+        if self.GetPageCount() == 0:
+            if self._style & NC_TOP:
+                self.sizer.Show(0, False)
+                self.sizer.Show(1, False)
+            else:
+                self.sizer.Show(1, False)
+                self.sizer.Show(2, False)
+
+            self.sizer.Layout()
+
+        custom = self.GetCustomPage()
+        if custom is not None:
+            self.SetCustomPage(custom)
+            
+        self.Thaw()
+
+        frame.Show()
+
+        
+    def ReparentToNotebook(self, nPage, notebook, newPage=None):
+        """ Reparents The NotebookCtrl Page nPage To A New NotebookCtrl. """
+        
+        if nPage < 0 or (self.GetSelection() >= 0 and nPage >= self.GetPageCount()):
+            raise "\nERROR: Invalid Notebook Page In ReparentToNotebook: (" + str(nPage) + ")"
+
+        if newPage is not None and newPage >= notebook.GetPageCount():
+            raise "\nERROR: Invalid Notebook New Page In ReparentToNotebook: (" + str(nPage) + ")"
+
+        self.Freeze()
+        
+        infos = self.GetPageInfo(nPage)
+        panel = self.GetPage(nPage)
+
+        self.ReparentPage(nPage, notebook)
+        
+        if newPage is None:
+            notebook.AddPage(panel, infos["text"], False, infos["image"])
+            notebook.SetPageInfo(0, infos)
+            
+        self.nb.DeletePage(nPage, False)
+
+        self.bsizer.Detach(nPage)
+        self.bsizer.Layout()
+        self.sizer.Layout()
+
+        self._notebookpages.pop(nPage)
+        
+        self.AdvanceSelection()
+
+        if self.GetPageCount() == 0:
+            if self._style & NC_TOP:
+                self.sizer.Show(0, False)
+                self.sizer.Show(1, False)
+            else:
+                self.sizer.Show(1, False)
+                self.sizer.Show(2, False)
+
+            self.sizer.Layout()
+
+        self.Thaw()        
+        
+
+    def GetPageInfo(self, nPage):
+        """ Returns All The Style Information For A Given Page. """
+
+        if nPage < 0 or (self.GetSelection() >= 0 and nPage >= self.GetPageCount()):
+            raise "\nERROR: Invalid Notebook Page In GetPageInfo: (" + str(nPage) + ")"
+        
+        text = self.GetPageText(nPage)
+        image = self.GetPageImage(nPage)
+        font1 = self.GetPageTextFont(nPage)
+        font2 = self.GetPageTextSecondaryFont(nPage)
+        fontcolour = self.GetPageTextColour(nPage)
+        pagecolour = self.GetPageColour(nPage)
+        enabled = self.IsPageEnabled(nPage)
+        tooltip, ontime, winsize = self.GetPageToolTip(nPage)
+        menu = self.GetPagePopupMenu(nPage)
+            
+        isanimated = 0
+        timer = None
+
+        if self.nb._timers[nPage].IsRunning():
+            isanimated = 1
+            timer = self.nb._timers[nPage].GetInterval()
+            
+        self.StopAnimation(nPage)
+        animatedimages = self.GetAnimationImages(nPage)
+
+        infos = {"text": text, "image": image, "font1": font1, "font2": font2,
+                 "fontcolour": fontcolour, "pagecolour": pagecolour, "enabled": enabled,
+                 "tooltip": tooltip, "ontime": ontime, "winsize": winsize,
+                 "menu": menu, "isanimated": isanimated, "timer": timer,
+                 "animatedimages": animatedimages, "imagelist": self.nb._imglist}
+
+        return infos
+
+
+    def SetPageInfo(self, nPage, infos):
+        """ Sets All The Style Information For A Given Page. """
+
+        if nPage < 0 or (self.GetSelection() >= 0 and nPage >= self.GetPageCount()):
+            raise "\nERROR: Invalid Notebook Page In SetPageInfo: (" + str(nPage) + ")"
+
+        self.SetPageTextFont(nPage, infos["font1"])
+        self.SetPageTextSecondaryFont(nPage, infos["font2"])
+        self.SetPageTextColour(nPage, infos["fontcolour"])
+        self.SetPageColour(nPage, infos["pagecolour"])
+        self.EnablePage(nPage, infos["enabled"])
+        self.SetPageToolTip(nPage, infos["tooltip"], infos["ontime"], infos["winsize"])
+        self.SetPagePopupMenu(nPage, infos["menu"])
+        
+        if infos["isanimated"] and len(infos["animatedimages"]) > 1:
+            self.SetAnimationImages(nPage, infos["animatedimages"])
+            self.StartAnimation(nPage, infos["timer"])
+    
+
+    def SetCustomPage(self, panel):
+        """ Sets A Custom Panel To Show When There Are No Pages Left In NotebookCtrl. """
+        
+        self.Freeze()
+        
+        if panel is None:
+            if self._custompanel is not None:
+                self.bsizer.Detach(self._custompanel)
+                self._custompanel.Show(False)
+                
+            if self.GetPageCount() == 0:   
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+        else:
+            if self.GetPageCount() == 0:
+                if self._custompanel is not None:
+                    self.bsizer.Detach(self._custompanel)
+                    self._custompanel.Show(False)
+                    
+                self.bsizer.Add(panel, 1, wx.EXPAND | wx.ALL, 2)
+                panel.Show(True)
+                if self._style & NC_TOP:
+                    self.sizer.Show(0, False)
+                    self.sizer.Show(1, False)
+                else:
+                    self.sizer.Show(1, False)
+                    self.sizer.Show(2, False)
+            else:
+                panel.Show(False)
+
+        self._custompanel = panel
+        
+        self.bsizer.Layout()
+        self.sizer.Layout()
+        self.Thaw()
+            
+
+    def GetCustomPage(self):
+        """ Gets A Custom Panel To Show When There Are No Pages Left In NotebookCtrl. """
+        
+        return self._custompanel
+    
+
     def HitTest(self, point, flags=0):
         """
         Standard NotebookCtrl HitTest() Method. If Called With 2 Outputs, It
@@ -2987,11 +3427,13 @@ class NotebookCtrl(wx.Panel):
 # Class TransientTipWindow
 # Auxiliary Help Class. Used To Build The Tip Window.
 # ---------------------------------------------------------------------------- #
+
 class _PopupWindow:
     
-    def _Fill(self,tip,winsize):
+    def _Fill(self, tip, winsize):
+        
         panel = wx.Panel(self, -1)
-        panel.SetBackgroundColour(wx.Colour(255,255,230))
+        panel.SetBackgroundColour(wx.Colour(255, 255, 230))
 
         # border from sides and top to text (in pixels)
         border = 5
@@ -3017,49 +3459,118 @@ class _PopupWindow:
             
         panel.SetSize((sx+6, sy+6))
         self.SetSize(panel.GetSize())
+        
 
-class TransientTipWindow(_PopupWindow,wx.PopupWindow):
+class TransientTipWindow(_PopupWindow, wx.PopupWindow):
     
     def __init__(self, parent, tip, winsize):
+        
         wx.PopupWindow.__init__(self, parent, flags=wx.SIMPLE_BORDER)
         self._Fill(tip,winsize)
         
+        
     def ProcessLeftDown(self, evt):
+        
         return False
+
 
     def OnDismiss(self):
+        
         return False
 
+
 class macPopupWindow(wx.Frame):
-    def __init__(self,parent,flags):
-        wx.Frame.__init__(self,parent,id=-1,style=flags|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP  )
-        self._hideOnActivate    = False
+    
+    def __init__(self, parent, flags):
+        
+        wx.Frame.__init__(self, parent, id=-1, style=flags|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP)
+        self._hideOnActivate = False
         #Get the parent frame: could be improved maybe?
-        self._parentFrame       = parent
+        self._parentFrame = parent
+        
         while True:
+            
             parent = self._parentFrame.GetParent()
+
             if parent:
                 self._parentFrame = parent
             else:
                 break
-        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
             
-    def Show(self,show=True):
+        self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
+
+            
+    def Show(self, show=True):
+        
         wx.Frame.Show(self,show)
+        
         if show:
             self._parentFrame.Raise()
-            self._hideOnActivate    = True
+            self._hideOnActivate = True
+            
             
     def OnActivate(self, evt):
-        """Let the user hide the tooltip by clicking on it. 
-        NotebookCtrl will destroy it later."""
+        """
+        Let The User Hide The Tooltip By Clicking On It. 
+        NotebookCtrl Will Destroy It Later.
+        """
+        
         if self._hideOnActivate:
             wx.Frame.Show(self,False)
         
             
-class macTransientTipWindow(_PopupWindow,macPopupWindow):
+class macTransientTipWindow(_PopupWindow, macPopupWindow):
     
     def __init__(self, parent, tip, winsize):
+        
         macPopupWindow.__init__(self, parent, flags=wx.SIMPLE_BORDER)
-        self._Fill(tip,winsize)
+        self._Fill(tip, winsize)
     
+
+class NCFrame(wx.Frame):
+
+    def __init__(self, parent, id=wx.ID_ANY, title="", pos=wx.DefaultPosition,
+                 size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE, nb=None,
+                 panel=None, infos=None, oldparent=None):
+
+        wx.Frame.__init__(self, parent, id, title, pos, size, style)
+
+        self._infos = infos
+        self._nb = nb
+        self._panel = panel
+        self._oldparent = oldparent
+
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+
+    def OnClose(self, event):
+        
+        try:
+            infos = self._infos
+            self._panel.Reparent(self._oldparent)            
+            self._nb.AddPage(self._panel, infos["text"], False, infos["image"])
+
+            id = self._nb.GetPageCount() - 1
+            
+            self._nb.SetPageTextFont(id, infos["font1"])
+            self._nb.SetPageTextSecondaryFont(id, infos["font2"])
+            self._nb.SetPageTextColour(id, infos["fontcolour"])
+            self._nb.SetPageColour(id, infos["pagecolour"])
+            self._nb.EnablePage(id, infos["enabled"])
+            self._nb.SetPageToolTip(id, infos["tooltip"], infos["ontime"], infos["winsize"])
+            self._nb.SetPagePopupMenu(id, infos["menu"])
+            
+            if infos["isanimated"] and len(infos["animatedimages"]) > 1:
+                self._nb.SetAnimationImages(id, infos["animatedimages"])
+                self._nb.StartAnimation(id, infos["timer"])
+
+        except:
+            self.Destroy()
+            event.Skip()
+            return
+
+        self.Destroy()        
+
+        event.Skip()
+
+        
