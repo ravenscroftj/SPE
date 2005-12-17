@@ -314,7 +314,7 @@ class MyFrame(wx.Frame):
         self.Notebook.AddPage(self.MatchesPane, "Matches")
         self.Notebook.AddPage(self.SampleTextPane, "Sample text")
         self.Notebook.AddPage(self.HelpPane, "Help")
-        TopPaneSizer.Add(wx.NotebookSizer(self.Notebook), 1, wx.EXPAND, 0)
+        TopPaneSizer.Add(self.Notebook, 1, wx.EXPAND, 0)
         self.BottomPane.SetAutoLayout(1)
         self.BottomPane.SetSizer(TopPaneSizer)
         MainSizer.Add(self.SplitterWindow, 1, wx.EXPAND, 0)
@@ -710,3 +710,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

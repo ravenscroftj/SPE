@@ -720,7 +720,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     match = regex.search(source)
                     if match:
                         docstring = '%s\n\n%s'%(docstring,match.group(3))
-                    tabs.SetPageToolTip(index,docstring,winsize=300)
+                    tabs.SetPageToolTip(index,docstring,1000,winsize=300)
                 if self.parentPanel.get('UpdateSidebar')=='when clicked':
                     self.source.SetSTCFocus(0)
                 self.updateSidebar()

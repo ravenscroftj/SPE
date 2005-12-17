@@ -400,6 +400,11 @@ class TabCtrl(wx.PyControl):
             if self._isdragging:
                 self._isleaving = True
                 self.Refresh()
+
+        if self._istooltipshown:
+            self._tipwindow.Destroy()
+            self._istooltipshown = False
+            self.Refresh()
                 
         event.Skip()
         
