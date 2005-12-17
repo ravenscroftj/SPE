@@ -9,7 +9,7 @@ INFO['description']=\
 __doc__=INFO['doc']%INFO
 
 ####Modules---------------------------------------------------------------------
-import codecs, compiler, inspect, os, sys, re, time, types
+import codecs, compiler, inspect, os, sys, re, thread, time, types
 
 import wx
 from wx.lib.evtmgr import eventManager
@@ -72,6 +72,7 @@ class Panel(wx.SplitterWindow):
         #initialize
         self.argumentsPrevious  = []
         self.changed            = 0
+        self.checkBusy          = False
         self.column             = 1
         self.eventChanged       = False
         self.exitPrevious       = True
@@ -659,32 +660,45 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if self.parentPanel.get('UpdateSidebar')=='realtime':
                 self.updateSidebar()
             #check
+            if self.checkBusy:
+                return
             if self.parentPanel.get('CheckSourceRealtime')=='compiler':
-                source      = self.source.GetText().replace('\r\n','\n') + '\n'
-                try:
-                    tree    = compiler.parse(source)
-                    warning = ''
-                    e       = None
-                except Exception, e:
-                    if hasattr(e,'text'):
-                        if type(e.text) in types.StringTypes:
-                            text    = e.text.strip()
-                        else:
-                            text    = ''
-                        warning = '%s: %s at line %s, col %s: %s'%(self.name,e.msg,e.lineno,e.offset,text)
-                    else:
-                        warning = repr(e)
-                if warning  != self.warning:
-                    #todo: how to implement indicators?!!
-##                    if e:
-##                        self.source.markError(e.lineno,e.offset)
-                    if warning:
-                        self.setStatus(warning)
-                        self.statusBar.throbber.playFile('warning.gif')
-                    else:
-                        self.setStatus(STATUS)
-                        self.statusBar.throbber.stop()
-                    self.warning = warning
+                thread.start_new(self.idleCheck,())
+            
+    def idleCheck(self):
+        self.checkBusy  = True
+        source          = self.source.GetText()
+        length          = len(source)
+        source          = source.replace('\r\n','\n') + '\n'
+        try:
+            tree        = compiler.parse(source)
+            warning     = ''
+            e           = None
+        except Exception, e:
+            if hasattr(e,'text'):
+                if type(e.text) in types.StringTypes:
+                    text= e.text.strip()
+                else:
+                    text= ''
+                warning = '%s: %s at line %s, col %s.'%(self.name,e.msg,e.lineno,e.offset)
+            else:
+                warning = repr(e)
+        if warning  != self.warning:
+            #todo: how to implement indicators?!!
+            if warning:
+                wx.CallAfter(self.setStatus,warning)
+                wx.CallAfter(self.statusBar.throbber.playFile,'warning.gif')
+                if e and hasattr(e,'lineno'):
+                    wx.CallAfter(self.source.clearError,length)
+                    wx.CallAfter(self.source.markError,e.lineno,e.offset)
+            else:
+                wx.CallAfter(self.setStatus,STATUS)
+                wx.CallAfter(self.statusBar.throbber.stop)
+                if self.e and hasattr(self.e,'lineno'):
+                    wx.CallAfter(self.source.clearError,length)
+            self.warning = warning
+            self.e       = e
+        self.checkBusy = False
                 
     def onKillFocus(self,event=None):
         if self.app.DEBUG:
