@@ -119,6 +119,10 @@ if wx.Platform == '__WXMAC__':
 else:
     DEFAULT_SIZE = wx.DefaultSize
 
+# Themes On Mac... This May Slow Down The Paint Event If You Turn It On!
+NC_MAC_LIGHT = (240, 236)
+NC_MAC_DARK = (232, 228)
+
 # NotebookoCtrl Events:
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGED: Event Fired When You Switch Page;
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGING: Event Fired When You Are About To Switch
@@ -349,6 +353,11 @@ class TabCtrl(wx.PyControl):
         self._drawxstyle = 1
 
         self._pmenu = None
+
+        if wx.Platform == "__WXMAC__":
+            self._macstyle = 1
+        else:
+            self._macstyle = 0
         
         self.SetDefaultPage()        
         
@@ -735,6 +744,23 @@ class TabCtrl(wx.PyControl):
         self._firsttime = True
         self.Refresh()
 
+
+    def SetTabHeight(self, height=28):
+        """ Sets The Tabs Height. """
+        
+        self.SetBestSize((-1, height))
+        self._bestsize = height
+        
+
+    def SetControlBackgroundColour(self, colour=None):
+        """ Sets The TabCtrl Background Colour (Behind The Tabs). """
+
+        if colour is None:
+            colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+            
+        self.SetBackgroundColour(colour)
+        self.Refresh()
+        
         
     def GetPageTextFont(self, nPage):
         """ Returns The Primary Font For The Given Page nPage. """
@@ -1912,6 +1938,48 @@ class TabCtrl(wx.PyControl):
 
         event.Skip()
 
+
+    def EnableMacStyle(self, enable=True, style=1):
+        """
+        Enables/Disables Mac Themes. style=1 Is The Light Style, while style=2
+        Is The Dark Style.
+        """
+        
+        if enable:
+            self._macstyle = style
+        else:
+            self._macstyle = 0
+            
+
+    def DrawMacThemes(self, dc, tabrect):
+        """ Draws The Mac Theme On Tabs, If It Is Enabled. """
+        
+        if self._macstyle == 1:
+            col1, col2 = NC_MAC_LIGHT
+        else:
+            col1, col2 = NC_MAC_DARK
+
+        colour1 = wx.Colour(col1, col1, col1)
+        colour2 = wx.Colour(col2, col2, col2)
+
+        x, y, w, h = tabrect
+        index = 0
+        
+        for ii in xrange(0, h, 2):
+            if index%2 == 0:
+                colour = colour1
+            else:
+                colour = colour2
+
+            dc.SetBrush(wx.Brush(colour))
+            dc.SetPen(wx.Pen(colour))
+            if ii > 3:
+                dc.DrawRectangle(x, y+ii, w, 2)
+            else:
+                dc.DrawRoundedRectangle(x, y+ii, w, 3, 3)
+                
+            index = index + 1
+                
         
     def GetAllTextExtents(self, dc):
         """ Returns All Tabs Text Extents. Used Internally. """
@@ -2129,6 +2197,10 @@ class TabCtrl(wx.PyControl):
                                     ysize, 3)
 
             tabrect.append(wx.Rect(xpos, ypos, xsize, ysize))
+            
+            if self._macstyle:
+                self.DrawMacThemes(dc, tabrect[-1])
+                dc.SetPen(highlightpen)
                            
             if ii == selection:
                 dc.SetPen(cancelpen)                    
@@ -3063,6 +3135,33 @@ class NotebookCtrl(wx.Panel):
 
         return self.nb.GetPageColour(nPage)
 
+
+    def SetTabHeight(self, height=28):
+        """ Sets The Tabs Height. """
+
+        if height <= 0:
+            raise "\nERROR: Impossible To Set An Height <= 0. "
+        
+        self.nb.SetTabHeight(height)
+
+
+    def SetControlBackgroundColour(self, colour=None):
+        """ Sets The TabCtrl Background Colour (Behind The Tabs). """
+
+        if colour is None:
+            colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+            
+        self.nb.SetBackgroundColour(colour)
+        
+
+    def EnableMacStyle(self, enable=True, style=1):
+        """
+        Enables/Disables Mac Themes. style=1 Is The Light Style, while style=2
+        Is The Dark Style.
+        """
+        
+        self.nb.EnableMacStyle(enable, style)
+            
 
     def Tile(self, show=True, orient=None):
         """ Shows Pages In Column/Row Mode (One Panel After The Other In Columns/Rows). """

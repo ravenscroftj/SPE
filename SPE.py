@@ -218,7 +218,7 @@ if __debug:
     except:
         import time
         print "\nPress Ctrl+C to quit..."
-        time.sleep(10)
+        #time.sleep(10)
 
 
 

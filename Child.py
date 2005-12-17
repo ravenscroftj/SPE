@@ -36,6 +36,8 @@ if not info.DARWIN:
     STYLE_NOTES         |= wx.TE_DONTWRAP
 STYLE_SPLIT             = wx.SP_NOBORDER|wx.FULL_REPAINT_ON_RESIZE
 STYLE_TREE              = wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT
+RE_DOCSTRING            = re.compile(r'(\n|\n__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
+RE_DOCSTRING_FIRST      = re.compile(r'(|__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
@@ -702,10 +704,25 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 
     def onKillFocus(self,event=None):
         if self.app.DEBUG:
-            print 'Event:  Child: %s.onKillFocus(dead=%s)'%(self.__class__,self.frame.dead)
+            print 'Event:  Child: %s: %s.onKillFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
         try:
-            if not (self.frame.dead or self.parentFrame.dead) and self.parentPanel.get('UpdateSidebar')=='when clicked':
-                self.source.SetSTCFocus(0)
+            if not (self.frame.dead or self.parentFrame.dead):
+                if hasattr(self.parentFrame,'tabs'):
+                    docstring   = os.path.dirname(self.fileName)
+                    tabs        = self.parentFrame.tabs
+                    index       = self.frame.getIndex() - tabs.getZero() - 1
+                    source = self.source.GetText()
+                    if source and source[0] in ["'",'"']:
+                        regex = RE_DOCSTRING_FIRST
+                        print 'first'
+                    else:
+                        regex = RE_DOCSTRING
+                    match = regex.search(source)
+                    if match:
+                        docstring = '%s\n\n%s'%(docstring,match.group(3))
+                    tabs.SetPageToolTip(index,docstring,winsize=300)
+                if self.parentPanel.get('UpdateSidebar')=='when clicked':
+                    self.source.SetSTCFocus(0)
                 self.updateSidebar()
             event.Skip()
         except:

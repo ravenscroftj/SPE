@@ -13,7 +13,7 @@ try:
 
     __doc__=INFO['doc']%INFO
 except:
-    __doc__=="Stani's Multiple Document Interface (c)www.stani.be"
+    __doc__="Stani's Multiple Document Interface (c)www.stani.be"
 
 """
 Attributes of Application:
@@ -236,11 +236,16 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         if keyw.has_key('style'):
             del keyw['style']
         NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
+        if DARWIN:
+            self.EnableMacStyle(enable=True, style=1)
+            self.SetControlBackgroundColour(wx.Colour(236,236,236))
+        self.SetTabHeight(25)
         self.SetDrawX(True, 2)
         self.SetPadding(wx.Point(3,4))
         self.SetUseFocusIndicator(False)
         self.SetHighlightSelection(True)
         self.EnableDragAndDrop(True)
+        self.EnableToolTip(True)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
         #self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DCLICK, self.OnLeftDClick)
@@ -436,10 +441,10 @@ class Framework:
                 print 'Event<: Framework: %s.Activate(%s)'%(self.__class__,getActive)
             if hasattr(self.panel,'onActivate'):
                 self.panel.onActivate(event)
-            elif hasattr(self.panel,'onDeactivate'):
-                self.panel.onDeactivate(event)
-            if self.app.DEBUG: 
-                print 'Event>: Framework: %s.Activate(%s)'%(self.__class__,getActive)
+        elif hasattr(self.panel,'onDeactivate'):
+            self.panel.onDeactivate(event)
+        if self.app.DEBUG: 
+            print 'Event>: Framework: %s.Activate(%s)'%(self.__class__,getActive)
         if event: event.Skip()
         
     def onFrameClose(self, event=None, destroy = 1):
