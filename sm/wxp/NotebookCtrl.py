@@ -340,6 +340,7 @@ class TabCtrl(wx.PyControl):
         self._istooltipshown = False
         self._tipwindow = None
         self._tiptimer = wx.PyTimer(self.OnShowToolTip)
+        self._backtooltip = wx.Colour(255, 255, 230)
         self._xvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
         self._yvideo = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
 
@@ -514,6 +515,10 @@ class TabCtrl(wx.PyControl):
             self._timers[nPage].Stop()
             
         self._timers[nPage].Destroy()
+        
+        if self._istooltipshown:
+            self._tipwindow.Destroy()
+            self._istooltipshown = False
 
         if not oncontinue:
             self._somethingchanged = True
@@ -946,7 +951,7 @@ class TabCtrl(wx.PyControl):
         return self._usefocus
 
     
-    def SetPageToolTip(self, nPage, tooltip="", timer=500, winsize=150):
+    def SetPageToolTip(self, nPage, tooltip="", timer=500, winsize=400):
         """
         Sets A ToolTip For The Given Page nPage, With The Following Parameters:
         - nPage: The Given Page;
@@ -995,7 +1000,22 @@ class TabCtrl(wx.PyControl):
                 
             if self._tiptimer.IsRunning():
                 self._tiptimer.Stop()
-    
+
+
+    def GetToolTipBackgroundColour(self):
+        """ Returns The ToolTip Window Background Colour. """
+
+        return self._backtooltip
+
+
+    def SetToolTipBackgroundColour(self, colour=None):
+        """ Sets The ToolTip Window Background Colour. """
+
+        if colour is None:
+            colour = wx.Colour(255, 255, 230)
+            
+        self._backtooltip = colour
+        
 
     def AdvanceSelection(self, forward=True):
         """
@@ -1192,22 +1212,24 @@ class TabCtrl(wx.PyControl):
 
                 #onx attempt
                 if drawx:
-                    if dxstyle == 1:
-                        if flags and point.x >= posx + width + self._padding.x + space - 1 and \
-                             point.x <= posx + width + self._padding.x + space + mins:
-                            
-                            if point.y >= size.y - height - 1 \
-                               and point.y <= size.y - height + mins + 1:
-                                
-                                flags = NC_HITTEST_ONX
-                    else:
-                        if flags and point.x >= posx + width + 2*self._padding.x + space - 1 and \
-                             point.x <= posx + width + self._padding.x + space + xxspace - 1:
-                            
-                            if point.y >= size.y - height + self._padding.x \
-                               and point.y <= size.y - height + 2*self._padding.x + 1:
-                                
-                                flags = NC_HITTEST_ONX
+                    if flags and self._xrect[ii].Inside(point):
+                        flags = NC_HITTEST_ONX
+##                    if dxstyle == 1:
+##                        if flags and point.x >= posx + width + self._padding.x + space - 1 and \
+##                             point.x <= posx + width + self._padding.x + space + mins:
+##                            
+##                            if point.y >= size.y - height - 1 \
+##                               and point.y <= size.y - height + mins + 1:
+##                                
+##                                flags = NC_HITTEST_ONX
+##                    else:
+##                        if flags and point.x >= posx + width + 2*self._padding.x + space - 1 and \
+##                             point.x <= posx + width + self._padding.x + space + xxspace - 1:
+##                            
+##                            if point.y >= size.y - height + self._padding.x \
+##                               and point.y <= size.y - height + 2*self._padding.x + 1:
+##                                
+##                                flags = NC_HITTEST_ONX
 
                #onicon attempt 
                 if flags and bmp.Ok() and point.x >= posx + self._padding.x and \
@@ -1652,6 +1674,14 @@ class TabCtrl(wx.PyControl):
     def OnShowToolTip(self):
         """ Called When The Timer For The ToolTip Expires. Used Internally. """
 
+        pt = self.ScreenToClient(wx.GetMousePosition())
+        
+        oldinside = self._insidetab
+        self._insidetab = self.GetInsideTab(pt)
+
+        if self._insidetab != oldinside or self._insidetab < 0:
+            return
+                    
         self._istooltipshown = True
         self._tipwindow = self.TransientTipWindow(self, self._currenttip,
                                                   self._currentwinsize)
@@ -1684,7 +1714,7 @@ class TabCtrl(wx.PyControl):
         pos = event.GetPosition()        
         page, flags = self.HitTest(pos, 1)
         self._dragstartpos = pos
-        
+
         if page != wx.NOT_FOUND:
 
             if self.IsPageEnabled(page):
@@ -2964,7 +2994,7 @@ class NotebookCtrl(wx.Panel):
         return self.nb.GetPagePopupMenu(nPage)
     
 
-    def SetPageToolTip(self, nPage, tooltip="", timer=500, winsize=150):
+    def SetPageToolTip(self, nPage, tooltip="", timer=500, winsize=400):
         """
         Sets A ToolTip For The Given Page nPage, With The Following Parameters:
         - nPage: The Given Page;
@@ -2992,6 +3022,21 @@ class NotebookCtrl(wx.Panel):
         """ Globally Enables/Disables Tab ToolTips. """
 
         self.nb.EnableToolTip(show)        
+
+
+    def GetToolTipBackgroundColour(self):
+        """ Returns The ToolTip Window Background Colour. """
+
+        return self.nb.GetToolTipBackgroundColour()
+
+
+    def SetToolTipBackgroundColour(self, colour=None):
+        """ Sets The ToolTip Window Background Colour. """
+
+        if colour is None:
+            colour = wx.Colour(255, 255, 230)
+            
+        self.nb.SetToolTipBackgroundColour(colour)       
 
 
     def AdvanceSelection(self, forward=True):
@@ -3537,7 +3582,9 @@ class _PopupWindow:
     def _Fill(self, tip, winsize):
         
         panel = wx.Panel(self, -1)
-        panel.SetBackgroundColour(wx.Colour(255, 255, 230))
+        colour = self.GetParent().GetToolTipBackgroundColour()
+        
+        panel.SetBackgroundColour(colour)
 
         # border from sides and top to text (in pixels)
         border = 5
@@ -3546,18 +3593,25 @@ class _PopupWindow:
         max_len = len(tip)
         tw = winsize
 
-        while 1:
-            lines = textwrap.wrap(tip, max_len)
+        mylines = tip.split("\n")
+##        newlines = []
+##        
+##        for line in mylines:
+##            max_len = len(tip)
+##            
+##            while 1:
+##                aline = textwrap.wrap(line, max_len)
+##                for uline in aline:
+##                    w, h = self.GetTextExtent(uline)
+##                    if w > tw - border * 2:
+##                        max_len = max_len - 1
+##                        break
+##                else:
+##                    break
+                
+##            newlines.append(line)
 
-            for line in lines:
-                w, h = self.GetTextExtent(line)
-                if w > tw - border * 2:
-                    max_len = max_len - 1
-                    break
-            else:
-                break
-
-        sts = wx.StaticText(panel, -1, "\n".join(lines))
+        sts = wx.StaticText(panel, -1, "\n".join(mylines))
         sx, sy = sts.GetBestSize()
         sts.SetPosition((2, 2))
             

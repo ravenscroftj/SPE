@@ -1,3 +1,5 @@
+import sys
+
 try:
     WX_VERSION  = '2.5.4.1'
     import wxversion
