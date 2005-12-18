@@ -241,11 +241,11 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             self.SetControlBackgroundColour(wx.Colour(236,236,236))
         self.SetTabHeight(25)
         self.SetDrawX(True, 2)
-        self.SetPadding(wx.Point(3,4))
+        self.SetPadding(wx.Point(4,4))
         self.SetUseFocusIndicator(False)
         self.SetHighlightSelection(True)
         self.EnableDragAndDrop(True)
-        self.EnableToolTip(True)
+        #self.EnableToolTip(True)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
         #self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DCLICK, self.OnLeftDClick)
@@ -960,7 +960,7 @@ class Child(Framework):
             if extra:   self.extraTitle = extra
             #go
             if self.pageTitle:
-                m               = ['','*'][self.panel.changed and not self.pageIcons]
+                m               = ['',' *'][self.panel.changed and not self.pageIcons]
                 self._pageTitle =  '%s%s'%(self.pageTitle,m)
             else:
                 self._pageTitle =  ''

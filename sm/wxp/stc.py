@@ -181,6 +181,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.Bind(wx_stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleDown)
         self.Bind(wx.EVT_CHAR, self.OnChar)
         if self.menu:
             self.UsePopUp(False)
@@ -194,6 +195,13 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if not event.ShiftDown():
             self.SetSelectionEnd(0)
         event.Skip()
+        
+    def OnMiddleDown(self,event):
+        code    = self.GetSelectedText()
+        pos     = self.PositionFromPointClose(event.GetX(),event.GetY())
+        event.Skip()
+        self.SetSelection(pos,pos)
+        self.ReplaceSelection(code)
         
     def OnKeyDown(self, event):
         """"""

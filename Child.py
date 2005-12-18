@@ -36,7 +36,7 @@ if not info.DARWIN:
     STYLE_NOTES         |= wx.TE_DONTWRAP
 STYLE_SPLIT             = wx.SP_NOBORDER|wx.FULL_REPAINT_ON_RESIZE
 STYLE_TREE              = wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT
-RE_DOCSTRING            = re.compile(r'(\n|\n__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
+RE_DOCSTRING            = re.compile(r'([^\\]\s*\n|\n__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
 RE_DOCSTRING_FIRST      = re.compile(r'(|__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')

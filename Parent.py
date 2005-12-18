@@ -1196,6 +1196,8 @@ Please report these details and operating system to %s."""%(message,INFO['author
         self.redirect((not self.app.DEBUG) and self.getValue('RedirectShell'))
         self.showShell(self.getValue('ShowShell'))
         self.frame.menuBar.check_view()
+        if hasattr(self.frame,'tabs'):
+            self.frame.tabs.EnableToolTip(self.getValue('ToolTipsForFileTabs'))
         for child in self.app.children:
             child.source.update()
         #restart?!

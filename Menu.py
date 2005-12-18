@@ -610,7 +610,6 @@ class Bar(wxgMenu.Bar):
         else:
             self.parentPanel.about()
 
-
     def menu_open_workspace(self, event):
         self.parentPanel.open_workspace()
         event.Skip()

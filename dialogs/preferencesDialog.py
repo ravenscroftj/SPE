@@ -20,6 +20,7 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'ViewWhiteSpace','IndentationGuides', 'ViewEdge','WebBrowser',
           'WordChars','WxPythonDocs','globalRecent','globalFolders','globalNotes',
           'globalFileList','SaveOnExit','SingleInstanceApp',
+          'ToolTipsForFileTabs',
           'CloseChildrenOnNewWorkspace',
           'SaveWorkspaceOnFileSave','RememberLastWorkspace']#'ShowToolbar',
 
@@ -44,6 +45,7 @@ class Create(wx.Dialog):
         self.html_Label_staticbox = wx.StaticBox(self.Paths, -1, _("Html"))
         self.sizer_3_staticbox = wx.StaticBox(self.General, -1, _("Workspaces"))
         self.Backup = wx.CheckBox(self.General, -1, _("Create backup files"))
+        self.ToolTipsForFileTabs = wx.CheckBox(self.General, -1, _("Show tooltips on file tabs"))
         self.RedirectShell = wx.CheckBox(self.General, -1, _("Redirect output to spe shell"))
         self.CheckFileOnSave = wx.CheckBox(self.General, -1, _("Check file for syntax errors on save"))
         self.ShowShell = wx.CheckBox(self.General, -1, _("Show shell"))
@@ -153,7 +155,7 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
-        #self.Signature.SetSelection(-1)
+        self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)
@@ -183,7 +185,7 @@ class Create(wx.Dialog):
         width = wx.BoxSizer(wx.HORIZONTAL)
         GeneralEditor = wx.StaticBoxSizer(self.GeneralEditor_staticbox, wx.VERTICAL)
         grid_general = wx.FlexGridSizer(4, 3, 4, 4)
-        generalSizer = wx.FlexGridSizer(9, 1, 4, 4)
+        generalSizer = wx.FlexGridSizer(10, 1, 4, 4)
         sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.HORIZONTAL)
         grid_sizer_5 = wx.FlexGridSizer(4, 2, 4, 4)
         grid_sizer_3 = wx.FlexGridSizer(4, 1, 4, 4)
@@ -191,6 +193,7 @@ class Create(wx.Dialog):
         sizer_1.Add((4, 4), 0, 0, 0)
         sizer_2.Add((4, 4), 0, 0, 0)
         generalSizer.Add(self.Backup, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 4)
+        generalSizer.Add(self.ToolTipsForFileTabs, 0, wx.LEFT|wx.ADJUST_MINSIZE, 4)
         generalSizer.Add(self.RedirectShell, 0, wx.LEFT, 4)
         generalSizer.Add(self.CheckFileOnSave, 0, wx.LEFT, 4)
         generalSizer.Add(self.ShowShell, 0, wx.LEFT, 4)
