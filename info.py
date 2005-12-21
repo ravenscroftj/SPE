@@ -3,7 +3,7 @@ import os,sys
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
-LINUX						= not (WIN or DARWIN)
+LINUX                       = not (WIN or DARWIN)
 
 if WIN:
     windowsVer = sys.getwindowsversion()
@@ -56,7 +56,7 @@ INFO={
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.1.c.svn",
+    'version'           : "0.8.1.c",
     'wxVersion'         : "2.6.1.0.",
 }
 

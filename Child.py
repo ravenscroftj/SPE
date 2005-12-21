@@ -223,7 +223,8 @@ class Panel(wx.SplitterWindow):
         self.sash   = PythonSTC(
             parent      = self.main,
             namespace   = self.parentPanel.shell.interp.locals,
-            path        = os.path.dirname(fileName),config=self.parentPanel.config,
+            path        = os.path.dirname(fileName),
+            config      = self.parentPanel.config,
             menu        = self.parentFrame.menuBar.edit)
         self.sash.SetHelpText(help.CHILD_SOURCE)
         self.source = self.sash
@@ -714,7 +715,6 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     source = self.source.GetText()
                     if source and source[0] in ["'",'"']:
                         regex = RE_DOCSTRING_FIRST
-                        print 'first'
                     else:
                         regex = RE_DOCSTRING
                     match = regex.search(source)
@@ -722,7 +722,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                         match       = match.group(3).strip('"\'').strip()
                         if match:
                             docstring = '%s\n\n%s'%(docstring,match)
-                    tabs.SetPageToolTip(index,docstring,1000,winsize=300)
+                    tabs.SetPageToolTip(index,docstring.replace('\r\n','\n'),1000,winsize=300)
                 if self.parentPanel.get('UpdateSidebar')=='when clicked':
                     self.source.SetSTCFocus(0)
                 self.updateSidebar()

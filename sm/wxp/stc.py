@@ -91,7 +91,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetProperty("fold.quotes.python", "0")
         
         #USER SETTINGS
-        if config:
+        if self.config:
             self.update()
         else:
             self.SetViewWhiteSpace(0)

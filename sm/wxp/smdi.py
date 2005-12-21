@@ -236,19 +236,27 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         if keyw.has_key('style'):
             del keyw['style']
         NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
+        self.tabstyle   = NotebookCtrl.ThemeStyle()
         if DARWIN:
-            self.EnableMacStyle(enable=True, style=1)
             self.SetControlBackgroundColour(wx.Colour(236,236,236))
+            self.tabstyle.EnableAquaTheme(True,2)
+        elif WIN:
+            self.SetHighlightSelection(True)
+            self.tabstyle.SetSecondGradientColour(wx.Colour(190,190,216))
+            self.tabstyle.EnableGradientStyle(enable=True)
+        else:
+            self.tabstyle.EnableKDETheme(enable=True)
+        self.ApplyTabTheme(self.tabstyle)
         self.SetTabHeight(25)
         self.SetDrawX(True, 2)
         self.SetPadding(wx.Point(4,4))
         self.SetUseFocusIndicator(False)
-        self.SetHighlightSelection(True)
         self.EnableDragAndDrop(True)
         self.SetToolTipBackgroundColour(wx.Colour(240,255,240))
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
         #self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DCLICK, self.OnLeftDClick)
+        self.ApplyTabTheme(self.tabstyle)
         
     def onClosing(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""

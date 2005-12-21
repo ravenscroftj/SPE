@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 15 Dec 2005, 23.50 CET
+# Latest Revision: 18 Dec 2005, 23.00 CET
 #
 #
 # TODO List/Caveats
@@ -68,7 +68,13 @@ Supported Customizations For NotebookCtrl Include:
 - Possibility To Reparent A NotebookCtrl Page To A Freshly Created Frame As A Simple
   Panel Or To A New NotebookCtrl Created Inside That New Frame.
 - Possibility To Add A Custom Panel To Show A Logo Or HTML Information Or Whatever
-  You Like When There Are No Tabs In NotebookCtrl.
+  You Like When There Are No Tabs In NotebookCtrl;
+- Possibility To Change The ToolTip Window Background Colour;
+- Possibility To Draw Vertical Or Horizontal Gradient Coloured Tabs (2 Colours);
+- Themes On Tabs: Built-In Themes Are KDE And Gnome (Unix/Linux), Metal, Aqua Light
+  And Aqua Dark (MacOS), Windows Silver (Windows) Or Generic Gradient Coloured Tabs.
+  It's Also Possible To Define A Separate Theme For Selected Tabs And Control Background.
+  
 
 Usage:
 
@@ -82,7 +88,7 @@ wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 15 Dec 2005, 23.50 CET
+Latest Revision: Andrea Gavana @ 18 Dec 2005, 23.00 CET
 
 """
 
@@ -92,7 +98,6 @@ Latest Revision: Andrea Gavana @ 15 Dec 2005, 23.50 CET
 #----------------------------------------------------------------------
 
 import wx
-import textwrap
 import cStringIO, zlib
 
 # HitTest Results 
@@ -123,6 +128,29 @@ else:
 NC_MAC_LIGHT = (240, 236)
 NC_MAC_DARK = (232, 228)
 
+topaqua1 = [wx.Colour(106, 152, 231), wx.Colour(124, 173, 236)]
+botaqua1 = [wx.Colour(54, 128, 213), wx.Colour(130, 225, 249)]
+
+topaqua2 = [wx.Colour(176, 222, 251), wx.Colour(166, 211, 245)]
+botaqua2 = [wx.Colour(120, 182, 244), wx.Colour(162, 230, 245)]
+
+distaqua = [wx.Colour(248, 248, 248), wx.Colour(243, 243, 243)]
+disbaqua = [wx.Colour(219, 219, 219), wx.Colour(248, 248, 248)]
+
+# Themes On KDE... This May Slow Down The Paint Event If You Turn It On!
+kdetheme = [wx.Colour(0xf3,0xf7,0xf9), wx.Colour(0xf3,0xf7,0xf9),
+            wx.Colour(0xee,0xf3,0xf7), wx.Colour(0xee,0xf3,0xf7),
+            wx.Colour(0xea,0xf0,0xf4), wx.Colour(0xea,0xf0,0xf4),
+            wx.Colour(0xe6,0xec,0xf1), wx.Colour(0xe6,0xec,0xf1),
+            wx.Colour(0xe2,0xe9,0xef), wx.Colour(0xe2,0xe9,0xef),
+            wx.Colour(0xdd,0xe5,0xec), wx.Colour(0xdd,0xe5,0xec),
+            wx.Colour(0xd9,0xe2,0xea), wx.Colour(0xd9,0xe2,0xea)]
+
+# Themes On Windows... This May Slow Down The Paint Event If You Turn It On!
+silvertheme2 = [wx.Colour(255, 255, 255), wx.Colour(240, 240, 234),
+                wx.Colour(236, 235, 230)]
+silvertheme1 = [wx.Colour(252, 252, 254), wx.Colour(252, 252, 254)]
+           
 # NotebookoCtrl Events:
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGED: Event Fired When You Switch Page;
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGING: Event Fired When You Are About To Switch
@@ -221,6 +249,160 @@ class NotebookCtrlEvent(wx.PyCommandEvent):
     
 
 # ---------------------------------------------------------------------------- #
+# Class ThemeStyle. Used To Define A Custom Style For Tabs And Control
+# Background Colour.
+# ---------------------------------------------------------------------------- #
+
+class ThemeStyle:
+
+    def __init__(self):
+        """ Default Constructor For This Class."""
+        
+        self.ResetDefaults()
+
+
+    def ResetDefaults(self):
+        """ Resets Default Theme. """
+
+        self._normal = True
+        self._aqua = False
+        self._metal = False
+        self._macstyle = False
+        self._kdetheme = False
+        self._silver = False
+        self._gradient = False
+        self._firstcolour = wx.WHITE
+        self._secondcolour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE)
+
+
+    def EnableMacTheme(self, enable=True, style=1):
+        """
+        Enables/Disables Mac Themes. style=1 Is The Light Style, While style=2
+        Is The Dark Style. Mainly Used For Control Background Colour, Not For Tabs.
+        """
+        
+        if enable:
+            self._normal = False
+            self._macstyle = style
+            self._kdetheme = False
+            self._metal = False
+            self._aqua = False
+            self._silver = False
+            self._gradient = False
+        else:
+            self._macstyle = 0
+
+
+    def EnableKDETheme(self, enable=True):
+        """ Globally Enables/Disables Unix-Like KDE Theme For Tabs. """
+        
+        self._kdetheme = enable
+        
+        if enable:
+            self._normal = False
+            self._macstyle = False
+            self._metal = False
+            self._aqua = False
+            self._silver = False
+            self._gradient = False
+
+
+    def EnableMetalTheme(self, enable=True):
+        """ Globally Enables/Disables Mac-Like Metal Theme For Tabs. """
+        
+        self._metal = enable
+
+        if enable:
+            self._normal = False
+            self._macstyle = False
+            self._kdetheme = False
+            self._aqua = False
+            self._silver = False
+            self._gradient = False
+            
+
+    def EnableAquaTheme(self, enable=True, style=1):
+        """ Globally Enables/Disables Mac-Like Aqua Theme For Tabs. """
+
+        if enable:            
+            self._aqua = style
+            self._normal = False
+            self._macstyle = False
+            self._kdetheme = False
+            self._metal = False
+            self._silver = False
+            self._gradient = False
+        else:
+            self._aqua = 0
+
+
+    def EnableSilverTheme(self, enable=True):
+        """ Globally Enables/Disables Windows Silver Theme For Tabs. """
+
+        self._silver = enable
+        
+        if enable:
+            self._normal = False
+            self._macstyle = False
+            self._kdetheme = False
+            self._metal = False
+            self._aqua = False
+            self._gradient = False
+        
+
+    def EnableGradientStyle(self, enable=True, style=1):
+        """
+        Enables/Disables Gradient Drawing On Tabs. style=1 Is The Vertical Gradient,
+        While style=2 Is The Horizontal Gradient.
+        """
+
+        if enable:
+            self._normal = False
+            self._gradient = style
+            self._macstyle = False
+            self._kdetheme = False
+            self._metal = False
+            self._aqua = False
+            self._silver = False
+        else:
+            self._gradient = 0
+            
+
+    def SetFirstGradientColour(self, colour=None):
+        """ Sets The First Gradient Colour. """
+        
+        if colour is None:
+            colour = wx.WHITE
+
+        self._firstcolour = colour
+
+
+    def SetSecondGradientColour(self, colour=None):
+        """ Sets The Second Gradient Colour. """
+
+        if colour is None:
+            color = self.GetBackgroundColour()
+            r, g, b = int(color.Red()), int(color.Green()), int(color.Blue())
+            color = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
+            colour = wx.Colour(color[0], color[1], color[2])
+
+        self._secondcolour = colour
+
+
+    def GetFirstGradientColour(self):
+        """ Returns The First Gradient Colour. """
+        
+        return self._firstcolour
+
+
+    def GetSecondGradientColour(self):
+        """ Returns The Second Gradient Colour. """
+        
+        return self._secondcolour
+    
+            
+
+# ---------------------------------------------------------------------------- #
 # Class TabbedPage
 # This Is Just A Container Class That Initialize All The Default Settings For
 # Every Tab.
@@ -241,9 +423,9 @@ class TabbedPage:
         self._animationimages = []
         self._tooltip = ""
         self._tooltiptime = 500
-        self._winsize = 150
+        self._winsize = 400
         self._menu = None
-    
+        
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookSpinButton
@@ -321,7 +503,7 @@ class TabCtrl(wx.PyControl):
         self._imageconverted = False
         self._convertimage = False
         self._disabledcolour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT)
-        
+
         self._hover = False
         self._parent = parent
         self._firsttime = True
@@ -334,7 +516,12 @@ class TabCtrl(wx.PyControl):
         self._highlight = False
         self._usefocus = True
         self._hideonsingletab = False
+        self._selectioncolour = wx.Colour(255, 180, 0)
 
+        self._tabstyle = ThemeStyle()
+        self._backstyle = ThemeStyle()
+        self._selstyle = ThemeStyle()
+        
         self._insidetab = -1        
         self._showtooltip = False
         self._istooltipshown = False
@@ -355,21 +542,18 @@ class TabCtrl(wx.PyControl):
 
         self._pmenu = None
 
-        if wx.Platform == "__WXMAC__":
-            self._macstyle = 1
-        else:
-            self._macstyle = 0
-        
         self.SetDefaultPage()        
         
         self.SetBestSize((-1, 28))
 
         self._borderpen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)) 
-        self._highlightpen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))        
+        self._highlightpen2 = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
+        self._highlightpen = wx.Pen((145, 167, 180))
+        self._upperhigh = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
         self._shadowpen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DDKSHADOW), 2)
         self._shadowpen.SetCap(wx.CAP_BUTT)
         self._highlightpen.SetCap(wx.CAP_BUTT)
-        self._selectionpen = wx.Pen(wx.Colour(255, 180, 0), 2)
+        self._highlightpen2.SetCap(wx.CAP_BUTT)
 
         if wx.Platform == "__WXMAC__":
             self._focusindpen = wx.Pen(wx.BLACK, 1, wx.SOLID)
@@ -1017,6 +1201,15 @@ class TabCtrl(wx.PyControl):
         self._backtooltip = colour
         
 
+    def CancelTip(self):
+        """ Destroys The Tip Window (Probably You Won't Need This One. """
+        
+        if self._istooltipshown:
+            self._istooltipshown = False
+            self._tipwindow.Destroy()
+            self.Refresh()
+
+
     def AdvanceSelection(self, forward=True):
         """
         Cycles Through The Tabs. The Call To This Function Generates The
@@ -1212,7 +1405,7 @@ class TabCtrl(wx.PyControl):
 
                 #onx attempt
                 if drawx:
-                    if flags and self._xrect[ii].Inside(point):
+                    if flags and self._xrect[ii-self._firstvisible].Inside(point):
                         flags = NC_HITTEST_ONX
 ##                    if dxstyle == 1:
 ##                        if flags and point.x >= posx + width + self._padding.x + space - 1 and \
@@ -1974,22 +2167,29 @@ class TabCtrl(wx.PyControl):
         event.Skip()
 
 
-    def EnableMacStyle(self, enable=True, style=1):
-        """
-        Enables/Disables Mac Themes. style=1 Is The Light Style, while style=2
-        Is The Dark Style.
-        """
+    def SetSelectionColour(self, colour=None):
+        """ Sets The Tab Selection Colour (Thin Line Above The Selected Tab). """
         
-        if enable:
-            self._macstyle = style
-        else:
-            self._macstyle = 0
-            
+        if colour is None:
+            colour = wx.Colour(255, 180, 0)
 
-    def DrawMacThemes(self, dc, tabrect):
+        self._selectioncolour = colour
+
+
+    def ApplyTabTheme(self, theme=None):
+        """ Apply A Particular Theme To Be Drawn On Tabs. """
+        
+        if theme is None:
+            theme = ThemeStyle()
+
+        self._tabstyle = theme
+        self.Refresh()
+        
+
+    def DrawMacTheme(self, dc, tabrect, theme):
         """ Draws The Mac Theme On Tabs, If It Is Enabled. """
         
-        if self._macstyle == 1:
+        if theme == 1:
             col1, col2 = NC_MAC_LIGHT
         else:
             col1, col2 = NC_MAC_DARK
@@ -2014,7 +2214,299 @@ class TabCtrl(wx.PyControl):
                 dc.DrawRoundedRectangle(x, y+ii, w, 3, 3)
                 
             index = index + 1
+
+
+    def DrawKDETheme(self, dc, rect):
+        """ Draw Unix-Style KDE Theme On Tabs. """
+        
+        brush = wx.Brush(kdetheme[13], wx.SOLID)
+        dc.SetBackground(brush)
+        x, y, w, h = rect
+        
+        for ii in xrange(14):
+            pen = wx.Pen(kdetheme[ii])
+            dc.SetPen(pen)
+            dc.DrawLine(x+1, y+ii, x+w-1, y+ii)
+            dc.DrawLine(x+1, y+h-1-ii, x+w-2, y+h-1-ii)
+
+
+    def DrawSilverTheme(self, dc, rect, selected):
+
+        x, y, w, h = rect
+
+        if selected:
+            r1 = silvertheme1[0].Red()
+            g1 = silvertheme1[0].Green()
+            b1 = silvertheme1[0].Blue()
+            r2 = silvertheme1[1].Red()
+            g2 = silvertheme1[1].Green()
+            b2 = silvertheme1[1].Blue()
+        else:
+            r1 = silvertheme2[0].Red()
+            g1 = silvertheme2[0].Green()
+            b1 = silvertheme2[0].Blue()
+            r2 = silvertheme2[1].Red()
+            g2 = silvertheme2[1].Green()
+            b2 = silvertheme2[1].Blue()
+            rend = silvertheme2[2].Red()
+            gend = silvertheme2[2].Green()
+            bend = silvertheme2[2].Blue()
+
+        flrect = float(h-2)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+
+        counter = 0
+        
+        for yy in xrange(y+1, y+h):
+            currCol = (int(round(r1 + rf)), int(round(g1 + gf)), int(round(b1 + bf)))
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetPen(wx.Pen(currCol))
+            if counter == 0:
+                xpos = x + 2
+                xend = w - 4
+            elif counter == 1:
+                xpos = x + 1
+                xend = w - 2
+            else:
+                xpos = x + 1
+                xend = w - 2
+
+            counter = counter + 1
+            dc.DrawRectangle(xpos, yy, xend, 1)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+
+        if not selected:
+            dc.SetBrush(wx.Brush((rend, gend, bend), wx.SOLID))
+            dc.SetPen(wx.Pen((rend, gend, bend)))
+            dc.DrawRectangle(xpos, y+h-3, xend, 3)
+                    
+
+    def DrawAquaTheme(self, dc, rect, style, selected):
+        """ Draw Mac-Style Aqua Theme On Tabs. """
+        
+        x, y, w, h = rect
+
+        if selected:
+            if style == 1:  # Dark Aqua
+                r1 = topaqua1[0].Red()
+                g1 = topaqua1[0].Green()
+                b1 = topaqua1[0].Blue()
+
+                r2 = topaqua1[1].Red()
+                g2 = topaqua1[1].Green()
+                b2 = topaqua1[1].Blue()
+            else:
+                r1 = topaqua2[0].Red()
+                g1 = topaqua2[0].Green()
+                b1 = topaqua2[0].Blue()
+
+                r2 = topaqua2[1].Red()
+                g2 = topaqua2[1].Green()
+                b2 = topaqua2[1].Blue()
+        else:
+            r1 = distaqua[0].Red()
+            g1 = distaqua[0].Green()
+            b1 = distaqua[0].Blue()
+
+            r2 = distaqua[1].Red()
+            g2 = distaqua[1].Green()
+            b2 = distaqua[1].Blue()
+
+        flrect = float((h-2)/2)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+
+        counter = 0
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        
+        for yy in xrange(y+1, y+h/2):
+            currCol = (int(round(r1 + rf)), int(round(g1 + gf)), int(round(b1 + bf)))
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            if counter == 0:
+                xpos = x + 2
+                xend = w - 4
+            elif counter == 1:
+                xpos = x + 1
+                xend = w - 2
+            else:
+                xpos = x + 1
+                xend = w - 2
+
+            counter = counter + 1
+            
+            dc.DrawRectangle(xpos, yy, xend, 1)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+
+        if selected:
+            if style == 1:  # Dark Aqua 
+                r1 = botaqua1[0].Red()
+                g1 = botaqua1[0].Green()
+                b1 = botaqua1[0].Blue()
+
+                r2 = botaqua1[1].Red()
+                g2 = botaqua1[1].Green()
+                b2 = botaqua1[1].Blue()
+            else:
+                r1 = botaqua2[0].Red()
+                g1 = botaqua2[0].Green()
+                b1 = botaqua2[0].Blue()
+
+                r2 = botaqua2[1].Red()
+                g2 = botaqua2[1].Green()
+                b2 = botaqua2[1].Blue()
+        else:
+            r1 = disbaqua[0].Red()
+            g1 = disbaqua[0].Green()
+            b1 = disbaqua[0].Blue()
+
+            r2 = disbaqua[1].Red()
+            g2 = disbaqua[1].Green()
+            b2 = disbaqua[1].Blue()
+
+        flrect = float((h-2)/2)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+
+        counter = 0
+
+        for yy in xrange(y+h/2, y+h):
+            currCol = (int(round(r1 + rf)), int(round(g1 + gf)), int(round(b1 + bf)))
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.DrawRectangle(x+1, yy, w-2, 1)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+        
+        
+    def DrawMetalTheme(self, dc, rect):
+        """ Draw Mac-Style Metal Gradient On Tabs. """
+
+        x, y, w, h = rect
+        
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        counter = 0
+        
+        for yy in xrange(y+1, h+y):
+            intens = (230 + 80 * (y-yy)/h)
+            dc.SetBrush(wx.Brush(wx.Colour(intens, intens, intens), wx.SOLID))
+            if counter == 0:
+                xpos = x + 2
+                xend = w - 4
+            elif counter == 1:
+                xpos = x + 1
+                xend = w - 2
+            else:
+                xpos = x + 1
+                xend = w - 2
+
+            counter = counter + 1              
+            dc.DrawRectangle(xpos, yy, xend, 1)
                 
+
+    def DrawVerticalGradient(self, dc, rect):
+        """ Gradient Fill From Colour 1 To Colour 2 From Top To Bottom. """
+
+        dc.SetPen(wx.TRANSPARENT_PEN)
+
+        # calculate gradient coefficients
+        col2 = self._tabstyle._secondcolour
+        col1 = self._tabstyle._firstcolour
+
+        r1, g1, b1 = int(col1.Red()), int(col1.Green()), int(col1.Blue())
+        r2, g2, b2 = int(col2.Red()), int(col2.Green()), int(col2.Blue())
+
+        flrect = float(rect.height)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+
+        counter = 0
+        
+        for y in xrange(rect.y+1, rect.y + rect.height):
+            currCol = (r1 + rf, g1 + gf, b1 + bf)
+                
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            if counter == 0:
+                xpos = rect.x + 2
+                xend = rect.width - 4
+            elif counter == 1:
+                xpos = rect.x + 1
+                xend = rect.width - 2
+            else:
+                xpos = rect.x
+                xend = rect.width
+
+            counter = counter + 1
+            
+            dc.DrawRectangle(xpos, y, xend, 1)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+
+
+    def DrawHorizontalGradient(self, dc, rect):
+        """ Gradient Fill From Colour 1 To Colour 2 From Left To Right. """
+
+        dc.SetPen(wx.TRANSPARENT_PEN)
+
+        # calculate gradient coefficients
+        col2 = self._tabstyle._secondcolour
+        col1 = self._tabstyle._firstcolour
+
+        r1, g1, b1 = int(col1.Red()), int(col1.Green()), int(col1.Blue())
+        r2, g2, b2 = int(col2.Red()), int(col2.Green()), int(col2.Blue())
+
+        flrect = float(rect.width)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+        counter = 0
+        lenc = len(xrange(rect.x, rect.x + rect.width))
+        
+        for x in xrange(rect.x, rect.x + rect.width):
+            currCol = (r1 + rf, g1 + gf, b1 + bf)
+            
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))            
+            if counter in [0, lenc - 1]:
+                ypos = rect.y + 3
+                yend = rect.height - 3
+            elif counter in [1, lenc - 2]:
+                ypos = rect.y + 2
+                yend = rect.height - 2
+            else:
+                ypos = rect.y + 1
+                yend = rect.height - 1
+
+            counter = counter + 1                
+            
+            dc.DrawRectangle(x, ypos, 1, yend)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+            
         
     def GetAllTextExtents(self, dc):
         """ Returns All Tabs Text Extents. Used Internally. """
@@ -2061,6 +2553,67 @@ class TabCtrl(wx.PyControl):
         return  minheight, maxfont
                 
 
+    def DrawBuiltinStyle(self, dc, style, rect, index, selection):
+        """ Methods That Holds All The Theme Styles. """
+        
+        if style._aqua:
+            if self._selstyle._normal:
+                self.DrawAquaTheme(dc, rect, style._aqua, index==selection)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+
+        elif style._metal:
+            if self._selstyle._normal:
+                self.DrawMetalTheme(dc, rect)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+
+        elif style._kdetheme:
+            if self._selstyle._normal:
+                self.DrawKDETheme(dc, rect)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+        
+        elif style._macstyle:
+            if self._selstyle._normal:
+                self.DrawMacTheme(dc, rect, style._macstyle)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+
+        elif style._gradient:
+            if self._selstyle._normal:
+                if style._gradient == 1:
+                    self.DrawVerticalGradient(dc, rect)
+                else:
+                    self.DrawHorizontalGradient(dc, rect)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+                
+        elif style._silver:
+            if self._selstyle._normal:
+                self.DrawSilverTheme(dc, rect, index==selection)
+            else:
+                oldselstyle = self._selstyle[:]
+                self._selstyle._normal = True
+                self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
+                self._selstyle = oldselstyle
+                
+        
     def OnPaint(self, event):
         """ Handles The wx.EVT_PAINT Event For TabCtrl. """
         
@@ -2077,7 +2630,11 @@ class TabCtrl(wx.PyControl):
 
         border_pen = self._borderpen
         highlightpen = self._highlightpen
+        if self._tabstyle._normal:
+            highlightpen = self._highlightpen2
+        
         shadowpen = self._shadowpen
+        upperhighpen = self._upperhigh
 
         mirror = self._style & NC_BOTTOM 
         fullborder = not (self._style & wx.NO_BORDER) 
@@ -2086,7 +2643,7 @@ class TabCtrl(wx.PyControl):
         usefocus = self.GetUseFocusIndicator()
         
         if highlight:
-            selectionpen = self._selectionpen
+            selectionpen = wx.Pen(self._selectioncolour, 2)
             
         if drawx:
             if dxstyle == 1:
@@ -2103,7 +2660,7 @@ class TabCtrl(wx.PyControl):
         dc.SetBrush(back_brush)
         
         cancelpen = back_pen
-        
+
         if fullborder:
             dc.SetPen(border_pen)
             dc.SetPen(highlightpen)
@@ -2225,29 +2782,46 @@ class TabCtrl(wx.PyControl):
             if bmpOk:
                 bmpxpos = posx                
             
-            dc.SetPen(highlightpen)
-            
-            dc.DrawRoundedRectangle(xpos, ypos,
-                                    xsize,
-                                    ysize, 3)
-
             tabrect.append(wx.Rect(xpos, ypos, xsize, ysize))
-            
-            if self._macstyle:
-                self.DrawMacThemes(dc, tabrect[-1])
-                dc.SetPen(highlightpen)
-                           
-            if ii == selection:
-                dc.SetPen(cancelpen)                    
-                dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
+
+            if not self._tabstyle._normal:
+                if ii != selection:
+                    dc.SetPen(shadowpen)
+                    dc.DrawRoundedRectangle(xpos+1, ypos+1, xsize, ysize-1, 4)
                 
+                self.DrawBuiltinStyle(dc, self._tabstyle, tabrect[-1], ii, selection)
+                dc.SetPen(highlightpen)
+
+                dc.SetPen(highlightpen)
+                dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                
+                dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
+                dc.SetPen(upperhighpen)
+                dc.DrawLine(xpos+2, ypos-1, xpos + xsize - 2, ypos-1)
+                dc.SetPen(highlightpen)
+                
+                if ii == selection:
+                    dc.SetPen(cancelpen)                    
+                    dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
+                           
+                dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
+
+            else:
+
+                dc.SetPen(highlightpen)
+                dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
+                    
+                if ii == selection:
+                    dc.SetPen(cancelpen)                    
+                    dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
+                    
+                dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
+                dc.SetPen(highlightpen)
+                dc.DrawLine(xpos + 3, ypos, xpos + xsize - 3, ypos)
+                dc.SetPen(shadowpen)
+                dc.DrawLine(xpos + xsize, size.y-2, xpos+xsize, ypos+2)              
+
             dc.DrawText(text, xtextpos, ytextpos)
-           
-            dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
-            dc.SetPen(highlightpen)
-            dc.DrawLine(xpos + 3, ypos, xpos + xsize - 3, ypos)
-            dc.SetPen(shadowpen)
-            dc.DrawLine(xpos + xsize, size.y-2, xpos+xsize, ypos+2)
 
             if bmpOk:
                 bmpposx = posx + self._padding.x
@@ -2261,10 +2835,11 @@ class TabCtrl(wx.PyControl):
                                    wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
             if ii == selection + 1 and ii != self.GetPageCount() and selfound:
-                dc.SetPen(highlightpen)
+                dc.SetPen(highlightpen)                    
                 dc.DrawLine(xselpos + 3, yselpos, xselpos + xselsize - 3, yselpos)
-                dc.SetPen(shadowpen)
-                dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+2)
+                if self._tabstyle._normal:
+                    dc.SetPen(shadowpen)
+                    dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+2)
                 
             if highlight and selfound:
                 dc.SetBrush(back_brush) 
@@ -3039,6 +3614,12 @@ class NotebookCtrl(wx.Panel):
         self.nb.SetToolTipBackgroundColour(colour)       
 
 
+    def CancelTip(self):
+        """ Destroys The Tip Window (Probably You Won't Need This One. """
+        
+        self.nb.CancelTip()        
+
+
     def AdvanceSelection(self, forward=True):
         """
         Cycles Through The Tabs. The Call To This Function Generates The
@@ -3204,14 +3785,23 @@ class NotebookCtrl(wx.Panel):
         self.nb.SetBackgroundColour(colour)
         
 
-    def EnableMacStyle(self, enable=True, style=1):
-        """
-        Enables/Disables Mac Themes. style=1 Is The Light Style, while style=2
-        Is The Dark Style.
-        """
+    def ApplyTabTheme(self, theme=None):
+        """ Apply A Particular Theme To Be Drawn On Tabs. """
         
-        self.nb.EnableMacStyle(enable, style)
-            
+        if theme is None:
+            theme = ThemeStyle()
+
+        self.nb.ApplyTabTheme(theme)
+        
+                
+    def SetSelectionColour(self, colour=None):
+        """ Sets The Tab Selection Colour (Thin Line Above The Selected Tab). """
+        
+        if colour is None:
+            colour = wx.Colour(255, 180, 0)
+
+        self.nb.SetSelectionColour(colour)
+        
 
     def Tile(self, show=True, orient=None):
         """ Shows Pages In Column/Row Mode (One Panel After The Other In Columns/Rows). """
@@ -3594,22 +4184,6 @@ class _PopupWindow:
         tw = winsize
 
         mylines = tip.split("\n")
-##        newlines = []
-##        
-##        for line in mylines:
-##            max_len = len(tip)
-##            
-##            while 1:
-##                aline = textwrap.wrap(line, max_len)
-##                for uline in aline:
-##                    w, h = self.GetTextExtent(uline)
-##                    if w > tw - border * 2:
-##                        max_len = max_len - 1
-##                        break
-##                else:
-##                    break
-                
-##            newlines.append(line)
 
         sts = wx.StaticText(panel, -1, "\n".join(mylines))
         sx, sy = sts.GetBestSize()

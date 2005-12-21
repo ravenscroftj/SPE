@@ -155,7 +155,7 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
-        self.Signature.SetSelection(-1)
+        #self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)

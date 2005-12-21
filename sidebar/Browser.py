@@ -6,6 +6,7 @@ class Browser(wx.GenericDirCtrl) :
     def __init__ (self, parent, id, init_path=''):
         wx.GenericDirCtrl.__init__(self,parent,id,
             dir     = init_path,
+            size=(200,225),
             filter  = info.WILDCARD_EXTENDED,
             style   = wx.DIRCTRL_SHOW_FILTERS)
         self.dir    = init_path
