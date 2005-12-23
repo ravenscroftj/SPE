@@ -56,7 +56,7 @@ INFO={
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.1.c",
+    'version'           : "0.8.1.d.svn",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -99,8 +99,6 @@ Blender  v%(blenderVersion)s     optional"""%INFO
 
 INFO['copyright']           =\
 """Copyright (C)%(author)s (%(date)s)
-
-This library is released under the GPL, except from the sm.* library.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

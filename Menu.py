@@ -418,14 +418,20 @@ class Bar(wxgMenu.Bar):
         """Tools > Browse folder"""
         self.parentPanel.browse_folder()
 
-    def menu_run(self, event=None):
+    def menu_run(self, event): # wxGlade: Bar.<event_handler>
+        self.app.parentPanel.run()
+
+    def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+        self.app.parentPanel.run_with_arguments()
+
+    def menu_run_terminal(self, event=None):
         """Tools > Run"""
         self.app.childActive.run()
 
-    def menu_run_without_arguments(self, event):
+    def menu_run_terminal_without_arguments(self, event):
         self.app.childActive.run_with_arguments(exit=False)
         
-    def menu_run_without_arguments_exit(self,event):
+    def menu_run_terminal_without_arguments_exit(self,event):
         self.app.childActive.run_with_arguments(exit=True)        
 
     def menu_run_debug(self, event): # wxGlade: Bar.<event_handler>

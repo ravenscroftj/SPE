@@ -7,7 +7,7 @@ import wx
 def _(x): return x
 
 class RunDialog(wx.Dialog):
-    def __init__(self, fileName, runPreviousArguments, runPreviousBeep, *args, **kwds):
+    def __init__(self, fileName, runPreviousArguments, runPreviousExit, *args, **kwds):
         #todo: replace choices = [] with choices = runPreviousArguments
         # begin wxGlade: RunDialog.__init__
         kwds["style"] = wx.DEFAULT_DIALOG_STYLE
@@ -15,7 +15,7 @@ class RunDialog(wx.Dialog):
         self.fileName = wx.StaticText(self, -1, _("File"))
         self.argumentsLabel = wx.StaticText(self, -1, _("Arguments"))
         self.arguments = wx.ComboBox(self, -1, choices=runPreviousArguments, style=wx.CB_DROPDOWN)
-        self.beep = wx.CheckBox(self, -1, _("Beep after execution of script"))
+        self.exit = wx.CheckBox(self, -1, _("Exit terminal after execution of script"))
         self.label = wx.StaticText(self, -1, _("Use Edit>Execute to run code snippets in shell"))
         self.cancel = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
         self.ok = wx.Button(self, wx.ID_OK, _("Run"))
@@ -24,7 +24,7 @@ class RunDialog(wx.Dialog):
         self.__do_layout()
         # end wxGlade
         self.fileName.SetLabel("File name: "+fileName)
-        self.beep.SetValue(runPreviousBeep)
+        self.exit.SetValue(runPreviousExit)
         
     def __set_properties(self):
         #todo: comment out self.arguments.SetSelection(-1)
@@ -43,7 +43,7 @@ class RunDialog(wx.Dialog):
         sizer_2.Add(self.argumentsLabel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
         sizer_2.Add(self.arguments, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
         sizer_1.Add(sizer_2, 1, wx.EXPAND, 0)
-        sizer_1.Add(self.beep, 1, wx.ALL|wx.ADJUST_MINSIZE, 4)
+        sizer_1.Add(self.exit, 1, wx.ALL|wx.ADJUST_MINSIZE, 4)
         sizer_3.Add(self.label, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
         sizer_3.Add(self.cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
         sizer_3.Add(self.ok, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)

@@ -33,7 +33,7 @@ PLATFORM        = sys.platform
 PREFIX          = sys.prefix
 SIZE            = (600,400)
 SKIN            = 'default'
-TABS            = ['Shell','Locals','Session','Find','Browser','Recent','Todo','Index','Notes','Donate']
+TABS            = ['Shell','Locals','Session','Output','Find','Browser','Recent','Todo','Index','Notes','Donate']
 TITLE           = 'SPE %s'
 UNNAMED         = 'unnamed'
 RECENT          = 'recent.txt'
@@ -76,22 +76,24 @@ class Panel(wx.Notebook):
     def __settings__(self,openFiles,redirect,redraw=None,Blender=None,**kwds):
         self.idleTime       = time.time()
         #arguments
-        self._openFiles = openFiles
-        self._redirect  = redirect
-        self.redraw         = redraw
-        self.Blender        = Blender
+        self._openFiles         = openFiles
+        self._redirect          = redirect
+        self.redraw             = redraw
+        self.Blender            = Blender
         #panel
-        self.defaultEncoding= None
-        self.findDialog     = None
-        self.folders        = []
-        self.kiki           = None
-        self.remember       = 0
-        self.restartMessage = ''
-        self.runner         = None
+        self.argumentsPrevious  = []
+        self.beepPrevious       = False
+        self.defaultEncoding    = None
+        self.findDialog         = None
+        self.folders            = []
+        self.kiki               = None
+        self.remember           = 0
+        self.restartMessage     = ''
+        self.runner             = None
         if PLATFORM == 'win32':
-            self.LIST_STYLE = wx.LC_SMALL_ICON# todo: verify this better |wx.LC_LIST
+            self.LIST_STYLE     = wx.LC_SMALL_ICON# todo: verify this better |wx.LC_LIST
         else:
-            self.LIST_STYLE = wx.LC_LIST
+            self.LIST_STYLE     = wx.LC_LIST
 
     def __findReplaceEvents__(self):
         self.findStr=''
@@ -580,6 +582,38 @@ class Panel(wx.Notebook):
         if path[0] == '/': path = 'file://'+path
         webbrowser.open(path)
 
+    def run(self):
+        child = self.app.childActive
+        if not child.confirmSave():
+            return
+        from _spe.dialogs.runDialog import RunDialog
+        runDialog           = RunDialog(child.fileName,
+                                self.argumentsPrevious,
+                                self.beepPrevious,
+                                parent=self.frame,
+                                id=-1)
+        answer              = runDialog.ShowModal()
+        arguments           = runDialog.arguments.GetValue()
+        beep                = runDialog.beep.GetValue()
+        runDialog.Destroy()
+        if answer == wx.ID_OK:
+            self.argumentsPrevious.append(arguments)
+            self.beepPrevious   = beep
+            self.run_with_arguments(arguments,beep,confirm=False)
+        
+    def run_with_arguments(self,arguments='',beep=False,confirm=True):
+        child = self.app.childActive
+        if confirm and not child.confirmSave():
+            return
+        # todo: input stuff from preferences dialog box!
+        path, fileName  = os.path.split(child.fileName)
+        params          = { 'file':         child.fileName,
+                            'path':         path,
+                            'arguments':    arguments,
+                            'python':       info.PYTHON_EXEC}
+        os.chdir(path)
+        self.output.Execute("%(python)s %(file)s"%params)
+        
     def run_debug(self):
         """Run file"""
         if not self.runner:

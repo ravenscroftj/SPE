@@ -21,7 +21,8 @@ INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 END_OF_LINE_MARKER, SIDEBAR, SHELL, TOOLBAR,
 
-RUN, RUN_WITHOUT_ARGUMENTS, RUN_WITHOUT_ARGUMENTS_EXIT, IMPORT, RUN_DEBUG, DEBUG,
+RUN, RUN_WITHOUT_ARGUMENTS, RUN_TERMINAL, RUN_TERMINAL_WITHOUT_ARGUMENTS, 
+RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT, IMPORT, RUN_DEBUG, DEBUG,
 BROWSE_OBJECT_WITH_PYFILLING, TEST_REGULAR_EXPRESSION_WITH_KIKI,
 DESIGN_A_GUI_WITH_WXGLADE, DESIGN_A_GUI_WITH_XRC, CHECK_SOURCE_WITH_PYCHECKER,
 OPEN_TERMINAL_EMULATOR, BROWSE_FOLDER, RUN_IN_TERMINAL_EMULATOR,
@@ -41,7 +42,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(76)]
+[wx.NewId() for x in range(78)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -302,9 +303,12 @@ class Bar(wx.MenuBar):
         self.view.Append(SHELL, _("S&hell\tF12"), "", wx.ITEM_CHECK)
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
-        self.tools.Append(RUN, _("&Run\tF9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without &arguments\tShift+F9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_WITHOUT_ARGUMENTS_EXIT, _("Run without &arguments && exit\tCtrl+Shift+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN, _("Run\tCtrl+R"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without arguments\tCtrl+Shift+R"), "", wx.ITEM_NORMAL)
+        self.tools.AppendSeparator()
+        self.tools.Append(RUN_TERMINAL, _("&Run in terminal\tF9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_TERMINAL_WITHOUT_ARGUMENTS, _("Run in terminal without &arguments\tShift+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT, _("Run in terminal without &arguments && exit\tCtrl+Shift+F9"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(RUN_DEBUG, _("Run/Stop with &WinPdb\tCtrl+F9"), "", wx.ITEM_NORMAL)
         self.tools.Append(DEBUG, _("&Debug with winpdb...\tAlt+F9"), "", wx.ITEM_NORMAL)
@@ -415,7 +419,9 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_shell, id=SHELL)
         self.Bind(wx.EVT_MENU, self.menu_run, id=RUN)
         self.Bind(wx.EVT_MENU, self.menu_run_without_arguments, id=RUN_WITHOUT_ARGUMENTS)
-        self.Bind(wx.EVT_MENU, self.menu_run_without_arguments_exit, id=RUN_WITHOUT_ARGUMENTS_EXIT)
+        self.Bind(wx.EVT_MENU, self.menu_run_terminal, id=RUN_TERMINAL)
+        self.Bind(wx.EVT_MENU, self.menu_run_terminal_without_arguments, id=RUN_TERMINAL_WITHOUT_ARGUMENTS)
+        self.Bind(wx.EVT_MENU, self.menu_run_terminal_without_arguments_exit, id=RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT)
         self.Bind(wx.EVT_MENU, self.menu_run_debug, id=RUN_DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_debug, id=DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_import, id=IMPORT)
@@ -580,6 +586,21 @@ class Bar(wx.MenuBar):
     def menu_run(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
+    def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_run_terminal(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_terminal' not implemented"
+        event.Skip()
+
+    def menu_run_terminal_without_arguments(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_terminal_without_arguments' not implemented"
+        event.Skip()
+
+    def menu_run_terminal_without_arguments_exit(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_run_terminal_without_arguments_exit' not implemented"
+        event.Skip()
+
     def menu_import(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
@@ -602,12 +623,6 @@ class Bar(wx.MenuBar):
         event.Skip()
 
     def menu_open_terminal_emulator(self, event): # wxGlade: Bar.<event_handler>
-        event.Skip()
-
-    def menu_run_in_terminal_emulator(self, event): # wxGlade: Bar.<event_handler>
-        event.Skip()
-
-    def menu_run_in_terminal_emulator__exit(self, event): # wxGlade: Bar.<event_handler>
         event.Skip()
 
     def menu_load_in_blender(self, event): # wxGlade: Bar.<event_handler>

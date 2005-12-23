@@ -512,16 +512,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def run(self):
         if not self.confirmSave():
             return
-        from _spe.dialogs.runDialog import RunDialog
-        runDialog           = RunDialog(self.fileName,
+        from _spe.dialogs.runTerminalDialog import RunTerminalDialog
+        runTerminalDialog   = RunTerminalDialog(self.fileName,
                                 self.argumentsPrevious,
                                 self.exitPrevious,
                                 parent=self.app.parentFrame,
                                 id=-1)
-        answer              = runDialog.ShowModal()
-        arguments           = runDialog.arguments.GetValue()
-        exit                = runDialog.exit.GetValue()
-        runDialog.Destroy()
+        answer              = runTerminalDialog.ShowModal()
+        arguments           = runTerminalDialog.arguments.GetValue()
+        exit                = runTerminalDialog.exit.GetValue()
+        runTerminalDialog.Destroy()
         if answer == wx.ID_OK:
             self.argumentsPrevious.append(arguments)
             self.exitPrevious   = exit
@@ -559,7 +559,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 else:
                     os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s"' -e 'end tell'"""%params)
             else:
-                os.system("%(python)s %(file)s'"%params)
+                os.system("%(python)s %(file)s"%params)
         else:
             os.system(terminal%params)
             
@@ -587,16 +587,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     #---Blender
     def load_in_blender(self):
         """Load in blender"""
-        if self.checkBlender():
-            child=self.parentPanel.childActive
-            answer=child.confirmSave('Only saved contents will be loaded in Blender.')
+        if self.parentPanel.checkBlender():
+            child   = self.app.childActive
+            answer  = child.confirmSave('Only saved contents will be loaded in Blender.')
             if answer:
                 import blenpy.pyGui
                 blenpy.pyGui.pythonLoad(child.fileName)
         
     def reference_in_blender(self):
         """Reference in blender"""
-        if self.checkBlender():
+        if self.parentPanel.checkBlender():
             import blenpy.plugins.mouse
             blenpy.plugins.mouse.reference(self.parentPanel.childActive.fileName)
         
@@ -691,7 +691,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if warning:
                 wx.CallAfter(self.setStatus,warning)
                 wx.CallAfter(self.statusBar.throbber.playFile,'warning.gif')
-                if e and hasattr(e,'lineno'):
+                if e and hasattr(e,'lineno') and not (e.lineno is None):
                     wx.CallAfter(self.source.clearError,length)
                     wx.CallAfter(self.source.markError,e.lineno,e.offset)
             else:
@@ -709,10 +709,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         try:
             if not (self.frame.dead or self.parentFrame.dead):
                 if hasattr(self.parentFrame,'tabs'):
-                    docstring   = os.path.dirname(self.fileName)
                     tabs        = self.parentFrame.tabs
                     index       = self.frame.getIndex() - tabs.getZero() - 1
-                    source = self.source.GetText()
+                    source      = self.source.GetText()
+                    docstring   = '%s\n\n%d lines | %d chars | %d classes | %d defs'%(os.path.dirname(self.fileName),source.count('\n'),len(source),source.count('class '),source.count('def '))
                     if source and source[0] in ["'",'"']:
                         regex = RE_DOCSTRING_FIRST
                     else:
