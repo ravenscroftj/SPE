@@ -90,7 +90,7 @@ class Tool(wx.ToolBar):
         self.AddLabelTool(TOOL_SIDEBAR, "", wx.Bitmap("skins/default/view_left_right.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("View sidebar | F11"), "")
         self.AddLabelTool(TOOL_SHELL, "", wx.Bitmap("skins/default/view_top_bottom.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Show/hide shell | F12"), "")
         self.AddSeparator()
-        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Run... | F9"), "")
+        self.AddLabelTool(TOOL_RUN, "", wx.Bitmap("skins/default/run.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Run.../Stop | F9"), "")
         self.AddLabelTool(TOOL_RUN_DEBUG, "", wx.Bitmap("skins/default/run_debug.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, _("Run/Stop with WinPdb | F9"), "")
         self.AddLabelTool(TOOL_DEBUG, "", wx.Bitmap("skins/default/debug.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Debug with WinPdb... | Ctrl+Shift+D"), "")
         self.AddLabelTool(TOOL_IMPORT, "", wx.Bitmap("skins/default/import.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Import | F10"), "")
@@ -214,6 +214,10 @@ class Bar(wxgMenu.Bar):
             self.toolBar.ToggleTool(TOOL_REMEMBER_OPEN_FILES,bool)
 
     def check_run(self,bool):
+        if self.toolBar:
+            self.toolBar.ToggleTool(TOOL_RUN,bool)
+            
+    def check_run_debug(self,bool):
         if self.toolBar:
             self.toolBar.ToggleTool(TOOL_RUN_DEBUG,bool)
             

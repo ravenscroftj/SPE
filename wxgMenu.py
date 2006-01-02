@@ -304,7 +304,7 @@ class Bar(wx.MenuBar):
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
         self.tools.Append(RUN, _("Run\tCtrl+R"), "", wx.ITEM_NORMAL)
-        self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without arguments\tCtrl+Shift+R"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without arguments/Stop\tCtrl+Shift+R"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(RUN_TERMINAL, _("&Run in terminal\tF9"), "", wx.ITEM_NORMAL)
         self.tools.Append(RUN_TERMINAL_WITHOUT_ARGUMENTS, _("Run in terminal without &arguments\tShift+F9"), "", wx.ITEM_NORMAL)

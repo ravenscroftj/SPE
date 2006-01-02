@@ -56,7 +56,7 @@ except ImportError:
 ####Constants
 MDI         = 0
 DEBUG       = 0
-IMAGE_PATH  = os.path.join(info.path,'skins','default')
+IMAGE_PATH  = info.INFO['skinLocation']#os.path.join(info.path,'skins','default')
 
 ####Command line arguments
 openFiles   = []
@@ -91,7 +91,7 @@ except:
 # If there is a preference in the user's defaults that is not in
 # the regular defaults file,  add it
 baseConfig=ConfigParser.ConfigParser()
-baseConfig.read(os.path.join(info.path,"defaults.cfg"))
+baseConfig.read(os.path.join(info.PATH,"defaults.cfg"))
 for section in baseConfig.sections():
     for option in baseConfig.options(section):
         if not config.has_option(section,option):

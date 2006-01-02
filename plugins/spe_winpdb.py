@@ -152,9 +152,9 @@ class Runner:
         #assing method for check run tool button
         child                   = self.app.childActive
         if child.frame.menuBar:
-            self._check_run     = child.frame.menuBar.check_run
+            self._check_run     = child.frame.menuBar.check_run_debug
         else:
-            self._check_run     = child.parentFrame.menuBar.check_run
+            self._check_run     = child.parentFrame.menuBar.check_run_debug
 
     def _debug_childActive(self):
         child               = self.app.childActive

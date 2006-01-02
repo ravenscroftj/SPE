@@ -31,11 +31,17 @@ elif DARWIN:
 else:
     PYTHON_COM              = False
 
-path                        = os.path.dirname(__file__)
+PATH                        = os.path.dirname(__file__)
+
+def path(p):
+    if WIN and ' ' in p:
+        return '"%s"'%p
+    else:
+        return p
 
 #---Append sm
-if path not in sys.path:
-    sys.path.append(path)
+if PATH not in sys.path:
+    sys.path.append(PATH)
 import sm.osx
 
 INFO={
@@ -47,12 +53,12 @@ INFO={
     'doc'               : "%(titleFull)s\n\n%(description)s\n\n%(links)s\n\n%(requirements)s\n\n%(copyright)s",
     'forums'            : '',
     'license'           : 'GPL',
-    'location'          : path,
+    'location'          : PATH,
     'pyVersion'         : "2.3",
     'pyVersionC'        : sys.version.split(' ')[0],
     'scripts'           : ['spe','spe_wininst.py'],
-    'skinLocation'      : os.path.join(path,'skins','default'),
-    'smLocation'        : os.path.join(path,'sm'),
+    'skinLocation'      : os.path.join(PATH,'skins','default'),
+    'smLocation'        : os.path.join(PATH,'sm'),
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
     'userPath'          : sm.osx.userPath('.spe'),

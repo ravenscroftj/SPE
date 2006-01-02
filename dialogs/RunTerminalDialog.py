@@ -6,7 +6,7 @@ import wx
 
 def _(x): return x
 
-class RunDialog(wx.Dialog):
+class RunTerminalDialog(wx.Dialog):
     def __init__(self, fileName, runPreviousArguments, runPreviousExit, *args, **kwds):
         #todo: replace choices = [] with choices = runPreviousArguments
         # begin wxGlade: RunDialog.__init__

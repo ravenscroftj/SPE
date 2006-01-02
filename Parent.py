@@ -195,7 +195,6 @@ class Panel(wx.Notebook):
             new_cf.add_section("recent")
             try:
                 new_cf.set("recent","1",self.userOpen(RECENT))
-                print self.userOpen(RECENT)
             except:
                 new_cf.set("recent","1","")
 
@@ -583,6 +582,9 @@ class Panel(wx.Notebook):
         webbrowser.open(path)
 
     def run(self):
+        if self.output.IsBusy():
+            self.output.Kill()
+            return
         child = self.app.childActive
         if not child.confirmSave():
             return
@@ -600,19 +602,24 @@ class Panel(wx.Notebook):
             self.argumentsPrevious.append(arguments)
             self.beepPrevious   = beep
             self.run_with_arguments(arguments,beep,confirm=False)
+        else:
+            self.output._check_run(False)
         
-    def run_with_arguments(self,arguments='',beep=False,confirm=True):
+    def run_with_arguments(self,arguments='',beep=True,confirm=True):
+        if self.output.IsBusy():
+            self.output.Kill()
+            return
         child = self.app.childActive
         if confirm and not child.confirmSave():
             return
         # todo: input stuff from preferences dialog box!
         path, fileName  = os.path.split(child.fileName)
-        params          = { 'file':         child.fileName,
+        params          = { 'file':         info.path(child.fileName),
                             'path':         path,
                             'arguments':    arguments,
                             'python':       info.PYTHON_EXEC}
         os.chdir(path)
-        self.output.Execute("%(python)s %(file)s"%params)
+        self.output.Execute("%(python)s -u %(file)s"%params,beep=beep)
         
     def run_debug(self):
         """Run file"""
