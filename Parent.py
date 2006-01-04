@@ -1074,7 +1074,7 @@ Please report these details and operating system to %s."""%(message,INFO['author
                 todoIndex+=1
             if child.todoMax==todoMax:
                 for i in child.todoHighlights:
-                    item=self.todo.GetItem(todoIndexStart+i.wx())
+                    item=self.todo.GetItem(todoIndexStart+i.wx)
                     item.SetBackgroundColour(wx.Colour(255,255,0))
                     self.todo.SetItem(item)
 
