@@ -1111,6 +1111,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
             page        = page,
             extra       = extra,
             **options)
+        eventManager.Register(self.onFrameActivate, wx.EVT_SET_FOCUS,    self)
         
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
@@ -1149,6 +1150,12 @@ class MdiSplitChildFrame(Child,wx.Panel):
     def Activate(self):
         self.parentFrame.tabs.SetSelection(self.getIndex())
 
+    def onFrameActivate(self, event=None):
+        print 'ok'
+        if (not event) or event.GetActive():
+            self.setTitle(new=False)
+        Child.onFrameActivate(self,event)
+        
 class SdiChildFrame(TabPlatform,Child,wx.Frame):
     def __init__(self,parentFrame,
         id          = wx.ID_ANY,

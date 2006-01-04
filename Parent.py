@@ -525,30 +525,30 @@ class Panel(wx.Notebook):
         for child in self.app.children:
             child.source.SetViewEOL(event.IsChecked())
         self.set('ViewEol',event.IsChecked())
-
-    def asTabs(self,event):
+        
+    def as_notebook(self,event):
         if hasattr(self.frame,'Tile'):
             self.app.childActive.frame.Maximize()
         else:
             tabs    = getattr(self.frame,'tabs',None)
             if tabs:
                     tabs.Tile(False)
-##    def end_of_line_marker(self,event):
-    def asColumns(self,event):
+
+    def as_columns(self,event):
         if hasattr(self.frame,'Tile'):
-            self.frame.Tile(wx.HORIZONTAL)
-        else:
-            tabs    = getattr(self.frame,'tabs',None)
-            if tabs:
-                    tabs.Tile(True, wx.HORIZONTAL)
-        
-    def asRows(self,event):
-        if hasattr(self.frame,'Tile'):
-            self.frame.Maximize(wx.VERTICAL)
+            self.frame.Tile(wx.VERTICAL)
         else:
             tabs    = getattr(self.frame,'tabs',None)
             if tabs:
                     tabs.Tile(True, wx.VERTICAL)
+        
+    def as_rows(self,event):
+        if hasattr(self.frame,'Tile'):
+            self.frame.Maximize(wx.HORIZONTAL)
+        else:
+            tabs    = getattr(self.frame,'tabs',None)
+            if tabs:
+                    tabs.Tile(True, wx.HORIZONTAL)
         
     def toggle_shell(self):
         """Show/hide shell"""
@@ -610,7 +610,10 @@ class Panel(wx.Notebook):
 
     def run(self):
         if self.output.IsBusy():
-            self.output.Kill()
+            if self.messageConfirm('SPE will try to kill the running script.\n\nWarning:this might kill SPE as well.\nIt is highly recommended to save all scripts first.\n\nAre you sure you want to continue?'):
+                self.output.Kill()
+            else:
+                self.output._check_run(False)
             return
         child = self.app.childActive
         if not child.confirmSave():

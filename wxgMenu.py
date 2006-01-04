@@ -19,6 +19,7 @@ AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARA
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 
 REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
+AS_NOTEBOOK, AS_COLUMNS, AS_ROWS,
 END_OF_LINE_MARKER, SIDEBAR, SHELL, TOOLBAR,
 
 RUN, RUN_WITHOUT_ARGUMENTS, RUN_TERMINAL, RUN_TERMINAL_WITHOUT_ARGUMENTS, 
@@ -42,7 +43,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(78)]
+[wx.NewId() for x in range(81)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -54,6 +55,7 @@ AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, 
 
 WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
+AS_NOTEBOOK, AS_COLUMNS, AS_ROWS,
 END_OF_LINE_MARKER, SIDEBAR,
 
 RUN, RUN_WITHOUT_ARGUMENTS, IMPORT, RUN_DEBUG, DEBUG,
@@ -299,19 +301,23 @@ class Bar(wx.MenuBar):
         self.view.Append(RIGHT_EDGE_INDICATOR, _("Ri&ght edge indicator"), "", wx.ITEM_CHECK)
         self.view.Append(END_OF_LINE_MARKER, _("&End-of-line marker"), "", wx.ITEM_CHECK)
         self.view.AppendSeparator()
+        self.view.Append(AS_NOTEBOOK, _("As &notebook"), "", wx.ITEM_NORMAL)
+        self.view.Append(AS_COLUMNS, _("As &columns"), "", wx.ITEM_NORMAL)
+        self.view.Append(AS_ROWS, _("As &rows"), "", wx.ITEM_NORMAL)
+        self.view.AppendSeparator()
         self.view.Append(SIDEBAR, _("&Sidebar\tCtrl+F12"), "", wx.ITEM_CHECK)
         self.view.Append(SHELL, _("S&hell\tF12"), "", wx.ITEM_CHECK)
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
-        self.tools.Append(RUN, _("Run\tCtrl+R"), "", wx.ITEM_NORMAL)
+        self.tools.Append(RUN, _("Run\\Stop\tCtrl+R"), "", wx.ITEM_NORMAL)
         self.tools.Append(RUN_WITHOUT_ARGUMENTS, _("Run without arguments/Stop\tCtrl+Shift+R"), "", wx.ITEM_NORMAL)
+        self.tools.AppendSeparator()
+        self.tools.Append(RUN_DEBUG, _("Run/Stop with &WinPdb\tCtrl+F9"), "", wx.ITEM_NORMAL)
+        self.tools.Append(DEBUG, _("&Debug with winpdb...\tAlt+F9"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(RUN_TERMINAL, _("&Run in terminal\tF9"), "", wx.ITEM_NORMAL)
         self.tools.Append(RUN_TERMINAL_WITHOUT_ARGUMENTS, _("Run in terminal without &arguments\tShift+F9"), "", wx.ITEM_NORMAL)
         self.tools.Append(RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT, _("Run in terminal without &arguments && exit\tCtrl+Shift+F9"), "", wx.ITEM_NORMAL)
-        self.tools.AppendSeparator()
-        self.tools.Append(RUN_DEBUG, _("Run/Stop with &WinPdb\tCtrl+F9"), "", wx.ITEM_NORMAL)
-        self.tools.Append(DEBUG, _("&Debug with winpdb...\tAlt+F9"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
         self.tools.Append(IMPORT, _("&Import in shell\tF10"), "", wx.ITEM_NORMAL)
         self.tools.AppendSeparator()
@@ -415,15 +421,18 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_indentation, id=INDENTATION_GUIDES)
         self.Bind(wx.EVT_MENU, self.menu_right_edge_indicator, id=RIGHT_EDGE_INDICATOR)
         self.Bind(wx.EVT_MENU, self.menu_end_of_line_marker, id=END_OF_LINE_MARKER)
+        self.Bind(wx.EVT_MENU, self.menu_as_notebook, id=AS_NOTEBOOK)
+        self.Bind(wx.EVT_MENU, self.menu_as_columns, id=AS_COLUMNS)
+        self.Bind(wx.EVT_MENU, self.menu_as_rows, id=AS_ROWS)
         self.Bind(wx.EVT_MENU, self.menu_sidebar, id=SIDEBAR)
         self.Bind(wx.EVT_MENU, self.menu_shell, id=SHELL)
         self.Bind(wx.EVT_MENU, self.menu_run, id=RUN)
         self.Bind(wx.EVT_MENU, self.menu_run_without_arguments, id=RUN_WITHOUT_ARGUMENTS)
+        self.Bind(wx.EVT_MENU, self.menu_run_debug, id=RUN_DEBUG)
+        self.Bind(wx.EVT_MENU, self.menu_debug, id=DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_run_terminal, id=RUN_TERMINAL)
         self.Bind(wx.EVT_MENU, self.menu_run_terminal_without_arguments, id=RUN_TERMINAL_WITHOUT_ARGUMENTS)
         self.Bind(wx.EVT_MENU, self.menu_run_terminal_without_arguments_exit, id=RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT)
-        self.Bind(wx.EVT_MENU, self.menu_run_debug, id=RUN_DEBUG)
-        self.Bind(wx.EVT_MENU, self.menu_debug, id=DEBUG)
         self.Bind(wx.EVT_MENU, self.menu_import, id=IMPORT)
         self.Bind(wx.EVT_MENU, self.menu_browse_object_with_pyfilling, id=BROWSE_OBJECT_WITH_PYFILLING)
         self.Bind(wx.EVT_MENU, self.menu_test_regular_expression_with_kiki, id=TEST_REGULAR_EXPRESSION_WITH_KIKI)
@@ -575,6 +584,18 @@ class Bar(wx.MenuBar):
         event.Skip()
 
     def menu_end_of_line_marker(self, event): # wxGlade: Bar.<event_handler>
+        event.Skip()
+
+    def menu_as_notebook(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_as_notebook' not implemented"
+        event.Skip()
+
+    def menu_as_columns(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_as_columns' not implemented"
+        event.Skip()
+
+    def menu_as_rows(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_as_rows' not implemented"
         event.Skip()
 
     def menu_sidebar(self, event): # wxGlade: Bar.<event_handler>
@@ -763,6 +784,7 @@ class Bar(wx.MenuBar):
     def menu_show_docstring(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_show_docstring' not implemented"
         event.Skip()
+
 
 # end of class Bar
 

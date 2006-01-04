@@ -4052,16 +4052,23 @@ class NotebookCtrl(wx.Panel):
                 return
 
         self.Freeze()
-        
+
+        if orient is not None and show:
+            if orient == wx.VERTICAL:
+                norient = wx.HORIZONTAL
+            else:
+                norient = wx.VERTICAL
+                    
         if orient is not None and show:
             origorient = self.bsizer.GetOrientation()
-            if origorient != orient:
+            if origorient != norient:
                 for ii in xrange(self.GetPageCount()-1, -1, -1):
                     self.bsizer.Detach(ii)
 
                 self.sizer.Detach(self.bsizer)
                 self.bsizer.Destroy()
-                self.bsizer = wx.BoxSizer(orient)
+                    
+                self.bsizer = wx.BoxSizer(norient)
                 
                 for ii in xrange(self.GetPageCount()):
                     self.bsizer.Add(self._notebookpages[ii], 1, wx.EXPAND | wx.ALL, 2)

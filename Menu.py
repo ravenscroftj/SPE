@@ -403,6 +403,15 @@ class Bar(wxgMenu.Bar):
         """View > End-of-line marker"""
         self.parentPanel.end_of_line_marker(event)
 
+    def menu_as_notebook(self, event): 
+        self.parentPanel.as_notebook(event)
+
+    def menu_as_columns(self, event): 
+        self.parentPanel.as_columns(event)
+
+    def menu_as_rows(self, event): 
+        self.parentPanel.as_rows(event)
+
     def menu_sidebar(self, event=None):
         """View > Sidebar"""
         self.app.childActive.toggle_sidebar(event)

@@ -123,6 +123,7 @@ class Panel(wx.SplitterWindow):
         #events
         self.source.SetDropTarget(DropOpen(self.parentPanel.openList))
         eventManager.Register(self.onSetFocus, wx.EVT_SET_FOCUS, self)
+        eventManager.Register(self.onSetSourceFocus, wx.EVT_SET_FOCUS, self.source)
         eventManager.Register(self.onSash,wx.EVT_SPLITTER_SASH_POS_CHANGED,self)
         
     def __sideBar__(self):
@@ -642,6 +643,13 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         except:
             pass
        
+    def onSetSourceFocus(self,event):
+        if self.app.DEBUG:
+            print 'Event:  Child: %s: %s.onSetFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
+        event.Skip()
+        if self.app.childActive != self:
+            self.frame.onFrameActivate()
+        
     #---Source events
     def onSourceChange(self,event):
         self.eventChanged = True
