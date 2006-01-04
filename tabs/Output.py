@@ -39,11 +39,12 @@ class Output(html.HtmlWindow):
         else:
             child.parentFrame.menuBar.check_run(bool)
     
-    def Execute(self, command, statustext = "Running script...",beep=False):
+    def Execute(self, command, label = None, statustext = "Running script...",beep=False):
         """Executes a command of which the output will be redirected by OnIdle and OnEndProcess."""
         if self.pid is -1:
+            if not label: label = command
             #give feedback
-            self.AddText('<table bgcolor=#CCCCCC width=100%%><tr><td><TT><img src="%s">&nbsp;%s</TT></td></tr></table><br>'%(RUN_ICON,command))
+            self.AddText('<table bgcolor=#CCCCCC width=100%%><tr><td><TT><img src="%s">&nbsp;%s</TT></td></tr></table><br>'%(RUN_ICON,label))
             self.SetStatusText(statustext)
             self.UpdateToolbar()
             self.Raise()

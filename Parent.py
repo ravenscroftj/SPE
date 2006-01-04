@@ -631,7 +631,7 @@ class Panel(wx.Notebook):
         if answer == wx.ID_OK:
             self.argumentsPrevious.append(arguments)
             self.beepPrevious   = beep
-            self.run_with_arguments(arguments,beep,confirm=False)
+            self.run_with_arguments(arguments,beep=beep,confirm=False)
         else:
             self.output._check_run(False)
         
@@ -648,8 +648,9 @@ class Panel(wx.Notebook):
                             'path':         path,
                             'arguments':    arguments,
                             'python':       info.PYTHON_EXEC}
+        label = params['label'] = "%(file)s %(arguments)s"%params
         os.chdir(path)
-        self.output.Execute("%(python)s -u %(file)s"%params,beep=beep)
+        self.output.Execute("%(python)s -u %(label)s"%params,label=label,beep=beep)
         
     def run_debug(self):
         """Run file"""
