@@ -1151,7 +1151,6 @@ class MdiSplitChildFrame(Child,wx.Panel):
         self.parentFrame.tabs.SetSelection(self.getIndex())
 
     def onFrameActivate(self, event=None):
-        print 'ok'
         if (not event) or event.GetActive():
             self.setTitle(new=False)
         Child.onFrameActivate(self,event)

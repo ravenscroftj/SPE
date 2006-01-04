@@ -14,7 +14,7 @@ import codecs, compiler, inspect, os, sys, re, thread, time, types
 import wx
 from wx.lib.evtmgr import eventManager
 
-import sm, sm.spy, sm.uml, sm.wxp
+import sm, sm.spy, sm.uml, sm.wxp, sm.wxp.smdi
 from sm.wxp.stc import PythonSTC
 from sm.wxp.realtime import TreeCtrl, ListCtrl
 import view.documentation
@@ -647,7 +647,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if self.app.DEBUG:
             print 'Event:  Child: %s: %s.onSetFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
         event.Skip()
-        if self.app.childActive != self:
+        if self.app.childActive != self and sm.wxp.smdi.MdiSplitChildFrame == self.frame.__class__:
             self.frame.onFrameActivate()
         
     #---Source events
