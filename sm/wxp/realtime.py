@@ -33,12 +33,12 @@ class Ctrl:
         """Create unique id with data & index."""
         if data:
             try:
-                dataId      = '|'+repr(data)
+                dataId      = '|'+repr(data).replace('%','%%')
             except:
                 dataId      = ''
         else:
             dataId          = ''
-        id                  = ('%s%s|%%d'%(base,dataId)).encode('ascii','replace')
+        id                  = ('%s%s|%%d'%(base.replace('%','%%'),dataId)).encode('ascii','replace')
         nr                  = 0
         othersId            = [other.id for other in others]
         while id%nr in othersId:

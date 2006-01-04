@@ -52,6 +52,16 @@ def umlAdd(classes, umlClass):
     if umlClass: 
         classes[umlClass.name.split('(')[0]] = umlClass
 
+def isUtf8(text):
+    try:
+        if text.startswith('\xef\xbb\xbf'):
+            return True
+        else:
+            return False
+    except:
+        return False
+
+
 ####Child Panel class-----------------------------------------------------------
 class Source(PythonSTC):
     def __init__(self,parent):
@@ -545,7 +555,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 if info.WIN98:
                     if exit:
-                        os.system('start command /k %(python)s "%(file)s /c'%params)
+                        os.system('start command /k %(python)s "%(file)s" /c'%params)
                     else:
                         os.system('start command /k %(python)s "%(file)s"'%params) 
                 else:
@@ -898,10 +908,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             sepb_hit    = RE_SEPARATOR_HIGHLIGHT.match(l)
             encode_hit  = False
             if line < 3:
-##                if line == 0 and l.startswith(u'\xef\xbb\xbf'):
-##                    self.encoding = "utf8"
-##                    encode_hit = True
-##                else:
+                if line == 0 and isUtf8(l):
+                    self.encoding = "utf8"
+                    encode_hit = True
+                else:
                     enc = RE_ENCODING.search(l)
                     if enc:
                         self.encoding = str(enc.group(1))
@@ -1212,9 +1222,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         source=self.source
         
     def getEncoding(self,source):
-##        if source.startswith(u'\xef\xbb\xbf'):
-##            self.encoding = "utf8"
-##            return
+        if isUtf8(source):
+            self.encoding = "utf8"
+            return
         first2lines         = "".join(source.split("\n")[:2])
         encode_hit          = RE_ENCODING.search(first2lines)
         if encode_hit:
@@ -1236,7 +1246,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 self.setStatus('Warning: SPE uses "utf8" instead of "ascii" codec.')
                 self.encoding   = 'utf8'
         self.encoding = str(self.encoding)
-
+        
 class DropOpen(wx.FileDropTarget):
     """Opens a file when dropped on parent frame."""
     def __init__(self,openList):
