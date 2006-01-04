@@ -81,7 +81,10 @@ class Shell(wx.py.shell.Shell):
                 # web page that drops the trailing space
                 # from the ps2 prompt of a blank line.
                 line = ''
-            if line.strip() != '' and line.lstrip() == line:
+            lstrip = line.lstrip()
+            if line.strip() != '' and lstrip == line and \
+                    lstrip[:4] not in ['else','elif'] and \
+                    lstrip[:6] != 'except':
                 # New command.
                 if command:
                     # Add the previous command to the list.
