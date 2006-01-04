@@ -242,8 +242,7 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             self.tabstyle.EnableAquaTheme(True,2)
         elif WIN:
             self.SetHighlightSelection(True)
-            self.tabstyle.SetSecondGradientColour(wx.Colour(190,190,216))
-            self.tabstyle.EnableGradientStyle(enable=True)
+            self.tabstyle.EnableSilverTheme(True)
         else:
             self.tabstyle.EnableKDETheme(enable=True)
         self.ApplyTabTheme(self.tabstyle)

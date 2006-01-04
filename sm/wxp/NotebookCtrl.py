@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 18 Dec 2005, 23.00 CET
+# Latest Revision: 30 Dec 2005, 15.00 CET
 #
 #
 # TODO List/Caveats
@@ -71,9 +71,14 @@ Supported Customizations For NotebookCtrl Include:
   You Like When There Are No Tabs In NotebookCtrl;
 - Possibility To Change The ToolTip Window Background Colour;
 - Possibility To Draw Vertical Or Horizontal Gradient Coloured Tabs (2 Colours);
-- Themes On Tabs: Built-In Themes Are KDE And Gnome (Unix/Linux), Metal, Aqua Light
+- Themes On Tabs: Built-In Themes Are KDE (Unix/Linux), Metal, Aqua Light
   And Aqua Dark (MacOS), Windows Silver (Windows) Or Generic Gradient Coloured Tabs.
-  It's Also Possible To Define A Separate Theme For Selected Tabs And Control Background.
+  It's Also Possible To Define A Separate Theme For Selected Tabs And Control
+  Background (The Last Two Are Work In Progress);
+- Contour Line Colour Around Tabs Is Customizable;
+- Highlight Colour Of Selected Tab Is Customizable;
+- Each Tab Can Have Its Own Gradient Colouring (2 Colours For Every Tab);
+- Custom Images May Be Drawn As A "X" Close Buttons On Tabs;
   
 
 Usage:
@@ -88,7 +93,7 @@ wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 18 Dec 2005, 23.00 CET
+Latest Revision: Andrea Gavana @ 30 Dec 2005, 15.00 CET
 
 """
 
@@ -147,11 +152,11 @@ kdetheme = [wx.Colour(0xf3,0xf7,0xf9), wx.Colour(0xf3,0xf7,0xf9),
             wx.Colour(0xd9,0xe2,0xea), wx.Colour(0xd9,0xe2,0xea)]
 
 # Themes On Windows... This May Slow Down The Paint Event If You Turn It On!
-silvertheme2 = [wx.Colour(255, 255, 255), wx.Colour(240, 240, 234),
-                wx.Colour(236, 235, 230)]
+silvertheme2 = [wx.Colour(255, 255, 255), wx.Colour(190, 190, 216),
+                wx.Colour(180, 180, 200)]
 silvertheme1 = [wx.Colour(252, 252, 254), wx.Colour(252, 252, 254)]
            
-# NotebookoCtrl Events:
+# NotebookCtrl Events:
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGED: Event Fired When You Switch Page;
 # wxEVT_NOTEBOOKCTRL_PAGE_CHANGING: Event Fired When You Are About To Switch
 # Pages, But You Can Still "Veto" The Page Changing By Avoiding To Call
@@ -181,6 +186,10 @@ EVT_NOTEBOOKCTRL_PAGE_DCLICK = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_DCLICK, 
 EVT_NOTEBOOKCTRL_PAGE_RIGHT = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_RIGHT, 1)
 EVT_NOTEBOOKCTRL_PAGE_MIDDLE = wx.PyEventBinder(wxEVT_NOTEBOOKCTRL_PAGE_MIDDLE, 1)
 
+attrs = ["_backstyle", "_backtooltip", "_borderpen", "_convertimage", "_drawx",
+         "_drawxstyle", "_enabledragging", "_focusindpen", "_hideonsingletab",
+         "_highlight", "_padding", "_selectioncolour", "_selstyle", "_tabstyle",
+         "_upperhigh", "_usefocus", "_usegradients"]
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrlEvent
@@ -425,6 +434,11 @@ class TabbedPage:
         self._tooltiptime = 500
         self._winsize = 400
         self._menu = None
+        self._firstcolour = color = wx.WHITE
+        r, g, b = int(color.Red()), int(color.Green()), int(color.Blue())
+        color = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
+        colour = wx.Colour(color[0], color[1], color[2])
+        self._secondcolour = colour
         
 
 # ---------------------------------------------------------------------------- #
@@ -521,6 +535,7 @@ class TabCtrl(wx.PyControl):
         self._tabstyle = ThemeStyle()
         self._backstyle = ThemeStyle()
         self._selstyle = ThemeStyle()
+        self._usegradients = False
         
         self._insidetab = -1        
         self._showtooltip = False
@@ -1199,10 +1214,69 @@ class TabCtrl(wx.PyControl):
             colour = wx.Colour(255, 255, 230)
             
         self._backtooltip = colour
+
+
+    def EnableTabGradients(self, enable=True):
+        """ Globally Enables/Disables Drawing Of Gradient Coloured Tabs For Each Tab. """
+
+        self._usegradients = enable
+        
+        if enable:
+            self._tabstyle.ResetDefaults()
+            self._selstyle.ResetDefaults()
+            
+        self.Refresh()
         
 
+    def SetPageFirstGradientColour(self, nPage, colour=None):
+        """ Sets The Single Tab First Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPageFirstGradientColour: (" + str(nPage) + ")"
+        
+        if colour is None:
+            colour = wx.WHITE
+
+        self._pages[nPage]._firstcolour = colour
+        self.Refresh()
+        
+
+    def SetPageSecondGradientColour(self, nPage, colour=None):
+        """ Sets The Single Tab Second Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPageSecondGradientColour: (" + str(nPage) + ")"
+        
+        if colour is None:
+            color = self._pages[nPage]._firstcolour
+            r, g, b = int(color.Red()), int(color.Green()), int(color.Blue())
+            color = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
+            colour = wx.Colour(color[0], color[1], color[2])
+            
+        self._pages[nPage]._secondcolour = colour
+        self.Refresh()
+
+
+    def GetPageFirstGradientColour(self, nPage):
+        """ Returns The Single Tab First Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPageFirstGradientColour: (" + str(nPage) + ")"
+
+        return self._pages[nPage]._firstcolour
+
+
+    def GetPageSecondGradientColour(self, nPage):
+        """ Returns The Single Tab Second Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPageSecondGradientColour: (" + str(nPage) + ")"
+
+        return self._pages[nPage]._secondcolour
+    
+
     def CancelTip(self):
-        """ Destroys The Tip Window (Probably You Won't Need This One. """
+        """ Destroys The Tip Window (Probably You Won't Need This One). """
         
         if self._istooltipshown:
             self._istooltipshown = False
@@ -1552,16 +1626,23 @@ class TabCtrl(wx.PyControl):
             self._timers[nPage].Stop()
 
 
-    def SetDrawX(self, drawx=True, style=1):
+    def SetDrawX(self, drawx=True, style=1, image1=None, image2=None):
         """
         Globally Enables/Disables The Drawing Of A Closing "X" In The Tab. Depending
         On The "style" Parameter, You Will Have:
         - style = 1: Small "X" At The Top-Right Of The Tab;
-        - style = 2: Bigger "X" In The Middle Vertical Of The Tab (Like Opera Notebook).
+        - style = 2: Bigger "X" In The Middle Vertical Of The Tab (Like Opera Notebook);
+        - style = 3: Custom "X" Image Is Drawn On Tabs.
         """
 
         self._drawx = drawx
         self._drawxstyle = style
+
+        if style == 3:
+            self._imglist2 = wx.ImageList(16, 16, True, 0)
+            self._imglist2.Add(image1)
+            self._imglist2.Add(image2)
+            
         self.Refresh()
 
 
@@ -1682,6 +1763,7 @@ class TabCtrl(wx.PyControl):
         
         colour = self.GetPageTextColour(insidex)
         back_colour = self.GetBackgroundColour()
+        imagelist = 0
         
         if highlight:
             r = colour.Red()
@@ -1692,6 +1774,7 @@ class TabCtrl(wx.PyControl):
                 
             colour = wx.Colour(hr, hg, hb)
             back_colour = wx.WHITE
+            imagelist = 1
             
         dc = wx.ClientDC(self)
         xrect = self._xrect[insidex]
@@ -1701,7 +1784,7 @@ class TabCtrl(wx.PyControl):
             dc.SetPen(wx.Pen(colour, 1))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.DrawRectangleRect(xrect)
-        else:
+        elif drawx == 2:
             # Opera Style
             dc.SetPen(wx.Pen(colour, 1))
             dc.SetBrush(wx.Brush(colour))
@@ -1709,6 +1792,9 @@ class TabCtrl(wx.PyControl):
             dc.SetPen(wx.Pen(back_colour, 2))
             dc.DrawLine(xrect[0]+2, xrect[1]+2, xrect[0]+xrect[2]-3, xrect[1]+xrect[3]-3)
             dc.DrawLine(xrect[0]+2, xrect[1]+xrect[3]-3, xrect[0]+xrect[2]-3, xrect[1]+2)
+        else:
+            self._imglist2.Draw(imagelist, dc, xrect[0], xrect[1],
+                                wx.IMAGELIST_DRAW_TRANSPARENT, True)
     
 
     def HideOnSingleTab(self, hide=True):
@@ -1741,7 +1827,9 @@ class TabCtrl(wx.PyControl):
         Be Dropped (Between Which Tabs).
         """
         
-        if nPage < 0:
+        nPage = nPage - self._firstvisible
+        
+        if nPage < 0 or nPage >= len(self._tabrect):
             return
             
         colour = wx.BLACK
@@ -2003,6 +2091,8 @@ class TabCtrl(wx.PyControl):
                 enabled = self.IsPageEnabled(self._tabID)
                 tooltip, ontime, winsize = self.GetPageToolTip(self._tabID)
                 menu = self.GetPagePopupMenu(self._tabID)
+                firstcol = self.GetPageFirstGradientColour(self._tabID)
+                secondcol = self.GetPageSecondGradientColour(self._tabID)
             except:
                 self._parent.Thaw()
                 self._tabID = -1 
@@ -2062,6 +2152,8 @@ class TabCtrl(wx.PyControl):
             self.EnablePage(id, enabled)
             self.SetPageToolTip(id, tooltip, ontime, winsize)
             self.SetPagePopupMenu(id, menu)
+            self.SetPageFirstGradientColour(id, firstcol)
+            self.SetPageSecondGradientColour(id, secondcol)
             
             if isanimated and len(animatedimages) > 1:
                 self.SetAnimationImages(id, animatedimages)
@@ -2176,8 +2268,27 @@ class TabCtrl(wx.PyControl):
         self._selectioncolour = colour
 
 
+    def SetContourLineColour(self, colour=None):
+        """ Sets The Contour Line Colour (Controur Line Around Tabs). """
+
+        if colour is None:
+            if not self._tabstyle._normal or self._usegradients:
+                colour = wx.Colour(145, 167, 180)
+            else:
+                colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW)
+
+        if not self._tabstyle._normal or self._usegradients:
+            self._highlightpen = wx.Pen(colour)
+            self._highlightpen.SetCap(wx.CAP_BUTT)
+        else:
+            self._highlightpen2 = wx.Pen(colour)
+            self._highlightpen2.SetCap(wx.CAP_BUTT)
+
+        self.Refresh()
+        
+
     def ApplyTabTheme(self, theme=None):
-        """ Apply A Particular Theme To Be Drawn On Tabs. """
+        """ Applies A Particular Theme To Be Drawn On Tabs. """
         
         if theme is None:
             theme = ThemeStyle()
@@ -2215,9 +2326,11 @@ class TabCtrl(wx.PyControl):
                 
             index = index + 1
 
+        self._lastcolour = colour            
+
 
     def DrawKDETheme(self, dc, rect):
-        """ Draw Unix-Style KDE Theme On Tabs. """
+        """ Draws Unix-Style KDE Theme On Tabs. """
         
         brush = wx.Brush(kdetheme[13], wx.SOLID)
         dc.SetBackground(brush)
@@ -2229,8 +2342,11 @@ class TabCtrl(wx.PyControl):
             dc.DrawLine(x+1, y+ii, x+w-1, y+ii)
             dc.DrawLine(x+1, y+h-1-ii, x+w-2, y+h-1-ii)
 
+        self._lastcolour = kdetheme[0]
 
+        
     def DrawSilverTheme(self, dc, rect, selected):
+        """ Draws Windows XP Silver-Like Theme. """
 
         x, y, w, h = rect
 
@@ -2281,15 +2397,17 @@ class TabCtrl(wx.PyControl):
             rf = rf + rstep
             gf = gf + gstep
             bf = bf + bstep
+            self._lastcolour = currCol
 
         if not selected:
-            dc.SetBrush(wx.Brush((rend, gend, bend), wx.SOLID))
+            dc.SetBrush(wx.Brush((rend, gend, bend)))
             dc.SetPen(wx.Pen((rend, gend, bend)))
             dc.DrawRectangle(xpos, y+h-3, xend, 3)
-                    
+            self._lastcolour = wx.Colour(rend, gend, bend)
+            
 
     def DrawAquaTheme(self, dc, rect, style, selected):
-        """ Draw Mac-Style Aqua Theme On Tabs. """
+        """ Draws Mac-Style Aqua Theme On Tabs. """
         
         x, y, w, h = rect
 
@@ -2393,10 +2511,12 @@ class TabCtrl(wx.PyControl):
             rf = rf + rstep
             gf = gf + gstep
             bf = bf + bstep
+
+        self._lastcolour = currCol
         
         
     def DrawMetalTheme(self, dc, rect):
-        """ Draw Mac-Style Metal Gradient On Tabs. """
+        """ Draws Mac-Style Metal Gradient On Tabs. """
 
         x, y, w, h = rect
         
@@ -2405,7 +2525,8 @@ class TabCtrl(wx.PyControl):
         
         for yy in xrange(y+1, h+y):
             intens = (230 + 80 * (y-yy)/h)
-            dc.SetBrush(wx.Brush(wx.Colour(intens, intens, intens), wx.SOLID))
+            colour = wx.Colour(intens, intens, intens)
+            dc.SetBrush(wx.Brush(colour))
             if counter == 0:
                 xpos = x + 2
                 xend = w - 4
@@ -2419,6 +2540,8 @@ class TabCtrl(wx.PyControl):
             counter = counter + 1              
             dc.DrawRectangle(xpos, yy, xend, 1)
                 
+        self._lastcolour = colour
+
 
     def DrawVerticalGradient(self, dc, rect):
         """ Gradient Fill From Colour 1 To Colour 2 From Top To Bottom. """
@@ -2463,6 +2586,8 @@ class TabCtrl(wx.PyControl):
             gf = gf + gstep
             bf = bf + bstep
 
+        self._lastcolour = currCol
+        
 
     def DrawHorizontalGradient(self, dc, rect):
         """ Gradient Fill From Colour 1 To Colour 2 From Left To Right. """
@@ -2506,7 +2631,9 @@ class TabCtrl(wx.PyControl):
             rf = rf + rstep
             gf = gf + gstep
             bf = bf + bstep
-            
+
+        self._lastcolour = currCol
+        
         
     def GetAllTextExtents(self, dc):
         """ Returns All Tabs Text Extents. Used Internally. """
@@ -2612,6 +2739,48 @@ class TabCtrl(wx.PyControl):
                 self._selstyle._normal = True
                 self.DrawBuiltinStyle(dc, self._selstyle, rect, index, selection)
                 self._selstyle = oldselstyle
+
+
+    def DrawGradientOnTab(self, dc, rect, col1, col2):
+        """ Draw A Gradient Coloured Tab. """
+
+        dc.SetPen(wx.TRANSPARENT_PEN)
+
+        r1, g1, b1 = int(col1.Red()), int(col1.Green()), int(col1.Blue())
+        r2, g2, b2 = int(col2.Red()), int(col2.Green()), int(col2.Blue())
+
+        flrect = float(rect.height)
+
+        rstep = float((r2 - r1)) / flrect
+        gstep = float((g2 - g1)) / flrect
+        bstep = float((b2 - b1)) / flrect
+
+        rf, gf, bf = 0, 0, 0
+
+        counter = 0
+        
+        for y in xrange(rect.y+1, rect.y + rect.height):
+            currCol = (r1 + rf, g1 + gf, b1 + bf)
+                
+            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            if counter == 0:
+                xpos = rect.x + 2
+                xend = rect.width - 4
+            elif counter == 1:
+                xpos = rect.x + 1
+                xend = rect.width - 2
+            else:
+                xpos = rect.x
+                xend = rect.width
+
+            counter = counter + 1
+            
+            dc.DrawRectangle(xpos, y, xend, 1)
+            rf = rf + rstep
+            gf = gf + gstep
+            bf = bf + bstep
+
+        self._lastcolour = currCol            
                 
         
     def OnPaint(self, event):
@@ -2630,7 +2799,7 @@ class TabCtrl(wx.PyControl):
 
         border_pen = self._borderpen
         highlightpen = self._highlightpen
-        if self._tabstyle._normal:
+        if self._tabstyle._normal and not self._usegradients:
             highlightpen = self._highlightpen2
         
         shadowpen = self._shadowpen
@@ -2693,9 +2862,14 @@ class TabCtrl(wx.PyControl):
         maxwidth = max(self._maxtabwidths)
 
         if self._firsttime:
-            
-            self._initrect = []
-            self._firstvisible = 0
+            if not hasattr(self, "_initrect"):
+                self._initrect = []
+            if self.HasSpinButton():
+                self._firstvisible = self._spinbutton.GetValue()
+                self._firsttime = False
+            else:
+                self._initrect = []
+                self._firstvisible = 0
         else:
             if self.HasSpinButton():
                 self._firstvisible = self._spinbutton.GetValue()
@@ -2784,14 +2958,18 @@ class TabCtrl(wx.PyControl):
             
             tabrect.append(wx.Rect(xpos, ypos, xsize, ysize))
 
-            if not self._tabstyle._normal:
+            if not self._tabstyle._normal or self._usegradients:
                 if ii != selection:
+                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
                     dc.SetPen(shadowpen)
-                    dc.DrawRoundedRectangle(xpos+1, ypos+1, xsize, ysize-1, 4)
-                
-                self.DrawBuiltinStyle(dc, self._tabstyle, tabrect[-1], ii, selection)
-                dc.SetPen(highlightpen)
+                    dc.DrawRoundedRectangle(xpos+1, ypos+1, xsize, ysize-1, 3)
 
+                if self._usegradients:
+                    self.DrawGradientOnTab(dc, tabrect[-1], self._pages[ii]._firstcolour,
+                                            self._pages[ii]._secondcolour)
+                else:
+                    self.DrawBuiltinStyle(dc, self._tabstyle, tabrect[-1], ii, selection)
+                    
                 dc.SetPen(highlightpen)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
                 
@@ -2799,9 +2977,9 @@ class TabCtrl(wx.PyControl):
                 dc.SetPen(upperhighpen)
                 dc.DrawLine(xpos+2, ypos-1, xpos + xsize - 2, ypos-1)
                 dc.SetPen(highlightpen)
-                
+    
                 if ii == selection:
-                    dc.SetPen(cancelpen)                    
+                    dc.SetPen(wx.Pen(self._lastcolour))                    
                     dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
                            
                 dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
@@ -2837,10 +3015,14 @@ class TabCtrl(wx.PyControl):
             if ii == selection + 1 and ii != self.GetPageCount() and selfound:
                 dc.SetPen(highlightpen)                    
                 dc.DrawLine(xselpos + 3, yselpos, xselpos + xselsize - 3, yselpos)
-                if self._tabstyle._normal:
+                if self._tabstyle._normal and not self._usegradients:
                     dc.SetPen(shadowpen)
                     dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+2)
-                
+                else:
+                    shadowpen.SetWidth(1)
+                    dc.SetPen(shadowpen)
+                    dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+3)
+                    
             if highlight and selfound:
                 dc.SetBrush(back_brush) 
                 dc.SetPen(selectionpen)
@@ -2861,7 +3043,7 @@ class TabCtrl(wx.PyControl):
                     dc.DrawLine(xpos+xsize-mins-3, ypos+2+mins, xpos+xsize-2, ypos+1)
                     dc.DrawRectangle(xpos+xsize-mins-3, ypos+2, mins+1, mins+1)
                     Xrect.append(wx.Rect(xpos+xsize-mins-3, ypos+2, mins+1, mins+1))
-                else:
+                elif dxstyle == 2:
                     dc.SetPen(wx.Pen(thecolour))
                     dc.SetBrush(wx.Brush(thecolour))
                     xxpos = xpos+xsize-height-self._padding.x
@@ -2871,7 +3053,11 @@ class TabCtrl(wx.PyControl):
                     dc.DrawLine(xxpos+2, yypos+2, xxpos+height-3, yypos+height-3)
                     dc.DrawLine(xxpos+2, yypos+height-3, xxpos+height-3, yypos+2)
                     Xrect.append(wx.Rect(xxpos, yypos, height, height))
-
+                else:
+                    xxpos = xpos+xsize-height-self._padding.x
+                    yypos = ypos+(ysize-height-self._padding.y/2)/2
+                    Xrect.append(wx.Rect(xxpos, yypos, height, height))
+                    self._imglist2.Draw(0, dc, xxpos, yypos, wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
             if ii in self._selectedtabs:
                 dc.SetPen(wx.Pen(thecolour, 1, wx.DOT_DASH))
@@ -3495,15 +3681,16 @@ class NotebookCtrl(wx.Panel):
         self.nb.EnableDragAndDrop(enable)
 
 
-    def SetDrawX(self, drawx=True, style=1):
+    def SetDrawX(self, drawx=True, style=1, image1=None, image2=None):
         """
         Globally Enables/Disables The Drawing Of A Closing "X" In The Tab. Depending
         On The "style" Parameter, You Will Have:
         - style = 1: Small "X" At The Top-Right Of The Tab;
-        - style = 2: Bigger "X" In The Middle Vertical Of The Tab (Like Opera Notebook).
+        - style = 2: Bigger "X" In The Middle Vertical Of The Tab (Like Opera Notebook);
+        - style = 3: Custom "X" Is Drawn On Tabs.
         """
 
-        self.nb.SetDrawX(drawx, style)
+        self.nb.SetDrawX(drawx, style, image1, image2)
 
 
     def GetDrawX(self):
@@ -3613,6 +3800,51 @@ class NotebookCtrl(wx.Panel):
             
         self.nb.SetToolTipBackgroundColour(colour)       
 
+
+    def EnableTabGradients(self, enable=True):
+        """ Globally Enables/Disables Drawing Of Gradient Coloured Tabs For Each Tab. """
+
+        self.nb.EnableTabGradients(enable)
+        
+
+    def SetPageFirstGradientColour(self, nPage, colour=None):
+        """ Sets The Single Tab First Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPageFirstGradientColour: (" + str(nPage) + ")"
+        
+        if colour is None:
+            colour = wx.WHITE
+
+        self.nb.SetPageFirstGradientColour(nPage, colour)
+        
+
+    def SetPageSecondGradientColour(self, nPage, colour=None):
+        """ Sets The Single Tab Second Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In SetPageSecondGradientColour: (" + str(nPage) + ")"
+        
+        self.nb.SetPageSecondGradientColour(nPage, colour)
+
+
+    def GetPageFirstGradientColour(self, nPage):
+        """ Returns The Single Tab First Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPageFirstGradientColour: (" + str(nPage) + ")"
+
+        return self.nb.GetPageFirstGradientColour(nPage)
+
+
+    def GetPageSecondGradientColour(self, nPage):
+        """ Returns The Single Tab Second Gradient Colour. """
+        
+        if nPage < 0 or nPage >= self.GetPageCount():
+            raise "\nERROR: Invalid Notebook Page In GetPageSecondGradientColour: (" + str(nPage) + ")"
+
+        return self.nb.GetPageSecondGradientColour(nPage)
+    
 
     def CancelTip(self):
         """ Destroys The Tip Window (Probably You Won't Need This One. """
@@ -3801,6 +4033,12 @@ class NotebookCtrl(wx.Panel):
             colour = wx.Colour(255, 180, 0)
 
         self.nb.SetSelectionColour(colour)
+
+
+    def SetContourLineColour(self, colour=None):
+        """ Sets The Contour Line Colour (Controur Line Around Tabs). """
+
+        self.nb.SetContourLineColour(colour)
         
 
     def Tile(self, show=True, orient=None):
@@ -4022,7 +4260,10 @@ class NotebookCtrl(wx.Panel):
         if newPage is None:
             notebook.AddPage(panel, infos["text"], False, infos["image"])
             notebook.SetPageInfo(0, infos)
-            
+
+        for attr in attrs:
+            setattr(notebook, attr, getattr(self.nb, attr))
+                    
         self.nb.DeletePage(nPage, False)
 
         self.bsizer.Detach(nPage)
@@ -4061,6 +4302,8 @@ class NotebookCtrl(wx.Panel):
         enabled = self.IsPageEnabled(nPage)
         tooltip, ontime, winsize = self.GetPageToolTip(nPage)
         menu = self.GetPagePopupMenu(nPage)
+        firstcol = self.GetPageFirstGradientColour(nPage)
+        secondcol = self.GetPageSecondGradientColour(nPage)
             
         isanimated = 0
         timer = None
@@ -4076,7 +4319,8 @@ class NotebookCtrl(wx.Panel):
                  "fontcolour": fontcolour, "pagecolour": pagecolour, "enabled": enabled,
                  "tooltip": tooltip, "ontime": ontime, "winsize": winsize,
                  "menu": menu, "isanimated": isanimated, "timer": timer,
-                 "animatedimages": animatedimages, "imagelist": self.nb._imglist}
+                 "animatedimages": animatedimages, "imagelist": self.nb._imglist,
+                 "firstcol": firstcol, "secondcol": secondcol}
 
         return infos
 
@@ -4094,6 +4338,8 @@ class NotebookCtrl(wx.Panel):
         self.EnablePage(nPage, infos["enabled"])
         self.SetPageToolTip(nPage, infos["tooltip"], infos["ontime"], infos["winsize"])
         self.SetPagePopupMenu(nPage, infos["menu"])
+        self.SetPageFirstGradientColour(nPage, infos["firstcol"])
+        self.SetPageSecondGradientColour(nPage, infos["secondcol"])
         
         if infos["isanimated"] and len(infos["animatedimages"]) > 1:
             self.SetAnimationImages(nPage, infos["animatedimages"])
@@ -4291,6 +4537,8 @@ class NCFrame(wx.Frame):
             self._nb.EnablePage(id, infos["enabled"])
             self._nb.SetPageToolTip(id, infos["tooltip"], infos["ontime"], infos["winsize"])
             self._nb.SetPagePopupMenu(id, infos["menu"])
+            self._nb.SetPageFirstGradientColour(id, infos["firstcol"])
+            self._nb.SetPageSecondGradientColour(id, infos["secondcol"])
             
             if infos["isanimated"] and len(infos["animatedimages"]) > 1:
                 self._nb.SetAnimationImages(id, infos["animatedimages"])

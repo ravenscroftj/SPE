@@ -555,21 +555,21 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 if info.WIN98:
                     if exit:
-                        os.system('start command /k %(python)s "%(file)s" /c'%params)
+                        os.system('start command /k %(python)s "%(file)s" %(arguments)s /c'%params)
                     else:
-                        os.system('start command /k %(python)s "%(file)s"'%params) 
+                        os.system('start command /k %(python)s "%(file)s" %(arguments)s'%params) 
                 else:
                     if exit:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" %(python)s "%(file)s"'%params)
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" %(python)s "%(file)s" %(arguments)s'%params)
                     else:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B %(python)s "%(file)s"'%params)
+                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B %(python)s "%(file)s" %(arguments)s'%params)
             elif info.DARWIN:
                 if exit:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s;exit"' -e 'end tell'"""%params)
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s;exit"' -e 'end tell'"""%params)
                 else:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s"' -e 'end tell'"""%params)
+                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s"' -e 'end tell'"""%params)
             else:
-                os.system("%(python)s %(file)s"%params)
+                os.system("%(python)s %(file)s %(arguments)s"%params)
         else:
             os.system(terminal%params)
             

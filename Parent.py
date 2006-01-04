@@ -78,6 +78,7 @@ class Panel(wx.Notebook):
         #arguments
         self._openFiles         = openFiles
         self._redirect          = redirect
+        self._simultaneous      = False
         self.redraw             = redraw
         self.Blender            = Blender
         #panel
@@ -485,6 +486,8 @@ class Panel(wx.Notebook):
         source  = child.source
         code    = source.GetSelectedText()
         if not code.strip():
+            if self.getValue('ExecuteWarning') and not self.messageConfirm('As there is no code selected,\nSPE will run the whole script.\n\nAre sure you want to continue?'):
+                return
             if self.getValue('SaveBeforeRun') and not child.confirmSave():
                 return
             child.setStatus('As there is no code selected, SPE will run the whole script.')
@@ -523,6 +526,30 @@ class Panel(wx.Notebook):
             child.source.SetViewEOL(event.IsChecked())
         self.set('ViewEol',event.IsChecked())
 
+    def asTabs(self,event):
+        if hasattr(self.frame,'Tile'):
+            self.app.childActive.frame.Maximize()
+        else:
+            tabs    = getattr(self.frame,'tabs',None)
+            if tabs:
+                    tabs.Tile(False)
+##    def end_of_line_marker(self,event):
+    def asColumns(self,event):
+        if hasattr(self.frame,'Tile'):
+            self.frame.Tile(wx.HORIZONTAL)
+        else:
+            tabs    = getattr(self.frame,'tabs',None)
+            if tabs:
+                    tabs.Tile(True, wx.HORIZONTAL)
+        
+    def asRows(self,event):
+        if hasattr(self.frame,'Tile'):
+            self.frame.Maximize(wx.VERTICAL)
+        else:
+            tabs    = getattr(self.frame,'tabs',None)
+            if tabs:
+                    tabs.Tile(True, wx.VERTICAL)
+        
     def toggle_shell(self):
         """Show/hide shell"""
         frame               = self.frame

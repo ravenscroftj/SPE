@@ -32,6 +32,7 @@ else:
     PYTHON_COM              = False
 
 PATH                        = os.path.dirname(__file__)
+_PATH                       = os.path.dirname(PATH)
 
 def path(p):
     if WIN and ' ' in p:
@@ -42,6 +43,9 @@ def path(p):
 #---Append sm
 if PATH not in sys.path:
     sys.path.append(PATH)
+if _PATH not in sys.path:
+    sys.path.append(_PATH)
+    
 import sm.osx
 
 INFO={
