@@ -810,7 +810,7 @@ class Panel(wx.Notebook):
 
     def python_documentation_server(self):
         from pydoc import __file__ as fileName
-        os.spawnl(os.P_NOWAIT,sys.executable,sys.executable,fileName,'-g')
+        os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,fileName,'-g')
         self.messageHtml('http://localhost:7464/')
 
     def wxwindows_documentation(self):

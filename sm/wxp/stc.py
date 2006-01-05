@@ -326,7 +326,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
 
     def OnRightClick(self, event):
-        self.PopupMenu(self.menu, event.GetPosition())
+        self.PopupMenu(self.menu)
 
     def SetViewEdge(self,check):
             if check:
