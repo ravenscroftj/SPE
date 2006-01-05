@@ -503,6 +503,6 @@ class Canvas(PrintCanvas):
 
         
 if __name__=='__main__':
-    import sm.wxp
+    import __init__ as wxp
     
-    sm.wxp.panelApp(Canvas)
+    wxp.panelApp(Canvas)

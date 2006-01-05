@@ -237,14 +237,15 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             del keyw['style']
         NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
         self.tabstyle   = NotebookCtrl.ThemeStyle()
-        if DARWIN:
-            self.SetControlBackgroundColour(wx.Colour(236,236,236))
-            self.tabstyle.EnableAquaTheme(True,2)
-        elif WIN:
+        if WIN:
             self.SetHighlightSelection(True)
             self.tabstyle.EnableSilverTheme(True)
+        elif DARWIN:
+            self.SetControlBackgroundColour(wx.Colour(236,236,236))
+            self.tabstyle.EnableAquaTheme(True,2)
         else:
-            self.tabstyle.EnableKDETheme(enable=True)
+            #self.SetControlBackgroundColour(wx.Colour(236,236,236))
+            self.tabstyle.EnableAquaTheme(True,1)
         self.ApplyTabTheme(self.tabstyle)
         self.SetTabHeight(25)
         self.SetDrawX(True, 2)

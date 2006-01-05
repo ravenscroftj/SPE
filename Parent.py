@@ -40,6 +40,10 @@ RECENT          = 'recent.txt'
 FOLDERS         = 'folders.txt'
 NOTES           = 'notes.txt'
 REMEMBER        = 'remember.txt'
+if info.LINUX:
+    STYLE       = wx.NB_TOP
+else:
+    STYLE       = wx.NB_BOTTOM
 
 
 
@@ -48,7 +52,7 @@ class Panel(wx.Notebook):
     ####Constructors
     def __init__(self, parent, openFiles=[], splash=None, redirect=1, path=PATH,
                  size = SIZE,**settings):
-        wx.Notebook.__init__(self,parent=parent,id=wx.ID_ANY,style=wx.NB_BOTTOM,size=size)
+        wx.Notebook.__init__(self,parent=parent,id=wx.ID_ANY,style=STYLE,size=size)
         self.__paths__(path)
         self.__settings__(openFiles,redirect,**settings)
         self.__findReplaceEvents__()

@@ -31,6 +31,7 @@ def my_import(name):
 class Panel(sm.wxp.HtmlWindow):
     def __init__(self,parent,*args,**kwds):
         sm.wxp.HtmlWindow.__init__(self,parent=parent,id=-1)
+        self.SetFonts(normal_face='helvetica',fixed_face='courier',sizes=[8,9,10,12,16,20,22])
         self.childPanel     = parent.childPanel
         self.open           = self.childPanel.parentPanel.openList
         self.moduleName     = None

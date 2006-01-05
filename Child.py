@@ -36,6 +36,8 @@ if not info.DARWIN:
     STYLE_NOTES         |= wx.TE_DONTWRAP
 STYLE_SPLIT             = wx.SP_NOBORDER|wx.FULL_REPAINT_ON_RESIZE
 STYLE_TREE              = wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT
+if info.LINUX:
+    STYLE_TREE          |= wx.TR_NO_LINES
 RE_DOCSTRING            = re.compile(r'(\n|\n__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
 RE_DOCSTRING_FIRST      = re.compile(r'(|__doc__\s*=(\s*|\s*\\\s*\n))("""([^"]*)"""|\'\'\'([^\']*)\'\'\'|"([^"]*)"|\'([^\']*)\')')
 RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
@@ -139,9 +141,9 @@ class Panel(wx.SplitterWindow):
         self.indexIcon      = self.notebookIcons.Add(self.parentPanel.icons['index.png'])
         self.notesIcon      = self.notebookIcons.Add(self.parentPanel.icons['notes.png'])
         self.pycheckerIcon  = self.notebookIcons.Add(self.parentPanel.icons['pychecker.png'])
-        if info.LINUX:
-            #todo: check with linux users if this is really necessary?!
-            self.notebook.SetBackgroundColour(wx.WHITE)
+##        if info.LINUX:
+##            #todo: check with linux users if this is really necessary?!
+##            self.notebook.SetBackgroundColour(wx.WHITE)
         notebook.AssignImageList(self.notebookIcons)
         notebook.parentPanel=self.parentPanel
 
