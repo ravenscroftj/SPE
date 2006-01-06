@@ -16,6 +16,8 @@ else:
     
 PYTHON_EXEC                 = sys.executable
 if WIN:
+    if PYTHON_EXEC.endswith('w.exe'):
+        PYTHON_EXEC = PYTHON_EXEC[:-5] + '.exe'
     try:
         import win32api
         PYTHON_EXEC         = win32api.GetShortPathName(PYTHON_EXEC)

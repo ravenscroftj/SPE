@@ -39,7 +39,7 @@ class Panel(wx.ListCtrl):
         self.SetHelpText(help.RECENT)
         #events
         wx.EVT_LIST_ITEM_SELECTED(self, -1, self.onLeftClick)
-        wx.EVT_LIST_ITEM_RIGHT_CLICK(self, -1, self.onRightClick)
+        wx.EVT_LIST_ITEM_ACTIVATED(self, -1, self.onRightClick)
         wx.EVT_LIST_ITEM_MIDDLE_CLICK(self, -1, self.onMiddleClick)
         
     def add(self,fileList):

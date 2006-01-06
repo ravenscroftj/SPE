@@ -139,6 +139,7 @@ class Panel(wx.Notebook):
         tabs = TABS[:-1] + [x for x in tabs if x not in TABS] + [TABS[-1]]
         if not self.app.Blender:
             tabs.remove('Blender')
+        self.tabPanel = {}
         for tab in tabs:
             if self.app.DEBUG: print '\t',tab
             __import__('_spe.tabs.'+tab)
@@ -146,6 +147,7 @@ class Panel(wx.Notebook):
             if info.DARWIN and tab!='Shell':    text    = ''
             else:                               text    = tab
             self.AddPage(page=page,text=text,imageId=self.iconsListIndex[tab.lower()+'.png'])
+            self.tabPanel[tab] = page
         self.tabs = tabs
         if self.get('version')!=INFO['version']:
             self.SetSelection(self.GetPageCount()-1)
