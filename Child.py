@@ -1218,15 +1218,15 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             return
         self.notesText=self.notes.GetValue()
         if file:
-            if not self.notesText:
-                try:
+            try:
+                if not self.notesText:
                     os.remove(self.notesFile())
-                except:
-                    pass
-            else:
-                f=open(self.notesFile(),'w')
-                f.write(self.notesText)
-                f.close()
+                else:
+                    f=open(self.notesFile(),'w')
+                    f.write(self.notesText)
+                    f.close()
+            except (OSError, IOError):
+                pass # tolerate IO failure otherwise app hangs
 
     def selectLine(self,line):
         source=self.source

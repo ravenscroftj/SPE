@@ -191,7 +191,8 @@ class Panel(wxgPanel):
             pass
 
         if os.path.exists(folder):
-            flen = len(folder)
+            flen = len(folder)+1
+            if folder[-1] in ['\\','/']: flen -= 1
             self.files=[(file[flen:], file)
                         for file in sm.osx.listdirR(folder,recursion,['.py','.pyw'])]
             self.files.sort()
