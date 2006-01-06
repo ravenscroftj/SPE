@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 30 Dec 2005, 15.00 CET
+# Latest Revision: 06 Jan 2006, 16.00 CET
 #
 #
 # TODO List/Caveats
@@ -93,7 +93,7 @@ wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 30 Dec 2005, 15.00 CET
+Latest Revision: Andrea Gavana @ 06 Jan 2006, 16.00 CET
 
 """
 
@@ -512,7 +512,7 @@ class TabCtrl(wx.PyControl):
 
         self._padding = wx.Point(8, 5)
         self._spacetabs = 2
-        self._xrect = wx.Rect()
+        self._xrect = []
         self._xrefreshed = False
         self._imageconverted = False
         self._convertimage = False
@@ -526,6 +526,7 @@ class TabCtrl(wx.PyControl):
         self._tabID = -1
         self._enabledragging = False
         self._olddragpos = -1
+        self._fromdnd = False
         self._isleaving = False
         self._highlight = False
         self._usefocus = True
@@ -551,6 +552,7 @@ class TabCtrl(wx.PyControl):
         self._timers = []
         
         self._dragcursor = wx.StockCursor(wx.CURSOR_HAND)
+        self._dragstartpos = wx.Point()
 
         self._drawx = False
         self._drawxstyle = 1
@@ -1984,6 +1986,12 @@ class TabCtrl(wx.PyControl):
             else: # NW Tip Positioning
                 posx = xpos + 10
                 posy = ypos
+
+        if posy < 0:
+            posy = ypos
+
+        if posx < 0:
+            posx = xpos
         
         self._tipwindow.SetPosition((posx, posy))
         self._tipwindow.Show()
@@ -2176,6 +2184,7 @@ class TabCtrl(wx.PyControl):
 
         self._isdragging = False
         self._olddragpos = -1
+        self._fromdnd = True
         self.Refresh()
         self._tabID = -1 
         self.SetCursor(wx.STANDARD_CURSOR)
@@ -2204,7 +2213,7 @@ class TabCtrl(wx.PyControl):
             if self.IsPageEnabled(id):
                 menu = self.GetPagePopupMenu(id)
                 if menu:
-                    self.PopupMenu(menu, pt)
+                    self.PopupMenu(menu)
 
         event.Skip()
 
@@ -2864,9 +2873,10 @@ class TabCtrl(wx.PyControl):
         if self._firsttime:
             if not hasattr(self, "_initrect"):
                 self._initrect = []
-            if self.HasSpinButton():
+            if self.HasSpinButton() and self._fromdnd:
                 self._firstvisible = self._spinbutton.GetValue()
                 self._firsttime = False
+                self._fromdnd = False
             else:
                 self._initrect = []
                 self._firstvisible = 0
@@ -3132,6 +3142,8 @@ class NotebookCtrl(wx.Panel):
         self._showtabs = True
         self._sizerstyle = sizer
         self._custompanel = None
+        self._focusswitch = False
+        self._oldfocus = None
         
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.bsizer = wx.BoxSizer(sizer)
@@ -3146,6 +3158,9 @@ class NotebookCtrl(wx.Panel):
             self.sizer.Add((0, margin), 0)
 
         self.SetSizer(self.sizer)
+
+        self.sizer.Show(self.nb, False)
+        
         self.sizer.Layout()  
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
@@ -3213,7 +3228,61 @@ class NotebookCtrl(wx.Panel):
                     
         event.Skip()
                     
+
+    def EnableChildFocus(self, enable=True):
+        """ Enables/Disables Sending EVT_NOTEBOOKCTRL_PAGE_CHANGING When In Tile Mode. """
+        
+        self._focusswitch = enable
+        
+
+    def FindFocusedPage(self, obj):
+        """ Find Which NotebookCtrl Page Has The Focus Based On Its Child Focus. """
+        
+        while 1:
+            if obj in self._notebookpages:
+                return obj
+
+            try:
+                obj = obj.GetParent()
+            except:
+                return None
+
+        return None
     
+    
+    def OnFocus(self, event):
+        """ Handles The wx.EVT_CHILD_FOCUS Event For NotebookCtrl. """
+
+        if not self._focusswitch:
+            event.Skip()
+            return
+
+        newfocus = self.FindFocusedPage(event.GetEventObject())
+
+        if newfocus == self._oldfocus or newfocus is None:
+            event.Skip()
+            return
+
+        self._oldfocus = newfocus
+                
+        eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_CHANGING, self.GetId())
+        
+        nPage = self._notebookpages.index(newfocus)
+        eventOut.SetSelection(nPage)
+        eventOut.SetOldSelection(self.GetSelection())
+        eventOut.SetEventObject(self)
+    
+        if not self.GetEventHandler().ProcessEvent(eventOut):
+
+            # Program Allows The Page Change 
+            self.nb._selection = nPage
+            eventOut.SetEventType(wxEVT_NOTEBOOKCTRL_PAGE_CHANGED) 
+            eventOut.SetOldSelection(self.nb._selection) 
+            self.GetEventHandler().ProcessEvent(eventOut)        
+        
+        event.Skip()
+
+        
     def AddPage(self, page, text, select=False, img=-1):
         """
         Add A Page To The Notebook, With Following Parameters:
@@ -3237,6 +3306,8 @@ class NotebookCtrl(wx.Panel):
                     
         self.nb.AddPage(text, select, img)
         self._notebookpages.append(page)
+        
+        page.Bind(wx.EVT_CHILD_FOCUS, self.OnFocus)
 
         if select:
             if oldselection >= 0:
@@ -3326,6 +3397,8 @@ class NotebookCtrl(wx.Panel):
         self.bsizer.Insert(nPage, page, 1, wx.EXPAND | wx.ALL, 2)
         self._notebookpages.insert(nPage, page)
         self.bsizer.Layout()
+
+        page.Bind(wx.EVT_CHILD_FOCUS, self.OnFocus)        
 
         for ii in xrange(self.GetPageCount()):
             self.bsizer.Show(ii, False)

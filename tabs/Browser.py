@@ -191,12 +191,12 @@ class Panel(wxgPanel):
             pass
 
         if os.path.exists(folder):
-            self.files=[(os.path.basename(file),file) for file in sm.osx.listdirR(folder,recursion,['.py','.pyw'])]
+            flen = len(folder)
+            self.files=[(file[flen:], file)
+                        for file in sm.osx.listdirR(folder,recursion,['.py','.pyw'])]
             self.files.sort()
-            i = 0
-            for file in self.files:
-                self.fileList.InsertImageStringItem(i, file[0],self.pyIcon)
-                i += 1
+            for i, file in enumerate(self.files):
+                self.fileList.InsertImageStringItem(i, file[0], self.pyIcon)
     # End of new methods
 
     def add(self,folders):

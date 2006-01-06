@@ -134,11 +134,17 @@ class Panel(wxgPanel):
         self.path.SetValue(os.path.dirname(self.panel.app.childActive.fileName))
 
     def onBrowseButton(self,event):
-        """When browse is clicked, show dir select dialog."""
+        """ When browse is clicked, show dir select dialog.
+            If path ends in ';' we append the new path, otherwise we replace what
+            is there.
+        """
         path        = self.path.GetValue()
         dlg         = wx.DirDialog(self,defaultPath=path)
         if dlg.ShowModal() == wx.ID_OK:
             dir     = dlg.GetPath()
+            # see if this is a valid path and if it ends in ; - if so append path
+            if path and path[-1]==';':
+                dir = path + dir
             self.path.SetValue(dir)
         dlg.Destroy()
 
@@ -155,10 +161,13 @@ class Panel(wxgPanel):
         self.panel.SetStatusText('Collecting filenames ...',1)
         engine      = FindReplace(case=case, word=word, regex=regex, wrap=1, reverse=0)
         if path:
-            names   = sm.osx.listdirR(path,pathDepth,extensions)
+            # traverse ; seperated list of file paths
+            names = []
+            for p in path.split(';'):
+                names += sm.osx.listdirR(p, pathDepth, extensions)
         else:
             names   = self.panel.getFileNames()
-        results     = engine.findAllInFiles(names,self,pattern,path=path)
+        results     = engine.findAllInFiles(names, self, pattern, path=path)
 
     #---Clear Results Event added by Sam Widmer
     def onClearButton(self,event):
