@@ -103,6 +103,8 @@ Latest Revision: Andrea Gavana @ 06 Jan 2006, 16.00 CET
 #----------------------------------------------------------------------
 
 import wx
+from wx.lib.buttons import GenBitmapButton as BitmapButton
+
 import cStringIO, zlib
 
 # HitTest Results 
@@ -190,6 +192,31 @@ attrs = ["_backstyle", "_backtooltip", "_borderpen", "_convertimage", "_drawx",
          "_drawxstyle", "_enabledragging", "_focusindpen", "_hideonsingletab",
          "_highlight", "_padding", "_selectioncolour", "_selstyle", "_tabstyle",
          "_upperhigh", "_usefocus", "_usegradients"]
+
+
+# ---------------------------------------------------------------------------- #
+def GetMenuButtonData():
+
+    return zlib.decompress(
+"x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\x9c \xcc\xc1\
+\x06$\x1fLd\x13\x00R,\xc5N\x9e!\x1c@P\xc3\x91\xd2\x01\xe4[x\xba8\x86HL\xed\
+\xbd`\xc8\xc7\xa0\xc0\xe1|q\xdb\x9d\xff'\xba\xb4\x1d\x05v\xff}\xe2\xab\x9a:c\
+\x99\xc4\xbe\xe9\xfd+\x9a\xc5W%t\x1a\xe5\x08\xa6\xd6,\xe2\xf0\x9a\xc2\xc8\
+\xf0\xe1\xf9r\xe6\xa3\xc9\x02b\xd9\x0c35\x80f0x\xba\xfa\xb9\xacsJh\x02\x00\
+\xcd-%1")
+
+
+def GetMenuButtonBitmap():
+
+    return wx.BitmapFromImage(GetMenuButtonImage())
+
+
+def GetMenuButtonImage():
+
+    stream = cStringIO.StringIO(GetMenuButtonData())
+    return wx.ImageFromStream(stream)
+
+# ---------------------------------------------------------------------------- #
 
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrlEvent
@@ -419,7 +446,7 @@ class ThemeStyle:
 
 class TabbedPage:
 
-    def __init__(self, text="", image=-1):
+    def __init__(self, text="", image=-1, hidden=False):
         """ Default Class Constructor. """
         
         self._text = text
@@ -434,6 +461,7 @@ class TabbedPage:
         self._tooltiptime = 500
         self._winsize = 400
         self._menu = None
+        self._ishidden = hidden
         self._firstcolour = color = wx.WHITE
         r, g, b = int(color.Red()), int(color.Green()), int(color.Blue())
         color = ((r >> 1) + 20, (g >> 1) + 20, (b >> 1) + 20)
@@ -473,8 +501,16 @@ class NotebookSpinButton(wx.SpinButton):
             return
 
         if type(event) != type(1):
+            if self._nb._enablehiding:
+                if pos < self._oldvalue:
+                    incr = -1
+                else:
+                    incr = 1
+                while self._nb._pages[pos]._ishidden:
+                    pos = pos + incr
+                    
             self.SetValue(pos)
-
+    
         if self._nb.IsLastVisible() and self._oldvalue < pos:
             self.SetValue(self._oldvalue)
             return
@@ -483,6 +519,115 @@ class NotebookSpinButton(wx.SpinButton):
         
         self._nb.Refresh()
                 
+
+class NotebookMenuButton(BitmapButton):
+
+    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=(15, 11),
+                 style=0):
+
+        bmp = GetMenuButtonBitmap()
+        
+        BitmapButton.__init__(self, parent, id, bmp, pos, size, style)
+        
+        self.SetUseFocusIndicator(False)
+        self.SetBezelWidth(1)
+        
+        self._originalcolour = self.GetBackgroundColour()
+        self._nb = parent
+        
+        self.Bind(wx.EVT_BUTTON, self.OnButton)
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
+        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
+        self.Bind(wx.EVT_MENU, self.OnMenu)
+
+
+    def OnButton(self, event):
+
+        count = self._nb.GetPageCount()
+
+        if count <= 0:
+            return
+        
+        menu = wx.Menu()
+        id = wx.NewId()
+        myids = []
+        
+        for ii in xrange(count):
+
+            id = id + 1
+            myids.append(id)
+            name = self._nb.GetPageText(ii)
+
+            if self._nb._pages[ii]._ishidden:
+                msg = "Page Hidden"
+                check = False
+            else:
+                msg = "Page Shown"
+                check = True
+
+            item = wx.MenuItem(menu, id, name, msg, wx.ITEM_CHECK)
+            menu.AppendItem(item)
+            
+            if not self._nb._pages[ii]._ishidden:
+                item.Check()
+
+            menu.SetHelpString(id, msg)
+
+        self._myids = myids
+        
+        self.PopupMenu(menu)
+        
+        event.Skip()
+
+
+    def OnMenu(self, event):
+
+        indx = self._myids.index(event.GetId())
+        checked = not event.GetEventObject().IsChecked(event.GetId())
+
+        if checked:
+            self._nb._pages[indx]._ishidden = False
+        else:
+            self._nb._pages[indx]._ishidden = True
+
+        if indx == self._nb.GetSelection():
+            self._nb.AdvanceSelection()
+                
+        self._nb._firsttime = True
+        self._nb.Refresh()
+        
+        event.Skip()
+        
+
+    def OnEnterWindow(self, event):
+
+        entercolour = self.GetBackgroundColour()
+        firstcolour  = entercolour.Red()
+        secondcolour = entercolour.Green()
+        thirdcolour = entercolour.Blue()
+        
+        if entercolour.Red() > 235:
+            firstcolour = entercolour.Red() - 40
+        if entercolour.Green() > 235:
+            secondcolour = entercolour.Green() - 40
+        if entercolour.Blue() > 235:
+            thirdcolour = entercolour.Blue() - 40
+            
+        entercolour = wx.Colour(firstcolour+20, secondcolour+20, thirdcolour+20)
+        
+        self.SetBackgroundColour(entercolour)
+        self.Refresh()
+        
+        event.Skip()
+
+
+    def OnLeaveWindow(self, event):
+
+        self.SetBackgroundColour(self._originalcolour)
+        self.Refresh()
+
+        event.Skip()
+        
 
 # ---------------------------------------------------------------------------- #
 # Class TabCtrl
@@ -558,6 +703,8 @@ class TabCtrl(wx.PyControl):
         self._drawxstyle = 1
 
         self._pmenu = None
+
+        self._enablehiding = False        
 
         self.SetDefaultPage()        
         
@@ -635,7 +782,7 @@ class TabCtrl(wx.PyControl):
         event.Skip()
     
 
-    def AddPage(self, text, select=False, img=-1):
+    def AddPage(self, text, select=False, img=-1, hidden=False):
         """
         Add A Page To The Notebook, With Following Parameters:
         - text: The Tab Text;
@@ -643,7 +790,7 @@ class TabCtrl(wx.PyControl):
         - img: Specifies The Optional Image Index For The New Page.
         """
 
-        self._pages.append(TabbedPage(text, img))
+        self._pages.append(TabbedPage(text, img, hidden))
         self._somethingchanged = True
         
         self._firsttime = True
@@ -655,7 +802,7 @@ class TabCtrl(wx.PyControl):
         self.Refresh()
  
 
-    def InsertPage(self, nPage, text, select=False, img=-1):
+    def InsertPage(self, nPage, text, select=False, img=-1, hidden=False):
         """
         Insert A Page Into The Notebook, With Following Parameters:
         - nPage: Specifies The Position For The New Page;
@@ -669,7 +816,7 @@ class TabCtrl(wx.PyControl):
 
         oldselection = self.GetSelection()
         
-        self._pages.insert(nPage, TabbedPage(text, img))
+        self._pages.insert(nPage, TabbedPage(text, img, hidden))
         self._timers.insert(nPage, wx.Timer(self))
         
         self._somethingchanged = True
@@ -790,7 +937,8 @@ class TabCtrl(wx.PyControl):
             return
                 
         fullrect = self.GetClientSize()
-        currect = self._tabrect[selection-self._firstvisible]
+        count = self._tabvisible[0:selection].count(0)
+        currect = self._tabrect[selection-self._firstvisible-count]
 
         spinval = self._spinbutton.GetValue()
         firstrect = self._initrect[spinval]
@@ -801,10 +949,23 @@ class TabCtrl(wx.PyControl):
         while xpos + xsize > fullrect[0] - self._spinbutton.GetSize()[0]:
             
             xpos = xpos - firstrect.width
+
+            if not self._enablehiding:
+                spinval = spinval + 1
+            else:
+                oldspinval = spinval
+                spinval = spinval + self._tabvisible[0:selection].count(0)
+                if spinval == oldspinval:
+                    spinval = spinval + 1
+
+                if spinval >= len(self._initrect):
+                    spinval = spinval - 1
+                
             firstrect = self._initrect[spinval]
-            spinval = spinval + 1
+            
             self._spinbutton.OnSpin(spinval)
             self._spinbutton.SetValue(spinval)
+
             torefresh = 1
 
         if torefresh:
@@ -1304,9 +1465,16 @@ class TabCtrl(wx.PyControl):
             else:
                 sel = sel + 1
 
-            while not self.IsPageEnabled(sel):
+            while not self.IsPageEnabled(sel) or \
+                  (self._enablehiding and self._pages[sel]._ishidden):
+                
                 count = count + 1
                 sel = sel + 1
+                
+                if self._enablehiding and self._pages[sel]._ishidden:
+                    count = count + 1
+                    sel = sel + 1
+                    
                 if sel == self.GetPageCount() - 1:
                     sel = 0
                     
@@ -1366,11 +1534,17 @@ class TabCtrl(wx.PyControl):
             if not hasattr(self, "_spinbutton"):
                 self._spinbutton = NotebookSpinButton(self, pos=(10000,10000))
                 self._spinbutton.SetValue(0)
+                self._originalspinsize = self._spinbutton.GetSize()
 
             sbsize = self._spinbutton.GetSize()
             xpos = clsize[0] - sbsize[0]
             ypos = clsize[1] - sbsize[1]
 
+            if self.HasMenuButton():
+                self._spinbutton.SetSize((-1, 16))
+            else:
+                self._spinbutton.SetSize(self._originalspinsize)
+                
             self._spinbutton.Move((xpos, ypos))
             self._spinbutton.Show()
             self._spinbutton.SetRange(0, count-1)
@@ -1397,8 +1571,45 @@ class TabCtrl(wx.PyControl):
                 return True
 
         return False            
-    
 
+
+    def UpdateMenuButton(self, show):
+        """ Updates The Notebook Menu Button To Show/Hide Tabs. Used Internally. """
+        
+        count = self.GetPageCount()
+        
+        if count == 0:        
+            return
+
+        if not show and not hasattr(self, "_menubutton"):
+            return
+
+        if not hasattr(self, "_menubutton"):
+            self._menubutton = NotebookMenuButton(self, pos=(10000,10000))
+
+        sbsize = self._menubutton.GetSize()
+        nbsize = []
+        nbsize.append(self._initrect[-1][0] + self._initrect[-1][2])
+        nbsize.append(self._initrect[-1][1] + self._initrect[-1][3])
+        clsize = self.GetClientSize()
+        
+        xpos = clsize[0] - sbsize[0]
+        ypos = clsize[1] - sbsize[1]
+
+        if self.HasSpinButton():
+            self._menubutton.Move((xpos-1, ypos-16))
+        else:
+            self._menubutton.Move((xpos-1, ypos-1))
+            
+        self._menubutton.Show(show)
+
+
+    def HasMenuButton(self):
+        """ Returns Wheter The NotebookMenuButton Exists And Is Shown. """
+
+        return hasattr(self, "_menubutton") and self._menubutton.IsShown()
+    
+            
     def HitTest(self, point, flags=0):
         """
         Standard NotebookCtrl HitTest() Method. If Called With 2 Outputs, It
@@ -1458,80 +1669,67 @@ class TabCtrl(wx.PyControl):
 
         for ii in xrange(self._firstvisible, self.GetPageCount()):
 
-            bmp = wx.NullBitmap
-            
-            thefont = self.GetPageTextFont(ii)
-            dc.SetFont(thefont)
-            width, pom = dc.GetTextExtent(self.GetPageText(ii))
-           
-            if self.GetPageImage(ii) >= 0:
-                bmp = self.GetImageList().GetBitmap(ii)
-
-            if self._style & NC_FIXED_WIDTH:
-                width = maxwidth
+            if not self._enablehiding or not self._pages[ii]._ishidden:
                 
-            space = self._padding.x + self._incrtext[ii]
-            
-            if bmp.Ok():
-                space = space + bmp.GetWidth() + self._padding.x 
+                bmp = wx.NullBitmap
+                
+                thefont = self.GetPageTextFont(ii)
+                dc.SetFont(thefont)
+                width, pom = dc.GetTextExtent(self.GetPageText(ii))
+               
+                if self.GetPageImage(ii) >= 0:
+                    bmp = self.GetImageList().GetBitmap(ii)
 
-            if point.x > posx and point.x < posx + width + space + self._padding.x + xxspace:
-                if flags:
-                    flags = NC_HITTEST_ONITEM 
-
-                #onx attempt
-                if drawx:
-                    if flags and self._xrect[ii-self._firstvisible].Inside(point):
-                        flags = NC_HITTEST_ONX
-##                    if dxstyle == 1:
-##                        if flags and point.x >= posx + width + self._padding.x + space - 1 and \
-##                             point.x <= posx + width + self._padding.x + space + mins:
-##                            
-##                            if point.y >= size.y - height - 1 \
-##                               and point.y <= size.y - height + mins + 1:
-##                                
-##                                flags = NC_HITTEST_ONX
-##                    else:
-##                        if flags and point.x >= posx + width + 2*self._padding.x + space - 1 and \
-##                             point.x <= posx + width + self._padding.x + space + xxspace - 1:
-##                            
-##                            if point.y >= size.y - height + self._padding.x \
-##                               and point.y <= size.y - height + 2*self._padding.x + 1:
-##                                
-##                                flags = NC_HITTEST_ONX
-
-               #onicon attempt 
-                if flags and bmp.Ok() and point.x >= posx + self._padding.x and \
-                   point.x <= posx + bmp.GetWidth() + self._padding.x:
-
-                    if not mirror and point.y >= size.y - height \
-                       and point.y <= size.y - self._padding.y:
-                        
-                        flags = NC_HITTEST_ONICON
-                        
-                    elif mirror and point.y >= self._padding.y and \
-                         point.y <= self._padding.y + bmp.GetHeight():
-                        
-                        flags = NC_HITTEST_ONICON 
-              
-               #onlabel attempt 
-                elif flags and point.x >= posx + space and \
-                     point.x <= posx + space + width:
+                if self._style & NC_FIXED_WIDTH:
+                    width = maxwidth
                     
-                    if not mirror and point.y >= size.y - height \
-                       and point.y <= size.y - self._padding.y:
-                        flags = NC_HITTEST_ONLABEL
+                space = self._padding.x + self._incrtext[ii]
+                
+                if bmp.Ok():
+                    space = space + bmp.GetWidth() + self._padding.x 
+
+                if point.x > posx and point.x < posx + width + space + self._padding.x + xxspace:
+                    if flags:
+                        flags = NC_HITTEST_ONITEM 
+
+                    #onx attempt
+                    if drawx:
+                        count = self._tabvisible[0:ii].count(0)
+                        if flags and self._xrect[ii-self._firstvisible-count].Inside(point):
+                            flags = NC_HITTEST_ONX
+
+                   #onicon attempt 
+                    if flags and bmp.Ok() and point.x >= posx + self._padding.x and \
+                       point.x <= posx + bmp.GetWidth() + self._padding.x:
+
+                        if not mirror and point.y >= size.y - height \
+                           and point.y <= size.y - self._padding.y:
+                            
+                            flags = NC_HITTEST_ONICON
+                            
+                        elif mirror and point.y >= self._padding.y and \
+                             point.y <= self._padding.y + bmp.GetHeight():
+                            
+                            flags = NC_HITTEST_ONICON 
+                  
+                   #onlabel attempt 
+                    elif flags and point.x >= posx + space and \
+                         point.x <= posx + space + width:
                         
-                    elif mirror and point.y >= self._padding.y and \
-                         point.y <= height:
-                        flags = NC_HITTEST_ONLABEL 
-                        
-                if flags:
-                    return ii, flags
-                else:
-                    return ii
-             
-            posx = posx + width + space + self._padding.x + self._spacetabs + xxspace
+                        if not mirror and point.y >= size.y - height \
+                           and point.y <= size.y - self._padding.y:
+                            flags = NC_HITTEST_ONLABEL
+                            
+                        elif mirror and point.y >= self._padding.y and \
+                             point.y <= height:
+                            flags = NC_HITTEST_ONLABEL 
+                            
+                    if flags:
+                        return ii, flags
+                    else:
+                        return ii
+                 
+                posx = posx + width + space + self._padding.x + self._spacetabs + xxspace              
 
         if flags:
             return wx.NOT_FOUND, flags
@@ -1544,6 +1742,13 @@ class TabCtrl(wx.PyControl):
         
         self._enabledragging = enable
 
+
+    def EnableHiding(self, enable=True):
+        """ Globally Enables/Disables Hiding On Tabs In Runtime. """
+
+        self._enablehiding = enable
+        self.UpdateMenuButton(enable)
+        
 
     def SetAnimationImages(self, nPage, imgarray):
         """
@@ -1828,16 +2033,32 @@ class TabCtrl(wx.PyControl):
         Draw An Insertion Arrow To Let The User Understand Where A Dragged Tab Will
         Be Dropped (Between Which Tabs).
         """
-        
-        nPage = nPage - self._firstvisible
-        
-        if nPage < 0 or nPage >= len(self._tabrect):
-            return
+
+        if not self._enablehiding:
+            if nPage < 0 or nPage >= len(self._tabrect):
+                return
+        else:
+            if nPage < 0 or nPage >= len(self._tabrect) + self._tabvisible.count(0):
+                return
             
         colour = wx.BLACK
 
-        rect = self._tabrect[nPage]
+        if self._enablehiding:
+            for ii in xrange(nPage):
+                if self._pages[ii]._ishidden:
+                    nPage = nPage - 1
+
+            nPage = nPage + 1
+
+        added = False
         
+        if self._enablehiding:
+            if nPage == len(self._tabrect):
+                nPage = nPage - 1
+                added = True
+                
+        rect = self._tabrect[nPage]
+
         x1 = rect.x - 4
         y1 = rect.y - 1
         x2 = rect.x
@@ -1845,13 +2066,27 @@ class TabCtrl(wx.PyControl):
         x3 = rect.x + 3
         y3 = y1
 
-        if nPage > self._tabID:
-            x1 = x1 + rect.width
-            x2 = x2 + rect.width
-            x3 = x3 + rect.width
+        mybrush = wx.Brush(self.GetPageTextColour(nPage))
+        
+        if not self._enablehiding:
+            if nPage > self._tabID:
+                x1 = x1 + rect.width
+                x2 = x2 + rect.width
+                x3 = x3 + rect.width
+        else:
+            if nPage < self._tabID:
+                x1 = x1 - self._tabrect[nPage-1].width
+                x2 = x2 - self._tabrect[nPage-1].width
+                x3 = x3 - self._tabrect[nPage-1].width
+            else:
+                if added:
+                    x1 = x1 + rect.width
+                    x2 = x2 + rect.width
+                    x3 = x3 + rect.width
+                    mybrush = wx.Brush(self.GetPageTextColour(nPage+1))
         
         dc.SetPen(wx.Pen(wx.BLACK, 1))
-        dc.SetBrush(wx.Brush(self.GetPageTextColour(nPage)))
+        dc.SetBrush(mybrush)
         dc.DrawPolygon([(x1, y1), (x2, y2), (x3, y3)])
         
 
@@ -1877,9 +2112,8 @@ class TabCtrl(wx.PyControl):
                 self._isdragging = True
                 self._isleaving = False
                 newpos = self.HitTest(pt)
-
+                
                 if newpos >= 0 and newpos != self._olddragpos:
-                    
                     self._olddragpos = newpos
                     self.Refresh()
                     
@@ -2101,6 +2335,7 @@ class TabCtrl(wx.PyControl):
                 menu = self.GetPagePopupMenu(self._tabID)
                 firstcol = self.GetPageFirstGradientColour(self._tabID)
                 secondcol = self.GetPageSecondGradientColour(self._tabID)
+                ishidden = self._pages[self._tabID]._ishidden
             except:
                 self._parent.Thaw()
                 self._tabID = -1 
@@ -2162,6 +2397,7 @@ class TabCtrl(wx.PyControl):
             self.SetPagePopupMenu(id, menu)
             self.SetPageFirstGradientColour(id, firstcol)
             self.SetPageSecondGradientColour(id, secondcol)
+            self._pages[id]._ishidden = ishidden
             
             if isanimated and len(animatedimages) > 1:
                 self.SetAnimationImages(id, animatedimages)
@@ -2897,195 +3133,211 @@ class TabCtrl(wx.PyControl):
         else:
             xxspace = 0
 
-        #and tabs 
+        #and tabs
+        oncount = -1
+        
+        self._tabvisible = [1]*self.GetPageCount()
+        
         for ii in xrange(self._firstvisible, lastvisible):
 
-            bmp = wx.NullBitmap
-            text = self.GetPageText(ii)
+            if not self._enablehiding or not self._pages[ii]._ishidden:
 
-            thefont = self.GetPageTextFont(ii)
-            thebrush = wx.Brush(self.GetPageColour(ii))
-            
-            if self.IsPageEnabled(ii):
-                thecolour = self.GetPageTextColour(ii)
-            else:
-                thecolour = self._disabledcolour
-      
-            dc.SetFont(thefont)
-            dc.SetTextForeground(thecolour)
-            dc.SetBrush(thebrush)
+                oncount = oncount + 1
 
-            width, pom = dc.GetTextExtent(text)
-
-            incrtext = self._incrtext[ii]
-
-            if self.GetPageImage(ii) >= 0:
-                bmpindex = self.GetPageImage(ii)
-                bmp = self._imglist.GetBitmap(bmpindex)
-
-            bmpOk = bmp.Ok()          
-            space = self._padding.x
-            
-            if bmpOk:
-                space = space + self._padding.x + bmp.GetWidth()
-
-            xpos = posx
-            
-            if self._style & NC_FIXED_WIDTH:
-                xsize = maxwidth + space + self._padding.x + incrtext + xxspace
-                newwidth = maxwidth
-            else:
-                newwidth = width
-                xsize = width + space + self._padding.x + incrtext + xxspace
+                self._tabvisible[ii] = 1
                 
-            xtextpos = posx + space + incrtext/2
+                bmp = wx.NullBitmap
+                text = self.GetPageText(ii)
 
-            ypos = size.y - height - self._padding.y*2
-            ytextpos = size.y - height - self._padding.y + abs(self._mintabheights[ii] - self._maxtabheights[ii])/2
-            
-            ysize = height + self._padding.y*2 + 3
-            
-            if ii == selection:
-                selfound = 1
-                xsize = xsize + self._spacetabs
-                if ii > 0:
-                    xpos = xpos - self._spacetabs
+                thefont = self.GetPageTextFont(ii)
+                thebrush = wx.Brush(self.GetPageColour(ii))
+                
+                if self.IsPageEnabled(ii):
+                    thecolour = self.GetPageTextColour(ii)
+                else:
+                    thecolour = self._disabledcolour
+          
+                dc.SetFont(thefont)
+                dc.SetTextForeground(thecolour)
+                dc.SetBrush(thebrush)
+
+                width, pom = dc.GetTextExtent(text)
+
+                incrtext = self._incrtext[ii]
+
+                if self.GetPageImage(ii) >= 0:
+                    bmpindex = self.GetPageImage(ii)
+                    bmp = self._imglist.GetBitmap(bmpindex)
+
+                bmpOk = bmp.Ok()          
+                space = self._padding.x
+                
+                if bmpOk:
+                    space = space + self._padding.x + bmp.GetWidth()
+
+                xpos = posx
+                
+                if self._style & NC_FIXED_WIDTH:
+                    xsize = maxwidth + space + self._padding.x + incrtext + xxspace
+                    newwidth = maxwidth
+                else:
+                    newwidth = width
+                    xsize = width + space + self._padding.x + incrtext + xxspace
+                    
+                xtextpos = posx + space + incrtext/2
+
+                ypos = size.y - height - self._padding.y*2
+                ytextpos = size.y - height - self._padding.y + abs(self._mintabheights[ii]
+                                                                   - self._maxtabheights[ii])/2
+                
+                ysize = height + self._padding.y*2 + 3
+                
+                if ii == selection:
+                    selfound = 1
                     xsize = xsize + self._spacetabs
-                else:
-                    xtextpos = xtextpos + self._spacetabs/2.0 + 1
-                
-                ytextpos = ytextpos - 2
-                ypos = ypos - 3                    
-                ysize = ysize + 2
-                
-                xselpos = xpos
-                yselpos = ypos
-                xselsize = xsize
-                yselsize = ysize
-                
-            if bmpOk:
-                bmpxpos = posx                
-            
-            tabrect.append(wx.Rect(xpos, ypos, xsize, ysize))
-
-            if not self._tabstyle._normal or self._usegradients:
-                if ii != selection:
-                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.SetPen(shadowpen)
-                    dc.DrawRoundedRectangle(xpos+1, ypos+1, xsize, ysize-1, 3)
-
-                if self._usegradients:
-                    self.DrawGradientOnTab(dc, tabrect[-1], self._pages[ii]._firstcolour,
-                                            self._pages[ii]._secondcolour)
-                else:
-                    self.DrawBuiltinStyle(dc, self._tabstyle, tabrect[-1], ii, selection)
+                    if ii > 0:
+                        xpos = xpos - self._spacetabs
+                        xsize = xsize + self._spacetabs
+                    else:
+                        xtextpos = xtextpos + self._spacetabs/2.0 + 1
                     
-                dc.SetPen(highlightpen)
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                
-                dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
-                dc.SetPen(upperhighpen)
-                dc.DrawLine(xpos+2, ypos-1, xpos + xsize - 2, ypos-1)
-                dc.SetPen(highlightpen)
-    
-                if ii == selection:
-                    dc.SetPen(wx.Pen(self._lastcolour))                    
-                    dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
-                           
-                dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
+                    ytextpos = ytextpos - 2
+                    ypos = ypos - 3                    
+                    ysize = ysize + 2
+                    
+                    xselpos = xpos
+                    yselpos = ypos
+                    xselsize = xsize
+                    yselsize = ysize
+                    
+                if bmpOk:
+                    bmpxpos = posx                
+
+                tabrect.append(wx.Rect(xpos, ypos, xsize, ysize))
+
+                if not self._tabstyle._normal or self._usegradients:
+                    if ii != selection:
+                        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                        dc.SetPen(shadowpen)
+                        dc.DrawRoundedRectangle(xpos+1, ypos+1, xsize, ysize-1, 3)
+
+                    if self._usegradients:
+                        self.DrawGradientOnTab(dc, tabrect[-1], self._pages[ii]._firstcolour,
+                                                self._pages[ii]._secondcolour)
+                    else:
+                        self.DrawBuiltinStyle(dc, self._tabstyle, tabrect[-1], ii, selection)
+                        
+                    dc.SetPen(highlightpen)
+                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                    
+                    dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
+                    dc.SetPen(upperhighpen)
+                    dc.DrawLine(xpos+2, ypos-1, xpos + xsize - 2, ypos-1)
+                    dc.SetPen(highlightpen)
+        
+                    if ii == selection:
+                        dc.SetPen(wx.Pen(self._lastcolour))                    
+                        dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
+                               
+                    dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
+
+                else:
+
+                    dc.SetPen(highlightpen)
+                    dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
+                        
+                    if ii == selection:
+                        dc.SetPen(cancelpen)                    
+                        dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
+                        
+                    dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
+                    dc.SetPen(highlightpen)
+                    dc.DrawLine(xpos + 3, ypos, xpos + xsize - 3, ypos)
+                    dc.SetPen(shadowpen)
+                    dc.DrawLine(xpos + xsize, size.y-2, xpos+xsize, ypos+2)              
+
+                dc.DrawText(text, xtextpos, ytextpos)
+
+                if bmpOk:
+                    bmpposx = posx + self._padding.x
+                    bmpposy = size.y - (height + 2*self._padding.y + bmp.GetHeight())/2 - 1
+
+                    if ii == selection:
+                        bmpposx = bmpposx + 1
+                        bmpposy = bmpposy - 1
+
+                    self._imglist.Draw(bmpindex, dc, bmpposx, bmpposy,
+                                       wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+                if selfound:
+                    dc.SetPen(highlightpen)                    
+                    dc.DrawLine(xselpos + 3, yselpos, xselpos + xselsize - 3, yselpos)
+                    if self._tabstyle._normal and not self._usegradients:
+                        dc.SetPen(shadowpen)
+                        dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+2)
+                    else:
+                        shadowpen.SetWidth(1)
+                        dc.SetPen(shadowpen)
+                        dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+3)
+                        
+                if highlight and selfound:
+                    dc.SetBrush(back_brush) 
+                    dc.SetPen(selectionpen)
+                    dc.DrawLine(xselpos + 1, yselpos, xselpos + xselsize - 2, yselpos)
+
+                if ii == selection and usefocus:
+                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                    dc.SetPen(focusindpen)
+                    dc.DrawRoundedRectangle(xpos+self._padding.x/2, ypos+self._padding.y/2,
+                                            xsize-self._padding.x,
+                                            ysize-self._padding.y-2, 2)
+
+                if drawx:
+                    if dxstyle == 1:
+                        dc.SetPen(wx.Pen(thecolour, 1))
+                        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                        dc.DrawLine(xpos+xsize-mins-3, ypos+2, xpos+xsize-2, ypos+3+mins)
+                        dc.DrawLine(xpos+xsize-mins-3, ypos+2+mins, xpos+xsize-2, ypos+1)
+                        dc.DrawRectangle(xpos+xsize-mins-3, ypos+2, mins+1, mins+1)
+                        Xrect.append(wx.Rect(xpos+xsize-mins-3, ypos+2, mins+1, mins+1))
+                    elif dxstyle == 2:
+                        dc.SetPen(wx.Pen(thecolour))
+                        dc.SetBrush(wx.Brush(thecolour))
+                        xxpos = xpos+xsize-height-self._padding.x
+                        yypos = ypos+(ysize-height-self._padding.y/2)/2
+                        dc.DrawRoundedRectangle(xxpos, yypos, height, height, 2)
+                        dc.SetPen(wx.Pen(back_colour, 2))
+                        dc.DrawLine(xxpos+2, yypos+2, xxpos+height-3, yypos+height-3)
+                        dc.DrawLine(xxpos+2, yypos+height-3, xxpos+height-3, yypos+2)
+                        Xrect.append(wx.Rect(xxpos, yypos, height, height))
+                    else:
+                        xxpos = xpos+xsize-height-self._padding.x
+                        yypos = ypos+(ysize-height-self._padding.y/2)/2
+                        Xrect.append(wx.Rect(xxpos, yypos, height, height))
+                        self._imglist2.Draw(0, dc, xxpos, yypos, wx.IMAGELIST_DRAW_TRANSPARENT, True)
+
+                if ii in self._selectedtabs:
+                    dc.SetPen(wx.Pen(thecolour, 1, wx.DOT_DASH))
+                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
+                    dc.DrawRoundedRectangle(xpos+self._padding.x/2+1, ypos+self._padding.y/2+1,
+                                            xsize-self._padding.x-2,
+                                            ysize-self._padding.y-2-2, 2)
+                    
+                posx = posx + newwidth + space + self._padding.x + self._spacetabs + incrtext + xxspace
+                if self._firsttime:
+                    self._initrect.append(tabrect[oncount])
 
             else:
 
-                dc.SetPen(highlightpen)
-                dc.DrawRoundedRectangle(xpos, ypos, xsize, ysize, 3)
-                    
-                if ii == selection:
-                    dc.SetPen(cancelpen)                    
-                    dc.DrawLine(xpos, ysize, xpos + xsize, ysize)
-                    
-                dc.DrawLine(xpos, size.y-1, xpos + xsize, size.y-1)
-                dc.SetPen(highlightpen)
-                dc.DrawLine(xpos + 3, ypos, xpos + xsize - 3, ypos)
-                dc.SetPen(shadowpen)
-                dc.DrawLine(xpos + xsize, size.y-2, xpos+xsize, ypos+2)              
-
-            dc.DrawText(text, xtextpos, ytextpos)
-
-            if bmpOk:
-                bmpposx = posx + self._padding.x
-                bmpposy = size.y - (height + 2*self._padding.y + bmp.GetHeight())/2 - 1
-
-                if ii == selection:
-                    bmpposx = bmpposx + 1
-                    bmpposy = bmpposy - 1
-
-                self._imglist.Draw(bmpindex, dc, bmpposx, bmpposy,
-                                   wx.IMAGELIST_DRAW_TRANSPARENT, True)
-
-            if ii == selection + 1 and ii != self.GetPageCount() and selfound:
-                dc.SetPen(highlightpen)                    
-                dc.DrawLine(xselpos + 3, yselpos, xselpos + xselsize - 3, yselpos)
-                if self._tabstyle._normal and not self._usegradients:
-                    dc.SetPen(shadowpen)
-                    dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+2)
-                else:
-                    shadowpen.SetWidth(1)
-                    dc.SetPen(shadowpen)
-                    dc.DrawLine(xselpos + xselsize, size.y-2, xselpos+xselsize, yselpos+3)
-                    
-            if highlight and selfound:
-                dc.SetBrush(back_brush) 
-                dc.SetPen(selectionpen)
-                dc.DrawLine(xselpos + 1, yselpos, xselpos + xselsize - 2, yselpos)
-
-            if ii == selection and usefocus:
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetPen(focusindpen)
-                dc.DrawRoundedRectangle(xpos+self._padding.x/2, ypos+self._padding.y/2,
-                                        xsize-self._padding.x,
-                                        ysize-self._padding.y-2, 2)
-
-            if drawx:
-                if dxstyle == 1:
-                    dc.SetPen(wx.Pen(thecolour, 1))
-                    dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.DrawLine(xpos+xsize-mins-3, ypos+2, xpos+xsize-2, ypos+3+mins)
-                    dc.DrawLine(xpos+xsize-mins-3, ypos+2+mins, xpos+xsize-2, ypos+1)
-                    dc.DrawRectangle(xpos+xsize-mins-3, ypos+2, mins+1, mins+1)
-                    Xrect.append(wx.Rect(xpos+xsize-mins-3, ypos+2, mins+1, mins+1))
-                elif dxstyle == 2:
-                    dc.SetPen(wx.Pen(thecolour))
-                    dc.SetBrush(wx.Brush(thecolour))
-                    xxpos = xpos+xsize-height-self._padding.x
-                    yypos = ypos+(ysize-height-self._padding.y/2)/2
-                    dc.DrawRoundedRectangle(xxpos, yypos, height, height, 2)
-                    dc.SetPen(wx.Pen(back_colour, 2))
-                    dc.DrawLine(xxpos+2, yypos+2, xxpos+height-3, yypos+height-3)
-                    dc.DrawLine(xxpos+2, yypos+height-3, xxpos+height-3, yypos+2)
-                    Xrect.append(wx.Rect(xxpos, yypos, height, height))
-                else:
-                    xxpos = xpos+xsize-height-self._padding.x
-                    yypos = ypos+(ysize-height-self._padding.y/2)/2
-                    Xrect.append(wx.Rect(xxpos, yypos, height, height))
-                    self._imglist2.Draw(0, dc, xxpos, yypos, wx.IMAGELIST_DRAW_TRANSPARENT, True)
-
-            if ii in self._selectedtabs:
-                dc.SetPen(wx.Pen(thecolour, 1, wx.DOT_DASH))
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.DrawRoundedRectangle(xpos+self._padding.x/2+1, ypos+self._padding.y/2+1,
-                                        xsize-self._padding.x-2,
-                                        ysize-self._padding.y-2-2, 2)
-                
-            posx = posx + newwidth + space + self._padding.x + self._spacetabs + incrtext + xxspace
-            if self._firsttime:
-                self._initrect.append(tabrect[ii])
+                self._tabvisible[ii] = 0
 
         self._tabrect = tabrect
         self._xrect = Xrect
 
         if self._firsttime:
             self._firsttime = False
-            
+
+        self.UpdateMenuButton(self.HasMenuButton())            
         self.UpdateSpinButton()
 
         if self._enabledragging:
@@ -3283,7 +3535,7 @@ class NotebookCtrl(wx.Panel):
         event.Skip()
 
         
-    def AddPage(self, page, text, select=False, img=-1):
+    def AddPage(self, page, text, select=False, img=-1, hidden=False):
         """
         Add A Page To The Notebook, With Following Parameters:
         - page: Specifies The New Page;
@@ -3304,7 +3556,7 @@ class NotebookCtrl(wx.Panel):
         
         self.bsizer.Add(page, 1, wx.EXPAND | wx.ALL, 2)
                     
-        self.nb.AddPage(text, select, img)
+        self.nb.AddPage(text, select, img, hidden)
         self._notebookpages.append(page)
         
         page.Bind(wx.EVT_CHILD_FOCUS, self.OnFocus)
@@ -3364,7 +3616,7 @@ class NotebookCtrl(wx.Panel):
         self.ShowTabs(self._showtabs)
         
 
-    def InsertPage(self, nPage, page, text, select=False, img=-1):
+    def InsertPage(self, nPage, page, text, select=False, img=-1, hidden=False):
         """
         Insert A Page Into The Notebook, With Following Parameters:
         - page: Specifies The New Page;
@@ -3393,7 +3645,7 @@ class NotebookCtrl(wx.Panel):
         if oldselection >= nPage:
             oldselection = oldselection + 1
         
-        self.nb.InsertPage(nPage, text, select, img)
+        self.nb.InsertPage(nPage, text, select, img, hidden)
         self.bsizer.Insert(nPage, page, 1, wx.EXPAND | wx.ALL, 2)
         self._notebookpages.insert(nPage, page)
         self.bsizer.Layout()
@@ -3753,6 +4005,12 @@ class NotebookCtrl(wx.Panel):
 
         self.nb.EnableDragAndDrop(enable)
 
+
+    def EnableHiding(self, enable=True):
+        """ Globally Enables/Disables Hiding On Tabs In Runtime. """
+
+        self.nb.EnableHiding(enable)
+        
 
     def SetDrawX(self, drawx=True, style=1, image1=None, image2=None):
         """
@@ -4169,7 +4427,10 @@ class NotebookCtrl(wx.Panel):
                 else:
                     for ii in xrange(self.GetPageCount()):
                         if self.IsPageEnabled(ii):
-                            self.bsizer.Show(ii, True)
+                            if not self.nb._enablehiding or not self.nb._pages[ii]._ishidden:
+                                self.bsizer.Show(ii, True)
+                            else:
+                                self.bsizer.Show(ii, False)
                         else:
                             self.bsizer.Show(ii, False)
             else:
@@ -4182,7 +4443,12 @@ class NotebookCtrl(wx.Panel):
                 else:
                     for ii in xrange(self.GetPageCount()):
                         if self.IsPageEnabled(ii):
-                            self.bsizer.Show(ii, True)
+                            if not self.nb._enablehiding or not self.nb._pages[ii]._ishidden:
+                                self.bsizer.Show(ii, True)
+                            else:
+                                self.bsizer.Show(ii, False)
+                        else:
+                            self.bsizer.Show(ii, False)
         else:
             if self._style & NC_TOP:
                 self.sizer.Show(0, True)
@@ -4384,6 +4650,7 @@ class NotebookCtrl(wx.Panel):
         menu = self.GetPagePopupMenu(nPage)
         firstcol = self.GetPageFirstGradientColour(nPage)
         secondcol = self.GetPageSecondGradientColour(nPage)
+        ishidden = self.nb._pages[nPage]._ishidden
             
         isanimated = 0
         timer = None
@@ -4400,7 +4667,7 @@ class NotebookCtrl(wx.Panel):
                  "tooltip": tooltip, "ontime": ontime, "winsize": winsize,
                  "menu": menu, "isanimated": isanimated, "timer": timer,
                  "animatedimages": animatedimages, "imagelist": self.nb._imglist,
-                 "firstcol": firstcol, "secondcol": secondcol}
+                 "firstcol": firstcol, "secondcol": secondcol, "ishidden": ishidden}
 
         return infos
 
@@ -4420,6 +4687,7 @@ class NotebookCtrl(wx.Panel):
         self.SetPagePopupMenu(nPage, infos["menu"])
         self.SetPageFirstGradientColour(nPage, infos["firstcol"])
         self.SetPageSecondGradientColour(nPage, infos["secondcol"])
+        self.nb._pages[nPage]._ishidden = infos["ishidden"]
         
         if infos["isanimated"] and len(infos["animatedimages"]) > 1:
             self.SetAnimationImages(nPage, infos["animatedimages"])
@@ -4619,6 +4887,7 @@ class NCFrame(wx.Frame):
             self._nb.SetPagePopupMenu(id, infos["menu"])
             self._nb.SetPageFirstGradientColour(id, infos["firstcol"])
             self._nb.SetPageSecondGradientColour(id, infos["secondcol"])
+            self._nb._pages[id]._ishidden = infos["ishidden"]
             
             if infos["isanimated"] and len(infos["animatedimages"]) > 1:
                 self._nb.SetAnimationImages(id, infos["animatedimages"])
