@@ -253,6 +253,7 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         self.SetDrawX(True, 2)
         self.SetPadding(wx.Point(4,4))
         self.SetUseFocusIndicator(False)
+        self.EnableChildFocus(True)
         self.EnableDragAndDrop(True)
         self.EnableHiding(True)
         self.SetToolTipBackgroundColour(wx.Colour(240,255,240))
@@ -446,7 +447,7 @@ class Framework:
         
     def onFrameActivate(self, event):
         """Activate event (to be overwritten)."""
-        getActive   = (not event) or event.GetActive()
+        getActive   = (event is None) or event.GetActive()
         if getActive:
             if self.app.DEBUG: 
                 print 'Event<: Framework: %s.Activate(%s)'%(self.__class__,getActive)
@@ -807,7 +808,6 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         split.SetMinimumPaneSize(20)
         split.SplitHorizontally(self.tabs, self.panel, -200)
         
-    
         self.bindTabs()
         
     def bindTabs(self,event=None):
@@ -820,6 +820,7 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         
     def onFrameTab(self,event):
         index = event.GetSelection()
+        #print index
         if index>-1:
             self.app.children[index].frame.onFrameActivate()
         event.Skip()
@@ -1154,10 +1155,10 @@ class MdiSplitChildFrame(Child,wx.Panel):
     def Activate(self):
         self.parentFrame.tabs.SetSelection(self.getIndex())
 
-    def onFrameActivate(self, event=None):
-        if (not event) or event.GetActive():
-            self.setTitle(new=False)
-        Child.onFrameActivate(self,event)
+##    def onFrameActivate(self, event=None):
+##        if (not event) or event.GetActive():
+##            self.setTitle(new=False)
+##        Child.onFrameActivate(self,event)
         
 class SdiChildFrame(TabPlatform,Child,wx.Frame):
     def __init__(self,parentFrame,

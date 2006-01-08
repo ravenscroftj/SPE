@@ -125,7 +125,7 @@ class Panel(wx.SplitterWindow):
         #events
         self.source.SetDropTarget(DropOpen(self.parentPanel.openList))
         eventManager.Register(self.onSetFocus, wx.EVT_SET_FOCUS, self)
-        eventManager.Register(self.onSetSourceFocus, wx.EVT_SET_FOCUS, self.source)
+        #eventManager.Register(self.onSetSourceFocus, wx.EVT_SET_FOCUS, self.source)
         eventManager.Register(self.onSash,wx.EVT_SPLITTER_SASH_POS_CHANGED,self)
         
     def __sideBar__(self):
