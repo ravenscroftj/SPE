@@ -255,7 +255,7 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         self.SetUseFocusIndicator(False)
         self.EnableChildFocus(True)
         self.EnableDragAndDrop(True)
-        self.EnableHiding(True)
+        #self.EnableHiding(True)
         self.SetToolTipBackgroundColour(wx.Colour(240,255,240))
         #events
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)

@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 11 Nov 2005
-# Latest Revision: 06 Jan 2006, 16.00 CET
+# Latest Revision: 10 Jan 2006, 18.10 CET
 #
 #
 # TODO List/Caveats
@@ -40,7 +40,8 @@ Supported Customizations For NotebookCtrl Include:
 - Setting Individual Tab Font And Text Colour;
 - Images On Tabs (Line wx.Notebook);
 - Setting Individual Tab Colours;
-- Disabling/Enabling Individual Tabs (Also Visually Effective);
+- Disabling/Enabling Individual Tabs (Also Visually Effective); Now Supports Grayed
+  Out Icons When A Page Is Disabled;
 - Drawing Of A Small Closing "X" At The Right Of Every Tab, That Enable The User
   To Close A Tab With A Mouse Click (Like eMule Tab Style);
 - Enabling Highlighted Tabs On Selection;
@@ -79,8 +80,12 @@ Supported Customizations For NotebookCtrl Include:
 - Highlight Colour Of Selected Tab Is Customizable;
 - Each Tab Can Have Its Own Gradient Colouring (2 Colours For Every Tab);
 - Custom Images May Be Drawn As A "X" Close Buttons On Tabs;
-  
+- Possibility To Hide A Particular Tab Using A wx.PopupMenu That Is Shown If You
+  Call EnableHiding(True). Look At The Top Right Of NotebookCtrl;
+- Allows Drag And Drop Of Tabs/Pages Between Different NotebookCtrls In The Same
+  Application.
 
+  
 Usage:
 
 NotebookCtrl Construction Is Quite Similar To wx.Notebook:
@@ -93,7 +98,7 @@ wxPython) Parameters.
 
 NotebookCtrl Control Is Freeware And Distributed Under The wxPython License. 
 
-Latest Revision: Andrea Gavana @ 06 Jan 2006, 16.00 CET
+Latest Revision: Andrea Gavana @ 10 Jan 2006, 18.10 CET
 
 """
 
@@ -106,6 +111,8 @@ import wx
 from wx.lib.buttons import GenBitmapButton as BitmapButton
 
 import cStringIO, zlib
+import cPickle
+import weakref
 
 # HitTest Results 
 NC_HITTEST_NOWHERE = 0   # Not On Tab 
@@ -218,6 +225,46 @@ def GetMenuButtonImage():
 
 # ---------------------------------------------------------------------------- #
 
+def GrayOut(anImage):
+    """
+    Convert The Given Image (In Place) To A Grayed-Out Version,
+    Appropriate For A 'Disabled' Appearance.
+    """
+    
+    factor = 0.7        # 0 < f < 1.  Higher Is Grayer
+    
+    if anImage.HasMask():
+        maskColor = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
+    else:
+        maskColor = None
+        
+    data = map(ord, list(anImage.GetData()))
+
+    for i in range(0, len(data), 3):
+        
+        pixel = (data[i], data[i+1], data[i+2])
+        pixel = MakeGray(pixel, factor, maskColor)
+
+        for x in range(3):
+            data[i+x] = pixel[x]
+
+    anImage.SetData(''.join(map(chr, data)))
+    
+    return anImage
+
+
+def MakeGray((r,g,b), factor, maskColor):
+    """
+    Make A Pixel Grayed-Out. If The Pixel Matches The MaskColor, It Won't Be
+    Changed.
+    """
+    
+    if (r,g,b) != maskColor:
+        return map(lambda x: int((230 - x) * factor) + x, (r,g,b))
+    else:
+        return (r,g,b)
+
+    
 # ---------------------------------------------------------------------------- #
 # Class NotebookCtrlEvent
 # ---------------------------------------------------------------------------- #
@@ -283,6 +330,66 @@ class NotebookCtrlEvent(wx.PyCommandEvent):
 
         return self._newposition    
     
+
+# ---------------------------------------------------------------------------- #
+# Class NCDragInfo
+# Stores All The Information To Allow Drag And Drop Between Different
+# NotebookCtrls In The Same Application.
+# ---------------------------------------------------------------------------- #
+
+class NCDragInfo:
+
+    _map = weakref.WeakValueDictionary()
+
+    def __init__(self, container, pageindex):
+        """ Default Class Constructor. """
+        
+        self._id = id(container)
+        NCDragInfo._map[self._id] = container
+        self._pageindex = pageindex
+
+
+    def GetContainer(self):
+        """ Returns The NotebookCtrl Page (Usually A Panel). """
+        
+        return NCDragInfo._map.get(self._id, None)
+
+
+    def GetPageIndex(self):
+        """ Returns The Page Index Associated With A Page. """
+
+        return self._pageindex        
+
+
+# ---------------------------------------------------------------------------- #
+# Class NCDropTarget
+# Simply Used To Handle The OnDrop() Method When Dragging And Dropping Between
+# Different NotebookCtrls.
+# ---------------------------------------------------------------------------- #
+
+class NCDropTarget(wx.DropTarget):
+
+    def __init__(self, parent):
+        """ Default Class Constructor. """
+        
+        wx.DropTarget.__init__(self)
+
+        self._parent = parent
+        self._dataobject = wx.CustomDataObject(wx.CustomDataFormat("NotebookCtrl"))
+        self.SetDataObject(self._dataobject)
+
+
+    def OnData(self, x, y, dragres):
+        """ Handles The OnData() Method TO Call The Real DnD Routine. """
+        
+        if not self.GetData():
+            return wx.DragNone
+
+        draginfo = self._dataobject.GetData()
+        drginfo = cPickle.loads(draginfo)
+        
+        return self._parent.OnDropTarget(x, y, drginfo.GetPageIndex(), drginfo.GetContainer())
+
 
 # ---------------------------------------------------------------------------- #
 # Class ThemeStyle. Used To Define A Custom Style For Tabs And Control
@@ -520,11 +627,19 @@ class NotebookSpinButton(wx.SpinButton):
         self._nb.Refresh()
                 
 
+# ---------------------------------------------------------------------------- #
+# Class NotebookMenuButton
+# This MenuButton Is Created/Shown Only When You Activate The Option EnableHiding
+# Of NotebookCtrl. This Small Button Will Be Shown Right Above The Spin Button
+# (If Present), Or In The Position Of The Spin Button.
+# ---------------------------------------------------------------------------- #
+
 class NotebookMenuButton(BitmapButton):
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=(15, 11),
                  style=0):
-
+        """ Default Class Constructor. """
+        
         bmp = GetMenuButtonBitmap()
         
         BitmapButton.__init__(self, parent, id, bmp, pos, size, style)
@@ -542,7 +657,8 @@ class NotebookMenuButton(BitmapButton):
 
 
     def OnButton(self, event):
-
+        """ Handles The wx.EVT_BUTTON For NotebookMenuButton (Opens The wx.PopupMenu) """
+        
         count = self._nb.GetPageCount()
 
         if count <= 0:
@@ -581,26 +697,22 @@ class NotebookMenuButton(BitmapButton):
 
 
     def OnMenu(self, event):
+        """ Handles The wx.EVT_MENU For NotebookMenuButton. Calls HideTab(). """
 
         indx = self._myids.index(event.GetId())
         checked = not event.GetEventObject().IsChecked(event.GetId())
 
-        if checked:
-            self._nb._pages[indx]._ishidden = False
-        else:
-            self._nb._pages[indx]._ishidden = True
-
-        if indx == self._nb.GetSelection():
-            self._nb.AdvanceSelection()
+        self._nb.HideTab(indx, not checked)
                 
-        self._nb._firsttime = True
-        self._nb.Refresh()
-        
         event.Skip()
         
 
     def OnEnterWindow(self, event):
-
+        """
+        Changes The NotebookMenuButton Background Colour When The Mouse
+        Enters The Button Region.
+        """
+        
         entercolour = self.GetBackgroundColour()
         firstcolour  = entercolour.Red()
         secondcolour = entercolour.Green()
@@ -622,7 +734,11 @@ class NotebookMenuButton(BitmapButton):
 
 
     def OnLeaveWindow(self, event):
-
+        """
+        Restore The NotebookMenuButton Background Colour When The Mouse
+        Leaves The Button Region.
+        """
+        
         self.SetBackgroundColour(self._originalcolour)
         self.Refresh()
 
@@ -742,11 +858,209 @@ class TabCtrl(wx.PyControl):
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
 
+        self._droptarget = NCDropTarget(self)
+        self.SetDropTarget(self._droptarget)
+
+
+    def OnDropTarget(self, x, y, nPage, oldcont):
+        """ Handles The OnDrop Action For Drag And Drop Between Different NotebookCtrl. """
+        
+        where = self.HitTest(wx.Point(x, y))
+
+        oldNotebook = oldcont.GetParent()
+        newNotebook = self.GetParent()
+
+        if oldNotebook == newNotebook:
+            if where >= 0 and where != self._tabID:
+
+                self._isdragging = False
+                self._olddragpos = -1
+                eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_DND, self.GetId())
+                eventOut.SetOldPosition(self._tabID)
+                eventOut.SetNewPosition(where)
+                eventOut.SetEventObject(self)
+                
+                if self.GetEventHandler().ProcessEvent(eventOut):
+                    self._tabID = -1
+                    self._olddragpos = -1
+                    self.SetCursor(wx.STANDARD_CURSOR)
+                    self.Refresh()
+                    return
+                
+                self._parent.Freeze()
+
+                try:
+                    text = self.GetPageText(self._tabID)
+                    image = self.GetPageImage(self._tabID)
+                    font1 = self.GetPageTextFont(self._tabID)
+                    font2 = self.GetPageTextSecondaryFont(self._tabID)
+                    fontcolour = self.GetPageTextColour(self._tabID)
+                    pagecolour = self.GetPageColour(self._tabID)
+                    enabled = self.IsPageEnabled(self._tabID)
+                    tooltip, ontime, winsize = self.GetPageToolTip(self._tabID)
+                    menu = self.GetPagePopupMenu(self._tabID)
+                    firstcol = self.GetPageFirstGradientColour(self._tabID)
+                    secondcol = self.GetPageSecondGradientColour(self._tabID)
+                    ishidden = self._pages[self._tabID]._ishidden
+                except:
+                    self._parent.Thaw()
+                    self._tabID = -1 
+                    self.SetCursor(wx.STANDARD_CURSOR)
+                    return
+                
+                isanimated = 0
+                if self._timers[self._tabID].IsRunning():
+                    isanimated = 1
+                    timer = self._timers[self._tabID].GetInterval()
+                    
+                self.StopAnimation(self._tabID)
+                animatedimages = self.GetAnimationImages(self._tabID)
+                            
+                pagerange = range(self.GetPageCount())
+                    
+                newrange = pagerange[:]
+                newrange.remove(self._tabID)
+                newrange.insert(where, self._tabID)
+                        
+                newpages = []
+                counter = self.GetPageCount() - 1
+                
+                for ii in xrange(self.GetPageCount()):  
+                    newpages.append(self._parent.GetPage(ii))
+                    self._parent.bsizer.Detach(counter-ii)
+
+                cc = 0
+
+                self._parent._notebookpages = []
+                
+                for jj in newrange:
+                    self._parent.bsizer.Add(newpages[jj], 1, wx.EXPAND | wx.ALL, 2)
+                    self._parent.bsizer.Show(cc, False)
+                    self._parent._notebookpages.append(newpages[jj])
+                    cc = cc + 1
+                        
+                self.DeletePage(self._tabID)
+                
+                if enabled:
+                    if id == self.GetPageCount():
+                        self.AddPage(text, True, image)
+                    else:
+                        self.InsertPage(where, text, True, image)
+                else:
+                    if id == self.GetPageCount():
+                        self.AddPage(text, False, image)
+                    else:
+                        self.InsertPage(where, text, False, image)
+
+                self.SetPageImage(where, image)
+                self.SetPageText(where, text)
+                self.SetPageTextFont(where, font1)
+                self.SetPageTextSecondaryFont(where, font2)
+                self.SetPageTextColour(where, fontcolour)
+                self.SetPageColour(where, pagecolour)
+                self.EnablePage(where, enabled)
+                self.SetPageToolTip(where, tooltip, ontime, winsize)
+                self.SetPagePopupMenu(where, menu)
+                self.SetPageFirstGradientColour(where, firstcol)
+                self.SetPageSecondGradientColour(where, secondcol)
+                self._pages[where]._ishidden = ishidden
+                
+                if isanimated and len(animatedimages) > 1:
+                    self.SetAnimationImages(where, animatedimages)
+                    self.StartAnimation(where, timer)
+                    
+                if enabled:
+                    self._parent.bsizer.Show(where, True)
+                else:
+                    sel = self.GetSelection()
+                    
+                    if sel == -1:
+                        sel = 0
+                    self._parent.bsizer.Show(where, False)
+                    self._parent.SetSelection(sel)
+                    self._parent.bsizer.Show(sel, True)
+                    
+                self._parent.bsizer.Layout()
+                
+                self._parent.Thaw()
+
+            self._isdragging = False
+            self._olddragpos = -1
+            self._fromdnd = True
+            self.Refresh()
+            self._tabID = -1 
+            self.SetCursor(wx.STANDARD_CURSOR)
+
+            return            
+
+        if nPage >= 0 and where >= 0:
+            panel = oldNotebook.GetPage(nPage)
+            
+            if panel:
+                eventOut = NotebookCtrlEvent(wxEVT_NOTEBOOKCTRL_PAGE_DND, oldNotebook.GetId())
+                eventOut.SetOldPosition(nPage)
+                eventOut.SetNewPosition(where)
+                eventOut.SetEventObject(oldNotebook)
+                
+                if oldNotebook.GetEventHandler().ProcessEvent(eventOut):
+                    oldNotebook.nb._tabID = -1
+                    oldNotebook.nb._olddragpos = -1
+                    oldNotebook.SetCursor(wx.STANDARD_CURSOR)
+                    oldNotebook.Refresh()
+                    return
+                
+                oldNotebook.Freeze()
+                infos = oldNotebook.GetPageInfo(nPage)
+                
+                text = infos["text"]
+                image = infos["image"]
+                hidden = infos["ishidden"]
+
+                panel.Reparent(newNotebook)                
+                newNotebook.InsertPage(where, panel, text, True, image, hidden)
+                newNotebook.SetPageInfo(where, infos)
+
+                oldNotebook.nb.DeletePage(nPage)
+
+                oldNotebook.bsizer.Detach(nPage)
+                oldNotebook.bsizer.Layout()
+                oldNotebook.sizer.Layout()
+
+                oldNotebook._notebookpages.pop(nPage)
+                
+                oldNotebook.AdvanceSelection()
+
+                if oldNotebook.GetPageCount() == 0:
+                    if oldNotebook._style & NC_TOP:
+                        oldNotebook.sizer.Show(0, False)
+                        oldNotebook.sizer.Show(1, False)
+                    else:
+                        oldNotebook.sizer.Show(1, False)
+                        oldNotebook.sizer.Show(2, False)
+
+                    oldNotebook.sizer.Layout()
+
+                oldNotebook.Thaw()
+                newNotebook.Refresh()
+                
+        return wx.DragMove
+
 
     def OnLeaveWindow(self, event):
-
+        """ Handles The wx.EVT_LEAVE_WINDOW Events For TabCtrl. """
+        
         if self._enabledragging:
             if self._isdragging:
+
+                page = self._parent.GetPage(self._tabID)                
+                draginfo = NCDragInfo(page, self._tabID)
+                drginfo = cPickle.dumps(draginfo)
+                dataobject = wx.CustomDataObject(wx.CustomDataFormat("NotebookCtrl"))
+                dataobject.SetData(drginfo)
+                dragSource = wx.DropSource(self)
+                dragSource.SetData(dataobject)
+                dragSource.DoDragDrop(wx.Drag_DefaultMove)
+                
                 self._isleaving = True
                 self.Refresh()
 
@@ -994,13 +1308,31 @@ class TabCtrl(wx.PyControl):
         """ Associate An Image List To NotebookCtrl. """
         
         self._imglist = imagelist
+        self._grayedlist = wx.ImageList(16, 16, True, 0)
+        
+        for ii in xrange(imagelist.GetImageCount()):
+            
+            bmp = imagelist.GetBitmap(ii)
+            image = wx.ImageFromBitmap(bmp)
+            image = GrayOut(image)
+            newbmp = wx.BitmapFromImage(image)
+            self._grayedlist.Add(newbmp)
 
 
     def AssignImageList(self, imagelist):
         """ Associate An Image List To NotebookCtrl. """
 
         self._imglist = imagelist
+        self._grayedlist = wx.ImageList(16, 16, True, 0)
         
+        for ii in xrange(imagelist.GetImageCount()):
+            
+            bmp = imagelist.GetBitmap(ii)
+            image = wx.ImageFromBitmap(bmp)
+            image = GrayOut(image)
+            newbmp = wx.BitmapFromImage(image)
+            self._grayedlist.Add(newbmp)
+            
 
     def GetPadding(self):
         """ Returns The (Horizontal, Vertical) Padding Of The Text Inside Tabs. """
@@ -1578,7 +1910,10 @@ class TabCtrl(wx.PyControl):
         
         count = self.GetPageCount()
         
-        if count == 0:        
+        if count == 0:   
+            return
+
+        if not hasattr(self, "_initrect"):
             return
 
         if not show and not hasattr(self, "_menubutton"):
@@ -1609,7 +1944,22 @@ class TabCtrl(wx.PyControl):
 
         return hasattr(self, "_menubutton") and self._menubutton.IsShown()
     
-            
+
+    def HideTab(self, nPage, hide=True):
+        """ Hides A Tab In The NotebookCtrl. """
+        
+        if hide:
+            self._pages[nPage]._ishidden = True
+        else:
+            self._pages[nPage]._ishidden = False
+
+        if nPage == self.GetSelection():
+            self.AdvanceSelection()
+                
+        self._firsttime = True
+        self.Refresh()
+
+        
     def HitTest(self, point, flags=0):
         """
         Standard NotebookCtrl HitTest() Method. If Called With 2 Outputs, It
@@ -1748,6 +2098,8 @@ class TabCtrl(wx.PyControl):
 
         self._enablehiding = enable
         self.UpdateMenuButton(enable)
+        
+        wx.FutureCall(1000, self.UpdateMenuButton, enable)
         
 
     def SetAnimationImages(self, nPage, imgarray):
@@ -2042,21 +2394,14 @@ class TabCtrl(wx.PyControl):
                 return
             
         colour = wx.BLACK
+        somehidden = False
 
         if self._enablehiding:
             for ii in xrange(nPage):
                 if self._pages[ii]._ishidden:
                     nPage = nPage - 1
+                    somehidden = True
 
-            nPage = nPage + 1
-
-        added = False
-        
-        if self._enablehiding:
-            if nPage == len(self._tabrect):
-                nPage = nPage - 1
-                added = True
-                
         rect = self._tabrect[nPage]
 
         x1 = rect.x - 4
@@ -2074,16 +2419,11 @@ class TabCtrl(wx.PyControl):
                 x2 = x2 + rect.width
                 x3 = x3 + rect.width
         else:
-            if nPage < self._tabID:
-                x1 = x1 - self._tabrect[nPage-1].width
-                x2 = x2 - self._tabrect[nPage-1].width
-                x3 = x3 - self._tabrect[nPage-1].width
-            else:
-                if added:
-                    x1 = x1 + rect.width
-                    x2 = x2 + rect.width
-                    x3 = x3 + rect.width
-                    mybrush = wx.Brush(self.GetPageTextColour(nPage+1))
+            mybrush = wx.Brush(self.GetPageTextColour(nPage))
+            if nPage >= self._tabID:
+                x1 = x1 + rect.width
+                x2 = x2 + rect.width
+                x3 = x3 + rect.width
         
         dc.SetPen(wx.Pen(wx.BLACK, 1))
         dc.SetBrush(mybrush)
@@ -2112,7 +2452,7 @@ class TabCtrl(wx.PyControl):
                 self._isdragging = True
                 self._isleaving = False
                 newpos = self.HitTest(pt)
-                
+
                 if newpos >= 0 and newpos != self._olddragpos:
                     self._olddragpos = newpos
                     self.Refresh()
@@ -2263,7 +2603,7 @@ class TabCtrl(wx.PyControl):
                     else:
                         self.SetSelection(page)
                         self._tabID = page
-
+                        
         event.Skip()
 
 
@@ -3167,7 +3507,10 @@ class TabCtrl(wx.PyControl):
 
                 if self.GetPageImage(ii) >= 0:
                     bmpindex = self.GetPageImage(ii)
-                    bmp = self._imglist.GetBitmap(bmpindex)
+                    if self.IsPageEnabled(ii):
+                        bmp = self._imglist.GetBitmap(bmpindex)
+                    else:
+                        bmp = self._grayedlist.GetBitmap(bmpindex)
 
                 bmpOk = bmp.Ok()          
                 space = self._padding.x
@@ -3266,8 +3609,12 @@ class TabCtrl(wx.PyControl):
                         bmpposx = bmpposx + 1
                         bmpposy = bmpposy - 1
 
-                    self._imglist.Draw(bmpindex, dc, bmpposx, bmpposy,
-                                       wx.IMAGELIST_DRAW_TRANSPARENT, True)
+                    if self.IsPageEnabled(ii):
+                        self._imglist.Draw(bmpindex, dc, bmpposx, bmpposy,
+                                           wx.IMAGELIST_DRAW_TRANSPARENT, True)
+                    else:
+                        self._grayedlist.Draw(bmpindex, dc, bmpposx, bmpposy,
+                                              wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
                 if selfound:
                     dc.SetPen(highlightpen)                    
@@ -4741,6 +5088,12 @@ class NotebookCtrl(wx.Panel):
         return self._custompanel
     
 
+    def HideTab(self, nPage, hide=True):
+        """ Hides A Tab In The NotebookCtrl. """
+
+        self.nb.HideTab(nPage, hide)
+
+        
     def HitTest(self, point, flags=0):
         """
         Standard NotebookCtrl HitTest() Method. If Called With 2 Outputs, It

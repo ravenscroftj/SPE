@@ -959,13 +959,13 @@
                                                             <selection>0</selection>
                                                             <choices>
                                                                 <choice>&lt;default&gt;</choice>
-                                                                <choice>start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B python "%(file)s"</choice>
-                                                                <choice>/usr/bin/Eterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/X11R6/bin/xterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/wterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/aterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/rxvt-xterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/gnome-terminal -e 'cd "%(path)s"; python "%(file)s"'</choice>
+                                                                <choice>start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B %(python)s "%(file)s"</choice>
+                                                                <choice>/usr/bin/Eterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/X11R6/bin/xterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/wterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/aterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/rxvt-xterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/gnome-terminal -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
                                                             </choices>
                                                         </object>
                                                     </object>
@@ -986,13 +986,13 @@
                                                             <selection>0</selection>
                                                             <choices>
                                                                 <choice>&lt;default&gt;</choice>
-                                                                <choice>start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"</choice>
-                                                                <choice>/usr/bin/Eterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/X11R6/bin/xterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/wterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/aterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/rxvt-xterm -e 'cd "%(path)s"; python "%(file)s"'</choice>
-                                                                <choice>/usr/bin/gnome-terminal -e 'cd "%(path)s"; python "%(file)s"'</choice>
+                                                                <choice>start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" %(python)s "%(file)s"</choice>
+                                                                <choice>/usr/bin/Eterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/X11R6/bin/xterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/wterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/aterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/rxvt-xterm -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
+                                                                <choice>/usr/bin/gnome-terminal -e 'cd "%(path)s"; %(python)s "%(file)s"'</choice>
                                                             </choices>
                                                         </object>
                                                     </object>
