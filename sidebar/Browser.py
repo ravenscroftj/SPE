@@ -28,7 +28,7 @@ class Browser(wx.GenericDirCtrl) :
         pt          = event.GetPosition();
         item, flags = tree.HitTest(pt)
         event.Skip()
-        tree.SelectItem(item)
+        #tree.SelectItem(item)
         
         try:
             path = tree.GetItemText(item)
