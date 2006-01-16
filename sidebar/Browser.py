@@ -2,6 +2,9 @@ import wx
 import os
 import _spe.info as info
 
+LINUX_HOME          = 'Home directory'
+LINUX_HOME_LENGTH   = len(LINUX_HOME)
+
 class Browser(wx.GenericDirCtrl) :
     def __init__ (self, parent, id, init_path=''):
         wx.GenericDirCtrl.__init__(self,parent,id,
@@ -11,6 +14,7 @@ class Browser(wx.GenericDirCtrl) :
             style   = wx.DIRCTRL_SHOW_FILTERS)
         self.dir    = init_path
         self.tree   = self.GetTreeCtrl()
+        self.home   = os.path.dirname(info.INFO['userPath'])
         self.tree.Bind(wx.EVT_LEFT_DCLICK, self.onClick)
         self.tree.Bind(wx.EVT_RIGHT_DOWN, self.onClick)
         
@@ -23,6 +27,7 @@ class Browser(wx.GenericDirCtrl) :
         root        = tree.GetRootItem()
         pt          = event.GetPosition();
         item, flags = tree.HitTest(pt)
+        event.Skip()
         tree.SelectItem(item)
         
         try:
@@ -38,8 +43,12 @@ class Browser(wx.GenericDirCtrl) :
             
         if info.DARWIN:
             print 'Trying to open "%s".\nIs this a valid path (answer to s_t_a_n_i@yahoo.com)?'%path
+        if info.LINUX:
+            if path[:LINUX_HOME_LENGTH] == LINUX_HOME:
+                path = self.home + path[LINUX_HOME_LENGTH:]
         if os.path.isfile(path): 
             self.open(path)
             
     def open(self, fname) : 
         pass
+        
