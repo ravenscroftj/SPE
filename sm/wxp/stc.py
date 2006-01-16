@@ -535,11 +535,13 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.ConvertEOLs(self.GetEOLMode())
 
     def autoComplete(self,object=0):
+        word    = self.getWord()
+        if not word: 
+            if object:
+                self.AddText('.')
+            return
         if object:
             self.AddText('.')
-        word    = self.getWord()
-        if not word: return
-        if object:
             word+='.'
         words   = self.getWords(word=word)
         if word[-1] == '.':

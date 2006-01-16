@@ -102,6 +102,8 @@ class Panel(wx.SplitterWindow):
         self.updateBug          = False
         #construct
         wx.SplitterWindow.__init__(self, id=-1, parent=parent,style=STYLE_SPLIT)
+        if info.DARWIN:
+            self.SetSashSize(6)
         #Remember if this file contains DOS line endings (\r\n)
         #Otherwise assume Unix (\n)
         self.dosLines = (source.find('\r\n') >= 0)
