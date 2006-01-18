@@ -194,7 +194,7 @@ class Panel(wx.SplitterWindow):
         self.pychecker          = Pycheck.Panel(self.notebook,page=4)
         self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)        
         #browser
-        if not info.DARWIN:
+        if 1 or not info.DARWIN:
             #todo: the browser control doesn't work on mac
             self.notebookLabel.append('Browse')
             self.updateSidebarTab.append(self.updateBrowser)
