@@ -90,9 +90,10 @@ class Panel(wx.SplitterWindow):
         self.column             = 1
         self.eventChanged       = False
         self.exitPrevious       = True
+        self.inspectPrevious    = False
         self.line               = 1
         self.position           = 0
-        self.sashPosition       = self.minSashPosition = [285,310][info.DARWIN]
+        self.sashPosition       = self.minSashPosition = [310,285][info.WIN]
         self.sidebarHidden      = False
         self.saved              = ''
         self.todoMax            = 1
@@ -102,6 +103,7 @@ class Panel(wx.SplitterWindow):
         self.updateBug          = False
         #construct
         wx.SplitterWindow.__init__(self, id=-1, parent=parent,style=STYLE_SPLIT)
+        self.SetMinimumPaneSize(1)
         if info.DARWIN:
             self.SetSashSize(6)
         #Remember if this file contains DOS line endings (\r\n)
@@ -519,8 +521,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 os.system('start "Spe console - Press Ctrl+Break to stop" /D"%(path)s"'%params)
             elif info.DARWIN:
                 os.system("""osascript -e 'tell application "Terminal"' -e 'do script "cd %(path)s"' -e 'activate' -e 'end tell'"""%params)
+            elif os.path.isfile('/usr/bin/konsole'):
+                os.system('/usr/bin/konsole --caption SPE --workdir "%(path)s" &'%params)
+            elif os.path.isfile('/usr/bin/gnome-terminal'):
+                os.system('/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" &')
             else:
-                os.system("cd \"%(path)s\"; /usr/X11R6/bin/xterm &"%params)
+                os.system('cd %(path)s;xterm &')
         else:
             os.system(terminal%params)
 
@@ -530,19 +536,22 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         from _spe.dialogs.runTerminalDialog import RunTerminalDialog
         runTerminalDialog   = RunTerminalDialog(self.fileName,
                                 self.argumentsPrevious,
+                                self.inspectPrevious,
                                 self.exitPrevious,
                                 parent=self.app.parentFrame,
                                 id=-1)
         answer              = runTerminalDialog.ShowModal()
         arguments           = runTerminalDialog.arguments.GetValue()
+        inspct              = runTerminalDialog.inspect.GetValue()
         exit                = runTerminalDialog.exit.GetValue()
         runTerminalDialog.Destroy()
         if answer == wx.ID_OK:
             self.argumentsPrevious.append(arguments)
-            self.exitPrevious   = exit
-            self.run_with_arguments(arguments,exit,confirm=False)
+            self.inspectPrevious    = inspct
+            self.exitPrevious       = exit
+            self.run_with_arguments(arguments,inspct,exit,confirm=False)
         
-    def run_with_arguments(self,arguments='',exit=False, confirm=True):
+    def run_with_arguments(self,arguments='', inspct=False, exit=False, confirm=True):
         """Run in terminal emulator"""
         if confirm and not self.confirmSave():
             return
@@ -551,7 +560,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         params          = { 'file':         fileName,
                             'path':         path,
                             'arguments':    arguments,
-                            'python':       info.PYTHON_EXEC}
+                            'python':       info.PYTHON_EXEC+['',' -i'][inspct]}
         if exit:
             terminal=self.parentPanel.get('TerminalRunExit')
         else:
@@ -559,42 +568,30 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if terminal == DEFAULT:
             if info.WIN:
                 if info.WIN98:
-                    if exit:
-                        os.system('start command /k %(python)s "%(file)s" %(arguments)s /c'%params)
-                    else:
-                        os.system('start command /k %(python)s "%(file)s" %(arguments)s'%params) 
+                    params['start'] = 'start command'
                 else:
-                    if exit:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" %(python)s "%(file)s" %(arguments)s'%params)
-                    else:
-                        os.system('start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" start /B %(python)s "%(file)s" %(arguments)s'%params)
+                    params['start'] = 'start "SPE - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" cmd'%params
+                if exit:
+                    os.system('%(start)s /c %(python)s "%(file)s" %(arguments)s'%params)
+                else:
+                    os.system('%(start)s /k %(python)s "%(file)s" %(arguments)s'%params)
             elif info.DARWIN:
                 if exit:
                     os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s;exit"' -e 'end tell'"""%params)
                 else:
                     os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s"' -e 'end tell'"""%params)
+            elif os.path.isfile('/usr/bin/konsole'):
+                if exit:
+                    os.system("""/usr/bin/konsole --caption SPE --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
+                else:
+                    os.system("""/usr/bin/konsole --noclose --caption SPE --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
+            elif os.path.isfile('/usr/bin/gnome-terminal'):
+                os.system("""/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" -e '%(python)s "%(file)s" %(arguments)s' &"""%params)
             else:
-                os.system("%(python)s %(file)s %(arguments)s"%params)
+                os.system('%(python)s "%(file)s" %(arguments)s'%params)
         else:
             os.system(terminal%params)
             
-##    def run_in_terminal_emulator_exit(self):
-##        path,fileName=os.path.split(self.fileName)
-##        params = {'file':fileName,'path':path}
-##        terminal=self.parentPanel.get('TerminalRunExit')
-##        if terminal==DEFAULT:
-##            if info.WIN:
-##                if info.WIN98:
-##                    os.system('start command /k %s /c'%info.PYTHON_EXEC)
-##                else:
-##                    os.system('start "Spe - %(file)s - Press Ctrl+Break to stop" /D"%(path)s" python "%(file)s"'%params)
-##            elif info.DARWIN:
-##                os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;pythonw %(file)s;exit"' -e 'end tell'"""%params)
-##            else:
-##                os.system("/usr/bin/Eterm -e 'cd \"%(path)s\"; python \"%(file)s\"'"%params)
-##        else:
-##            os.system(terminal%params)
-        
     def check_source_with_pychecker(self): 
         """Check source with pychecker"""
         self.pychecker.check()

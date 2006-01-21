@@ -817,6 +817,7 @@ class TabCtrl(wx.PyControl):
 
         self._drawx = False
         self._drawxstyle = 1
+        self._isclosing = False
 
         self._pmenu = None
 
@@ -2435,6 +2436,10 @@ class TabCtrl(wx.PyControl):
 
         pt = event.GetPosition()
         
+        if self._isclosing:
+            event.Skip()
+            return
+        
         if self._enabledragging:
             
             if event.Dragging() and not event.RightIsDown() and not event.MiddleIsDown():
@@ -2577,6 +2582,7 @@ class TabCtrl(wx.PyControl):
         pos = event.GetPosition()        
         page, flags = self.HitTest(pos, 1)
         self._dragstartpos = pos
+        self._isclosing = True
 
         if page != wx.NOT_FOUND:
 
@@ -2603,7 +2609,9 @@ class TabCtrl(wx.PyControl):
                     else:
                         self.SetSelection(page)
                         self._tabID = page
-                        
+
+        self._isclosing = False
+        
         event.Skip()
 
 

@@ -25,6 +25,7 @@ import Child
 
 ####Constants-------------------------------------------------------------------
 DEFAULT         = "<default>"
+FIREFOX         = '/usr/bin/firefox'
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
 MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
@@ -1255,9 +1256,12 @@ Please report these details and operating system to %s."""%(message,INFO['author
         if fileName[0]=='/': fileName = 'file://'+fileName
         WebBrowser=self.get('WebBrowser')
         if WebBrowser==DEFAULT:
-            webbrowser.open(fileName, 1)
+            if os.path.isfile(FIREFOX):
+                os.system("%s %s"%(FIREFOX,fileName))
+            else:
+                webbrowser.open(fileName, 1)
         else:
-            os.system("%s '%s'"%(WebBrowser,fileName))
+            os.system("%s %s"%(WebBrowser,fileName))
 
     #---preferences
     def preferencesSave(self):
@@ -1299,11 +1303,11 @@ Please report these details and operating system to %s."""%(message,INFO['author
                 self.message('Please restart SPE to apply following changes:\n%s'%restart)
 
     def set(self,name,value,save=1):
-        self.config.set('DEFAULT',name,str(value))
+        self.config.set('DEFAULT',name,str(value).replace('%(','%{').replace(')s','}s'))
         if save: self.preferencesSave()
 
     def get(self,name):
-        return self.config.get('DEFAULT',name)
+        return self.config.get('DEFAULT',name).replace('%{','%(').replace('}s',')s')
 
     def getValue(self,name):
         return eval(self.config.get('DEFAULT',name))
