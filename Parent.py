@@ -12,6 +12,7 @@ __doc__=INFO['doc']%INFO
 #---general modules
 import ConfigParser,os,string,sys,thread,time,types,webbrowser, pprint
 import _spe,sm.scriptutils,sm.wxp
+import dialogs.stcStyleEditor
 
 #---wxPython
 import wx
@@ -1275,6 +1276,7 @@ Please report these details and operating system to %s."""%(message,INFO['author
             print message
 
     def preferencesUpdate(self):
+        if self.frame.dead: return
         self.redirect((not self.app.DEBUG) and self.getValue('RedirectShell'))
         self.showShell(self.getValue('ShowShell'))
         self.frame.menuBar.check_view()
@@ -1282,6 +1284,7 @@ Please report these details and operating system to %s."""%(message,INFO['author
             self.frame.tabs.EnableToolTip(self.getValue('ToolTipsForFileTabs'))
         for child in self.app.children:
             child.source.update()
+        dialogs.stcStyleEditor.SetStyles(self.tabPanel['Shell'], self.config)
         #restart?!
         restart = ''
         if self.app.mdiName     != self.get('Mdi'):
@@ -1303,13 +1306,13 @@ Please report these details and operating system to %s."""%(message,INFO['author
                 self.message('Please restart SPE to apply following changes:\n%s'%restart)
 
     def set(self,name,value,save=1):
-        self.config.set('DEFAULT',name,str(value).replace('%(','%{').replace(')s','}s'))
+        self.config.set('Default',name,str(value).replace('%(','%{').replace(')s','}s'))
         if save: self.preferencesSave()
 
     def get(self,name):
-        return self.config.get('DEFAULT',name).replace('%{','%(').replace('}s',')s')
+        return self.config.get('Default',name).replace('%{','%(').replace('}s',')s')
 
     def getValue(self,name):
-        return eval(self.config.get('DEFAULT',name))
+        return eval(self.config.get('Default',name))
 
 

@@ -103,9 +103,9 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             #self.faces
             if wx.Platform == '__WXMSW__':
                 self.faces = { 'times': 'Courier New',
-                          'mono' : 'Courier New',
-                          'helv' : 'Courier New',
-                          'other': 'Courier New',
+                          'mono' : 'Courier',
+                          'helv' : 'Courier',
+                          'other': 'Courier',
                           'size' : 10,
                           'size2': 10,
                          }
@@ -137,7 +137,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetMargins(0,0)
         #margin 1 for line numbers
         self.SetMarginType(1, wx_stc.STC_MARGIN_NUMBER)
-        self.SetMarginWidth(1, 40)
+        self.SetMarginWidth(1, 50)
         #margin 2 for markers
         self.SetMarginType(2, wx_stc.STC_MARGIN_SYMBOL)
         self.SetMarginMask(2, wx_stc.STC_MASK_FOLDERS)
@@ -398,13 +398,13 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
 #---preferences-----------------------------------------------------------------
     def get(self,name):
-        return self.config.get('DEFAULT',name)
+        return self.config.get('Default',name)
         
     def getint(self,name):
         try:
-            return self.config.getint('DEFAULT',name)
+            return self.config.getint('Default',name)
         except:#True,False
-            if eval(self.config.get('DEFAULT',name)):
+            if eval(self.config.get('Default',name)):
                 return 1
             else:
                 return 0
@@ -432,53 +432,55 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetWordChars(self.get('WordChars'))
         
     def SetStyles(self):
-        self.StyleClearAll()
-
         # anti-aliasing
         if hasattr(self,'SetUseAntiAliasing'):
             self.SetUseAntiAliasing(True)
-
-        # Global default styles for all languages
-        self.StyleSetSpec(wx_stc.STC_STYLE_DEFAULT,     "face:%(helv)s,size:%(size)d" % self.faces)
-        self.StyleSetSpec(wx_stc.STC_STYLE_LINENUMBER,  "back:#C0C0C0,face:%(helv)s,size:%(size2)d" % self.faces)
-        self.StyleSetSpec(wx_stc.STC_STYLE_CONTROLCHAR, "face:%(other)s" % self.faces)
-        self.StyleSetSpec(wx_stc.STC_STYLE_BRACELIGHT,  "fore:#FFFFFF,back:#0000FF,bold")
-        self.StyleSetSpec(wx_stc.STC_STYLE_BRACEBAD,    "fore:#000000,back:#FF0000,bold")
-
-        # Python styles
-        # White space
-        self.StyleSetSpec(wx_stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % self.faces)
-        # Comment
-        self.StyleSetSpec(wx_stc.STC_P_COMMENTLINE, "fore:#007F00,back:#E8FFE8,italic,face:%(other)s,size:%(size)d" % self.faces)
-        # Number
-        self.StyleSetSpec(wx_stc.STC_P_NUMBER, "fore:#007F7F,size:%(size)d" % self.faces)
-        # String
-        self.StyleSetSpec(wx_stc.STC_P_STRING, "fore:#7F007F,face:%(times)s,size:%(size)d" % self.faces)
-        # Single quoted string
-        self.StyleSetSpec(wx_stc.STC_P_CHARACTER, "fore:#7F007F,face:%(times)s,size:%(size)d" % self.faces)
-        # Keyword
-        self.StyleSetSpec(wx_stc.STC_P_WORD, "fore:#00007F,bold,size:%(size)d" % self.faces)
-        # Triple quotes
-        self.StyleSetSpec(wx_stc.STC_P_TRIPLE, "fore:#7F0000,size:%(size)d" % self.faces)
-        # Triple double quotes
-        self.StyleSetSpec(wx_stc.STC_P_TRIPLEDOUBLE, "fore:#7F0000,size:%(size)d" % self.faces)
-        # Class name definition
-        self.StyleSetSpec(wx_stc.STC_P_CLASSNAME, "fore:#0000FF,bold,underline,size:%(size)d" % self.faces)
-        # Function or method name definition
-        self.StyleSetSpec(wx_stc.STC_P_DEFNAME, "fore:#007F7F,bold,size:%(size)d" % self.faces)
-        # Operators
-        self.StyleSetSpec(wx_stc.STC_P_OPERATOR, "bold,size:%(size)d" % self.faces)
-        # Identifiers
-        self.StyleSetSpec(wx_stc.STC_P_IDENTIFIER, "")
-        # Comment-blocks
-        self.StyleSetSpec(wx_stc.STC_P_COMMENTBLOCK, "fore:#990000,back:#C0C0C0,italic,size:%(size)d" % self.faces)
-        # End of line where string is not closed
-        self.StyleSetSpec(wx_stc.STC_P_STRINGEOL, "fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % self.faces)
-
+    
         #INDICATOR STYLES FOR ERRORS (self.errorMark)
         self.IndicatorSetStyle(2, wx_stc.STC_INDIC_SQUIGGLE)
         self.IndicatorSetForeground(2, wx.RED)
 
+        import dialogs.stcStyleEditor
+        if not dialogs.stcStyleEditor.SetStyles(self, self.config):
+            self.StyleClearAll()
+    
+            # Global default styles for all languages
+            self.StyleSetSpec(wx_stc.STC_STYLE_DEFAULT,     "face:%(helv)s,size:%(size)d" % self.faces)
+            self.StyleSetSpec(wx_stc.STC_STYLE_LINENUMBER,  "back:#C0C0C0,face:%(helv)s,size:%(size2)d" % self.faces)
+            self.StyleSetSpec(wx_stc.STC_STYLE_CONTROLCHAR, "face:%(other)s" % self.faces)
+            self.StyleSetSpec(wx_stc.STC_STYLE_BRACELIGHT,  "fore:#FFFFFF,back:#0000FF,bold")
+            self.StyleSetSpec(wx_stc.STC_STYLE_BRACEBAD,    "fore:#000000,back:#FF0000,bold")
+    
+            # Python styles
+            # White space
+            self.StyleSetSpec(wx_stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % self.faces)
+            # Comment
+            self.StyleSetSpec(wx_stc.STC_P_COMMENTLINE, "fore:#007F00,back:#E8FFE8,italic,face:%(other)s,size:%(size)d" % self.faces)
+            # Number
+            self.StyleSetSpec(wx_stc.STC_P_NUMBER, "fore:#007F7F,size:%(size)d" % self.faces)
+            # String
+            self.StyleSetSpec(wx_stc.STC_P_STRING, "fore:#7F007F,face:%(times)s,size:%(size)d" % self.faces)
+            # Single quoted string
+            self.StyleSetSpec(wx_stc.STC_P_CHARACTER, "fore:#7F007F,face:%(times)s,size:%(size)d" % self.faces)
+            # Keyword
+            self.StyleSetSpec(wx_stc.STC_P_WORD, "fore:#00007F,bold,size:%(size)d" % self.faces)
+            # Triple quotes
+            self.StyleSetSpec(wx_stc.STC_P_TRIPLE, "fore:#7F0000,size:%(size)d" % self.faces)
+            # Triple double quotes
+            self.StyleSetSpec(wx_stc.STC_P_TRIPLEDOUBLE, "fore:#7F0000,size:%(size)d" % self.faces)
+            # Class name definition
+            self.StyleSetSpec(wx_stc.STC_P_CLASSNAME, "fore:#0000FF,bold,underline,size:%(size)d" % self.faces)
+            # Function or method name definition
+            self.StyleSetSpec(wx_stc.STC_P_DEFNAME, "fore:#007F7F,bold,size:%(size)d" % self.faces)
+            # Operators
+            self.StyleSetSpec(wx_stc.STC_P_OPERATOR, "bold,size:%(size)d" % self.faces)
+            # Identifiers
+            self.StyleSetSpec(wx_stc.STC_P_IDENTIFIER, "")
+            # Comment-blocks
+            self.StyleSetSpec(wx_stc.STC_P_COMMENTBLOCK, "fore:#990000,back:#C0C0C0,italic,size:%(size)d" % self.faces)
+            # End of line where string is not closed
+            self.StyleSetSpec(wx_stc.STC_P_STRINGEOL, "fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % self.faces)
+    
     #---get
     def getWord(self,whole=None):
         for delta in (0,-1,1):

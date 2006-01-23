@@ -101,7 +101,7 @@ for section in baseConfig.sections():
 
 #---Workspace
 if __workspace is not None: 
-    config.set("DEFAULT","currentworkspace",__workspace)
+    config.set("Default","currentworkspace",__workspace)
     fp  = open(INFO['defaultsUser'],"w")
     config.write(fp)
     fp.close()
@@ -109,17 +109,17 @@ if __workspace is not None:
 #---Maximize    
 style   = smdi.STYLE_PARENTFRAME
 try:
-    maximize=eval(config.get("DEFAULT","maximize"))
+    maximize=eval(config.get("Default","maximize"))
 except:
     maximize=True
 if maximize: style |= wx.MAXIMIZE
 
 #---Size
 try:
-    sizeX   = int(config.get("DEFAULT","sizex"))
-    sizeY   = int(config.get("DEFAULT","sizey"))
-    posX    = max(0,int(config.get("DEFAULT","posx")))
-    posY    = max(0,int(config.get("DEFAULT","posy")))
+    sizeX   = int(config.get("Default","sizex"))
+    sizeY   = int(config.get("Default","sizey"))
+    posX    = max(0,int(config.get("Default","posx")))
+    posY    = max(0,int(config.get("Default","posy")))
 except:
     sizeX   = 800
     sizeY   = 600
@@ -127,14 +127,14 @@ except:
     posY    = 0
     
 #---MDI
-mdi         = config.get('DEFAULT','Mdi')
+mdi         = config.get('Default','Mdi')
 if not smdi.DI.has_key(mdi):
-    mdi     = smdi.DEFAULT
-    config.set('DEFAULT','Mdi',mdi)
+    mdi     = smdi.Default
+    config.set('Default','Mdi',mdi)
     
 #---Single Instance Application
 try:
-    singleInstance = eval(config.get('DEFAULT','SingleInstanceApp'))
+    singleInstance = eval(config.get('Default','SingleInstanceApp'))
 except:
     singleInstance = False
             
@@ -161,7 +161,7 @@ class Translate:
     def strip(self,x):
         return x.replace('&','').replace('.','')
         
-shortcuts    = config.get("DEFAULT","shortcuts")
+shortcuts    = config.get("Default","shortcuts")
 if shortcuts == smdi.DEFAULT:
     if smdi.DARWIN:
         _shortcuts  = 'Macintosh'

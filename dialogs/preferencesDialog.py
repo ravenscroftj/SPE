@@ -69,9 +69,8 @@ class Create(wx.Dialog):
         self.globalFolders = wx.CheckBox(self.General, -1, _("Folders"))
         self.globalNotes = wx.CheckBox(self.General, -1, _("Notes"))
         self.globalFileList = wx.CheckBox(self.General, -1, _("Open File list"))
-        self.label_font = wx.StaticText(self.Editor, -1, _("Font"))
-        self.Font = wx.TextCtrl(self.Editor, -1, _("Courier New, 10"))
-        self.chooseFont = wx.Button(self.Editor, -1, _("Choose"))
+        self.label_font = wx.StaticText(self.Editor, -1, _("Fonts && Colors"))
+        self.chooseFont = wx.Button(self.Editor, -1, _("Configure styles ..."))
         self.label_wordchars = wx.StaticText(self.Editor, -1, _("Word characters"))
         self.WordChars = wx.TextCtrl(self.Editor, -1, "")
         self.label_calltips = wx.StaticText(self.Editor, -1, _("Calltips"))
@@ -126,6 +125,7 @@ class Create(wx.Dialog):
         wx.EVT_BUTTON(self.defaults, self.defaults.GetId(), self.OnDefaultsButton)
         wx.EVT_BUTTON(self.save, self.save.GetId(), self.OnSaveButton)
         wx.EVT_BUTTON(self.Cancel, self.Cancel.GetId(), self.OnCancelButton)
+        self.customStyle = False
 
     def __set_properties(self):
         self.__fill()
@@ -157,7 +157,7 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
-        self.Signature.SetSelection(-1)
+        #self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)
@@ -186,7 +186,7 @@ class Create(wx.Dialog):
         grid_sizer_2 = wx.FlexGridSizer(4, 1, 4, 4)
         width = wx.BoxSizer(wx.HORIZONTAL)
         GeneralEditor = wx.StaticBoxSizer(self.GeneralEditor_staticbox, wx.VERTICAL)
-        grid_general = wx.FlexGridSizer(4, 3, 4, 4)
+        grid_general = wx.FlexGridSizer(4, 2, 4, 4)
         generalSizer = wx.FlexGridSizer(10, 1, 4, 4)
         sizer_3 = wx.StaticBoxSizer(self.sizer_3_staticbox, wx.HORIZONTAL)
         grid_sizer_5 = wx.FlexGridSizer(4, 2, 4, 4)
@@ -235,20 +235,15 @@ class Create(wx.Dialog):
         generalSizer.AddGrowableCol(0)
         GeneralEditor.Add((4, 4), 0, 0, 0)
         grid_general.Add(self.label_font, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        grid_general.Add(self.Font, 0, wx.EXPAND, 0)
-        grid_general.Add(self.chooseFont, 0, 0, 0)
+        grid_general.Add(self.chooseFont, 0, wx.EXPAND, 0)
         grid_general.Add(self.label_wordchars, 0, wx.ADJUST_MINSIZE, 0)
         grid_general.Add(self.WordChars, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        grid_general.Add((20, 20), 0, wx.ADJUST_MINSIZE, 0)
         grid_general.Add(self.label_calltips, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.CallTips, 0, wx.EXPAND, 0)
-        grid_general.Add((20, 20), 0, 0, 0)
         grid_general.Add(self.label_CheckSourceRealtime, 0, wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
         grid_general.Add(self.CheckSourceRealtime, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        grid_general.Add((20, 20), 0, wx.ADJUST_MINSIZE, 0)
         grid_general.Add(self.label_sidebar, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.UpdateSidebar, 0, wx.EXPAND, 0)
-        grid_general.Add((20, 20), 0, 0, 0)
         grid_general.AddGrowableCol(1)
         GeneralEditor.Add(grid_general, 1, wx.EXPAND, 0)
         GeneralEditor.Add(self.AutoReloadChangedFile, 0, wx.TOP, 4)
@@ -285,6 +280,7 @@ class Create(wx.Dialog):
         self.Editor.SetSizer(grid_sizer_1)
         grid_sizer_1.Fit(self.Editor)
         grid_sizer_1.SetSizeHints(self.Editor)
+        grid_sizer_1.AddGrowableCol(1)
         general_Label_Sizer.Add(self.signatureLabel, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         general_Label_Sizer.Add(self.Signature, 1, wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         general_Label_Sizer.Add(self.browseSignature, 0, wx.RIGHT|wx.TOP|wx.ADJUST_MINSIZE, 5)
@@ -343,7 +339,6 @@ class Create(wx.Dialog):
 
     def update(self):
         for name in VALUES: self._update(name)
-        self.Font.SetValue(self.parent.get('Font'))
         self.AutoCompleteIgnore.SetStrings(self.parent.getValue('AutoCompleteIgnore'))
 
     def _update(self,name):
@@ -358,24 +353,14 @@ class Create(wx.Dialog):
             item.SetValue(self.parent.getValue(name))
 
     def OnChooseFontButton(self, event):
-        data = wx.FontData()
-        face,size=self.Font.GetValue().split(',')
-        size=eval(size)
-        try:
-            font=wx.Font(size,wx.DEFAULT,wx.NORMAL,wx.NORMAL,0,face)
-        except:
-            font=wx.SystemSettings_GetFont(wx.SYS_OEM_FIXED_FONT)
-        data.SetInitialFont(font)
-        #data
-        dialog=wx.FontDialog(self,data)
-        try:
-            if dialog.ShowModal() == wx.ID_OK:
-                data = dialog.GetFontData()
-                font = data.GetChosenFont()
-                colour = data.GetColour()
-                self.Font.SetValue('%s,%s'%(font.GetFaceName(),font.GetPointSize()))
-        finally:
-            dialog.Destroy()
+        import stcStyleEditor
+        dlg = stcStyleEditor.STCStyleEditDlg(self, 'Python', 
+            self.parent.config, None)
+        try: 
+            if dlg.ShowModal() == wx.ID_OK:
+                self.customStyle = True
+        finally: 
+            dlg.Destroy()
         
     def OnDefaultsButton(self, event):
         self.Close()
@@ -383,8 +368,9 @@ class Create(wx.Dialog):
     def OnSaveButton(self, event):
         #Editor
         for name in VALUES: self.set(name)
-        self.set('Font')
         self.set('AutoCompleteIgnore')
+        if self.customStyle:
+            self.parent.set("stcstyle", "Custom", 0)        
         self.parent.preferencesSave()
         self.Close()
 

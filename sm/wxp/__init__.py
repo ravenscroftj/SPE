@@ -1,5 +1,5 @@
 #(c)www.stani.be (read __doc__ for more information)                            
-import os, types
+import os, types, sys
 import sm
 INFO=sm.INFO.copy()
 

@@ -12,6 +12,7 @@ __doc__=INFO['doc']%INFO
 
 import sm.wxp
 import _spe.help
+import sys
 
 class Panel(sm.wxp.SmFilling):
     def __init__(self,panel,*args,**options):
