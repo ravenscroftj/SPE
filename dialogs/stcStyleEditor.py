@@ -1072,6 +1072,13 @@ def getDefs():
             'lnsize': 10, 
             'backcol': '#FFFFFF', 
             'size': 10}
+    elif wx.Platform =='__WXMAC__':
+        commonDefs = {
+            'helv': 'Helvetica', 
+            'mono': 'Courier', 
+            'lnsize': 14, 
+            'backcol': '#FFFFFF', 
+            'size': 14}
     else:    
         commonDefs = {
             'helv': 'Helvetica', 
