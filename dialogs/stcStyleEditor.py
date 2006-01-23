@@ -324,8 +324,11 @@ class STCStyleEditDlg(wx.Dialog):
 
         self.stc_title = 'wx.StyledTextCtrl Style Editor'
         self.stc_title = 'wx.StyledTextCtrl Style Editor - %s' % langTitle
-        if wx.Platform == '__wx.MSW__':
+        if wx.Platform == '__WXMSW__':
             self.style_font_size = 10
+        elif wx.Platform == '__WXMAC__':
+            self.style_font_size = 14
+            commonPropDefs['size']=14
         else:
             self.style_font_size = 10
         self._init_ctrls(parent)
@@ -868,6 +871,14 @@ class STCStyleEditDlg(wx.Dialog):
         finally:
             wx.EndBusyCursor()
         self.EndModal(wx.ID_OK)
+        dlg = wx.MessageDialog(self, 'Please restart SPE.',
+                               'SPE',
+                               wx.OK | wx.ICON_INFORMATION
+                               )
+        dlg.ShowModal()
+        dlg.Destroy()
+        return wx.ID_OK
+
 
     def OnCancelbtnButton(self, event):
         self.EndModal(wx.ID_CANCEL)
