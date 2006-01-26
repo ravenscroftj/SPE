@@ -254,7 +254,8 @@ class Panel(wx.Notebook):
             for i in openFiles: 
                 self.workspace['openfiles'].append(i[0])
         except Exception,e:
-            print "Error opening workspace file %s: %s"%(file,e)
+            if self.app.DEBUG:
+                self.SetStatusText("Error opening workspace file %s: %s"%(file,e))
             
     def applyWorkspaceTab(self,child):
         """ this function will change the child tab to indicate that it is part of the workspace """

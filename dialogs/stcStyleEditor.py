@@ -871,12 +871,13 @@ class STCStyleEditDlg(wx.Dialog):
         finally:
             wx.EndBusyCursor()
         self.EndModal(wx.ID_OK)
-        dlg = wx.MessageDialog(self, 'Please restart SPE.',
-                               'SPE',
-                               wx.OK | wx.ICON_INFORMATION
-                               )
-        dlg.ShowModal()
-        dlg.Destroy()
+        if wx.Platform == '__WXMAC__':
+            dlg = wx.MessageDialog(self, 'Please restart SPE.',
+                                   'Styles reconfigured...',
+                                   wx.OK | wx.ICON_INFORMATION
+                                   )
+            dlg.ShowModal()
+            dlg.Destroy()
         return wx.ID_OK
 
 
@@ -1052,11 +1053,13 @@ def setSTCStyles(stc, styles, styleIdNames, commonDefs, keywords):
     stc.SetBackgroundColour(bkCol)
 
     # Set the styles on the wx.STC
+    if wx.Platform != '__WXMAC__': stc.StyleResetDefault()
+    stc.ClearDocumentStyle()
+    stc.StyleSetSpec(wx_stc.STC_STYLE_DEFAULT,
+          styleDict[wx_stc.STC_STYLE_DEFAULT] % commonDefs)
     stc.StyleClearAll()
     stc.SetLexer(wx_stc.STC_LEX_PYTHON)
     stc.SetKeyWords(0, keywords)
-    stc.StyleSetSpec(wx_stc.STC_STYLE_DEFAULT,
-          styleDict[wx_stc.STC_STYLE_DEFAULT] % commonDefs)
 
     for num, style in styleDict.items():
         if num >= 0:
@@ -1134,6 +1137,7 @@ class MyClass(MyParent):
     def __init__(self):
         ''' Triple quotes '''
         # Do something silly
+        ## Do something silly again
         a = ('Py' + "thon") * 100
         b = 'EOL unclosed string
         c = [Matched braces]

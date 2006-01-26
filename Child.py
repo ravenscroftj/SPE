@@ -124,18 +124,36 @@ class Panel(wx.SplitterWindow):
         else:
             frame.setTitle(page=self.name,extra=self._fileName,colour=wx.WHITE)
         frame.SetIcon(sm.wxp.bitmap2Icon(self.app.bitmap('icon_py.png')))
-        self.__source__(self._fileName,self._source)
         self.__sideBar__()
+        self.__source__(self._fileName,self._source)
+        #update
+        self.updateExplore()
         #events
         self.source.SetDropTarget(DropOpen(self.parentPanel.openList))
         eventManager.Register(self.onSetFocus, wx.EVT_SET_FOCUS, self)
         #eventManager.Register(self.onSetSourceFocus, wx.EVT_SET_FOCUS, self.source)
         eventManager.Register(self.onSash,wx.EVT_SPLITTER_SASH_POS_CHANGED,self)
+        #events
+        self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
+        eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
+        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
+        if not info.DARWIN:
+            #Mac has already always triangles
+            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
+        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
+        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
+        eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
+        eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.todo)
+        eventManager.Register(self.onSourceFromIndex,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.index)
+        eventManager.Register(self.onSourceFromIndex,wx.EVT_LIST_ITEM_SELECTED,self.index)
+        eventManager.Register(self.updateSidebar,wx.EVT_NOTEBOOK_PAGE_CHANGED,self.notebook)
+        #split
+        self.SplitVertically(self.notebook, self.main, self.sashPosition)
         
     def __sideBar__(self):
         """Create notebook contents."""
-        notebook = self.notebook = wx.Notebook(id=-1, parent=self, pos=wx.Point(2, 2),
-              size=wx.Size(198, 481),style=STYLE_NOTEBOOK)
+        notebook = self.notebook = wx.Notebook(id=-1, parent=self, 
+              style=STYLE_NOTEBOOK)
         self.updateSidebarTab=[self.updateExplore,self.updateTodo,self.updateIndex,self.doNothing,self.doNothing]
         self.notebookLabel  = ['Explore','Todo','Index','Notes','Check']
         self.notebookIcons  = wx.ImageList(16,16)
@@ -188,7 +206,7 @@ class Panel(wx.SplitterWindow):
         else:
             self.indexCharIcon  = self.parentPanel.iconsListIndex['index_char.png']
         #notes
-        self.notes = wx.TextCtrl(parent=self.notebook,id=-1,value=self.notesText,
+        self.notes = wx.TextCtrl(parent=self.notebook,id=-1,
             style=STYLE_NOTES)
         self.notes.SetHelpText(help.CHILD_NOTES)
         self.notebook.AddPage(page=self.notes, text='',imageId=self.notesIcon)
@@ -196,38 +214,20 @@ class Panel(wx.SplitterWindow):
         self.pychecker          = Pycheck.Panel(self.notebook,page=4)
         self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)        
         #browser
-        if wx.VERSION >= (2,6,2) or not info.DARWIN:
-            #todo: the browser control doesn't work on mac
-            self.notebookLabel.append('Browse')
-            self.updateSidebarTab.append(self.updateBrowser)
-            browser         = self.browser = Browser(self.notebook, -1, os.path.dirname ( self._fileName ))
-            browser.open    = self.onOpenFromBrowser
-            notebook.AddPage (page=self.browser, text='', imageId=self.browserIcon)
-        #events
-        self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
-        eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
-        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
-        if not info.DARWIN:
-            #Mac has already always triangles
-            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
-        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
-        eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
-        eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
-        eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.todo)
-        eventManager.Register(self.onSourceFromIndex,wx.EVT_LIST_ITEM_RIGHT_CLICK,self.index)
-        eventManager.Register(self.onSourceFromIndex,wx.EVT_LIST_ITEM_SELECTED,self.index)
-        eventManager.Register(self.updateSidebar,wx.EVT_NOTEBOOK_PAGE_CHANGED,self.notebook)
-        #split
-        self.SplitVertically(self.notebook, self.main, self.sashPosition)
-        self.SetAutoLayout(True)
-        #update
-        self.updateExplore()
+        if not info.DARWIN or wx.VERSION >= (2,6,2):
+            self.sidebarAddBrowser()
+    def sidebarAddBrowser(self):
+        self.notebookLabel.append('Browse')
+        self.updateSidebarTab.append(self.updateBrowser)
+        browser         = self.browser = Browser(self.notebook, -1, os.path.dirname ( self._fileName ))
+        browser.open    = self.onOpenFromBrowser
+        self.notebook.AddPage(page=self.browser, text='', imageId=self.browserIcon)
 
     def __source__(self,fileName,source):
         #notebook
         self.main               = wx.Notebook(id=-1, 
                                     parent=self, 
-                                    size=wx.Size(5000, 5000),
+                                    #size=wx.Size(5000, 5000),
                                     style=wx.NO_BORDER)
         self.main.childPanel    = self
         self.mainIcons          = wx.ImageList(16,16)
@@ -620,7 +620,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else:
             self.parentFrame.menuBar.check_sidebar()
             self.updateStatus()
-        self.source.SetFocus()
+        if hasattr(self,'source'):
+            self.source.SetFocus()
 
     def onClose(self, event=None):
         if self.confirmSave():
@@ -1171,6 +1172,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.notesText=open(self.notesFile()).read()
         except:
             self.notesText=''
+        self.notes.SetValue(self.notesText)
         self.frame.setTitle()
         self.changed=0
 

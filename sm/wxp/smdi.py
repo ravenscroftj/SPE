@@ -242,7 +242,7 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
             self.SetHighlightSelection(True)
             self.tabstyle.EnableSilverTheme(True)
         elif DARWIN:
-            self.SetControlBackgroundColour(wx.Colour(236,236,236))
+            self.SetControlBackgroundColour(wx.NullColour)#wx.Colour(236,236,236))
             self.tabstyle.EnableAquaTheme(True,2)
         else:
             #self.SetControlBackgroundColour(wx.Colour(236,236,236))
@@ -308,6 +308,7 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
 class Framework:
     """Foundation class for every frame."""
     def __init__(self,app,Panel,parentFrame,page='',extra='',**options):
+        self.Freeze()
         #stage
         self.__before__(app         = app,
                         Panel       = Panel,
@@ -325,6 +326,7 @@ class Framework:
         self.__finish__()
         self.__events__()
         #show
+        self.Thaw()
         self.Show(True)
         
     #---components
@@ -724,7 +726,7 @@ class MdiSashParentFrame(MdiParentFrame):
         self.sash.SetAlignment(wx.LAYOUT_BOTTOM)
         self.sash.SetSashVisible(wx.SASH_TOP, 1)
         self.sash.SetMinimumSizeY(1)
-        self.sash.Show(True)
+        #self.sash.Show(True)
         eventManager.Register(self.onFrameSashDragged, wx.EVT_SASH_DRAGGED, self.sash)
         #parentPanel
         self.panel          = self.Panel(parent=self.sash,**options)
@@ -807,7 +809,10 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         self.panel  = self.Panel(parent=split,**options)
         split.SetMinimumPaneSize(20)
         split.SplitHorizontally(self.tabs, self.panel, -200)
-        
+        size = self.GetSize()
+        self.SetSize((size[0],size[1]-1))
+        self.SetSize((size[0],size[1]))
+        split.UpdateSize()
         self.bindTabs()
         
     def bindTabs(self,event=None):
@@ -943,7 +948,10 @@ class Child(Framework):
             parentFrame.unbindTabs()
             parentFrame.tabs.DeletePage(current)
             if (mdi in [SDI,MDI_SASH_TABS,MDI_TABS] or (mdi==MDI_SPLIT and children)) and childActive:
-                parentFrame.tabs.SetSelection(0)
+                try:
+                    parentFrame.tabs.SetSelection(0)
+                except:
+                    pass
             parentFrame.bindTabs()
             # * children frames (sdi)
             if mdi in [SDI,MDI_TABS] and childActive: #not for mdichild

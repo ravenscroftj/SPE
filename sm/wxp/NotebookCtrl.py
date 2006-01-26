@@ -1169,6 +1169,7 @@ class TabCtrl(wx.PyControl):
         if nPage < 0 or nPage >= self.GetPageCount():
             raise "\nERROR: Invalid Notebook Page In DeletePage: (" + str(nPage) + ")"
 
+
         oldselection = self.GetSelection()
 
         self._pages.pop(nPage)
@@ -2464,68 +2465,70 @@ class TabCtrl(wx.PyControl):
 
                 self._isdragging = False
                 self.SetCursor(wx.STANDARD_CURSOR)
-
-        if not event.Dragging():
-            drawx = self.GetDrawX()
+                
+        if len(self._xrect)==self.GetPageCount(): #SM: check if a page has not been just deleted
             
-            if drawx[0]:
-                insidex = self.GetInsideX(pt)
-                if insidex >= 0:
-                    if self.IsPageEnabled(insidex):
-                        self.RedrawClosingX(pt, insidex, drawx[1], True)
-                        self._xrefreshed = False
-                else:
-                    if not self._xrefreshed:
-                        insidetab = self.GetInsideTab(pt)
-                        if insidetab >= 0:
-                            if self.IsPageEnabled(insidetab):
-                                self.RedrawClosingX(pt, insidetab, drawx[1])
-                                self._xrefreshed = True
-            else:
-                if self.GetImageToCloseButton():
-                    page, flags = self.HitTest(pt, 1)
-                    if page >= 0:
-                        if self.IsPageEnabled(page):
-                            if flags == NC_HITTEST_ONICON:
-                                if not self._imageconverted:
-                                    self.ConvertImageToCloseButton(page)
-                                    self._imageconverted = True
-                            else:
-                                if self._imageconverted:
-                                    self.Refresh()
-                                    self._imageconverted = False
-                            
-        if self._showtooltip:
             if not event.Dragging():
-                if not event.LeftDown():
-                    
-                    oldinside = self._insidetab
-                    self._insidetab = self.GetInsideTab(pt)
-
-                    if self._insidetab >= 0:
-                        if oldinside != self._insidetab:
-
+                drawx = self.GetDrawX()
+                
+                if drawx[0]:
+                    insidex = self.GetInsideX(pt)
+                    if insidex >= 0:
+                        if self.IsPageEnabled(insidex):
+                            self.RedrawClosingX(pt, insidex, drawx[1], True)
+                            self._xrefreshed = False
+                    else:
+                        if not self._xrefreshed:
+                            insidetab = self.GetInsideTab(pt)
+                            if insidetab >= 0:
+                                if self.IsPageEnabled(insidetab):
+                                    self.RedrawClosingX(pt, insidetab, drawx[1])
+                                    self._xrefreshed = True
+                else:
+                    if self.GetImageToCloseButton():
+                        page, flags = self.HitTest(pt, 1)
+                        if page >= 0:
+                            if self.IsPageEnabled(page):
+                                if flags == NC_HITTEST_ONICON:
+                                    if not self._imageconverted:
+                                        self.ConvertImageToCloseButton(page)
+                                        self._imageconverted = True
+                                else:
+                                    if self._imageconverted:
+                                        self.Refresh()
+                                        self._imageconverted = False
+                                
+            if self._showtooltip and len(self._tabrect)==self.GetPageCount():
+                if not event.Dragging():
+                    if not event.LeftDown():
+                        
+                        oldinside = self._insidetab
+                        self._insidetab = self.GetInsideTab(pt)
+    
+                        if self._insidetab >= 0:
+                            if oldinside != self._insidetab:
+    
+                                if self._istooltipshown:
+                                    self._tipwindow.Destroy()
+                                    self._istooltipshown = False
+                                    self.Refresh()
+                                    
+                                if self._tiptimer.IsRunning():
+                                    self._tiptimer.Stop()
+                                    
+                                tip, ontime, winsize= self.GetPageToolTip(self._insidetab)
+                                
+                                if tip.strip() != "":
+                                    self._currenttip = tip
+                                    self._currentwinsize = winsize
+                                    self._tiptimer.Start(ontime, wx.TIMER_ONE_SHOT)
+                                
+                        else:
                             if self._istooltipshown:
                                 self._tipwindow.Destroy()
                                 self._istooltipshown = False
                                 self.Refresh()
-                                
-                            if self._tiptimer.IsRunning():
-                                self._tiptimer.Stop()
-                                
-                            tip, ontime, winsize= self.GetPageToolTip(self._insidetab)
-                            
-                            if tip.strip() != "":
-                                self._currenttip = tip
-                                self._currentwinsize = winsize
-                                self._tiptimer.Start(ontime, wx.TIMER_ONE_SHOT)
-                            
-                    else:
-                        if self._istooltipshown:
-                            self._tipwindow.Destroy()
-                            self._istooltipshown = False
-                            self.Refresh()
-
+    
         self._mousepos = pt
         
         event.Skip()
