@@ -28,7 +28,7 @@ class Output(html.HtmlWindow):
     
     def __init__(self,parent=None,*args,**keyw):
         html.HtmlWindow.__init__(self,parent,*args,**keyw)
-        self.SetFonts(normal_face='helvetica',fixed_face='courier',sizes=[8,9,10,12,16,20,22])
+        self.SetFonts(normal_face='courier',fixed_face='courier',sizes=[8,9,10,12,16,20,22])
         self.app        = parent.app
     
     #---execute
