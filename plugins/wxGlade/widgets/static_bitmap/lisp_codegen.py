@@ -1,5 +1,5 @@
 # codegen.py: code generator functions for wxStaticBitmap objects
-# $Id: perl_codegen.py,v 1.10 2005/10/14 12:39:47 crazyinsomniac Exp $
+# $Id: lisp_codegen.py,v 1.1 2005/09/22 06:52:58 efuzzyone Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -19,10 +19,10 @@ _bmp_str_types = {
     }
 
 
-class PerlCodeGenerator:
+class LispCodeGenerator:
     def get_code(self, obj):
         init = []
-        plgen = common.code_writers['perl']
+        plgen = common.code_writers['lisp']
         prop = obj.properties
 
         attribute = plgen.test_attribute(obj)
@@ -30,9 +30,9 @@ class PerlCodeGenerator:
         id_name, id = plgen.generate_code_id(obj) 
 
         if not obj.parent.is_toplevel:
-            parent = '$self->{%s}' % obj.parent.name
+            parent = '(slot-%s obj)' % obj.parent.name
         else:
-            parent = '$self'
+            parent = '(slot-top-window obj)'
 
         bmp_file = prop.get('bitmap', '')
         if not bmp_file:
@@ -42,28 +42,30 @@ class PerlCodeGenerator:
             var = bmp_file[4:].strip()
             if var[0] != "$":
                 var = "$" + var
-            bmp = 'Wx::Bitmap->new(%s, wxBITMAP_TYPE_ANY)' % var
+            bmp = '(wxBitmap_CreateLoad %s wxBITMAP_TYPE_ANY)' % var
         elif bmp_file.startswith('code:'):
             bmp = '(%s)' % bmp_file[5:].strip()
         else:
-            bmp = 'Wx::Bitmap->new(%s, wxBITMAP_TYPE_ANY)' % \
+            bmp = '(wxBitmap_CreateLoad %s wxBITMAP_TYPE_ANY)' % \
                   plgen.quote_path(bmp_file)
 
         if id_name: init.append(id_name)
         if attribute:
-            prefix = '$self->{%s}' % obj.name
+            prefix = '(slot-%s obj)' % obj.name
         else:
             prefix = '$self'
 
         style = prop.get('style')
-        if not style: style = ''
+        if not style:
+            style = '0'
+        else:
+            style = style.strip().replace('|',' ')
+            if style.find(' ') != -1:
+                style = '(logior %s)' % style
 
-        klass = obj.base;
-        if klass != obj.klass : klass = obj.klass; 
-        else: klass = klass.replace('wx','Wx::',1);
 
-        init.append('%s = %s->new(%s, %s, %s, wxDefaultPosition, wxDefaultSize,'
-                    ' %s);\n' %  (prefix, klass, parent, id, bmp, style))
+        init.append('(setf %s (wxStaticBitmap_Create %s %s  %s -1 -1 -1 -1 %s))\n' % 
+                    (prefix, parent, id, bmp, style))
         props_buf = plgen.generate_common_properties(obj)
 
         if not attribute:
@@ -72,12 +74,12 @@ class PerlCodeGenerator:
             return [], [], init + props_buf
         return init, props_buf, []
 
-# end of class PerlCodeGenerator
+# end of class LispCodeGenerator
 
 
 def initialize():
     common.class_names['EditStaticBitmap'] = 'wxStaticBitmap'
 
-    plgen = common.code_writers.get('perl')
+    plgen = common.code_writers.get('lisp')
     if plgen:
-        plgen.add_widget_handler('wxStaticBitmap', PerlCodeGenerator())
+        plgen.add_widget_handler('wxStaticBitmap', LispCodeGenerator())

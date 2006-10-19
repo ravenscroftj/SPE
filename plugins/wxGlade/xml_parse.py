@@ -1,6 +1,6 @@
 # xml_parse.py: parsers used to load an app and to generate the code
 # from an xml file.
-# $Id: xml_parse.py,v 1.37 2005/05/06 21:48:24 agriggio Exp $
+# $Id: xml_parse.py,v 1.39 2005/12/28 00:22:01 agriggio Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -187,7 +187,7 @@ class XmlWidgetBuilder(XmlParser):
         if name == 'object':
             # remove last object from the stack
             obj = self.pop()
-            if obj.klass == 'sizeritem': return
+            if obj.klass in ('sizeritem', 'sizerslot'): return
             si = self._sizer_item.top()
             if si is not None and si.parent == obj.parent:
                 sprop = obj.obj.sizer_properties
@@ -425,7 +425,14 @@ class XmlWidgetObject:
             self.obj = Sizeritem()
             self.parent = self.parser._windows.top().obj
             self.parser._sizer_item.push(self)
-            
+
+        elif self.klass == 'sizerslot':
+            sizer = self.parser._sizers.top().obj
+            assert sizer is not None, \
+                   "malformed wxg file: slots can only be inside sizers!"
+            sizer.add_slot()
+            self.parser._sizer_item.push(self)
+                        
         # push the object on the _objects stack
         self.parser._objects.push(self)
 
@@ -560,7 +567,7 @@ class CodeWriter(XmlParser):
             return
         if name == 'object':
             obj = self.pop()
-            if obj.klass == 'sizeritem': return
+            if obj.klass in ('sizeritem', 'sizerslot'): return
             # at the end of the object, we have all the information to add it
             # to its toplevel parent, or to generate the code for the custom
             # class
@@ -660,13 +667,17 @@ class CodeObject:
                    can_be_toplevel:
                 #self.base != 'CustomWidget':
                 self.is_toplevel = True
-                # make a valid name for the class (this can be invalid for
-                # some sensible reasons...)
-                # ALB: NEVER try to be smarter than the user!!
-                #self.klass = self.klass[self.klass.rfind('.')+1:]
-                #self.klass = self.klass[self.klass.rfind(':')+1:]
-                
-                self.parser._toplevels.push(self)
+                # ALB 2005-11-19: for panel objects, if the user sets a
+                # custom class but (s)he doesn't want the code
+                # to be generated...
+                if int(attrs.get('no_custom_class', False)) and \
+                       not self.preview:
+                    self.is_toplevel = False
+                    #print 'OK:', str(self)
+                    #self.in_windows = True
+                    #self.parser._windows.push(self)
+                else:
+                    self.parser._toplevels.push(self)
             #------------- 2003-05-07: preview --------------------------------
             elif self.preview and not can_be_toplevel:
                 # if this is a custom class, but not a toplevel one,

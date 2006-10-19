@@ -1,6 +1,6 @@
 # application.py: Application class to store properties of the application
 #                 being created
-# $Id: application.py,v 1.49 2005/07/11 12:12:47 agriggio Exp $
+# $Id: application.py,v 1.52 2005/10/14 12:18:31 agriggio Exp $
 # 
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -158,12 +158,13 @@ class Application(object):
                                "Select output file", "Select output directory",
                                wxSAVE|wxOVERWRITE_PROMPT)
 
-        # this "columns-stuff" is to fix a bug (of at least wxGTK)
+##         # this "columns-stuff" is to fix a bug (of at least wxGTK)
         _writers = common.code_writers.keys()
-        if not len(_writers) % 3: columns = 3
-        elif not len(_writers) % 2: columns = 2
-        else: columns = 1
-        
+##         if not len(_writers) % 3: columns = 3
+##         elif not len(_writers) % 2: columns = 2
+##         else: columns = 1
+        columns = 3
+
         self.codewriters_prop = RadioProperty(self, "language", panel,
                                               _writers, columns=columns)
 
@@ -237,7 +238,7 @@ class Application(object):
             self.name_prop.set_value(self.name)
         else:
             self.name = value
-    set_name_pattern = re.compile('^[a-zA-Z]+[\w0-9]*$')
+    set_name_pattern = re.compile('^[a-zA-Z]+[\w0-9-]*$')
 
     def set_klass(self, value):
         value = "%s" % value
@@ -245,7 +246,7 @@ class Application(object):
             self.klass_prop.set_value(self.klass)
         else:
             self.klass = value
-    set_klass_pattern = re.compile('^[a-zA-Z]+[\w:.0-9]*$')
+    set_klass_pattern = re.compile('^[a-zA-Z]+[\w:.0-9-]*$')
 
     def _get_default_encoding(self):
         """\

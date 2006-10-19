@@ -1,5 +1,5 @@
 # perl_codegen.py : perl generator functions for wxMenuBar objects
-# $Id: perl_codegen.py,v 1.6 2005/08/15 07:41:20 crazyinsomniac Exp $
+# $Id: perl_codegen.py,v 1.9 2005/10/14 13:30:34 crazyinsomniac Exp $
 #
 # Copyright (c) 2002-2004 D.H. aka crazyinsomniac on sourceforge.net
 # License: MIT (see license.txt)
@@ -32,7 +32,6 @@ class PerlCodeGenerator:
                 else:
                     if name: ids.append(name)
                     id = val
-
 
                 if item.children:
                     if item.name:
@@ -82,7 +81,6 @@ class PerlCodeGenerator:
         """\
         function that generates Perl code for the menubar of a wxFrame.
         """
-
         klass = obj.base;
         if klass != obj.klass : klass = obj.klass; 
         else: klass = klass.replace('wx','Wx::',1);
@@ -95,7 +93,34 @@ class PerlCodeGenerator:
         init.append('\n# Menu Bar end\n\n')
         return init, [], []
 
+    # 2004-12-05
+    def get_events(self, obj):
+        pygen = common.code_writers['perl']
+        cn = pygen.cn
+        out = []
+
+        #print 'get_events', obj.properties['menubar']
+
+        def do_get(item):
+            ret = []
+            if item.name:
+                val = '#self.%s' % item.name # see py_codegen.py, ~480
+            else:
+                name, val = pygen.generate_code_id(None, item.id)
+                if not val: val = '-1' # but this is wrong anyway...
+            if item.handler:
+                ret.append((val, 'EVT_MENU', item.handler))
+            if item.children:
+                for c in item.children:
+                    ret.extend(do_get(c))
+            return ret
+        
+        for menu in obj.properties['menubar']:
+            out.extend(do_get(menu.root))
+        return out
+
 # end of class PerlCodeGenerator
+
 
 def initialize():
     common.class_names['EditMenuBar'] = 'wxMenuBar'

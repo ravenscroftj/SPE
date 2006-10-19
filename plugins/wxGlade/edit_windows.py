@@ -1,5 +1,5 @@
 # edit_windows.py: base classes for windows used by wxGlade
-# $Id: edit_windows.py,v 1.80 2005/05/06 21:48:26 agriggio Exp $
+# $Id: edit_windows.py,v 1.83 2005/12/28 00:22:02 agriggio Exp $
 # 
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -159,7 +159,7 @@ class EditBase(EventsMixin):
             try: common.app_tree.refresh_name(self.node, oldname) #, self.name)
             except AttributeError: pass
             self.property_window.SetTitle('Properties - <%s>' % self.name)
-    set_name_pattern = re.compile(r'^[a-zA-Z_]+\w*(\[\w*\])*$')
+    set_name_pattern = re.compile(r'^[a-zA-Z_]+[\w-]*(\[\w*\])*$')
 
     def set_klass(self, value):
         value = "%s" % value
@@ -169,7 +169,7 @@ class EditBase(EventsMixin):
             self.klass = value
             try: common.app_tree.refresh_name(self.node) #, self.name)
             except AttributeError: pass
-    set_klass_pattern = re.compile('^[a-zA-Z_]+[\w:.0-9]*$')
+    set_klass_pattern = re.compile('^[a-zA-Z_]+[\w:.0-9-]*$')
 
     def popup_menu(self, event):
         if self.widget:
@@ -198,6 +198,31 @@ class EditBase(EventsMixin):
         """\
         Updates property_window to display the properties of self
         """
+
+        # Begin Marcello 13 oct. 2005
+        if self.klass == 'wxPanel': # am I a wxPanel under a wxNotebook?
+            if self.parent and self.parent.klass == 'wxNotebook':
+                #pdb.set_trace()
+                nb = self.parent
+                if nb.widget:
+                    i = 0
+                    for tn,ep in nb.tabs: # tn=tabname, ep = editpanel 
+                        if self.name == ep.name:      # If I am under this tab...
+                            nb.widget.SetSelection(i) # ...Show that tab.
+                        i = i + 1
+        if self.parent and self.parent.klass == 'wxPanel': # am I a widget under a wxPanel under a wxNotebook?
+            if self.parent.parent and self.parent.parent.klass == 'wxNotebook':
+                #pdb.set_trace()
+                nb = self.parent.parent
+                if nb.widget:
+                    i = 0
+                    for tn,ep in nb.tabs: # tn=tabname, ep = editpanel 
+                        if self.parent.name == ep.name:
+                            nb.widget.SetSelection(i)
+                        i = i + 1
+        # End Marcello 13 oct. 2005
+
+
         if not self.is_visible(): return # don't do anything if self is hidden
         # create the notebook the first time the function is called: this
         # allows us to create only the notebooks we really need
@@ -799,7 +824,10 @@ class ManagedBase(WindowBase):
                 w, h = [ int(v) for v in size.split(',') ]
                 if use_dialog_units:
                     w, h = wxDLG_SZE(self.widget, (w, h))
-            else: w, h = self.widget.GetBestSize()
+                if value:
+                    w, h = 1, 1
+            else:
+                w, h = self.widget.GetBestSize()
             self.sizer.set_item(self.pos, option=value, size=(w, h))
         except AttributeError, e:
             print e
