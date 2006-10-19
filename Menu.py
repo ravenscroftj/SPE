@@ -743,7 +743,7 @@ class Throbber(GIFAnimationCtrl):
         self.SetPosition((rect.x+(rect.width-16)/2, rect.y+(rect.height-16)/2))
         
     def LoadFile(self,fileName):
-        if fileName != self._fileName and not self._running:
+        if (hasattr(self,'_fileName') and fileName != self._fileName) and not self._running:
             GIFAnimationCtrl.LoadFile(self,info.imageFile(fileName))
             self._fileName  = fileName
             return True
