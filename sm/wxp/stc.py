@@ -205,7 +205,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         
     def OnKeyDown(self, event):
         """"""
-        key     = event.KeyCode()
+        key     = event.GetKeyCode()
         control = event.ControlDown()
         #shift=event.ShiftDown()
         alt     = event.AltDown()
@@ -237,7 +237,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             event.Skip()
 
     def OnChar(self,event):
-        key     = event.KeyCode()
+        key     = event.GetKeyCode()
         control = event.ControlDown()
         alt     = event.AltDown()
         # GF We avoid an error while evaluating chr(key), next line.
