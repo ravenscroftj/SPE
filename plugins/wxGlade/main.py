@@ -423,7 +423,7 @@ class wxGladeFrame(wxFrame):
         self.Show()
 
         self._skip_activate = False
-        if wxPlatform == '__WXMSW__':
+        if 0 and wxPlatform == '__WXMSW__':
             import about
             # I'll pay a beer to anyone who can explain to me why this prevents
             # a segfault on Win32 when you exit without doing anything!!
