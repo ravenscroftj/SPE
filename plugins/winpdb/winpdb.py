@@ -395,8 +395,8 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.0.6"
-WINPDB_VERSION = "WINPDB_1_0_6"
+WINPDB_TITLE = "Winpdb 1.0.8"
+WINPDB_VERSION = "WINPDB_1_0_8"
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -477,7 +477,7 @@ TB_NEXT = "Next"
 TB_RETURN = "Return"
 TB_GOTO = "Run to Cursor"
 TB_TOGGLE_BP = "Toggle breakpoint."
-TB_FILTER = "Filter modules, classes, and functions from global namespace."
+TB_FILTER = "Filter modules, classes, and functions from the global and local namespaces."
 TB_EXCEPTION = "Analyze Exception."
 
 COMMAND = "command"
@@ -808,7 +808,7 @@ class CToolBar:
 
     def OnToggleTool(self, event):
         tool = self.m_toolbar.FindById(event.GetId())
-        if tool == None:
+        if tool is None:
             event.Skip()
             return
 
@@ -859,7 +859,7 @@ class CStatusBar:
 
     def set_bitmap(self, i, data, tooltip):
         if not i in self.m_bitmaps:
-            if data == None:
+            if data is None:
                 return
                 
             image = image_from_base64(data)
@@ -870,7 +870,7 @@ class CStatusBar:
             self.m_bitmaps[i] = (p, sb, tooltip)
             
         else:
-            if data == None:
+            if data is None:
                 self.m_bitmaps[i][0].Hide()
             else:
                 image = image_from_base64(data)
@@ -947,7 +947,7 @@ class CJobs:
 
         try:
             r = job(*args)
-            if r == None:
+            if r is None:
                 r = ()
             elif type(r) != tuple:
                 r = (r)
@@ -955,7 +955,7 @@ class CJobs:
             rpdb2.print_debug()
             callback = None
 
-        if callback != None:
+        if callback is not None:
             wx.CallAfter(callback, *r)
             
         try:
@@ -1249,7 +1249,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_namespave_viewer.update_namespace(self.m_stack)
     
     def do_notify_filename(self, filename, command):
-        if command != None:
+        if command is not None:
             self.add_menu_item(ML_WINDOW, filename, command)
             
         self.m_console.set_filename(filename)
@@ -1625,7 +1625,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.SetMarginWidth(1, 16)
         self.SetMarginSensitive(1, True)
 
-        if self.m_margin_command != None:
+        if self.m_margin_command is not None:
             self.Bind(stc.EVT_STC_MARGINCLICK, self.m_margin_command)
 
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyPressed)
@@ -1685,7 +1685,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.SetSavePoint()
       
     def OnKeyReleased(self, event):
-        key_code = event.KeyCode()
+        key_code = event.GetKeyCode()
 
         if key_code == wx.WXK_CONTROL:
             self.GetParent().GetEventHandler().ProcessEvent(event)
@@ -1693,7 +1693,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         event.Skip()
             
     def OnKeyPressed(self, event):
-        key_code = event.KeyCode()
+        key_code = event.GetKeyCode()
 
         if key_code == wx.WXK_TAB:
             forward = not event.ShiftDown()
@@ -1754,7 +1754,7 @@ class CSourceManager:
 
             de = wx.GetDefaultPyEncoding()
             se = rpdb2.ParseEncoding(_source)
-            if se == None:
+            if se is None:
                 se = de
                 
             u = _source.decode(se, 'ignore')
@@ -1862,10 +1862,10 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
     def __toggle_breakpoint(self, lineno):
         bpl = self.m_session_manager.get_breakpoints()
         id = self.m_breakpoint_lines.get(lineno, None)
-        if id != None:
+        if id is not None:
             bp = bpl.get(id, None)
             
-        if (id == None) or (bp == None):
+        if (id is None) or (bp is None):
             self.job_post(self.job_set_breakpoint, (self.m_cur_filename, lineno))
             return
 
@@ -1945,7 +1945,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         self.m_viewer._clear()        
 
     def __notify_filename(self, filename, fNew):
-        if self.m_notify_filename == None:
+        if self.m_notify_filename is None:
             return
 
         if fNew:    
@@ -1980,7 +1980,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
             
         self.__notify_filename(filename, fNew = False)
         
-        if self.m_cur_filename != None:
+        if self.m_cur_filename is not None:
             self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1  
 
         lineno = self.m_files.get(_filename, 1)
@@ -2018,7 +2018,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
             self.__notify_filename(filename, fNew = False)
             
-            if self.m_cur_filename != None:
+            if self.m_cur_filename is not None:
                 self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1 
 
             self.m_viewer.load_source(source)
@@ -2039,7 +2039,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         self.set_history(self.m_cur_filename)
         
     def update_bp(self, event):
-        if self.m_pos_filename == None:
+        if self.m_pos_filename is None:
             return
 
         if event.m_action == rpdb2.CEventBreakpoint.SET:
@@ -2111,11 +2111,12 @@ class CConsole(wx.Panel, CCaptionManager):
         label = wx.StaticText(self, -1, LABEL_CONSOLE, style = wx.TAB_TRAVERSAL)
         sizerh.Add(label, 0, wx.ALIGN_CENTRE | wx.ALL, 0)
 
-        self.m_console_in = wx.TextCtrl(self)
+        self.m_console_in = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
         self.bind_caption(self.m_console_in)
         self.set_font(self.m_console_in)
         self.m_console_in.SetFocus()
         self.m_console_in.Bind(wx.EVT_CHAR, self.OnChar)
+        self.m_console_in.Bind(wx.EVT_TEXT_ENTER, self.OnSendText)
         sizerh.Add(self.m_console_in, 1, wx.EXPAND | wx.ALL, 0)       
 
         self.SetSizer(_sizerv)
@@ -2176,8 +2177,8 @@ class CConsole(wx.Panel, CCaptionManager):
         return str
 
     def OnChar(self, event):
-        key = event.KeyCode()
-
+        key = event.GetKeyCode()
+        
         if key in [wx.WXK_UP, wx.WXK_DOWN]:
             value = self.m_console_in.GetValue()
             _value = self.get_history(key == wx.WXK_UP, value)
@@ -2185,23 +2186,23 @@ class CConsole(wx.Panel, CCaptionManager):
             self.m_console_in.SetInsertionPointEnd()
             return
             
-        if key == wx.WXK_RETURN:
-            value = self.m_console_in.GetValue()
-            self.set_history(value)
-            
-            self.m_console_out.write(CONSOLE_PROMPT + value + '\n') 
-            self.m_console_in.Clear()
-            self.m_queue.put(value + '\n')
-
-            if value in ['exit', 'EOF']:
-                self.m_parent.do_exit()
-                
-            return
-
         event.Skip()    
+
+
+    def OnSendText(self, event):
+        value = self.m_console_in.GetValue()
+        self.set_history(value)
         
+        self.m_console_out.write(CONSOLE_PROMPT + value + '\n') 
+        self.m_console_in.Clear()
+        self.m_queue.put(value + '\n')
+
+        if value in ['exit', 'EOF']:
+            self.m_parent.do_exit()
+
+            
     def get_history(self, fBack, value = None):
-        if (value != None) and (value != self.m_history[self.m_history_index]):
+        if (value is not None) and (value != self.m_history[self.m_history_index]):
             self.m_history[0] = value
             self.m_history_index = 0
             
@@ -2290,7 +2291,7 @@ class CThreadsViewer(wx.Panel, CCaptionManager):
 
         self.m_threads.set_columns_width()
 
-        if j != None:
+        if j is not None:
             self.m_suppress_recursion += 1
             self.m_threads.Select(j)
 
@@ -2393,7 +2394,7 @@ class CNamespacePanel(wx.Panel, CJobs):
         event.Skip()
 
     def get_namespace(self, expr, _map):
-        if _map != None:
+        if _map is not None:
             l = [e for e in _map if e.get(rpdb2.DICT_KEY_EXPR, None) == expr]
             if l == []:
                 return None
@@ -2415,11 +2416,11 @@ class CNamespacePanel(wx.Panel, CJobs):
         
         return _r
         
-    def expand_item(self, item, _map = None):
+    def expand_item(self, item, _map = None, froot = False):
         if not self.m_tree.ItemHasChildren(item):
             return
         
-        if self.m_tree.IsExpanded(item):
+        if not froot and self.m_tree.IsExpanded(item):
             return
 
         if self.m_tree.GetChildrenCount(item) > 0:
@@ -2428,7 +2429,7 @@ class CNamespacePanel(wx.Panel, CJobs):
         expr = self.m_tree.GetPyData(item)
 
         _r = self.get_namespace(expr, _map)
-        if _r == None:
+        if _r is None:
             return   
 
         if rpdb2.DICT_KEY_ERROR in _r:
@@ -2439,21 +2440,26 @@ class CNamespacePanel(wx.Panel, CJobs):
             return
 
         snl = _r[rpdb2.DICT_KEY_SUBNODES] 
-    
-        for r in snl:
-            child = self.m_tree.AppendItem(item, r[rpdb2.DICT_KEY_NAME])
+
+        sorted_snl = [(r[rpdb2.DICT_KEY_NAME], r) for r in snl]
+        sorted_snl.sort()
+        
+        for (key_name, r) in sorted_snl:
+            child = self.m_tree.AppendItem(item, key_name)
             self.m_tree.SetItemText(child, ' ' + r[rpdb2.DICT_KEY_REPR], 2)
             self.m_tree.SetItemText(child, ' ' + r[rpdb2.DICT_KEY_TYPE], 1)
             self.m_tree.SetItemPyData(child, r[rpdb2.DICT_KEY_EXPR])
             self.m_tree.SetItemHasChildren(child, (r[rpdb2.DICT_KEY_N_SUBNODES] > 0))
 
         self.m_tree.Expand(item)
+
     
     def OnItemExpanding(self, event):
         item = event.GetItem()
         self.expand_item(item)
         event.Skip()
         return
+
 
     def get_children(self, item):
         (child, cookie) = self.m_tree.GetFirstChild(item)
@@ -2496,7 +2502,7 @@ class CNamespacePanel(wx.Panel, CJobs):
 
         self.m_key = key
 
-        if el == None:
+        if el is None:
             el = [(self.get_root_expr(), True)]
 
         self.post(el, self.m_fFilter)
@@ -2542,7 +2548,7 @@ class CNamespacePanel(wx.Panel, CJobs):
 
         while len(s) > 0:
             item = s.pop(0)
-            self.expand_item(item, rl)
+            self.expand_item(item, rl, item is root)
             
             items = self.get_children(item)
             s = items + s
@@ -2639,7 +2645,9 @@ class CNamespaceViewer(wx.Panel, CCaptionManager):
         self.m_exception.Enable()
         
     def set_filter(self, fFilter):
+        self.m_locals.set_filter(fFilter)
         self.m_globals.set_filter(fFilter)
+        self.m_exception.set_filter(fFilter)
 
     def get_local_key(self, _stack):
         frame_index = self.m_session_manager.get_frame_index()
@@ -2887,7 +2895,7 @@ class CAttachDialog(wx.Dialog, CJobs):
 
     def init2(self):
         pwd = self.m_session_manager.get_password()
-        if pwd != None:
+        if pwd is not None:
             self.do_refresh()
             return
 
@@ -3059,7 +3067,7 @@ class CPwdDialog(wx.Dialog):
 
         label = wx.StaticText(self, -1, LABEL_PWD)
         sizerh.Add(label, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-        pwd = [current_password, ''][current_password == None]
+        pwd = [current_password, ''][current_password is None]
         self.m_entry_pwd = wx.TextCtrl(self, value = pwd, size = (200, -1))
         self.Bind(wx.EVT_TEXT, self.OnText, self.m_entry_pwd)
         sizerh.Add(self.m_entry_pwd, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
@@ -3296,8 +3304,8 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_0_6":
-        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_6", rpdb2.get_version())
+    if rpdb2.get_version() != "RPDB_2_0_8":
+        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_8", rpdb2.get_version())
         return
         
     return rpdb2.main(StartClient)
