@@ -1,11 +1,11 @@
 # slider.py: wxSlider objects
-# $Id: slider.py,v 1.10 2005/05/06 21:48:18 agriggio Exp $
+# $Id: slider.py,v 1.13 2007/02/09 22:24:06 dinogen Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
 # THIS PROGRAM COMES WITH NO WARRANTY
 
-from wxPython.wx import *
+import wx
 import common, misc
 from edit_windows import ManagedBase
 from tree import Tree
@@ -43,33 +43,45 @@ class EditSlider(ManagedBase):
         self.access_functions['range'] = (self.get_range, self.set_range)
         style_labels = ('#section#Style', 'wxSL_HORIZONTAL', 'wxSL_VERTICAL',
                         'wxSL_AUTOTICKS', 'wxSL_LABELS', 'wxSL_LEFT',
-                        'wxSL_RIGHT', 'wxSL_TOP')
-        self.style_pos = (wxSL_HORIZONTAL, wxSL_VERTICAL,
-                          wxSL_AUTOTICKS, wxSL_LABELS, wxSL_LEFT,
-                          wxSL_RIGHT, wxSL_TOP)
-        prop['style'] = CheckListProperty(self, 'style', None, style_labels)
+                        'wxSL_RIGHT', 'wxSL_TOP', 'wxSL_BOTTOM',
+                        'wxSL_SELRANGE', 'wxSL_INVERSE')
+        self.style_pos = (wx.SL_HORIZONTAL, wx.SL_VERTICAL,
+                          wx.SL_AUTOTICKS, wx.SL_LABELS, wx.SL_LEFT,
+                          wx.SL_RIGHT, wx.SL_TOP, wx.SL_BOTTOM,
+                          wx.SL_SELRANGE, wx.SL_INVERSE)
+        tooltips = (_("Displays the slider horizontally (this is the default)."),
+                    _("Displays the slider vertically."),
+                    _("Displays tick marks."),
+                    _("Displays minimum, maximum and value labels."),
+                    _("Displays ticks on the left and forces the slider to be vertical."),
+                    _("Displays ticks on the right and forces the slider to be vertical."),
+                    _("Displays ticks on the top."),
+                    _("Displays ticks on the bottom (this is the default)."),
+                    _("Allows the user to select a range on the slider. Windows only."),
+                    _("Inverses the mininum and maximum endpoints on the slider. Not compatible with wxSL_SELRANGE."))
+        prop['style'] = CheckListProperty(self, 'style', None, style_labels, tooltips=tooltips)
         prop['range'] = TextProperty(self, 'range', None, can_disable=True)
         prop['value'] = SpinProperty(self, 'value', None, can_disable=True)
 
     def create_widget(self):
-        self.widget = wxSlider(self.parent.widget, self.id, self.value,
-                               self.range[0], self.range[1], style=self.style)
+        self.widget = wx.Slider(self.parent.widget, self.id, self.value,
+                                self.range[0], self.range[1], style=self.style)
 
     def create_properties(self):
         ManagedBase.create_properties(self)
-        panel = wxScrolledWindow(self.notebook, -1, style=wxTAB_TRAVERSAL)
+        panel = wx.ScrolledWindow(self.notebook, -1, style=wx.TAB_TRAVERSAL)
         prop = self.properties
-        szr = wxBoxSizer(wxVERTICAL)
+        szr = wx.BoxSizer(wx.VERTICAL)
         prop['range'].display(panel)
         prop['value'].display(panel)
         prop['style'].display(panel)
-        szr.Add(prop['range'].panel, 0, wxEXPAND)
-        szr.Add(prop['value'].panel, 0, wxEXPAND)
-        szr.Add(prop['style'].panel, 0, wxEXPAND)
+        szr.Add(prop['range'].panel, 0, wx.EXPAND)
+        szr.Add(prop['value'].panel, 0, wx.EXPAND)
+        szr.Add(prop['style'].panel, 0, wx.EXPAND)
         panel.SetAutoLayout(True)
         panel.SetSizer(szr)
         szr.Fit(panel)
-        self.notebook.AddPage(panel, 'Widget')
+        self.notebook.AddPage(panel, _('Widget'))
 
     def get_style(self):
         retval = [0] * len(self.style_pos)
@@ -114,26 +126,26 @@ def builder(parent, sizer, pos, number=[1]):
     """\
     factory function for EditStaticLine objects.
     """
-    class Dialog(wxDialog):
+    class Dialog(wx.Dialog):
         def __init__(self):
-            wxDialog.__init__(self, None, -1, 'Select style')
-            self.orientations = [ wxSL_HORIZONTAL, wxSL_VERTICAL ]
-            self.orientation = wxSL_HORIZONTAL
+            wx.Dialog.__init__(self, None, -1, _('Select style'))
+            self.orientations = [ wx.SL_HORIZONTAL, wx.SL_VERTICAL ]
+            self.orientation = wx.SL_HORIZONTAL
             prop = RadioProperty(self, 'orientation', self,
                                  ['wxSL_HORIZONTAL', 'wxSL_VERTICAL'])
-            szr = wxBoxSizer(wxVERTICAL)
-            szr.Add(prop.panel, 0, wxALL|wxEXPAND, 10)
+            szr = wx.BoxSizer(wx.VERTICAL)
+            szr.Add(prop.panel, 0, wx.ALL|wx.EXPAND, 10)
             style_labels = ('#section#', 'wxSL_AUTOTICKS', 'wxSL_LABELS',
                             'wxSL_LEFT', 'wxSL_RIGHT', 'wxSL_TOP')
-            self.style_pos = (wxSL_AUTOTICKS, wxSL_LABELS, wxSL_LEFT,
-                              wxSL_RIGHT, wxSL_TOP)
+            self.style_pos = (wx.SL_AUTOTICKS, wx.SL_LABELS, wx.SL_LEFT,
+                              wx.SL_RIGHT, wx.SL_TOP)
             self.style = 0
             self.style_prop = CheckListProperty(self, 'style', self,
                                                 style_labels)
-            szr.Add(self.style_prop.panel, 0, wxALL|wxEXPAND, 10)
-            btn = wxButton(self, wxID_OK, 'OK')
+            szr.Add(self.style_prop.panel, 0, wx.ALL|wx.EXPAND, 10)
+            btn = wx.Button(self, wx.ID_OK, 'OK')
             btn.SetDefault()
-            szr.Add(btn, 0, wxBOTTOM|wxALIGN_CENTER, 10)
+            szr.Add(btn, 0, wx.BOTTOM|wx.ALIGN_CENTER, 10)
             self.SetAutoLayout(True)
             self.SetSizer(szr)
             szr.Fit(self)
@@ -171,7 +183,7 @@ def builder(parent, sizer, pos, number=[1]):
     while common.app_tree.has_name(label):
         number[0] += 1
         label = 'slider_%d' % number[0]
-    slider = EditSlider(label, parent, wxNewId(), dialog.orientation |
+    slider = EditSlider(label, parent, wx.NewId(), dialog.orientation |
                         dialog.style, sizer, pos, common.property_panel)
     node = Tree.Node(slider)
     slider.node = node
@@ -189,7 +201,7 @@ def xml_builder(attrs, parent, sizer, sizeritem, pos=None):
     style = 0
     if sizer is None or sizeritem is None:
         raise XmlParsingError, "sizer or sizeritem object cannot be None"
-    slider = EditSlider(name, parent, wxNewId(), style, sizer,
+    slider = EditSlider(name, parent, wx.NewId(), style, sizer,
                         pos, common.property_panel) 
     sizer.set_item(slider.pos, option=sizeritem.option,
                    flag=sizeritem.flag, border=sizeritem.border)

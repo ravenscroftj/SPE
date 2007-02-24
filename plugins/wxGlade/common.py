@@ -1,18 +1,17 @@
 # common.py: global variables
-# $Id: common.py,v 1.51 2006/03/02 09:02:43 agriggio Exp $
+# $Id: common.py,v 1.56 2007/01/27 18:24:37 dinogen Exp $
 # 
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
 # THIS PROGRAM COMES WITH NO WARRANTY
 
 import os
-
 # if False, the program is invoked from the command-line in "batch" mode (for
 # code generation only)
 use_gui = True
 
 # version identification string
-version = '0.4.1'
+version = '0.4.1cvs'
 
 # program path, set in wxglade.py
 wxglade_path = '.'
@@ -90,11 +89,11 @@ def load_code_writers():
             try: writer = __import__(name).writer
             except (ImportError, AttributeError, ValueError):
                 if use_gui:
-                    print '"%s" is not a valid code generator module' % module
+                    print _('"%s" is not a valid code generator module') % module
             else:
                 code_writers[writer.language] = writer
                 if use_gui:
-                    print 'loaded code generator for %s' % writer.language
+                    print _('loaded code generator for %s') % writer.language
 
 def load_widgets():
     """\
@@ -125,8 +124,8 @@ def __load_widgets(widget_dir):
     sys.path.append(widget_dir)
     modules = open(widgets_file)
     if use_gui:
-        print 'Found widgets listing -> %s' % widgets_file 
-        print 'loading widget modules:'
+        print _('Found widgets listing -> %s') % widgets_file 
+        print _('loading widget modules:')
     for line in modules:
         module = line.strip()
         if not module or module.startswith('#'): continue
@@ -135,7 +134,7 @@ def __load_widgets(widget_dir):
             b = __import__(module).initialize()
         except (ImportError, AttributeError):
             if use_gui:
-                print 'ERROR loading "%s"' % module
+                print _('ERROR loading "%s"') % module
                 import traceback; traceback.print_exc()
         else:
             if use_gui: print '\t' + module
@@ -184,24 +183,25 @@ def make_object_button(widget, icon_path, toplevel=False, tip=None):
     Returns:
       the newly created wxBitmapButton
     """
-    from wxPython import wx
+    #from wxPython import wx
+    import wx
     from tree import WidgetTree
-    id = wx.wxNewId()
+    id = wx.NewId()
     if not os.path.isabs(icon_path):
         icon_path = os.path.join(wxglade_path, icon_path)
-    if wx.wxPlatform == '__WXGTK__': style = wx.wxNO_BORDER
-    else: style = wx.wxBU_AUTODRAW
-    tmp = wx.wxBitmapButton(palette, id, wx.wxBitmap(icon_path,
-                                                     wx.wxBITMAP_TYPE_XPM),
-                            size=(31, 31), style=style)
+    if wx.Platform == '__WXGTK__': style = wx.NO_BORDER
+    else: style = wx.BU_AUTODRAW
+    tmp = wx.BitmapButton(palette, id, wx.Bitmap(icon_path,
+                                                 wx.BITMAP_TYPE_XPM),
+                          size=(31, 31), style=style)
     if not toplevel:
         wx.EVT_BUTTON(tmp, id, add_object)
     else:
         wx.EVT_BUTTON(tmp, id, add_toplevel_object)
     refs[id] = widget
     if not tip:
-        tip = 'Add a %s' % widget.replace('Edit', '')
-    tmp.SetToolTip(wx.wxToolTip(tip))
+        tip = _('Add a %s') % widget.replace('Edit', '')
+    tmp.SetToolTip(wx.ToolTip(tip))
 
     WidgetTree.images[widget] = icon_path
 
@@ -218,7 +218,7 @@ def make_object_button(widget, icon_path, toplevel=False, tip=None):
         widget_to_add = None
         import misc
         if misc._currently_under_mouse is not None:
-            misc._currently_under_mouse.SetCursor(wx.wxSTANDARD_CURSOR)
+            misc._currently_under_mouse.SetCursor(wx.STANDARD_CURSOR)
         event.Skip()
     wx.EVT_CHAR(tmp, on_char)
 
@@ -351,3 +351,9 @@ def restore_from_autosaved(filename):
             return False
         return True
     return False
+
+
+def generated_from():
+    if app_tree.app.filename:
+        return " from " + app_tree.app.filename
+    return ""

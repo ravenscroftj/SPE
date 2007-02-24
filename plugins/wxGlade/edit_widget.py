@@ -4,13 +4,11 @@
 # License: MIT (see license.txt)
 # THIS PROGRAM COMES WITH NO WARRANTY
 
-from wxPython.wx import *
-
+import wx
 import common, misc, config
 from edit_windows import ManagedBase
 from tree import Tree
 from widget_properties import *
-
 
 class EditWidget(ManagedBase):
     def __init__(self, name, klass, parent, id, label, sizer, pos,
@@ -54,11 +52,11 @@ class EditWidget(ManagedBase):
 
     def create_properties(self):
         ManagedBase.create_properties(self)
-        panel = wxScrolledWindow(self.notebook, -1, style=wxTAB_TRAVERSAL)
-        szr = wxBoxSizer(wxVERTICAL)
+        panel = wx.ScrolledWindow(self.notebook, -1, style=wx.TAB_TRAVERSAL)
+        szr = wx.BoxSizer(wx.VERTICAL)
         for name in self.property_names:
             self.properties[name].display(panel)
-            szr.Add(self.properties[name].panel, 0, wxEXPAND)
+            szr.Add(self.properties[name].panel, 0, wx.EXPAND)
         panel.SetAutoLayout(1)
         panel.SetSizer(szr)
         szr.Fit(panel)
@@ -84,7 +82,7 @@ def add_widget_node(widget, sizer, pos, from_xml=False,
     widget.node = node
 
     if not border and config.preferences.default_border:
-        flag |= wxALL
+        flag |= wx.ALL
         border = config.preferences.default_border_size
 
     if option: widget.set_option(option)
@@ -102,12 +100,12 @@ def get_label_from_xml(attrs):
     try:
         return attrs['name']
     except KeyError:
-        raise XmlParsingError, "'name' attribute missing"
+        raise XmlParsingError, _("'name' attribute missing")
 
 
 def initialize(edit_klass, builder, xml_builder, icon_path):
     """\
-    initialization function for the module: returns a wxBitmapButton to be
+    initialization function for the module: returns a wx.BitmapButton to be
     added to the main palette.
     """
     common.widgets[edit_klass] = builder

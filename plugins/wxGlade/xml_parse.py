@@ -1,6 +1,6 @@
 # xml_parse.py: parsers used to load an app and to generate the code
 # from an xml file.
-# $Id: xml_parse.py,v 1.39 2005/12/28 00:22:01 agriggio Exp $
+# $Id: xml_parse.py,v 1.44 2007/02/13 19:16:44 guyru Exp $
 #
 # Copyright (c) 2002-2005 Alberto Griggio <agriggio@users.sourceforge.net>
 # License: MIT (see license.txt)
@@ -28,7 +28,8 @@ import xml.sax.expatreader
 
 
 if common.use_gui:
-    from wxPython import wx
+    #from wxPython import wx
+    import wx
 
 class XmlParsingError(SAXException):
     """\
@@ -141,6 +142,11 @@ class XmlWidgetBuilder(XmlParser):
             if use_gettext:
                 app.use_gettext = True
                 app.use_gettext_prop.set_value(True)
+		
+            try: is_template = int(attrs["is_template"])
+            except (KeyError, ValueError): is_template = False
+            app.is_template = is_template
+	    
             try: overwrite = int(attrs['overwrite'])
             except (KeyError, ValueError): overwrite = False
             if overwrite:
@@ -149,8 +155,10 @@ class XmlWidgetBuilder(XmlParser):
             # ALB 2004-01-18
             try: use_new_namespace = int(attrs['use_new_namespace'])
             except (KeyError, ValueError): use_new_namespace = False
-            app.set_use_new_namespace(use_new_namespace)
-            app.use_new_namespace_prop.set_value(use_new_namespace)
+##             app.set_use_new_namespace(use_new_namespace)
+##             app.use_new_namespace_prop.set_value(use_new_namespace)
+            app.set_use_old_namespace(not use_new_namespace)
+            app.use_old_namespace_prop.set_value(not use_new_namespace)
             # ALB 2004-12-05
             try:
                 for_version = attrs['for_version']
@@ -204,11 +212,13 @@ class XmlWidgetBuilder(XmlParser):
             # 1: set _curr_prop value
             data = common._encode_from_xml("".join(self._curr_prop_val))
             if data:
-                handler = self.top().prop_handlers.top()
-                if not handler or handler.char_data(data):
-                    # if char_data returned False,
-                    # we don't have to call add_property
-                    self.top().add_property(self._curr_prop, data)
+                try:
+                    handler = self.top().prop_handlers.top()
+                    if not handler or handler.char_data(data):
+                        # if char_data returned False,
+                        # we don't have to call add_property
+                        self.top().add_property(self._curr_prop, data)
+                except AttributeError: pass
             # 2: call custom end_elem handler
             try:
                 # if there is a custom handler installed for this property,
@@ -242,8 +252,8 @@ class ProgressXmlWidgetBuilder(XmlWidgetBuilder):
             del kwds['input_file']
             self.size = len(self.input_file.readlines())
             self.input_file.seek(0)
-            self.progress = wx.wxProgressDialog("Loading...", "Please wait "
-                                                "while loading the app", 20)
+            self.progress = wx.ProgressDialog(_("Loading..."), _("Please wait "
+                                              "while loading the app"), 20)
             self.step = 4
             self.i = 1
         else:
@@ -393,9 +403,9 @@ class XmlWidgetObject:
             if hasattr(sizeritem, 'pos'):
                 pos = sizeritem.pos
             else: pos = None
-			
+            
             if parent and hasattr(parent, 'virtual_sizer') and \
-                    parent.virtual_sizer:
+                parent.virtual_sizer:
                 sizer = parent.virtual_sizer
                 sizer.node = parent.node
                 sizeritem = Sizeritem()
@@ -756,19 +766,19 @@ class Stack:
 
 class Sizeritem:
     if common.use_gui:
-        flags = { 'wxALL': wx.wxALL,
-                  'wxEXPAND': wx.wxEXPAND, 'wxALIGN_RIGHT': wx.wxALIGN_RIGHT,
-                  'wxALIGN_BOTTOM': wx.wxALIGN_BOTTOM,
-                  'wxALIGN_CENTER_HORIZONTAL': wx.wxALIGN_CENTER_HORIZONTAL,
-                  'wxALIGN_CENTER_VERTICAL': wx.wxALIGN_CENTER_VERTICAL,
-                  'wxLEFT': wx.wxLEFT, 'wxRIGHT': wx.wxRIGHT,
-                  'wxTOP': wx.wxTOP,
-                  'wxBOTTOM': wx.wxBOTTOM,
-                  'wxSHAPED': wx.wxSHAPED,
-                  'wxADJUST_MINSIZE': wx.wxADJUST_MINSIZE, }
+        flags = { 'wxALL': wx.ALL,
+                  'wxEXPAND': wx.EXPAND, 'wxALIGN_RIGHT': wx.ALIGN_RIGHT,
+                  'wxALIGN_BOTTOM': wx.ALIGN_BOTTOM,
+                  'wxALIGN_CENTER_HORIZONTAL': wx.ALIGN_CENTER_HORIZONTAL,
+                  'wxALIGN_CENTER_VERTICAL': wx.ALIGN_CENTER_VERTICAL,
+                  'wxLEFT': wx.LEFT, 'wxRIGHT': wx.RIGHT,
+                  'wxTOP': wx.TOP,
+                  'wxBOTTOM': wx.BOTTOM,
+                  'wxSHAPED': wx.SHAPED,
+                  'wxADJUST_MINSIZE': wx.ADJUST_MINSIZE, }
         import misc
         if misc.check_wx_version(2, 5, 2):
-            flags['wxFIXED_MINSIZE'] = wx.wxFIXED_MINSIZE
+            flags['wxFIXED_MINSIZE'] = wx.FIXED_MINSIZE
         else:
             flags['wxFIXED_MINSIZE'] = 0
 

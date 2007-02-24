@@ -4,14 +4,15 @@
 
  Other Developers:
  ---------------------------------------------------------------------------
- - Marcello Semboli <dinogen@supereva.it>
+ - Marcello Semboli <dinogen@siena.linux.it>
+ - Guy Rutenberg <guyrutenberg@gmail.com>
  - D.H. <crazyinsomniac@yahoo.com> (Perl code generation)
  - Georges Khaznadar <gekhajofour@netinfo.fr> (debian package maintainer)
- - Kevin Walzer (OSX app bundle maintainer)
 
  Former Developers:
  ---------------------------------------------------------------------------
  - Marco Barisione <marco.bari@vene.ws>
+ - Kevin Walzer (OSX app bundle maintainer)
 
  Contributors:
  ---------------------------------------------------------------------------
@@ -20,6 +21,7 @@
    porting of the SplitterWindow to this new model
  - Brendan Oakley <pradoderobles@angelfire.com>: editor of the new user's
    manual 
+ - Jack Thomasson <wxglade@jkt.mailsnare.net>: assist with port to wx namespace
  
  Many thanks to:
  ---------------------------------------------------------------------------
