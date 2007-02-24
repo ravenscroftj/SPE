@@ -486,6 +486,8 @@ class Panel(wx.Notebook):
         #dialog
         self.findDialog = wx.FindReplaceDialog(self, data, "Find & Replace",
                 wx.FR_REPLACEDIALOG|wx.FR_NOUPDOWN)
+        x, y    = self.frame.GetPosition()
+        self.findDialog.SetPosition((x+5,y+200))
         self.findDialog.Show(1)
         self.findDialog.data = data  # save a reference to it...
 

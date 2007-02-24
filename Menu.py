@@ -723,7 +723,7 @@ class Status(wx.StatusBar):
     def __init__(self,parent=None,id=-1):
         wx.StatusBar.__init__(self,parent=parent,id=id)
         self.SetFieldsCount(5)
-        self.SetStatusWidths([20, -1, 90, 90, 90])
+        self.SetStatusWidths([20, -1, 90, 90, 100])
         self.throbber   = Throbber(self,'throbber_still.gif')
         self.throbber.Play()
         self.SetStatusText(STATUS,1)

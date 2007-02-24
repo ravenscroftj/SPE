@@ -136,6 +136,7 @@ DI                  = {SDI_MAC                  : SDI,
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
 DARWIN                      = PLATFORM.startswith('darwin')
+GTK                         = not (WIN or DARWIN)
 
 if DARWIN:
     print 'If spe is unstable, try this interface from the preferences:\n  "%s"\n'%MDI_SPLIT_ALL
@@ -238,18 +239,18 @@ class NotebookPlus(NotebookCtrl.NotebookCtrl):
         NotebookCtrl.NotebookCtrl.__init__(self,*args,**keyw)
         #theme
         self.tabstyle   = NotebookCtrl.ThemeStyle()
-        if WIN:
-            self.SetHighlightSelection(True)
-            self.tabstyle.EnableSilverTheme(True)
-        elif DARWIN:
+        if DARWIN:
             self.SetControlBackgroundColour(wx.NullColour)#wx.Colour(236,236,236))
             self.tabstyle.EnableAquaTheme(True,2)
         else:
-            #self.SetControlBackgroundColour(wx.Colour(236,236,236))
-            self.tabstyle.EnableAquaTheme(True,1)
+            self.SetHighlightSelection(True)
+            self.tabstyle.EnableSilverTheme(True)
         self.ApplyTabTheme(self.tabstyle)
         #general settings
-        self.SetTabHeight(25)
+        if GTK:
+            self.SetTabHeight(30)
+        else:
+            self.SetTabHeight(25)            
         self.SetDrawX(True, 2)
         self.SetPadding(wx.Point(4,4))
         self.SetUseFocusIndicator(False)
@@ -987,7 +988,7 @@ class Child(Framework):
         if draw:
             if self.app.mdiName == SDI or WIN:
                 self.SetTitle(self.extraTitle)
-            else:
+            elif hasattr(self,'SetTitle'):
                 self.SetTitle(self.pageTitle)
             self.setIcon()
             
