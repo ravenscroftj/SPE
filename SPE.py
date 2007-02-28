@@ -3,6 +3,7 @@ import sys
 try:
     WX_VERSION  = '2.5.4.1'
     import wxversion
+    #wxversion.select('2.6')
     wxversion.ensureMinimal(WX_VERSION)
 except ImportError:
     print 'You need to install at least wxPython v%s to run SPE.\nGet it from http://www.wxpython.org'%WX_VERSION

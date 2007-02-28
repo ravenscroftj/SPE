@@ -33,7 +33,7 @@ MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
 PATH            = info.dirname(__file__)
 PLATFORM        = sys.platform
 PREFIX          = sys.prefix
-SIZE            = (600,400)
+SIZE            = (600,1)
 SKIN            = 'default'
 TABS            = ['Shell','Locals','Session','Output','Find','Browser','Recent','Todo','Index','Notes','Donate']
 TITLE           = 'SPE %s'
