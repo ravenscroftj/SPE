@@ -1100,7 +1100,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else: return 1
 
     def checkTime(self):
-        if (not (self.frame.dead or self.parentFrame.dead)) and os.path.exists(self.fileName):
+        if (not (self.frame.dead or self.parentFrame.dead)) and \
+            hasattr(self,'fileName') and os.path.exists(self.fileName):
             try:
                 pos=self.source.GetCurrentPos()
                 fileTime=os.path.getmtime(self.fileName)
