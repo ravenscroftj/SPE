@@ -54,7 +54,6 @@ save them first before generating any documentation.
             
     def OnLinkClicked(self, linkinfo):
         href                    = linkinfo.GetHref().split('.html')
-        print href
         if len(href)==1:
             anchor              = href[0]
             if anchor == '.':
@@ -68,7 +67,6 @@ save them first before generating any documentation.
             self.loadDoc(moduleName,anchor)
         
     def loadDoc(self,moduleName,anchor):
-        print (self.moduleName,moduleName,anchor)
         #generate html code
         if moduleName!= self.moduleName:
             try:
