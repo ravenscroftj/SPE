@@ -7,7 +7,7 @@
 # THIS PROGRAM COMES WITH NO WARRANTY
 
 import wxversion
-wxversion.select("2.6")
+wxversion.ensureMinimal("2.6")
 
 #from wxPython.wx import *
 import wx
