@@ -1319,6 +1319,8 @@ GNOME_DEFAULT_TERM = 'gnome-terminal'
 NT_DEBUG = 'nt_debug'
 SCREEN = 'screen'
 MAC = 'mac'
+DARWIN = 'darwin'
+POSIX = 'posix'
 
 #
 # REVIEW: Go over this mechanism
@@ -1330,9 +1332,10 @@ MAC = 'mac'
 osSpawn = {
     'nt': 'start "rpdb2 - Version ' + get_version() + ' - Debuggee Console" cmd /c %s %s', 
     NT_DEBUG: 'start "rpdb2 - Version ' + get_version() + ' - Debuggee Console" cmd /k %s %s', 
-    'posix': "%s -e %s %s &", 
+    POSIX: "%s -e %s %s &", 
     GNOME_DEFAULT_TERM: "gnome-terminal -x %s %s &", 
     MAC: '%s %s',
+    DARWIN: '%s %s',
     SCREEN: 'screen -t debugger_console python %s'
 }
 
@@ -1961,6 +1964,37 @@ def CalcTerminalCommand():
 
 
 
+def CalcMacTerminalCommand(command):
+    """
+    Calculate what to put in popen to start a given script.
+    Starts a tiny Applescript that performs the script action.
+    """
+
+    #
+    # Quoting is a bit tricky; we do it step by step.
+    # Make Applescript string: put backslashes before double quotes and 
+    # backslashes.
+    #
+    command = command.replace('\\', '\\\\').replace('"', '\\"')
+
+    #
+    # Make complete Applescript command.
+    #
+    command = 'tell application "Terminal" to do script "%s"' % command
+
+    #
+    # Make a shell single quoted string (put backslashed single quotes 
+    # outside string).
+    #
+    command = command.replace("'", "'\\''")
+
+    #
+    # Make complete shell command.
+    #
+    return "osascript -e '%s'" % command
+
+
+
 def winlower(path):
     """
     return lowercase version of 'path' on NT systems.
@@ -2193,7 +2227,7 @@ def create_rpdb_settings_folder():
     '~/.rpdb2_settings' with mode 700.
     """
     
-    if os.name != 'posix':
+    if os.name != POSIX:
         return
         
     home = os.path.expanduser('~')
@@ -2225,7 +2259,7 @@ def create_pwd_file(rid, pwd):
     Create password file for Posix systems.
     """
     
-    if os.name != 'posix':
+    if os.name != POSIX:
         return
 
     path = calc_pwd_file_path(rid)
@@ -2242,7 +2276,7 @@ def read_pwd_file(rid):
     Read password from password file for Posix systems.
     """
 
-    assert(os.name == 'posix')
+    assert(os.name == POSIX)
 
     path = calc_pwd_file_path(rid)
 
@@ -2259,7 +2293,7 @@ def delete_pwd_file(rid):
     Delete password file for Posix systems.
     """
 
-    if os.name != 'posix':
+    if os.name != POSIX:
         return
 
     path = calc_pwd_file_path(rid)
@@ -6559,7 +6593,7 @@ class CSessionManagerInternal:
     def launch(self, fchdir, command_line):
         self.__verify_unattached()
 
-        if not os.name in ['posix', 'nt']:
+        if not os.name in [POSIX, 'nt']:
             self.m_printer(STR_SPAWN_UNSUPPORTED)
             raise SpawnUnsupported
             
@@ -6618,6 +6652,8 @@ class CSessionManagerInternal:
 
         if g_fScreen:
             name = SCREEN
+        elif sys.platform == DARWIN:
+            name = DARWIN
         else:
             try:
                 import terminalcommand
@@ -6645,7 +6681,7 @@ class CSessionManagerInternal:
         if python_exec.endswith('w.exe'):
             python_exec = python_exec[:-5] + '.exe'
 
-        if name == 'posix':
+        if name == POSIX:
             terminal_command = CalcTerminalCommand()
             if terminal_command == GNOME_DEFAULT_TERM:
                 command = osSpawn[GNOME_DEFAULT_TERM] % (python_exec, options)
@@ -6653,6 +6689,9 @@ class CSessionManagerInternal:
                 command = osSpawn[name] % (terminal_command, python_exec, options)
         else:    
             command = osSpawn[name] % (python_exec, options)
+
+        if name == DARWIN:
+            command = CalcMacTerminalCommand(command)
 
         if name == MAC:
             terminalcommand.run(command)
@@ -8664,7 +8703,7 @@ def main(StartClient_func = StartClient):
 
     assert (fWrap + fAttach + fSpawn + fStart) == 1
 
-    if fAttach and (os.name == 'posix'):
+    if fAttach and (os.name == POSIX):
         try:
             int(args[0])
 
@@ -8674,7 +8713,7 @@ def main(StartClient_func = StartClient):
         except (ValueError, IOError):
             pass
             
-    if (secret is not None) and (os.name == 'posix'):
+    if (secret is not None) and (os.name == POSIX):
         pwd = read_pwd_file(secret)
         
     if (fWrap or fAttach) and (pwd in [None, '']):

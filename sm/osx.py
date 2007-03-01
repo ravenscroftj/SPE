@@ -1,4 +1,4 @@
-#(c)www.stani.be (read __doc__ for more information)                            
+#(c)www.stani.be (read __doc__ for more information)
 import os
 import sm
 INFO=sm.INFO.copy()
@@ -140,20 +140,20 @@ def listdir(dir='', extensions=[],absPath=0,recursive=0,
         return fileList+recursiveList
     else:
         return filterByExtension(fileList,extensions)+recursiveList
-        
+
 def lastModified(fileName):
     return os.stat(fileName)[stat.ST_MTIME]
-    
+
 def mkdir(x):
     try:
         os.mkdir(x)
         return 1
     except:
         return 0
-    
+
 def newer(f1,f2):
     return os.path.exists(f2) and lastModified(f1) > lastModified(f2)
-    
+
 def listdirR(folder,recursion=0,extensions=None,absolute=1):
     """List recursively all files with a certain extension and limited recursion depth."""
     files=[os.path.join(folder,file) for file in os.listdir(folder)]
@@ -174,13 +174,13 @@ def pathSplit(f):
 
 def dirSplit(f):
     """Splits its directory in a list of all subdirectories.
-    
+
     Example:
         >>> dirSplit('d:\\hello\\world\\readme.txt')
         ['d:', 'hello', 'world']
     """
     return os.path.dirname(f).replace('\\','/').split('/')
-    
+
 def title(t):
     "Set the title of the console window."
     if displayTitle: os.system('title '+t)
@@ -188,11 +188,11 @@ def title(t):
 def treeDir(path='',extensions=[],ignore=[],ignorePathPrefix='\\'):
     dir=[os.path.join(path,x) for x in os.listdir(path)]
     return (path,
-        [treeDir(x,extensions,ignore,ignorePathPrefix) for x in dir 
+        [treeDir(x,extensions,ignore,ignorePathPrefix) for x in dir
             if os.path.isdir(x) and not((os.path.basename(x) in ignore) or
             (os.path.basename(x)[:len(ignorePathPrefix)]==ignorePathPrefix))
             ]+
-        [x for x in dir if (not os.path.isdir(x)) and 
+        [x for x in dir if (not os.path.isdir(x)) and
             (not extensions or os.path.splitext(x)[1].lower() in extensions)])
 
 def rmtree(p,output=0):
@@ -225,6 +225,46 @@ def userPath(dirname=''):
     #if no match found, use module directory
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), dirname)
 
+def startAppleScript(commandList, activateFlag = True):
+	"""Start a list of commands in the terminal window.
+	Each command is a list of program name, parameters.
+	Handles the quoting properly through shell, applescript and shell again.
+	"""
+	def adjustParameter(parameter):
+		"""Adjust a parameter for the shell.
+		Adds single quotes,
+		unless the parameter consists of letters only
+		(to make shell builtins work)
+		or if the parameter is a list
+		(to flag that it already is list a parameters).
+		"""
+		if isinstance(parameter, list): return parameter[0]
+		if parameter.isalpha(): return parameter
+		#the single quote proper is replaced by '\'' since
+		#backslashing a single quote doesn't work inside a string
+		return "'%s'"%parameter.replace("'",r"'\''")
+	command = ';'.join([
+		' '.join([
+			adjustParameter(parameter)
+			for parameter in command
+			])
+		for command in commandList
+	])
+	#make Applescript string from this command line:
+	#put backslashes before double quotes and backslashes
+	command = command.replace('\\','\\\\').replace('"','\\"')
+	#make complete Applescript command containing this string
+	command = 'tell application "Terminal" to do script "%s"'%command
+	#make a shell parameter (single quote handling as above)
+	command = command.replace("'","'\\''")
+	#make complete shell command
+	command = "osascript -e '%s'"%command
+	#prepend activate command if needed
+	if activateFlag:
+		command = "osascript -e 'tell application \"Terminal\" to activate';"+command
+	#go!
+	os.popen(command)
+
 #---registry--------------------------------------------------------------------
 
 def registerFileCreate(label, action, fileType='Python.File'):
@@ -241,13 +281,13 @@ def registerFileCreate(label, action, fileType='Python.File'):
         return 1
     except:
         return None
-    
+
 def registerPy(label, action, fileType='Python.File'):
     """action is a python file"""
     import sys
     action='"%s" "%s"'%(os.path.join(sys.exec_prefix,"pythonw.exe"),action)
     return registerFileCreate(label=label,action=action,fileType=fileType)
-    
+
 def registerFileDelete(label, fileType='Python.File'):
     try:
         import _winreg
@@ -261,7 +301,7 @@ def registerFileDelete(label, fileType='Python.File'):
         return 1
     except:
         return None
- 
+
 ####CONSTANTS------------------------------------------------------------------
 NOT_FILE_CHARS=['\\','/','<','>','"','|','?',':','*']
 

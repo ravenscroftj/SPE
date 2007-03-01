@@ -14,7 +14,7 @@ import codecs, compiler, inspect, os, sys, re, thread, time, types
 import wx
 from wx.lib.evtmgr import eventManager
 
-import sm, sm.spy, sm.uml, sm.wxp, sm.wxp.smdi
+import sm, sm.osx, sm.spy, sm.uml, sm.wxp, sm.wxp.smdi
 from sm.wxp.stc import PythonSTC
 from sm.wxp.realtime import TreeCtrl, ListCtrl
 import view.documentation
@@ -22,7 +22,7 @@ import view.documentation
 import _spe.help as help
 from Menu import STATUS
 import _spe.plugins.Pycheck as Pycheck
-from sidebar.Browser import Browser
+from sidebar.Browser import Browser 
 
 ####Constants-------------------------------------------------------------------
 DEFAULT                 = "<default>"
@@ -51,7 +51,7 @@ STATUS_TEXT_COL_POS     = STATUS_TEXT_LINE_POS+1
 ####Utilities-------------------------------------------------------------------
 def umlAdd(classes, umlClass):
     """Add umlClass to classes dictionary"""
-    if umlClass: 
+    if umlClass:
         classes[umlClass.name.split('(')[0]] = umlClass
 
 def isUtf8(text):
@@ -114,8 +114,8 @@ class Panel(wx.SplitterWindow):
             self.fileTime   = os.path.getmtime(fileName)
         else:
             self.fileTime   = 0
-        
-        
+
+
     def __finish__(self):
         frame = self.frame
         if self._fileName not in self.parentPanel.workspace['openfiles']:
@@ -149,10 +149,10 @@ class Panel(wx.SplitterWindow):
         eventManager.Register(self.updateSidebar,wx.EVT_NOTEBOOK_PAGE_CHANGED,self.notebook)
         #split
         self.SplitVertically(self.notebook, self.main, self.sashPosition)
-        
+
     def __sideBar__(self):
         """Create notebook contents."""
-        notebook = self.notebook = wx.Notebook(id=-1, parent=self, 
+        notebook = self.notebook = wx.Notebook(id=-1, parent=self,
               style=STYLE_NOTEBOOK)
         self.updateSidebarTab=[self.updateExplore,self.updateTodo,self.updateIndex,self.doNothing,self.doNothing]
         self.notebookLabel  = ['Explore','Todo','Index','Notes','Check']
@@ -183,11 +183,11 @@ class Panel(wx.SplitterWindow):
         notebook.AddPage(page=self.explore, text='Explore',imageId=self.exploreIcon)
         #todo
         todo            = self.todo = ListCtrl(parent=self.notebook,style=STYLE_LIST)
-        todo.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, 
+        todo.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT,
                 heading='Line',width=40)
-        todo.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
+        todo.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT,
                 heading='!',width=20)
-        todo.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, 
+        todo.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT,
                 heading='Task',width=500)
         todo.SetHelpText(help.CHILD_TODO)
         self.previousTodoHighlights = []
@@ -195,9 +195,9 @@ class Panel(wx.SplitterWindow):
         #index
         index = self.index = ListCtrl(parent=self.notebook,style=STYLE_LIST)
         index.SetImageList(self.parentPanel.iconsList,wx.IMAGE_LIST_SMALL)
-        index.InsertColumn(col=0, format=wx.LIST_FORMAT_RIGHT, 
+        index.InsertColumn(col=0, format=wx.LIST_FORMAT_RIGHT,
                 heading='Line',width=60)
-        index.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
+        index.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT,
                 heading='Entry',width=500)
         index.SetHelpText(help.CHILD_INDEX)
         notebook.AddPage(page=self.index, text='',imageId=self.indexIcon)
@@ -212,7 +212,7 @@ class Panel(wx.SplitterWindow):
         self.notebook.AddPage(page=self.notes, text='',imageId=self.notesIcon)
         #pyChecker
         self.pychecker          = Pycheck.Panel(self.notebook,page=4)
-        self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)        
+        self.notebook.AddPage(page=self.pychecker, text='',imageId=self.pycheckerIcon)
         #browser
         if not info.DARWIN or wx.VERSION >= (2,6,2):
             self.sidebarAddBrowser()
@@ -225,8 +225,8 @@ class Panel(wx.SplitterWindow):
 
     def __source__(self,fileName,source):
         #notebook
-        self.main               = wx.Notebook(id=-1, 
-                                    parent=self, 
+        self.main               = wx.Notebook(id=-1,
+                                    parent=self,
                                     #size=wx.Size(5000, 5000),
                                     style=wx.NO_BORDER)
         self.main.childPanel    = self
@@ -235,7 +235,7 @@ class Panel(wx.SplitterWindow):
         self.umlIcon            = self.mainIcons.Add(self.parentPanel.icons['uml.png'])
         self.documentationIcon  = self.mainIcons.Add(self.parentPanel.icons['documentinfo.png'])
         self.main.AssignImageList(self.mainIcons)
-        
+
         #sash
         self.sash   = PythonSTC(
             parent      = self.main,
@@ -253,7 +253,7 @@ class Panel(wx.SplitterWindow):
         if fileName:
             self.fileName   = fileName
             self.revert(source)
-        else: 
+        else:
             self.fileName   = NEWFILE
             self.notesText  = ''
             self.frame.setTitle()
@@ -261,15 +261,15 @@ class Panel(wx.SplitterWindow):
         self.source.EmptyUndoBuffer()
         self.source.Colourise(0, -1)
         self.main.AddPage(page=self.sash, text='Source',imageId=self.sashIcon)
-        
+
         #uml
         self.uml    = sm.uml.Canvas(parent=self.main,style=wx.FULL_REPAINT_ON_RESIZE)
         self.main.AddPage(page=self.uml, text='Uml',imageId=self.umlIcon)
-        
+
         #documentation
         self.documentation  = view.documentation.Panel(parent=self.main,id=-1)
         self.main.AddPage(page=self.documentation, text='PyDoc',imageId=self.documentationIcon)
-        
+
         #events
         eventManager.Register(self.onKillFocus, wx.EVT_KILL_FOCUS, self.source)
         eventManager.Register(self.updateMain,wx.EVT_NOTEBOOK_PAGE_CHANGED,self.main)
@@ -277,7 +277,7 @@ class Panel(wx.SplitterWindow):
     #---file
     def save(self,fileName=None):
         """Saves the file."""
-        if fileName: self.setFileName(fileName)     
+        if fileName: self.setFileName(fileName)
         if self.fileName==NEWFILE or not(os.path.exists(os.path.dirname(self.fileName))):
             self.saveAs()
         else:
@@ -295,7 +295,7 @@ class Panel(wx.SplitterWindow):
             if not self.dosLines:
                 #convert to Unix lines
                 source          = source.replace('\r\n','\n')
-                
+
             #get encoding
             self.getEncoding(source)
             #convert source to unicode
@@ -303,7 +303,7 @@ class Panel(wx.SplitterWindow):
                 sourceUnicode   = source
             else:
                 sourceUnicode   = source.decode(self.encoding)
-                
+
             #check if source can be encoded, to avoid overwriting with empty file
             try:
                 sourceUnicode.encode(self.encoding)
@@ -330,7 +330,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     os.rename(self.fileName,backup)
                 except:
                     self.setStatus('Warning: could not create backup.')
-                
+
             #save the file
             try:
                 #Note that the mode here must be "wb" to allow
@@ -345,7 +345,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
 %s
 
-SPE probably overwrote your file with an empty file, 
+SPE probably overwrote your file with an empty file,
 but made a backup of the previous version as "%s".
 
 Please save your file by Copying&Pasting it into another program
@@ -353,7 +353,7 @@ to make sure you don't loose data and contact %s.
 
 Please try then to change the encoding or save it again."""%(self.encoding,message,backup,INFO['author_email']))
                 return
-                
+
             #save succesfull
             self.notesSave(file=1)
             self.changed    = 0
@@ -374,12 +374,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.fileTime   = 0
         if self.parentPanel.get('UpdateSidebar')!='realtime':
             self.updateSidebar()
-    
+
     def saveAs(self):
         defaultDir      = os.path.dirname(self.fileName)
-        dlg             = wx.FileDialog(self, "Save As - www.stani.be", 
-            defaultDir  = defaultDir, 
-            wildcard    = info.WILDCARD, 
+        dlg             = wx.FileDialog(self, "Save As - www.stani.be",
+            defaultDir  = defaultDir,
+            wildcard    = info.WILDCARD,
             style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
             path        = dlg.GetPaths()[0]
@@ -388,23 +388,23 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 self.browser.SetDefaultPath(os.path.dirname(path))
                 self.browser.ReCreateTree()
         dlg.Destroy()
-        
+
     def saveUmlAs(self):
         self.main.SetSelection(UML_PAGE)
         self.uml.OnDoSave()
-        
+
     def printUml(self):
         self.main.SetSelection(UML_PAGE)
         self.uml.OnDoPrint()
-        
+
     def printUmlPreview(self):
         self.main.SetSelection(UML_PAGE)
         self.uml.OnPrintPreview()
-        
+
     def printUmlSetup(self):
         self.main.SetSelection(UML_PAGE)
         self.uml.OnPrintSetup()
-        
+
     #---edit
     def comment(self):
         """Comment section"""
@@ -421,7 +421,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         doc.SetCurrentPos(doc.PositionFromLine(start))
         doc.SetAnchor(doc.GetLineEndPosition(end))
         doc.EndUndoAction()
-        
+
     def uncomment(self):
         """Uncomment section"""
         doc = self.source
@@ -443,19 +443,19 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 doc.DelLineLeft()
         doc.SetSelection(sel[0],doc.PositionFromLine(end+1))
         doc.EndUndoAction()
-                
+
     def insert_separator(self):
         from dialogs import separatorDialog
         separatorDialog.create(self).ShowModal()
-        
+
     def insert_signature(self):
         signature   = self.parentPanel.get('Signature')
         if not os.path.exists(signature):
-            dlg = wx.FileDialog(self, 
-                message="SPE - Choose a signature file", 
-                #defaultDir  = os.getcwd(), 
-                #defaultFile = "", 
-                wildcard    = "Python source (*.py)|*.py|Text (*.txt)|*.txt|All files (*.*)|*.*", 
+            dlg = wx.FileDialog(self,
+                message="SPE - Choose a signature file",
+                #defaultDir  = os.getcwd(),
+                #defaultFile = "",
+                wildcard    = "Python source (*.py)|*.py|Text (*.txt)|*.txt|All files (*.*)|*.*",
                 style       = wx.OPEN | wx.FILE_MUST_EXIST
                 )
             answer      = dlg.ShowModal()
@@ -477,7 +477,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if self.parentPanel.redraw:self.parentPanel.redraw()
         if self.parentPanel.get('UpdateSidebar')!='realtime':
             self.updateSidebar()
-        
+
     def onSash(self,event):
         if self.sidebarHidden:
             self.showSidebar()
@@ -486,7 +486,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if pos < self.minSashPosition:
                 self.hideSidebar(self.minSashPosition)
             else: event.Skip()
-        
+
     def toggle_sidebar(self,event):
         pos     = self.GetSashPosition()
         show    = pos <= 5
@@ -498,21 +498,21 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.frame.menuBar.check_sidebar(show)
         else:
             self.parentFrame.menuBar.check_sidebar(show)
-            
+
     def hideSidebar(self,pos):
         self.sidebarHidden  = True
         self.sashPosition   = pos
         self.notebook.Hide()
         self.SetSashPosition(1)
-        
+
     def showSidebar(self):
         self.sidebarHidden  = False
         self.notebook.Show()
         self.SetSashPosition(self.sashPosition)
-        
+
     #---Tools
     def open_terminal_emulator(self):
-        """Open terminal emulator"""       
+        """Open terminal emulator"""
         path,fileName=os.path.split(self.fileName)
         params = {'file':fileName,'path':path}
         terminal=self.parentPanel.get('Terminal')
@@ -520,7 +520,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if info.WIN:
                 os.system('start "Spe console - Press Ctrl+Break to stop" /D"%(path)s"'%params)
             elif info.DARWIN:
-                os.system("""osascript -e 'tell application "Terminal"' -e 'do script "cd %(path)s"' -e 'activate' -e 'end tell'"""%params)
+                sm.osx.startAppleScript([['cd',params['path']]], activateFlag=True)
             elif os.path.isfile('/usr/bin/konsole'):
                 os.system('/usr/bin/konsole --caption SPE --workdir "%(path)s" &'%params)
             elif os.path.isfile('/usr/bin/gnome-terminal'):
@@ -550,7 +550,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.inspectPrevious    = inspct
             self.exitPrevious       = exit
             self.run_with_arguments(arguments,inspct,exit,confirm=False)
-        
+
     def run_with_arguments(self,arguments='', inspct=False, exit=False, confirm=True):
         """Run in terminal emulator"""
         if confirm and not self.confirmSave():
@@ -576,10 +576,13 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 else:
                     os.system('%(start)s /k %(python)s "%(file)s" %(arguments)s'%params)
             elif info.DARWIN:
+                commandList = [
+                        ['cd', params['path']],
+                        [params['python'], params['file'], [params['arguments']]]
+                        ]
                 if exit:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s;exit"' -e 'end tell'"""%params)
-                else:
-                    os.system("""osascript -e 'tell application "Terminal"' -e 'activate' -e 'do script "cd %(path)s;%(python)s %(file)s %(arguments)s"' -e 'end tell'"""%params)
+                    commandList.append(['exit'])
+                sm.osx.startAppleScript(commandList, activateFlag=True)
             elif os.path.isfile('/usr/bin/konsole'):
                 if exit:
                     os.system("""/usr/bin/konsole --caption SPE --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
@@ -591,11 +594,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 os.system('%(python)s "%(file)s" %(arguments)s'%params)
         else:
             os.system(terminal%params)
-            
-    def check_source_with_pychecker(self): 
+
+    def check_source_with_pychecker(self):
         """Check source with pychecker"""
         self.pychecker.check()
-        
+
     #---Blender
     def load_in_blender(self):
         """Load in blender"""
@@ -605,13 +608,13 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if answer:
                 import blenpy.pyGui
                 blenpy.pyGui.pythonLoad(child.fileName)
-        
+
     def reference_in_blender(self):
         """Reference in blender"""
         if self.parentPanel.checkBlender():
             import blenpy.plugins.mouse
             blenpy.plugins.mouse.reference(self.parentPanel.childActive.fileName)
-        
+
     ####Events------------------------------------------------------------------
     #---Smdi events
     def onActivate(self,event=None):
@@ -632,7 +635,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             return True
         else: return False
         return True
-        
+
     def onSize(self, event=None):
         self.source.SetFocus()
 
@@ -644,24 +647,24 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.source.SetFocus()
         except:
             pass
-       
+
     def onSetSourceFocus(self,event):
         if self.app.DEBUG:
             print 'Event:  Child: %s: %s.onSetFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
         event.Skip()
         if self.app.childActive != self and sm.wxp.smdi.MdiSplitChildFrame == self.frame.__class__:
             self.frame.onFrameActivate()
-        
+
     #---Source events
     def onSourceChange(self,event):
         self.eventChanged = True
 
     def onSourcePositionChange(self,event=None):
         """Updates statusbar with current position."""
-        
+
     def idle(self,event=None):
         #if dead, return immediately
-        if self.frame.dead or self.parentFrame.dead or not hasattr(self,'source'): 
+        if self.frame.dead or self.parentFrame.dead or not hasattr(self,'source'):
             return
         #update line & column in status
         pos = self.source.GetCurrentPos()
@@ -687,7 +690,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 return
             if self.parentPanel.get('CheckSourceRealtime')=='compiler':
                 thread.start_new(self.idleCheck,())
-            
+
     def idleCheck(self):
         self.checkBusy  = True
         source          = self.source.GetText()
@@ -722,7 +725,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.warning = warning
             self.e       = e
         self.checkBusy = False
-                
+
     def onKillFocus(self,event=None):
         if self.app.DEBUG:
             print 'Event:  Child: %s: %s.onKillFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
@@ -749,7 +752,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             event.Skip()
         except:
             pass
-        
+
     #---Sidebar update methods & jump events
     def updateSidebar(self,event=None):
         if event:
@@ -760,10 +763,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else:
             tab = self.notebook.GetSelection()
         self.updateSidebarTab[tab]()
-        
-    def updateBrowser(self): 
+
+    def updateBrowser(self):
         self.browser.update()
-        
+
     def updateStatus(self,pos=None):
         if hasattr(self,'source'):
             source          = self.source
@@ -780,7 +783,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else:
             self.SetStatusText('',STATUS_TEXT_LINE_POS)
             self.SetStatusText('',STATUS_TEXT_COL_POS)
-       
+
     def updateTodo(self):
         """Update todo tab in sidebar."""
         #get text
@@ -841,7 +844,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 ##                self.todo.SetItem(item)
         self.previousTodoHighlights = self.todoHighlights
         self.todo.Update()
-        
+
     def updateIndex(self):
         """Update index tab in sidebar."""
         #get code
@@ -891,7 +894,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.index.SetItemTextColour(item,colour)
         self.index.Update()
         #if self.parentPanel.indexVisible...
-            
+
     def updateExplore(self,uml=0):
         """Updates explore in sidebar."""
         #get text
@@ -900,7 +903,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         except:
             return
         #initialize
-        if uml:         
+        if uml:
             self.umlClass   = None
             previous    = 0
         classes         = {}
@@ -937,7 +940,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                             hierarchy[hierarchyIndex+1][0]<indentation:
                         hierarchyIndex  += 1
                     hierarchy=hierarchy[:hierarchyIndex+1]
-                    if uml and hierarchyIndex<=previous: 
+                    if uml and hierarchyIndex<=previous:
                         umlAdd(classes,self.umlClass)
                         self.umlClass    = None
                     #get definition-----------------------------------------
@@ -960,7 +963,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                         if rest[-1] == ':':l+= rest
                     #put in tree with color---------------------------------
                     l=l.split(':')[0].replace('class ','').replace('def ','').strip()
-                    if separators: 
+                    if separators:
                         self.appendSeparators(separators,hierarchy,hierarchyIndex,uml)
                         separators      = []
                     if l:
@@ -1024,7 +1027,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         #if self.parentPanel.exploreVisible: ...
         self.explore.Update()
         return classes
-        
+
     def updateMain(self,event=None):
         if event:
             tab = event.GetSelection()
@@ -1038,15 +1041,15 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else:
             tab = self.notebook.GetSelection()
         self.updateSidebarTab[tab]()
-        
+
     def refreshMain(self):
         pos = self.GetSashPosition()
         self.sashDelta *= -1
         self.SetSashPosition(pos+self.sashDelta, redraw=1)
-        
+
     def doNothing(self):
         pass
-    
+
     def appendSeparators(self,separators,hierarchy,hierarchyIndex,uml):
         explore = self.explore
         for separator in separators:
@@ -1062,18 +1065,18 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Jump to source line by clicking class or function in explore."""
         line=self.explore.GetPyData(event.GetItem())
         self.scrollTo(line,select='line')
-            
+
     def onToggleExplore(self,event):
         """Toggle item between collapse and expand."""
         self.explore.Toggle(event.GetItem())
-            
+
     def onToggleExploreTree(self,event):
         event.Skip()
         self.toggleExploreSelection = True
-        
+
     def onToggleExploreSelection(self):
         self.explore.Toggle(self.explore.GetSelection())
-        
+
     def onOpenFromBrowser(self, fname):
         if os.path.splitext(fname)[-1] in SPE_ALLOWED_EXTENSIONS:
             self.parentPanel.openList([fname])
@@ -1084,7 +1087,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Jump to source line by clicking task in todo."""
         line=event.GetData()
         self.scrollTo(line-1,scroll=1)
-        
+
     def onSourceFromIndex(self,event):
         """Jump to source line by clicking task in todo."""
         line=event.GetData()
@@ -1111,13 +1114,13 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     baseName=os.path.basename(self.fileName)
                     message=baseName+' is modified externally.\nDo you want to reload it%s?'
                     if  (self.changed>0 and self.parentPanel.messageConfirm(message%' and loose current changes')) or\
-                    (not self.changed>0 and (self.parentPanel.getValue('AutoReloadChangedFile') or self.parentPanel.messageConfirm(message%''))): 
+                    (not self.changed>0 and (self.parentPanel.getValue('AutoReloadChangedFile') or self.parentPanel.messageConfirm(message%''))):
                         self.revert()
                         self.source.GotoPos(pos)
                         return 1
             except:
                 return 0
-                
+
 
     def confirmSave(self, message=''):
         self.notesSave(file=1)
@@ -1132,12 +1135,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 return 1
             else:return 1
         else:return 1
-        
+
     def refreshTitle(self):
         if self.app.DEBUG:
             print 'Method: Child: %s.refreshTitle("%s")'%(self.__class__,self.fileName)
         self.frame.setTitle()
-        
+
     def revert(self,source=None):
         if not source:
             try:
@@ -1194,10 +1197,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def setStatus(self,text,i=1):
         self.SetStatusText(text,i)
-        
+
     def sidebarVisible(self):
         return self.GetSashPosition() > 5
-        
+
     def scrollTo(self,line=0,column=0,select='pos',scroll=0):
         source  = self.source
         source.EnsureVisible(line)
@@ -1214,7 +1217,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def notesFile(self):
         return os.path.splitext(self.fileName)[0]+'_notes.txt'
-    
+
     def notesSave(self,file=0):
         if not hasattr(self,'notes'):
             return
@@ -1232,7 +1235,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def selectLine(self,line):
         source=self.source
-        
+
     def getEncoding(self,source):
         if isUtf8(source):
             self.encoding = "utf8"
@@ -1258,14 +1261,14 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 self.setStatus('Warning: SPE uses "utf8" instead of "ascii" codec.')
                 self.encoding   = 'utf8'
         self.encoding = str(self.encoding)
-        
+
 class DropOpen(wx.FileDropTarget):
     """Opens a file when dropped on parent frame."""
     def __init__(self,openList):
         wx.FileDropTarget.__init__(self)
         self.openList   = openList
     def OnDropFiles(self,x,y,fileNames):
-        fileNames       = [script for script in fileNames 
+        fileNames       = [script for script in fileNames
             if os.path.splitext(script)[-1].lower() in SPE_ALLOWED_EXTENSIONS]
         if fileNames:
             self.openList(fileNames)
