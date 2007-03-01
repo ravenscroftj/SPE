@@ -142,7 +142,7 @@ class Panel(wx.ListCtrl):
                     l = data.find(' ',f)
                     line = data[f+1:l]
                     remark  = data[l+1:]
-            if not line.isdigit(): continue
+                if not line.isdigit(): continue
                 self.InsertStringItem(self.index,line)
                 self.SetStringItem(self.index,1,remark)
                 self.SetStringItem(self.index,2,file)
