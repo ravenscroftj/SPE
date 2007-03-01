@@ -106,6 +106,7 @@ class Panel(wx.ListCtrl):
     def OnProcessEnded(self, evt):
         self.DeleteItem(0)
         del self.list[0]
+        self.index -=1
         eventManager.DeregisterListener(self.OnIdle)
         self.focus()
         wx.Bell()
@@ -121,7 +122,7 @@ class Panel(wx.ListCtrl):
         if self.started: 
             #self.DeleteAllItems(0)
             self.started = 0
-        text        = text.replace('\r','').split('\n')
+        text        = text.splitlines()
         for data in text:
             data    = data.strip()
             if data and data not in IGNORE:
@@ -141,6 +142,7 @@ class Panel(wx.ListCtrl):
                     l = data.find(' ',f)
                     line = data[f+1:l]
                     remark  = data[l+1:]
+            if not line.isdigit(): continue
                 self.InsertStringItem(self.index,line)
                 self.SetStringItem(self.index,1,remark)
                 self.SetStringItem(self.index,2,file)
