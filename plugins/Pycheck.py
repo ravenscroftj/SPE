@@ -35,7 +35,7 @@ class Panel(wx.ListCtrl):
                 heading='Line',width=40)
         self.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
                 heading='Remark',width=600)
-        self.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
+        self.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, 
                 heading='File',width=400)
 
         self.InsertStringItem(0,'')
