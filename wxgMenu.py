@@ -10,7 +10,7 @@ def _(x):
 MENUS =[
 OPEN_WORKSPACE, SAVE_WORKSPACE, SAVE_WORKSPACE_AS, 
 
-SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
+SAVE_COPY, SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 REMEMBER_OPEN_FILES,
 
@@ -43,10 +43,10 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(81)]
+[wx.NewId() for x in range(82)]
 
 CHILD_MENUS=[
-wx.ID_SAVE, wx.ID_SAVEAS, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
+wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE,
@@ -167,28 +167,26 @@ class Palette(wx.Panel):
         # begin wxGlade: Palette.__do_layout
         sizer_main = wx.BoxSizer(wx.VERTICAL)
         sizer_palette = wx.GridSizer(1, 2, 0, 0)
-        sizer_main.Add(self.logo, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.previous, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.next, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.find, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.goto, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.browse_source, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.check, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.dedent, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.indent, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.comment, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.uncomment, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.run, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.imprt, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.sidebar, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.run_verbose, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.shell, 0, wx.ADJUST_MINSIZE, 0)
-        sizer_palette.Add(self.donate, 0, wx.ADJUST_MINSIZE, 0)
+        sizer_main.Add(self.logo, 0, 0, 0)
+        sizer_palette.Add(self.previous, 0, 0, 0)
+        sizer_palette.Add(self.next, 0, 0, 0)
+        sizer_palette.Add(self.find, 0, 0, 0)
+        sizer_palette.Add(self.goto, 0, 0, 0)
+        sizer_palette.Add(self.browse_source, 0, 0, 0)
+        sizer_palette.Add(self.check, 0, 0, 0)
+        sizer_palette.Add(self.dedent, 0, 0, 0)
+        sizer_palette.Add(self.indent, 0, 0, 0)
+        sizer_palette.Add(self.comment, 0, 0, 0)
+        sizer_palette.Add(self.uncomment, 0, 0, 0)
+        sizer_palette.Add(self.run, 0, 0, 0)
+        sizer_palette.Add(self.imprt, 0, 0, 0)
+        sizer_palette.Add(self.sidebar, 0, 0, 0)
+        sizer_palette.Add(self.run_verbose, 0, 0, 0)
+        sizer_palette.Add(self.shell, 0, 0, 0)
+        sizer_palette.Add(self.donate, 0, 0, 0)
         sizer_main.Add(sizer_palette, 1, wx.EXPAND, 0)
-        self.SetAutoLayout(True)
         self.SetSizer(sizer_main)
         sizer_main.Fit(self)
-        sizer_main.SetSizeHints(self)
         # end wxGlade
 
     def evt_indent(self, event): # wxGlade: Palette.<event_handler>
@@ -251,6 +249,7 @@ class Bar(wx.MenuBar):
         self.file.Append(wx.ID_OPEN, _("&Open file(s)...\tCtrl+O"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVE, _("&Save\tCtrl+S"), "", wx.ITEM_NORMAL)
         self.file.Append(wx.ID_SAVEAS, _("Save &As...\tCtrl+Alt+S"), "", wx.ITEM_NORMAL)
+        self.file.Append(SAVE_COPY, _("Sa&ve a Copy...\tShift+Ctrl+Alt+S"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
         self.file.Append(OPEN_WORKSPACE, _("Open &Workspace"), "", wx.ITEM_NORMAL)
         self.file.Append(SAVE_WORKSPACE, _("Save workspace"), "", wx.ITEM_NORMAL)
@@ -387,6 +386,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_open_files, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.menu_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.menu_save_as, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self.menu_save_copy, id=SAVE_COPY)
         self.Bind(wx.EVT_MENU, self.menu_open_workspace, id=OPEN_WORKSPACE)
         self.Bind(wx.EVT_MENU, self.menu_save_workspace, id=SAVE_WORKSPACE)
         self.Bind(wx.EVT_MENU, self.menu_save_workspace_as, id=SAVE_WORKSPACE_AS)
@@ -785,6 +785,10 @@ class Bar(wx.MenuBar):
         print "Event handler `menu_show_docstring' not implemented"
         event.Skip()
 
+
+    def menu_save_copy(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_save_copy' not implemented"
+        event.Skip()
 
 # end of class Bar
 

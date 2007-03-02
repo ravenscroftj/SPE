@@ -277,6 +277,10 @@ class Bar(wxgMenu.Bar):
 
     def menu_save_uml_as(self, event=None):
         self.app.childActive.saveUmlAs()
+        
+    def menu_save_copy(self, event=None):
+        """File > Save a Copy..."""
+        self.app.childActive.saveCopy()
 
     def menu_print_uml(self, event=None):
         self.app.childActive.printUml()

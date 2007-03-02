@@ -9,7 +9,7 @@ INFO['description']=\
 __doc__=INFO['doc']%INFO
 
 ####Modules---------------------------------------------------------------------
-import codecs, compiler, inspect, os, sys, re, thread, time, types
+import codecs, compiler, inspect, os, sys, re, shutil, thread, time, types
 
 import wx
 from wx.lib.evtmgr import eventManager
@@ -327,7 +327,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 except:
                     pass
                 try:
-                    os.rename(self.fileName,backup)
+                    shutil.copy2(self.fileName,backup)
                 except:
                     self.setStatus('Warning: could not create backup.')
 
@@ -387,6 +387,23 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             if hasattr(self,'browser'):
                 self.browser.SetDefaultPath(os.path.dirname(path))
                 self.browser.ReCreateTree()
+        dlg.Destroy()
+
+    def saveCopy(self):
+        """firstly save the current file, then make a copy of it"""
+        self.save(self.fileName)
+        defaultDir      = os.path.dirname(self.fileName)
+        dlg             = wx.FileDialog(self, "Save a Copy - www.stani.be", 
+            defaultDir  = defaultDir, 
+            wildcard    = info.WILDCARD, 
+            style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
+        if dlg.ShowModal() == wx.ID_OK:
+            path        = dlg.GetPaths()[0]
+            try:
+                shutil.copyfile(self.fileName, path)
+            except IOError:
+                self.parentPanel.messageError("Sorry, I was unable to copy %s to %s" % (
+                    self.fileName, path))
         dlg.Destroy()
 
     def saveUmlAs(self):

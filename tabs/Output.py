@@ -1,6 +1,7 @@
 """Panel to execute scripts and redirect their output for SPE"""
 
 import os, re
+from cgi import escape
 import wx
 import wx.stc as wx_stc
 import  wx.html as  html
@@ -102,10 +103,10 @@ class Output(html.HtmlWindow):
     def OnIdle(self, event):
             if self.inputstream.CanRead():
                 text = self.inputstream.read()
-                self.AddText(text)
+                self.AddText(escape(text))
             if self.errorstream.CanRead():
                 text = self.errorstream.read()
-                self.AddText(text,error=True)
+                self.AddText(escape(text),error=True)
 
     def OnEndProcess(self, event):
         #unbind events
