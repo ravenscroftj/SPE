@@ -1237,7 +1237,10 @@ Please report these details and operating system to %s."""%(message,INFO['author
         self.message(message,style=wx.OK | wx.ICON_ERROR)
 
     def messageEmail(self,message):
-        webbrowser.open('mailto:%s?subject=SPE error (automatic report)&body=%s'%(INFO['author_email'],message))
+        try:
+            webbrowser.open('mailto:%s?subject=SPE error (automatic report)&body=%s'%(INFO['author_email'],message))
+        except:
+            pass
 
     def messageEntry(self,message,default=''):
         """Show entry dialog box for user input."""
