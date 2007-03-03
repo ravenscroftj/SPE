@@ -536,7 +536,7 @@ class Bar(wxgMenu.Bar):
 
     def menu_spe_homepage(self, event=None):
         """Links > Spe homepage..."""
-        self.link('http://www.stani.be/spe/python/blog')
+        self.link('http://pythonide.stani.be')
 
     def menu_forum_spe(self, event=None):
         """Links > Forum spe..."""

@@ -34,7 +34,7 @@ BLENDER_PYTHON_MANUAL, BLENDER_PYTHON_TUTORIAL, BLENDER_HOMEPAGE,
 DOWNLOAD_BLENDER, FORUM_BLENDER_PYTHON, FORUM_ELYSIUN_PYTHON,
 
 SPE_HOMEPAGE, FORUM_SPE, AUTHORS_HOMEPAGE, CONTACT_AUTHOR, PYTHON_HOMEPAGE,
-ACTIVE_PYTHON_DISTRIBUTION, ENTHOUGHT_PYTHON_DISTRIBUTION, PYTHON_ANNOUNCEMENTS,
+PYTHON_ANNOUNCEMENTS,
 PYTHON_COOKBOOK, PYTHON_DAILY, PYTHON_FOR_ARTISTS, PYTHON_PACKAGE_INDEX,
 
 NEXT,PREVIOUS,
@@ -43,7 +43,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(83)]
+[wx.NewId() for x in range(81)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -347,18 +347,14 @@ class Bar(wx.MenuBar):
         self.links = wx.Menu()
         self.links.Append(SPE_HOMEPAGE, _("&Spe homepage..."), "", wx.ITEM_NORMAL)
         self.links.Append(FORUM_SPE, _("&Forum spe..."), "", wx.ITEM_NORMAL)
-        self.links.Append(AUTHORS_HOMEPAGE, _("&Authors homepage"), "", wx.ITEM_NORMAL)
-        self.links.Append(CONTACT_AUTHOR, _("&Contact author...\tCtrl+@"), "", wx.ITEM_NORMAL)
         self.links.AppendSeparator()
         self.links.Append(PYTHON_HOMEPAGE, _("&Python homepage..."), "", wx.ITEM_NORMAL)
-        self.links.Append(ACTIVE_PYTHON_DISTRIBUTION, _("&Active python distribution..."), "", wx.ITEM_NORMAL)
-        self.links.Append(ENTHOUGHT_PYTHON_DISTRIBUTION, _("&Enthought python distribution..."), "", wx.ITEM_NORMAL)
-        self.links.AppendSeparator()
         self.links.Append(PYTHON_ANNOUNCEMENTS, _("Python &announcements..."), "", wx.ITEM_NORMAL)
         self.links.Append(PYTHON_COOKBOOK, _("Python cook&book..."), "", wx.ITEM_NORMAL)
         self.links.Append(PYTHON_DAILY, _("Python &daily..."), "", wx.ITEM_NORMAL)
-        self.links.Append(PYTHON_FOR_ARTISTS, _("Python for a&rtists..."), "", wx.ITEM_NORMAL)
         self.links.Append(PYTHON_PACKAGE_INDEX, _("Python package &index..."), "", wx.ITEM_NORMAL)
+        self.links.AppendSeparator()
+        self.links.Append(AUTHORS_HOMEPAGE, _("&Authors homepage"), "", wx.ITEM_NORMAL)
         self.Append(self.links, _("&Links"))
         self.window = wx.Menu()
         self.window.Append(NEXT, _("&Next\tCtrl+`"), "", wx.ITEM_NORMAL)
@@ -453,14 +449,11 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_forum_elysiun_python, id=FORUM_ELYSIUN_PYTHON)
         self.Bind(wx.EVT_MENU, self.menu_spe_homepage, id=SPE_HOMEPAGE)
         self.Bind(wx.EVT_MENU, self.menu_forum_spe, id=FORUM_SPE)
-        self.Bind(wx.EVT_MENU, self.menu_authors_homepage, id=AUTHORS_HOMEPAGE)
-        self.Bind(wx.EVT_MENU, self.menu_contact_author, id=CONTACT_AUTHOR)
-        self.Bind(wx.EVT_MENU, self.menu_active_python_distribution, id=ACTIVE_PYTHON_DISTRIBUTION)
-        self.Bind(wx.EVT_MENU, self.menu_enthought_python_distribution, id=ENTHOUGHT_PYTHON_DISTRIBUTION)
         self.Bind(wx.EVT_MENU, self.menu_python_announcements, id=PYTHON_ANNOUNCEMENTS)
         self.Bind(wx.EVT_MENU, self.menu_python_cookbook, id=PYTHON_COOKBOOK)
         self.Bind(wx.EVT_MENU, self.menu_python_daily, id=PYTHON_DAILY)
         self.Bind(wx.EVT_MENU, self.menu_python_package_index, id=PYTHON_PACKAGE_INDEX)
+        self.Bind(wx.EVT_MENU, self.menu_authors_homepage, id=AUTHORS_HOMEPAGE)
         self.Bind(wx.EVT_MENU, self.menu_next, id=NEXT)
         self.Bind(wx.EVT_MENU, self.menu_previous, id=PREVIOUS)
         self.Bind(wx.EVT_MENU, self.menu_manual, id=MANUAL)
