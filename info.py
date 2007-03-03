@@ -161,12 +161,13 @@ def imageFile(fileName):
 #---wx
 try:
     import wx
-    INFO['wxVersionC']  = '.'.join([str(x)for x in wx.VERSION])
-    if INFO['wxVersionC']!=INFO['wxVersion']:
-        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],INFO['wxVersionC'])
-        print 'If you experience any problems please install wxPython v%s\n'%INFO['wxVersion']
+    INFO['wxVersionC']  = wx.VERSION_STRING
+##    if INFO['wxVersionC']!=INFO['wxVersion']:
+##        print '\nSpe Warning: Spe was developped on wxPython v%s, but v%s was found.'%(INFO['wxVersion'],INFO['wxVersionC'])
+##        print 'If you experience any problems please install wxPython v%s\n'%INFO['wxVersion']
     INFO['encoding']    = wx.GetDefaultPyEncoding()
     WX_ERROR = False
-except ImportError:
+except ImportError, message:
     print "Spe Error: Please install the right version of wxPython: %s"%INFO['wxVersion']
+    print message
     WX_ERROR = True

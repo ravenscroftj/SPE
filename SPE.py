@@ -1,13 +1,26 @@
 import sys
 
+MIN_WX_VERSION  = '2.5.4.1'
+GET_WXPYTHON    = 'Get it from http://www.wxpython.org!'
+
 try:
-    WX_VERSION  = '2.5.4.1'
     import wxversion
-    #wxversion.select('2.6')
-    wxversion.ensureMinimal(WX_VERSION)
+    wxversion.ensureMinimal(MIN_WX_VERSION)
 except ImportError:
-    print 'You need to install at least wxPython v%s to run SPE.\nGet it from http://www.wxpython.org'%WX_VERSION
-    sys.exit()
+    #the old fashioned way as not everyone seems to have wxversion installed
+    try:
+        import wx
+        if wx.VERSION_STRING < MIN_WX_VERSION:
+            print 'You need to upgrade wxPython to v%s (or higher) to run SPE.'%MIN_WX_VERSION
+            print GET_WXPYTHON
+            sys.exit()
+    except ImportError:
+            print "Error: SPE requires wxPython, which doesn't seem to be installed."
+            print GET_WXPYTHON
+            sys.exit()
+    print 'Warning: the package python-wxversion was not found, please install it!'
+    print 'SPE will continue anyway, but not all features (such as wxGlade) might work.'
+
     
 import info
 INFO    = info.copy()
