@@ -387,10 +387,6 @@ class Bar(wxgMenu.Bar):
         """Edit > Preferences..."""
         self.parentPanel.preferences()
 
-    def menu_refresh(self, event=None):
-        """View > Refresh"""
-        self.app.childActive.refresh()
-
     def menu_whitespace(self, event=None):
         """View > Whitespace"""
         self.parentPanel.whitespace(event)
@@ -426,6 +422,14 @@ class Bar(wxgMenu.Bar):
         self.Check(wxgMenu.SHELL,hidden)
         if self.toolBar:
             self.toolBar.ToggleTool(TOOL_SHELL,hidden)
+
+    def menu_clear_output(self, event=None):
+        """View > Refresh"""
+        self.parentPanel.output.Clear()
+
+    def menu_refresh(self, event=None):
+        """View > Refresh"""
+        self.app.childActive.refresh()
 
     def menu_toolbar(self, event): 
         show = not self.parentPanel.getValue('ShowToolbar')

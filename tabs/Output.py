@@ -98,6 +98,10 @@ class Output(html.HtmlWindow):
     def UpdateToolbar(self):
         #print 'Updating toolbar...'
         pass
+        
+    #---view
+    def Clear(self):
+        self.SetPage('')
 
     #---event handlers
     def OnIdle(self, event):

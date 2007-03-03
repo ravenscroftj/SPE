@@ -18,9 +18,9 @@ GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
 
-REFRESH, WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
+WHITESPACE, INDENTATION_GUIDES, RIGHT_EDGE_INDICATOR,
 AS_NOTEBOOK, AS_COLUMNS, AS_ROWS,
-END_OF_LINE_MARKER, SIDEBAR, SHELL, TOOLBAR,
+END_OF_LINE_MARKER, SIDEBAR, SHELL, TOOLBAR, CLEAR_OUTPUT, REFRESH,
 
 RUN, RUN_WITHOUT_ARGUMENTS, RUN_TERMINAL, RUN_TERMINAL_WITHOUT_ARGUMENTS, 
 RUN_TERMINAL_WITHOUT_ARGUMENTS_EXIT, IMPORT, RUN_DEBUG, DEBUG,
@@ -43,7 +43,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(82)]
+[wx.NewId() for x in range(83)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -293,8 +293,6 @@ class Bar(wx.MenuBar):
         self.edit.Append(PREFERENCES, _("&Preferences...\tCtrl+Alt+P"), "", wx.ITEM_NORMAL)
         self.Append(self.edit, _("&Edit"))
         self.view = wx.Menu()
-        self.view.Append(REFRESH, _("&Refresh\tF5"), "", wx.ITEM_NORMAL)
-        self.view.AppendSeparator()
         self.view.Append(WHITESPACE, _("&Whitespace"), "", wx.ITEM_CHECK)
         self.view.Append(INDENTATION_GUIDES, _("&Indentation guides"), "", wx.ITEM_CHECK)
         self.view.Append(RIGHT_EDGE_INDICATOR, _("Ri&ght edge indicator"), "", wx.ITEM_CHECK)
@@ -306,6 +304,9 @@ class Bar(wx.MenuBar):
         self.view.AppendSeparator()
         self.view.Append(SIDEBAR, _("&Sidebar\tCtrl+F12"), "", wx.ITEM_CHECK)
         self.view.Append(SHELL, _("S&hell\tF12"), "", wx.ITEM_CHECK)
+        self.view.AppendSeparator()
+        self.view.Append(CLEAR_OUTPUT, _("Clear &output"), "", wx.ITEM_NORMAL)
+        self.view.Append(REFRESH, _("&Refresh\tF5"), "", wx.ITEM_NORMAL)
         self.Append(self.view, _("&View"))
         self.tools = wx.Menu()
         self.tools.Append(RUN, _("Run\\Stop\tCtrl+R"), "", wx.ITEM_NORMAL)
@@ -416,7 +417,6 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_insert_separator, id=INSERT_SEPARATOR)
         self.Bind(wx.EVT_MENU, self.menu_insert_signature, id=INSERT_SIGNATURE)
         self.Bind(wx.EVT_MENU, self.menu_preferences, id=PREFERENCES)
-        self.Bind(wx.EVT_MENU, self.menu_refresh, id=REFRESH)
         self.Bind(wx.EVT_MENU, self.menu_whitespace, id=WHITESPACE)
         self.Bind(wx.EVT_MENU, self.menu_indentation, id=INDENTATION_GUIDES)
         self.Bind(wx.EVT_MENU, self.menu_right_edge_indicator, id=RIGHT_EDGE_INDICATOR)
@@ -426,6 +426,8 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_as_rows, id=AS_ROWS)
         self.Bind(wx.EVT_MENU, self.menu_sidebar, id=SIDEBAR)
         self.Bind(wx.EVT_MENU, self.menu_shell, id=SHELL)
+        self.Bind(wx.EVT_MENU, self.menu_clear_output, id=CLEAR_OUTPUT)
+        self.Bind(wx.EVT_MENU, self.menu_refresh, id=REFRESH)
         self.Bind(wx.EVT_MENU, self.menu_run, id=RUN)
         self.Bind(wx.EVT_MENU, self.menu_run_without_arguments, id=RUN_WITHOUT_ARGUMENTS)
         self.Bind(wx.EVT_MENU, self.menu_run_debug, id=RUN_DEBUG)
@@ -788,6 +790,10 @@ class Bar(wx.MenuBar):
 
     def menu_save_copy(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_save_copy' not implemented"
+        event.Skip()
+
+    def menu_clear_output(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_clear_output' not implemented"
         event.Skip()
 
 # end of class Bar
