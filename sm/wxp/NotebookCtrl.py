@@ -1465,8 +1465,7 @@ class TabCtrl(wx.PyControl):
         fullrect = self.GetClientSize()
         count = self._tabvisible[0:selection].count(0)
         sindex = selection-self._firstvisible-count
-        if sindex < 0 or sindex > len(self._tabrect):
-            print "NotebookCtrl Error: index out of range",sindex, len(self._tabrect)
+        if sindex < 0 or sindex >= len(self._tabrect):
             return
         currect = self._tabrect[sindex]
         spinval = self._spinbutton.GetValue()
