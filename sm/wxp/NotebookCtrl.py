@@ -1464,10 +1464,8 @@ class TabCtrl(wx.PyControl):
                 
         fullrect = self.GetClientSize()
         count = self._tabvisible[0:selection].count(0)
-        sindex = selection-self._firstvisible-count
-        if sindex < 0 or sindex >= len(self._tabrect):
-            return
-        currect = self._tabrect[sindex]
+        currect = self._tabrect[selection-self._firstvisible-count]
+
         spinval = self._spinbutton.GetValue()
         firstrect = self._initrect[spinval]
         if self._style & NC_LEFT or self._style & NC_RIGHT:
@@ -4703,7 +4701,7 @@ class NotebookCtrl(wx.Panel):
         if select:
             if oldselection >= 0:
                self.bsizer.Show(self.GetPage(oldselection), False)
-            
+               
             self.nb.SetSelection(self.GetPageCount()-1)
             self.bsizer.Layout()
         else:
