@@ -1,5 +1,9 @@
 import sys
 
+if sys.platform.startswith('win') and sys.executable.lower().endswith('pythonw.exe'):
+    from cStringIO import StringIO
+    sys.stdout = StringIO()
+
 MIN_WX_VERSION  = '2.5.4.1'
 GET_WXPYTHON    = 'Get it from http://www.wxpython.org!'
 
