@@ -93,7 +93,8 @@ class Panel(wx.SplitterWindow):
         self.inspectPrevious    = False
         self.line               = 1
         self.position           = 0
-        self.sashPosition       = self.minSashPosition = [310,285][info.WIN]
+        self.sashPosition       = [285,310][info.DARWIN]
+        self.minSashPosition    = [120,310][info.DARWIN]
         self.sidebarHidden      = False
         self.saved              = ''
         self.todoMax            = 1
