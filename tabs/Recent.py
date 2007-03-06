@@ -54,7 +54,7 @@ class Panel(wx.ListCtrl):
         self.DeleteAllItems()
         i=0
         self.files = [(os.path.basename(str(file)),file) for file in self.files]
-        self.files.sort()
+        self.files.sort(key=lambda (name,path): name.lower())
         self.files = [file[1] for file in self.files]
         for file in self.files:
             self.InsertImageStringItem(i, os.path.basename(str(file)),self.pyIcon)

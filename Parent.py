@@ -180,7 +180,7 @@ class Panel(wx.Notebook):
             menuBar.enable(0)
 
     def __remember__(self,openFiles=[]):
-        
+
         self.__openWorkspace__()  #this prepares the currentworkspace to be used
         try:
             self.get("currentworkspace") #This will fail if there is no current workspace to get
@@ -190,14 +190,14 @@ class Panel(wx.Notebook):
         if len(openFiles)>0:
             self.rememberSet(1)
             self.openList(openFiles)
-        if len(self.app.children)==0: 
+        if len(self.app.children)==0:
             self.new(maximize = self.getValue("MaxChildren"))
 
     #---Workspace
     def _createNewDefaultWorkspace(self):
-        #if not os.path.exists(self.workspace['file']): 
+        #if not os.path.exists(self.workspace['file']):
         file=os.path.join(INFO['userPath'],'defaults.sws')
-        if not os.path.isfile(file): 
+        if not os.path.isfile(file):
             new_cf=ConfigParser.ConfigParser()
 
             # Recent
@@ -238,7 +238,7 @@ class Panel(wx.Notebook):
             self._createNewDefaultWorkspace()
         self.workspace['defaultconfig']=ConfigParser.ConfigParser()
         self.workspace['defaultconfig'].read(file)
-        
+
         #read the specific workspace for the 'local' items
         self.workspace['config']=ConfigParser.ConfigParser()
         try:
@@ -251,12 +251,12 @@ class Panel(wx.Notebook):
         try:
             openFiles=eval(self.getWorkspaceValue("OpenFiles"))
             self.workspace['openfiles']=[]
-            for i in openFiles: 
+            for i in openFiles:
                 self.workspace['openfiles'].append(i[0])
         except Exception,e:
             if self.app.DEBUG:
                 self.SetStatusText("Error opening workspace file %s: %s"%(file,e))
-            
+
     def applyWorkspaceTab(self,child):
         """ this function will change the child tab to indicate that it is part of the workspace """
         self.name   = os.path.basename(child.fileName)
@@ -265,7 +265,7 @@ class Panel(wx.Notebook):
                 child.frame.setTitle(self.name,colour=wx.WHITE)
             except Exception, e:
                 print e
-            
+
     def loadWorkspace(self):
         try:
             if self.getValue('CloseChildrenOnNewWorkspace'):
@@ -274,7 +274,7 @@ class Panel(wx.Notebook):
                     child.frame.onFrameClose()
         except:
             pass
-            
+
         #load the Recent Files
         self.recent.files=[]
         default=False
@@ -284,7 +284,7 @@ class Panel(wx.Notebook):
             self.recent.add([file for file in files if file and os.path.exists(file)])
         except:
             pass
-            
+
         #load the Folders
         default=False
         if self.getValue('globalFolders'): default=True
@@ -294,7 +294,7 @@ class Panel(wx.Notebook):
             self.browser.add([file for file in folders[1:] if file])
         except:
             pass
-            
+
         #load the Notes
         default=False
         if self.getValue('globalNotes'): default=True
@@ -321,10 +321,10 @@ class Panel(wx.Notebook):
                 maximize    = self.getValue("MaxChildren"),
                 verbose     = True)
         self.setWorkspaceStatusBarText(self.workspace['file'])
-                
+
     def setWorkspaceStatusBarText(self,file):
         self.SetActiveStatusText(os.path.basename(file)[:-4],STATUS_TEXT_WORKSPACE_POS)
-        
+
     def saveWorkspace(self,filelocation=None):
         fileList=[]
         if self.app.children:
@@ -351,7 +351,7 @@ class Panel(wx.Notebook):
         except Exception, message:
             print 'Spe warning: could not save workspace options in',filelocation
             print message
-            
+
     def getWorkspaceValue(self,type,default=False):
         """        returns the value of the workspace config file key        """
         if default:
@@ -398,7 +398,7 @@ class Panel(wx.Notebook):
                     child.frame.onFrameClose()
             self.openList(fileList)
         dlg.Destroy()
-        
+
     def open_workspace(self):
         """Open file dialog."""
         try:
@@ -418,26 +418,26 @@ class Panel(wx.Notebook):
             except Exception,e:
                 self.message("Could not open workspace:%s\n%s"%(file,e))
         dlg.Destroy()
-        
+
     def save_workspace(self):
         """Save file dialog."""
         try:
             self.saveWorkspace()
         except Exception,e:
             self.message("Could not save workspace:%s\n%s"%(file,e))
-        
+
     def save_workspace_as(self):
         """Save file dialog."""
         try:
             defaultFile = self.workspace['file']
         except:
             defaultFile = ''
-        if info.WIN: 
+        if info.WIN:
            defaultFile  = defaultFile.replace("/","\\")
-        dlg             = wx.FileDialog(self, "Save Workspace As - www.stani.be", 
+        dlg             = wx.FileDialog(self, "Save Workspace As - www.stani.be",
             defaultFile = defaultFile,
-            defaultDir  = info.dirname(defaultFile), 
-            wildcard    = info.WORKSPACE_WILDCARD, 
+            defaultDir  = info.dirname(defaultFile),
+            wildcard    = info.WORKSPACE_WILDCARD,
             style       = wx.SAVE|wx.OVERWRITE_PROMPT|wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
             file = dlg.GetPath()
@@ -447,7 +447,7 @@ class Panel(wx.Notebook):
             except Exception,e:
                 self.message("Could not save workspace:%s\n%s"%(file,e))
         dlg.Destroy()
-                
+
     def save(self):
         try:
             if self.getValue('SaveWorkspaceOnFileSave'):
@@ -536,7 +536,7 @@ class Panel(wx.Notebook):
         for child in self.app.children:
             child.source.SetViewEOL(event.IsChecked())
         self.set('ViewEol',event.IsChecked())
-        
+
     def as_notebook(self,event):
         if hasattr(self.frame,'Tile'):
             self.app.childActive.frame.Maximize()
@@ -552,7 +552,7 @@ class Panel(wx.Notebook):
             tabs    = getattr(self.frame,'tabs',None)
             if tabs:
                     tabs.Tile(True, wx.VERTICAL)
-        
+
     def as_rows(self,event):
         if hasattr(self.frame,'Tile'):
             self.frame.Maximize(wx.HORIZONTAL)
@@ -560,7 +560,7 @@ class Panel(wx.Notebook):
             tabs    = getattr(self.frame,'tabs',None)
             if tabs:
                     tabs.Tile(True, wx.HORIZONTAL)
-        
+
     def toggle_shell(self):
         """Show/hide shell"""
         frame               = self.frame
@@ -645,7 +645,7 @@ class Panel(wx.Notebook):
             self.run_with_arguments(arguments,beep=beep,confirm=False)
         else:
             self.output._check_run(False)
-        
+
     def run_with_arguments(self,arguments='',beep=True,confirm=True):
         if self.output.IsBusy():
             self.output.Kill()
@@ -662,14 +662,14 @@ class Panel(wx.Notebook):
         label = params['label'] = "%(file)s %(arguments)s"%params
         os.chdir(path)
         self.output.Execute("%(python)s -u %(label)s"%params,label=label,beep=beep)
-        
+
     def run_debug(self):
         """Run file"""
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
         self.runner.switch()
-            
+
     def import_(self):
         """Import"""
         child                   = self.app.childActive
@@ -690,7 +690,7 @@ class Panel(wx.Notebook):
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
         self.runner.debug()
-            
+
         return
         child   = self.app.childActive
         if child.confirmSave():
@@ -835,6 +835,9 @@ class Panel(wx.Notebook):
                         path = p
         if path:
             self.messageHtml(path)
+        elif os.path.exists(os.path.join(WxPythonDocs2,"wxDocsViewer.app")):
+            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,
+                os.path.join(WxPythonDocs,"wxDocsViewer.app/Contents/Resources/viewdocs.py"))
         else:
             self.SetActiveStatusText('wxPython documentation could not be found. Check the path in the preferences dialog.')
 
@@ -871,7 +874,7 @@ class Panel(wx.Notebook):
                 self.recent.add([fileName])
                 if lineno:child.scrollTo(lineno,col,select=select)
 ##                if child.fileName in self.workspace['openfiles']:
-##                    #this is a workspace file and should 
+##                    #this is a workspace file and should
 ##                    self.applyWorkspaceTab(child)
             lineno=None
             col=1
@@ -948,7 +951,10 @@ class Panel(wx.Notebook):
         selfSize=mainWindow.GetRect()
         if not mainWindow.IsMaximized():
             self.set("sizex",selfSize.GetSize().x)
-            self.set("sizey",selfSize.GetSize().y)
+            if info.DARWIN and wx.VERSION_STRING>'2.8':
+                self.set("sizey",selfSize.GetSize().y-47) #dirty hack
+            else:
+            	self.set("sizey",selfSize.GetSize().y)
             self.set("posx",selfSize.GetPosition().x)
             self.set("posy",selfSize.GetPosition().y)
             self.set("maximize","False")
@@ -1290,7 +1296,7 @@ Please report these details and operating system to %s."""%(message,INFO['author
             self.frame.tabs.EnableToolTip(self.getValue('ToolTipsForFileTabs'))
         for child in self.app.children:
             child.source.update()
-        dialogs.stcStyleEditor.SetStyles(self.tabPanel['Shell'], self.config)
+        #dialogs.stcStyleEditor.SetStyles(self.tabPanel['Shell'], self.config)
         #restart?!
         restart = ''
         if self.app.mdiName     != self.get('Mdi'):

@@ -3,11 +3,11 @@
 try:
     import sm, sm.osx
     INFO=sm.INFO.copy()
-    
+
     INFO['title']     = INFO['titleFull'] = 'Sdi/Mdi Framework'
-    
+
     INFO['description']=\
-    """Framework which makes it easy to switch between Sdi (Linux/Mac) 
+    """Framework which makes it easy to switch between Sdi (Linux/Mac)
     and Mdi (Windows).
     """
 
@@ -39,7 +39,7 @@ Attributes of Application:
         - ParentPanel
         - StatusBar
         - ToolBar
-        
+
 Attributes of Frame:
     - properties:
         - app
@@ -62,7 +62,7 @@ Attributes of Frame:
         - (onFrameTab)
     - classes:
         - Panel
-        
+
 Attributes of Panel:
     - properties:
         - changed
@@ -71,7 +71,7 @@ Attributes of Panel:
         - parentFrame
         - parentPanel
     - methods:
-    
+
 Attributes of MenuBar:
     - properties:
         - app
@@ -85,7 +85,7 @@ Attributes of ToolBar:
         - app
         - frame
         - menuBar
-    
+
 Todo:
 - MDI_TABS IS NOT WORKING!! THIS SHOULD BE FIXED
 - icon support
@@ -164,7 +164,7 @@ def _(x):
 
 def _strip(x):
     return x.replace(' ','_').replace('-','_').replace('&& ','').replace('&','').replace('.','').replace('(','').replace(')','')
-    
+
 def menuWrite(menuBar,f='menu.txt'):
     labels = []
     for m in range(menuBar.GetMenuCount()):
@@ -188,11 +188,11 @@ def menuWrite(menuBar,f='menu.txt'):
     f   = open(f,'w')
     f.write(result)
     f.close()
-            
+
 def test_menuWrite():
     import menu
     menuWrite(wxgMenu.Bar())
-    
+
 ####Base
 WX_BITMAP       = wx.Bitmap
 
@@ -205,12 +205,12 @@ class Bitmap:
         #if self.app.DEBUG:
         #    print 'Bitmap: %s<%s'%(x,path)
         return WX_BITMAP(path,t)
-        
+
 class DummyPage(wx.StaticText):
     """Page to fill the tabs (not meant to be visible)."""
     def __init__(self,tabs):
         wx.StaticText.__init__(self, tabs, wx.ID_ANY, "SPE bug: This shouldn't be visible")
-        
+
 class NativeNotebookPlus(wx.Notebook):
     """Fall back for linux"""
     def __init__(self,app,*args,**keyw):
@@ -218,7 +218,7 @@ class NativeNotebookPlus(wx.Notebook):
         self.app = app
         self.Bind(wx.EVT_MIDDLE_UP,self.onFrameMiddleClick)
         self.Bind(wx.EVT_LEFT_DCLICK,self.onFrameMiddleClick)
-        
+
     def onFrameMiddleClick(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
         mousePos    = event.GetPosition()
@@ -229,10 +229,10 @@ class NativeNotebookPlus(wx.Notebook):
             zero = -1
         if index>zero:
             self.app.children[index-zero-1].frame.onFrameClose()
-            
+
     def EnableToolTip(self,*args,**keyw):
         pass
-        
+
     def SetPageToolTip(self,*args,**keyw):
         pass
 
@@ -260,7 +260,7 @@ class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
         if GTK:
             self.SetTabHeight(30)
         else:
-            self.SetTabHeight(25)            
+            self.SetTabHeight(25)
         self.SetDrawX(True, 2)
         self.SetPadding(wx.Point(4,4))
         self.SetUseFocusIndicator(False)
@@ -272,14 +272,14 @@ class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CLOSING,self.onClosing)
         self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DND, self.onDragAndDrop)
         #self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_DCLICK, self.OnLeftDClick)
-        
+
     def onClosing(self,event):
         """When a tab is middle clicked (EVT_MOUSE_LEFT&HitTest)."""
         index   = event.GetSelection()
         zero    = self.getZero()
         if index>zero:
             self.app.children[index-zero-1].frame.onFrameClose()
-            
+
     def onDragAndDrop(self, event):
         old     = event.GetOldPosition()
         new     = event.GetNewPosition()
@@ -290,27 +290,27 @@ class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
             children.remove(child)
             children.insert(new-zero-1,child)
             event.Skip()
-        
+
     def getZero(self):
         if self.app.mdi in [SDI,MDI_TABS]: #no parent tab
             return 0
         else:
             return -1
-        
+
     def setIcons(self,bitmaps):
         #todo: here this should go somewhere else!!
-        pageIcons      = []  
+        pageIcons      = []
         for bitmap in bitmaps:
             self.pageIcons.append(self.notebookIcons.Add(bitmap))
-            
+
         self.notebookIcons  = wx.ImageList(16,16)
         self.AssignImageList(self.notebookIcons)
-        
+
     def OnLeftDClick(self, event):
 
         nPage = event.GetSelection()
         self.ReparentToFrame(nPage, False)
-        
+
         event.Skip()
 
 
@@ -318,7 +318,7 @@ if sys.platform.startswith('linux'):
     NotebookPlus    = NativeNotebookPlus
 else:
     NotebookPlus    = AndreaNotebookPlus
-            
+
 ####Foundation Classes
 class Framework:
     """Foundation class for every frame."""
@@ -343,7 +343,7 @@ class Framework:
         #show
         self.Thaw()
         self.Show(True)
-        
+
     #---components
     def __before__(self,app,Panel,parentFrame,page,extra):
         """Reference frame attributes (not overwritten)."""
@@ -356,7 +356,7 @@ class Framework:
         self.page           = page
         self.extra          = extra
 
-        
+
     def __stage__(self,page,extra,**options):
         """Create notebook (to switch between documents) & panel
         This is mostly overwritten."""
@@ -397,8 +397,8 @@ class Framework:
 
     def __tool__(self,app):
         """Create toolbar
-        
-        Very important: in the custom wx.ToolBar class after the 
+
+        Very important: in the custom wx.ToolBar class after the
         wx.ToolBar.__init__ the following code must be written:
             parent.SetToolBar(self)"""
         if self.app.ToolBar and not (self.noMenu or self.isSdiParent):
@@ -418,7 +418,7 @@ class Framework:
             self.toolBar = None
             if self.menuBar:
                 self.menuBar.toolBar        = None
-            
+
     def __statusBar__(self):
         """Create statusbar (to be overwritten)."""
         if self.noMenu:
@@ -431,13 +431,13 @@ class Framework:
                     print """Create: Framework: statusbar."""
                 self.statusBar = self.app.StatusBar(parent=self,id=wx.ID_ANY)
                 self.SetStatusBar(self.statusBar)
-            
+
     #---other
     def __finish__(self):
         self.setTitle(self.page,self.extra)
         if hasattr(self.panel,'__finish__'):
             self.panel.__finish__()
-            
+
     def __layoutTabs__(self,parent=None):
         """Not for mdi children"""
         if not parent: parent = self
@@ -449,11 +449,11 @@ class Framework:
         parent.Layout()
         #events
         self.bindTabs()
-        
+
     #---events
     def _isActiveEvent(self,event):
         return (event is None) or (not hasattr(event,'GetActive')) or event.GetActive()
-    
+
     def __events__(self):
         """Initialize events."""
         eventManager.Register(self.onFrameActivate, wx.EVT_ACTIVATE,    self)
@@ -464,21 +464,21 @@ class Framework:
         if self.toolBar:    self.toolBar.__events__()
         if hasattr(self.panel,'onIdle'):
             eventManager.Register(self.onFrameIdle, wx.EVT_IDLE, self)
-        
+
     def onFrameActivate(self, event):
         """Activate event (to be overwritten)."""
         getActive   = self._isActiveEvent(event)
         if getActive:
-            if self.app.DEBUG: 
+            if self.app.DEBUG:
                 print 'Event<: Framework: %s.Activate(%s)'%(self.__class__,getActive)
             if hasattr(self.panel,'onActivate'):
                 self.panel.onActivate(event)
         elif hasattr(self.panel,'onDeactivate'):
             self.panel.onDeactivate(event)
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event>: Framework: %s.Activate(%s)'%(self.__class__,getActive)
         if event: event.Skip()
-        
+
     def onFrameClose(self, event=None, destroy = 1):
         """Close event (to be overwritten/extended)."""
         debug = self.app.DEBUG
@@ -493,68 +493,68 @@ class Framework:
                 eventManager.DeregisterWindow(self)
                 self.Destroy()
                 if event: event.Skip()
-            if debug: 
+            if debug:
                 print 'Event>: Framework: %s.Close returns True'%self.__class__
             return True
         else:
-            if debug: 
+            if debug:
                 print 'Event>: Framework: %s.Close returns False'%self.__class__
             return False
-        
+
     def onFrameMove(self, event=None):
         """Move event (to be overwritten)."""
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event<: Framework: %s.Move'%self.__class__
         if event: event.Skip()
         #sm.spy.frame(1)
         if hasattr(self.panel,'onMove'):
             self.panel.onMove(event)
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event>: Framework: %s.Move'%self.__class__
-        
+
     def onFrameSize(self, event=None):
         """Size event (to be overwritten)."""
         #sm.spy.frame(1)
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event<: Framework: %s.Size'%self.__class__
         if hasattr(self.panel,'onSize'):
             self.panel.onSize(event)
-        if self.app.DEBUG: 
+        if self.app.DEBUG:
             print 'Event>: Framework: %s.Size'%self.__class__
         if event: event.Skip()
-        
+
     def onFrameIdle(self, event):
         """To be overwritten."""
         if not self.dead:
             if hasattr(self.panel,'onIdle'):
                 self.panel.onIdle()
-                
+
     def bindTabs(self):
         """Bind events to notebook tabs (to be overwriten)."""
         pass
-        
+
     def unbindTabs(self):
         """Unbind events to notebook tabs (to be overwriten)."""
         pass
-        
+
     def getIndex(self):
         """Get index of current child."""
         try:
             return self.app.children.index(self.panel)
         except ValueError:
             return -1
-            
+
 
 class Tabs(Framework):
-    #---events            
+    #---events
     def bindTabs(self):
         self.tabs.Bind(self.app.EVENT_NOTEBOOK, self.onFrameTab)
         #eventManager.Register(self.onFrameTab, self.app.EVENT_NOTEBOOK, self.tabs)
-        
+
     def unbindTabs(self):
         self.tabs.Unbind(self.app.EVENT_NOTEBOOK)
         #eventManager.DeregisterWindow(self.tabs)
-        
+
     def raiseTab(self,index):
         if index > -1:
             app = self.app
@@ -582,11 +582,11 @@ class TabWin32(Tabs):
 ##        mousePos    = event.GetPosition()
 ##        index, other = self.tabs.HitTest(mousePos)
 ##        self.raiseTab(index)
-        
+
     def onFrameTab(self,event):
         self.raiseTab(event.GetSelection())
         event.Skip()
-                
+
 class TabUnix(Tabs):
     """SDI Implementation for windows (see also App.SetMdi)"""
     def onFrameTab(self,event):
@@ -599,7 +599,7 @@ if PLATFORM == 'win32':
     TabPlatform     = TabWin32
 else:
     TabPlatform     = TabUnix
-        
+
 ####Parent classes
 class Parent(Framework):
     #---initialize
@@ -612,10 +612,10 @@ class Parent(Framework):
             page            = page,
             parentFrame     = self,
             **options)
-        
+
     def __finish__(self):
         Framework.__finish__(self)
-        
+
     #---events
     def onFrameClose(self,event=None):
         self.dead = Framework.onFrameClose(self,event,destroy=0)
@@ -631,16 +631,16 @@ class Parent(Framework):
     #---menu
     def menu_new(self, event=None):
         self.child()
-        
+
     def menu_close(self,event=None):
         childActive = self.app.childActive
         if childActive:
             childActive.onFrameClose()
-        
+
     #---parentPanel
     def child(self,*args,**keyw):
         self.ChildFrame(self,*args,**keyw)
-        
+
     def maximize(self):
         if self.app.mdi == MDI_SPLIT:
             return True
@@ -650,7 +650,7 @@ class Parent(Framework):
             if child.frame.IsMaximized():
                 return True
         return False
-    
+
     #---other
     def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
@@ -658,22 +658,22 @@ class Parent(Framework):
             if page:
                 t       = '%s - %s'%(page,t)
             self.SetTitle(t)
-        
+
 
 class MdiParentFrame(Parent,wx.MDIParentFrame):
     """Uniformed parent Mdi/Sdi class based on Mdi.
-    
+
     self.Panel is defined by joined class"""
     def __init__(self,app,
-            id      = wx.ID_ANY, 
+            id      = wx.ID_ANY,
             page   = 'parentFrame',
             parent  = None,
             size    = SIZE,
             style   = STYLE_PARENTFRAME,
             pos     = POS,
             **options):
-        wx.MDIParentFrame.__init__(self, 
-            id      = id, 
+        wx.MDIParentFrame.__init__(self,
+            id      = id,
             name    = page,
             parent  = parent,
             size    = size,
@@ -687,7 +687,7 @@ class MdiParentFrame(Parent,wx.MDIParentFrame):
                 pass
         #This always has to be last!
         Parent.__init__(self,app=app,page=page,**options)
-        
+
     def __stage__(self,page,extra,**options):
         self.panelFrame     = wx.MDIChildFrame(parent=self,id=wx.ID_ANY)
         self.panelFrame.SetTitle(self.app.panelFrameTitle)
@@ -698,15 +698,15 @@ class MdiParentFrame(Parent,wx.MDIParentFrame):
         if self.app.Palette:
             self.palette    = self.app.Palette(parent=self,id=wx.ID_ANY)
             self.palette.Show()
-        
+
     def onSashClose(self,event):
         if hasattr(self.panel,'onClosePanelFrame'):
             self.panel.onClosePanelFrame(event)
-            
+
     def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
             self.SetTitle(self.app.title)
-            
+
 class MdiTabsParentFrame(TabPlatform,MdiParentFrame):
     def __stage__(self,page,extra,**options):
         app                 = self.app
@@ -725,12 +725,12 @@ class MdiTabsParentFrame(TabPlatform,MdiParentFrame):
         if app.Palette:
             self.palette    = self.app.Palette(parent=self,id=wx.ID_ANY)
             self.palette.Show()
-                
-        
+
+
 class MdiSashParentFrame(MdiParentFrame):
     """Uniformed parent Mdi/Sdi class based on Mdi.
-    
-    self.Panel is defined by joined class"""        
+
+    self.Panel is defined by joined class"""
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
@@ -753,7 +753,7 @@ class MdiSashParentFrame(MdiParentFrame):
         self.panelSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND, 0)
         self.sash.SetAutoLayout(1)
         self.sash.SetSizer(self.panelSizer)
-    
+
     def __finish__(self):
         Parent.__finish__(self)
         wx.LayoutAlgorithm().LayoutMDIFrame(self)
@@ -791,21 +791,21 @@ class MdiSashTabsParentFrame(TabPlatform,MdiSashParentFrame):
         """When a tab is changed (EVT_MOUSE_LEFT&HitTest)."""
         TabPlatform.onFrameTab(self,event)
         event.Skip()
-            
+
 class MdiSplitParentFrame(Parent,wx.Frame):
     """Default on Linux."""
     def __init__(self,app,
-            id      = wx.ID_ANY, 
+            id      = wx.ID_ANY,
             page    = 'parentFrame',
             parent  = None,
             size    = SIZE,
             style   = STYLE_PARENTFRAME,
             pos     = POS,
             **options):
-        wx.Frame.__init__(self, 
-            id      = id, 
+        wx.Frame.__init__(self,
+            id      = id,
             name    = page,
-            parent  = parent, 
+            parent  = parent,
             size    = size,
             style   = style | FULL_REPAINT_ON_RESIZE,
             title   = page,
@@ -817,7 +817,7 @@ class MdiSplitParentFrame(Parent,wx.Frame):
                 pass
         #This always has to be last!
         Parent.__init__(self,app=app,page=page,**options)
-        
+
     def __stage__(self,page,extra,**options):
         self.split  = split = wx.SplitterWindow(self,wx.ID_ANY,style=STYLE_SPLIT)
         self.tabs   = NotebookPlus(app=self.app,parent=split, id=wx.ID_ANY,
@@ -831,41 +831,40 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         self.SetSize((size[0],size[1]))
         split.UpdateSize()
         if sys.platform.startswith('linux'):
-            print '->',self.tabs.GetSize(),self.GetClientSize(),self.panel.GetSize(), '\n\n\n'
             split.SplitHorizontally(self.tabs, self.panel, size[1]-20)
         else:
             split.SplitHorizontally(self.tabs, self.panel, -200)
         self.bindTabs()
-        
+
     def bindTabs(self,event=None):
         self.tabs.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED, self.onFrameTab)
         #eventManager.Register(self.onFrameTab, wx.EVT_NOTEBOOK_PAGE_CHANGED, self.tabs)
-    
+
     def unbindTabs(self):
         self.tabs.Unbind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED)
         #eventManager.DeregisterWindow(self.tabs)
-        
+
     def onFrameTab(self,event):
         index = event.GetSelection()
         #print index
         if index>-1:
             self.app.children[index].frame.onFrameActivate()
         event.Skip()
-        
+
 class SdiParentFrame(TabPlatform,Parent,wx.Frame):
     """Uniformed parent Mdi/Sdi class based on Sdi."""
     def __init__(self,app,
-            id      = wx.ID_ANY, 
+            id      = wx.ID_ANY,
             page    = 'parentFrame',
             parent  = None,
             size    = SIZE,
             style   = STYLE_PARENTFRAME,
             pos     = POS,
             **options):
-        wx.Frame.__init__(self, 
-            id      = id, 
+        wx.Frame.__init__(self,
+            id      = id,
             name    = page,
-            parent  = parent, 
+            parent  = parent,
             size    = size,
             style   = style | FULL_REPAINT_ON_RESIZE,
             title   = page,
@@ -888,11 +887,11 @@ class SdiParentFrame(TabPlatform,Parent,wx.Frame):
         self.panel  = self.Panel(parent=self.tabs,**options)
         self.tabs.AddPage(self.panel, page)
         self.__layoutTabs__()
-        
+
     def setTitle(self,page='',extra='',draw=True,colour=None):
         if draw:
             self.SetTitle(self.app.title)
-        
+
 ####Child classes
 class Child(Framework):
     #---initialize
@@ -910,7 +909,7 @@ class Child(Framework):
             page            = page,
             extra           = extra,
             **options)
-    
+
     def __finish__(self):
         app             = self.app
         panel           = self.panel
@@ -919,7 +918,7 @@ class Child(Framework):
         self.addPageToParent(panel,app.mdi)
         #finish
         Framework.__finish__(self)
-        
+
     def addPageToParent(self,panel,mdi):
         """"Add page with childs title to parent
         Can be overwritten."""
@@ -931,11 +930,11 @@ class Child(Framework):
     def onFrameActivate(self, event=None):
         """Activate event."""#todo: update tabs above if not right
         if self._isActiveEvent(event):
-            if self.app.DEBUG: 
+            if self.app.DEBUG:
                 'Event:  Child: %s.Activate'%self.__class__
             self.app.childActive    = self.panel
         Framework.onFrameActivate(self,event)
-        
+
     def onFrameClose(self, event = None):
         """Close event.
         Try to avoid self here once DeletePage has been called."""
@@ -947,11 +946,11 @@ class Child(Framework):
         mdi         = app.mdi
         destroyed   = False
         parentFrame = self.parentFrame
-        if debug: 
+        if debug:
             print 'Event<: Child: %s.Close'%self.__class__
         self.dead = Framework.onFrameClose(self,destroy=0)
         if not self.dead:
-            if debug: 
+            if debug:
                 print 'Event>: Child: %s.Close returns False'%self.__class__
             return False
         #no references to self after this point
@@ -969,7 +968,7 @@ class Child(Framework):
             eventManager.DeregisterWindow(self.tabs)
         #update rest
         if hasattr(parentFrame,'tabs'):
-            #Update childBook tabs 
+            #Update childBook tabs
             current = index+delta
             # * parent frame (mdi & sdi)
             parentFrame.unbindTabs()
@@ -997,10 +996,10 @@ class Child(Framework):
             app.childActive = None
         if not destroyed and mdi!=MDI_SPLIT:
                 self.Destroy()
-        if debug: 
+        if debug:
             print 'Event>: Child: %s.Close returns True'%self.__class__
-        return True    
-            
+        return True
+
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         if new:
             #parameters
@@ -1018,10 +1017,10 @@ class Child(Framework):
             elif hasattr(self,'SetTitle'):
                 self.SetTitle(self.pageTitle)
             self.setIcon()
-            
+
     def setIcon(self):
         pass
-        
+
 class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
     def __init__(self,parentFrame,
         id          = wx.ID_ANY,
@@ -1040,10 +1039,10 @@ class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
         if maximize:
             style   |= wx.MAXIMIZE
         wx.MDIChildFrame.__init__(self,
-            id      = id, 
+            id      = id,
             name    = page,
             parent  = parentFrame,
-            style   = style | FULL_REPAINT_ON_RESIZE, 
+            style   = style | FULL_REPAINT_ON_RESIZE,
             title   = page)
         self.Maximize()#if maximize and PLATFORM != 'win32':#sm:seems better to leave this away.
         self.Raise  = self.Activate #raise doesn't work here
@@ -1053,11 +1052,11 @@ class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
             page        = page,
             extra       = extra,
             **options)
-        
+
     def __finish__(self):
         self.tabs       = self.parentFrame.tabs
         Child.__finish__(self)
-                
+
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new,draw)
         self.parentFrame.setTitle(self._pageTitle,draw=draw)
@@ -1066,13 +1065,13 @@ class MdiSashTabsChildFrame(Child,wx.MDIChildFrame):
             self.tabs.SetPageText(index,self._pageTitle)
             if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
                 self.tabs.SetPageColour(index,colour)
-        
+
     def onFrameActivate(self, event):
         if self._isActiveEvent(event):
             self.setTitle(new=False)
             self.parentFrame.tabs.SetSelection(self.getIndex())
         Child.onFrameActivate(self,event)
-        
+
 class MdiChildFrame(MdiSashTabsChildFrame, Child):
     """Mdi Child frame without tabs."""
     def addPageToParent(self,panel,mdi):
@@ -1081,15 +1080,15 @@ class MdiChildFrame(MdiSashTabsChildFrame, Child):
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new,draw)
         self.parentFrame.setTitle(self._pageTitle,draw=draw)
-        
+
     def __finish__(self):
         Child.__finish__(self)
-        
+
     def onFrameActivate(self, event):
         if self._isActiveEvent(event):
             self.setTitle(new=False)
         Child.onFrameActivate(self,event)
-        
+
 class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
@@ -1107,11 +1106,11 @@ class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
             childTabs.AddPage(page=DummyPage(childTabs),text=page)
         #Add itself to itself
         tabs.AddPage(page=panel,text=page,select=True)
-        self.__layoutTabs__()        
-        
+        self.__layoutTabs__()
+
     def __finish__(self):
         Child.__finish__(self)
-        
+
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
         if new and draw:
@@ -1119,13 +1118,13 @@ class MdiTabsChildFrame(TabPlatform,MdiSashTabsChildFrame, Child):
             self.tabs.SetPageText(index,self._pageTitle)
             if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
                 self.tabs.SetPageColour(index,colour)
-        
+
     def onFrameActivate(self, event):
         if self._isActiveEvent(event):
             self.setTitle(new=False)
             self.parentFrame.tabs.SetSelection(self.getIndex()+1)
         Child.onFrameActivate(self,event)
-        
+
 class MdiSplitChildFrame(Child,wx.Panel):
     def __init__(self,parentFrame,
         id          = wx.ID_ANY,
@@ -1140,11 +1139,11 @@ class MdiSplitChildFrame(Child,wx.Panel):
         if app.DEBUG:
             print 'Create: MdiSplit: %s'%self.__class__,page,extra
         wx.Panel.__init__(self,
-            id      = id, 
+            id      = id,
             name    = page,
-            parent  = parentFrame.tabs, 
+            parent  = parentFrame.tabs,
             size    = wx.Size(600,400),
-            style   = style | FULL_REPAINT_ON_RESIZE,) 
+            style   = style | FULL_REPAINT_ON_RESIZE,)
             #title   = page)
         #This always has to be last!
         Child.__init__(self,
@@ -1153,7 +1152,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
             extra       = extra,
             **options)
         eventManager.Register(self.onFrameActivate, wx.EVT_SET_FOCUS,    self)
-        
+
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
@@ -1164,7 +1163,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
         self.SetAutoLayout(True)
         self.SetSizer(sizer)
         self.Layout()
-        
+
     def addPageToParent(self,panel,mdi):
         """"Add page with childs title to parent
         Can be overwritten."""
@@ -1172,7 +1171,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
         tabs            = self.tabs = parentFrame.tabs
         parentFrame.unbindTabs()
         tabs.AddPage(page=self, text=self.page,select=(mdi not in [SDI,MDI_TABS]))
-        parentFrame.bindTabs()       
+        parentFrame.bindTabs()
 
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
@@ -1181,21 +1180,24 @@ class MdiSplitChildFrame(Child,wx.Panel):
             self.tabs.SetPageText(index,self._pageTitle)
             if not(colour is None) and hasattr(self.tabs,'SetPageColour'):
                 self.tabs.SetPageColour(index,colour)
-            
+
     def SetIcon(self,*args,**keyw):
         pass
-    
+
     def IsMaximized(self):
         return True
 
     def Activate(self):
         self.parentFrame.tabs.SetSelection(self.getIndex())
 
+    def Raise(self):
+        self.Activate()
+
 ##    def onFrameActivate(self, event=None):
 ##        if (not event) or event.GetActive():
 ##            self.setTitle(new=False)
 ##        Child.onFrameActivate(self,event)
-        
+
 class SdiChildFrame(TabPlatform,Child,wx.Frame):
     def __init__(self,parentFrame,
         id          = wx.ID_ANY,
@@ -1215,11 +1217,11 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
         if maximize:
             style   |= wx.MAXIMIZE
         wx.Frame.__init__(self,
-            id      = id, 
+            id      = id,
             name    = page,
-            parent  = parentFrame, 
+            parent  = parentFrame,
             size    = wx.Size(600,400),
-            style   = style | FULL_REPAINT_ON_RESIZE, 
+            style   = style | FULL_REPAINT_ON_RESIZE,
             title   = page)
         if maximize:
             if PLATFORM != 'win32':
@@ -1232,7 +1234,7 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
             page        = page,
             extra       = extra,
             **options)
-        
+
     def __stage__(self,page,extra,**options):
         """Create tabs to switch between documents as an wx.SashLayoutWindow"""
         if self.app.DEBUG:
@@ -1249,13 +1251,13 @@ class SdiChildFrame(TabPlatform,Child,wx.Frame):
             childTabs.AddPage(page=DummyPage(childTabs),text=page)
         #Add itself to itself
         tabs.AddPage(page=panel,text=page,select=True)
-        self.__layoutTabs__()        
-        
+        self.__layoutTabs__()
+
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
         if new and draw:
             self.tabs.SetPageText(self.getIndex()+1,self._pageTitle)
-        
+
 ####Application
 
 class App(singleApp.SingleInstanceApp):
@@ -1305,7 +1307,7 @@ class App(singleApp.SingleInstanceApp):
             print "Launching application..."
             wx.App.__init__(self,redirect=not debug)
 
-        
+
     def OnArgs(self, evt):
         if hasattr(self.parentPanel,'onArgs'):
             self.parentPanel.onArgs(evt.data)
@@ -1328,7 +1330,7 @@ class App(singleApp.SingleInstanceApp):
         self.parentFrame.Show(True)
         self.SetTopWindow(self.parentFrame)
         return True
-        
+
     def SetMdi(self,mdiName=DEFAULT):
         """Defines parent and children frame classes."""
         self.mdiName    = mdiName
@@ -1338,7 +1340,7 @@ class App(singleApp.SingleInstanceApp):
             if   WIN:
                 mdiName = MDI_SASH_TABS_WIN
             elif DARWIN:#mac osx
-                mdiName = MDI_SPLIT_ALL 
+                mdiName = MDI_SPLIT_ALL
             else:
                 mdiName = MDI_SPLIT_ALL#MDI_SASH_TABS_LINUX
 
@@ -1362,7 +1364,7 @@ class App(singleApp.SingleInstanceApp):
         elif    self.mdi == MDI_SPLIT:
             self.ParentFrame        = MdiSplitParentFrame
             self.ChildFrame         = MdiSplitChildFrame
-        
+
         self.EVENT_NOTEBOOK = NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED
 ##        #Tabs: notebook event is platformdependent
 ##        if WIN:
@@ -1394,7 +1396,7 @@ class TestMenuBar(wx.MenuBar):
         self.parentPanel.close()
     def menu_exit(self,event=None):
         self.parentFrame.onFrameClose()
-        
+
 ArtIDs = [ wx.ART_FILE_OPEN,
            wx.ART_PRINT,
            wx.ART_ADD_BOOKMARK,
@@ -1415,13 +1417,13 @@ class TestToolBar(wx.ToolBar):
             self.AddLabelTool(toolId, "", bmp, wx.NullBitmap, wx.ITEM_NORMAL, "info", "")
             self.tools.append(toolId)
         self.Realize()
-        
+
     def __events__(self):
         for id in self.tools:
             wx.EVT_TOOL(self,id, self.test)
     def test(self,event):
         print 'test seems ok'
-        
+
 class TestParentPanel(wx.TextCtrl):
     def __init__(self,parent,**kwds):
         wx.TextCtrl.__init__(self,parent=parent,id=wx.ID_ANY,value='parent',**kwds)
@@ -1433,11 +1435,11 @@ class TestParentPanel(wx.TextCtrl):
     def close(self):
         active = self.app.childActive
         if active: active.frame.onFrameClose()
-        
+
 class TestChildPanel(wx.TextCtrl):
     def __init__(self,parent,**kwds):
         wx.TextCtrl.__init__(self,parent=parent,id=wx.ID_ANY,**kwds)
-                
+
 def __test__(debug,mdi=MDI):
     app = App(TestParentPanel,
               TestChildPanel,
@@ -1448,7 +1450,7 @@ def __test__(debug,mdi=MDI):
               title='Parent',
               debug=debug)
     app.MainLoop()
-    
+
 if __name__=='__main__':
     __test__(debug=1,mdi=MDI_TABS_WIN)#multiple document interface for windows
     #__test__(debug=1,mdi=MDI_TABS_MAC)#single document interface for mac

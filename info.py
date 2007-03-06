@@ -1,4 +1,4 @@
-import os,sys 
+import os,sys
 
 PLATFORM                    = sys.platform
 WIN                         = PLATFORM.startswith('win')
@@ -13,7 +13,7 @@ if WIN:
         WIN98   = False
 else:
     WIN98       = False
-    
+
 PYTHON_EXEC                 = sys.executable
 if WIN:
     if PYTHON_EXEC.endswith('w.exe'):
@@ -47,7 +47,7 @@ if PATH not in sys.path:
     sys.path.append(PATH)
 if _PATH not in sys.path:
     sys.path.append(_PATH)
-    
+
 import sm.osx
 
 INFO={
@@ -68,7 +68,7 @@ INFO={
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.3.d",
+    'version'           : "0.8.4.a",
     'wxVersion'         : "2.6.1.0.",
 }
 
@@ -83,7 +83,7 @@ if DARWIN:
     INFO['python']          = 'pythonw'
 else:
     INFO['python']          = 'python'
-    
+
 INFO['links']               =\
 """Homepage : %s
 Donwloads: http://www.stani.be/python/spe/page_blender

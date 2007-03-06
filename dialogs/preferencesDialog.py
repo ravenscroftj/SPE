@@ -15,7 +15,7 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'CheckFileOnSave','CheckSourceRealtime','ConvertTabsToSpaces',
           'Encoding','ExecuteWarning','Mdi','EdgeColumn','PythonDocs',
           'RecentFileAmount', 'RedirectShell','Redraw','Signature',
-          'SaveBeforeRun','Shortcuts','ShowShell','StripTrailingSpaces', 
+          'SaveBeforeRun','Shortcuts','ShowShell','StripTrailingSpaces',
           'TabWidth','Terminal','TerminalRun','TerminalRunExit',
           'UpdateSidebar','UseTabs','ViewWhiteSpace','IndentationGuides',
           'ViewEdge','WebBrowser','WordChars','WxPythonDocs','globalRecent',
@@ -26,7 +26,7 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
 
 def _(x):
     return x
-          
+
 class Create(wx.Dialog):
     def __init__(self, *args, **kwds):
         # begin wxGlade: Create.__init__
@@ -69,8 +69,8 @@ class Create(wx.Dialog):
         self.globalFolders = wx.CheckBox(self.General, -1, _("Folders"))
         self.globalNotes = wx.CheckBox(self.General, -1, _("Notes"))
         self.globalFileList = wx.CheckBox(self.General, -1, _("Open File list"))
-        self.label_font = wx.StaticText(self.Editor, -1, _("Fonts && Colors"))
-        self.chooseFont = wx.Button(self.Editor, -1, _("Configure styles ..."))
+        self.label_font = wx.StaticText(self.Editor, -1, _("Fonts && Size"))
+        self.chooseFont = wx.Button(self.Editor, -1, _("Configure ..."))
         self.label_wordchars = wx.StaticText(self.Editor, -1, _("Word characters"))
         self.WordChars = wx.TextCtrl(self.Editor, -1, "")
         self.label_calltips = wx.StaticText(self.Editor, -1, _("Calltips"))
@@ -157,7 +157,6 @@ class Create(wx.Dialog):
         self.ViewEdge.SetValue(1)
         self.AutoComplete.SetValue(1)
         self.AutoCompleteIgnore.SetMinSize((-1, 150))
-        #self.Signature.SetSelection(-1)
         self.Terminal.SetSelection(0)
         self.TerminalRun.SetSelection(0)
         self.TerminalRunExit.SetSelection(0)
@@ -194,12 +193,12 @@ class Create(wx.Dialog):
         grid_sizer_4 = wx.FlexGridSizer(3, 2, 4, 4)
         sizer_1.Add((4, 4), 0, 0, 0)
         sizer_2.Add((4, 4), 0, 0, 0)
-        generalSizer.Add(self.Backup, 0, wx.LEFT|wx.TOP|wx.ADJUST_MINSIZE, 4)
-        generalSizer.Add(self.ToolTipsForFileTabs, 0, wx.LEFT|wx.ADJUST_MINSIZE, 4)
+        generalSizer.Add(self.Backup, 0, wx.LEFT|wx.TOP, 4)
+        generalSizer.Add(self.ToolTipsForFileTabs, 0, wx.LEFT, 4)
         generalSizer.Add(self.RedirectShell, 0, wx.LEFT, 4)
         generalSizer.Add(self.CheckFileOnSave, 0, wx.LEFT, 4)
         generalSizer.Add(self.ShowShell, 0, wx.LEFT, 4)
-        generalSizer.Add(self.SingleInstanceApp, 0, wx.LEFT|wx.ADJUST_MINSIZE, 4)
+        generalSizer.Add(self.SingleInstanceApp, 0, wx.LEFT, 4)
         grid_sizer_4.Add(self.label_di, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)
         grid_sizer_4.Add(self.Mdi, 0, wx.EXPAND, 0)
         grid_sizer_4.Add(self.label_recent, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)
@@ -208,47 +207,44 @@ class Create(wx.Dialog):
         grid_sizer_4.Add(self.Redraw, 0, wx.EXPAND, 0)
         grid_sizer_4.Add(self.label_encoding, 0, wx.LEFT|wx.FIXED_MINSIZE, 4)
         grid_sizer_4.Add(self.Encoding, 0, wx.EXPAND|wx.FIXED_MINSIZE, 0)
-        grid_sizer_4.Add(self.label_shortcuts, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
-        grid_sizer_4.Add(self.Shortcuts, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
+        grid_sizer_4.Add(self.label_shortcuts, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 4)
+        grid_sizer_4.Add(self.Shortcuts, 0, wx.EXPAND, 0)
         grid_sizer_4.AddGrowableCol(1)
         generalSizer.Add(grid_sizer_4, 1, wx.EXPAND, 0)
-        grid_sizer_3.Add(self.SaveOnExit, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_3.Add(self.CloseChildrenOnNewWorkspace, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_3.Add(self.SaveWorkspaceOnFileSave, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_3.Add(self.RememberLastWorkspace, 0, wx.ADJUST_MINSIZE, 0)
+        grid_sizer_3.Add(self.SaveOnExit, 0, 0, 0)
+        grid_sizer_3.Add(self.CloseChildrenOnNewWorkspace, 0, 0, 0)
+        grid_sizer_3.Add(self.SaveWorkspaceOnFileSave, 0, 0, 0)
+        grid_sizer_3.Add(self.RememberLastWorkspace, 0, 0, 0)
         sizer_3.Add(grid_sizer_3, 1, wx.EXPAND, 0)
-        sizer_3.Add((4, 4), 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add(self.label_globals, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add(self.globalRecent, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add(self.globalFolders, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add(self.globalNotes, 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add((5, 5), 0, wx.ADJUST_MINSIZE, 0)
-        grid_sizer_5.Add(self.globalFileList, 0, wx.ADJUST_MINSIZE, 0)
+        sizer_3.Add((4, 4), 0, 0, 0)
+        grid_sizer_5.Add(self.label_globals, 0, 0, 0)
+        grid_sizer_5.Add(self.globalRecent, 0, 0, 0)
+        grid_sizer_5.Add((5, 5), 0, 0, 0)
+        grid_sizer_5.Add(self.globalFolders, 0, 0, 0)
+        grid_sizer_5.Add((5, 5), 0, 0, 0)
+        grid_sizer_5.Add(self.globalNotes, 0, 0, 0)
+        grid_sizer_5.Add((5, 5), 0, 0, 0)
+        grid_sizer_5.Add(self.globalFileList, 0, 0, 0)
         sizer_3.Add(grid_sizer_5, 1, wx.EXPAND, 0)
         generalSizer.Add(sizer_3, 0, wx.EXPAND, 0)
-        self.General.SetAutoLayout(True)
         self.General.SetSizer(generalSizer)
-        generalSizer.Fit(self.General)
-        generalSizer.SetSizeHints(self.General)
         generalSizer.AddGrowableCol(0)
         GeneralEditor.Add((4, 4), 0, 0, 0)
         grid_general.Add(self.label_font, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.chooseFont, 0, wx.EXPAND, 0)
-        grid_general.Add(self.label_wordchars, 0, wx.ADJUST_MINSIZE, 0)
-        grid_general.Add(self.WordChars, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
+        grid_general.Add(self.label_wordchars, 0, 0, 0)
+        grid_general.Add(self.WordChars, 0, wx.EXPAND, 0)
         grid_general.Add(self.label_calltips, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.CallTips, 0, wx.EXPAND, 0)
-        grid_general.Add(self.label_CheckSourceRealtime, 0, wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
-        grid_general.Add(self.CheckSourceRealtime, 0, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
+        grid_general.Add(self.label_CheckSourceRealtime, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_general.Add(self.CheckSourceRealtime, 0, wx.EXPAND, 0)
         grid_general.Add(self.label_sidebar, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_general.Add(self.UpdateSidebar, 0, wx.EXPAND, 0)
         grid_general.AddGrowableCol(1)
         GeneralEditor.Add(grid_general, 1, wx.EXPAND, 0)
         GeneralEditor.Add(self.AutoReloadChangedFile, 0, wx.TOP, 4)
-        GeneralEditor.Add(self.SaveBeforeRun, 0, wx.TOP|wx.ADJUST_MINSIZE, 4)
-        GeneralEditor.Add(self.ExecuteWarning, 0, wx.TOP|wx.ADJUST_MINSIZE, 4)
+        GeneralEditor.Add(self.SaveBeforeRun, 0, wx.TOP, 4)
+        GeneralEditor.Add(self.ExecuteWarning, 0, wx.TOP, 4)
         grid_sizer_1.Add(GeneralEditor, 1, wx.EXPAND, 0)
         grid_sizer_2.Add((4, 4), 0, 0, 0)
         grid_sizer_2.Add(self.ViewWhiteSpace, 0, 0, 0)
@@ -276,14 +272,11 @@ class Create(wx.Dialog):
         AutoCompletion.Add(self.AutoComplete, 0, 0, 0)
         AutoCompletion.Add(self.AutoCompleteIgnore, 1, wx.EXPAND, 0)
         grid_sizer_1.Add(AutoCompletion, 1, wx.EXPAND, 0)
-        self.Editor.SetAutoLayout(True)
         self.Editor.SetSizer(grid_sizer_1)
-        grid_sizer_1.Fit(self.Editor)
-        grid_sizer_1.SetSizeHints(self.Editor)
         grid_sizer_1.AddGrowableCol(1)
-        general_Label_Sizer.Add(self.signatureLabel, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
-        general_Label_Sizer.Add(self.Signature, 1, wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
-        general_Label_Sizer.Add(self.browseSignature, 0, wx.RIGHT|wx.TOP|wx.ADJUST_MINSIZE, 5)
+        general_Label_Sizer.Add(self.signatureLabel, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
+        general_Label_Sizer.Add(self.Signature, 1, wx.LEFT|wx.RIGHT|wx.TOP|wx.EXPAND, 5)
+        general_Label_Sizer.Add(self.browseSignature, 0, wx.RIGHT|wx.TOP, 5)
         general_Label_Sizer.AddGrowableCol(1)
         general_Label.Add(general_Label_Sizer, 1, wx.EXPAND, 0)
         paths_Sizer.Add(general_Label, 0, wx.EXPAND, 0)
@@ -305,10 +298,7 @@ class Create(wx.Dialog):
         html_Sizer.AddGrowableCol(1)
         html_Label.Add(html_Sizer, 1, wx.EXPAND, 0)
         paths_Sizer.Add(html_Label, 1, wx.EXPAND|wx.ALIGN_RIGHT, 0)
-        self.Paths.SetAutoLayout(True)
         self.Paths.SetSizer(paths_Sizer)
-        paths_Sizer.Fit(self.Paths)
-        paths_Sizer.SetSizeHints(self.Paths)
         self.notebook_1.AddPage(self.General, _("General"))
         self.notebook_1.AddPage(self.Editor, _("Editor"))
         self.notebook_1.AddPage(self.Paths, _("Paths"))
@@ -322,10 +312,8 @@ class Create(wx.Dialog):
         sizer_2.Add((4, 4), 0, 0, 0)
         sizer_1.Add(sizer_2, 1, wx.EXPAND, 0)
         sizer_1.Add((4, 4), 0, 0, 0)
-        self.SetAutoLayout(True)
         self.SetSizer(sizer_1)
         sizer_1.Fit(self)
-        sizer_1.SetSizeHints(self)
         self.Layout()
         # end wxGlade
 
@@ -353,15 +341,39 @@ class Create(wx.Dialog):
             item.SetValue(self.parent.getValue(name))
 
     def OnChooseFontButton(self, event):
-        import stcStyleEditor
-        dlg = stcStyleEditor.STCStyleEditDlg(self, 'Python', 
-            self.parent.config, None)
-        try: 
-            if dlg.ShowModal() == wx.ID_OK:
-                self.customStyle = True
-        finally: 
-            dlg.Destroy()
-        
+        try:
+            font, size  = self.parent.get('Font').split(',')
+            font        = font.strip()
+            size        = eval(size.strip())
+        except:
+            font        = 'Courier'
+            size        = 10
+        data = wx.FontData()
+        data.EnableEffects(False)
+        data.SetInitialFont(wx.Font(
+            pointSize   = size,
+            family      = wx.FONTFAMILY_MODERN,
+            style       = wx.FONTSTYLE_NORMAL,
+            weight      = wx.FONTWEIGHT_NORMAL,
+            face        = font,
+        ))
+
+        dlg = wx.FontDialog(self, data)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            data = dlg.GetFontData()
+            font = data.GetChosenFont()
+            self.parent.set('Font','%s, %s'%(font.GetFaceName(),font.GetPointSize()))
+        dlg.Destroy()
+##        import stcStyleEditor
+##        dlg = stcStyleEditor.STCStyleEditDlg(self, 'Python',
+##            self.parent.config, None)
+##        try:
+##            if dlg.ShowModal() == wx.ID_OK:
+##                self.customStyle = True
+##        finally:
+##            dlg.Destroy()
+
     def OnDefaultsButton(self, event):
         self.Close()
 
@@ -370,7 +382,7 @@ class Create(wx.Dialog):
         for name in VALUES: self.set(name)
         self.set('AutoCompleteIgnore')
         if self.customStyle:
-            self.parent.set("stcstyle", "Custom", 0)        
+            self.parent.set("stcstyle", "Custom", 0)
         self.parent.preferencesSave()
         self.Close()
 
@@ -388,7 +400,7 @@ class Create(wx.Dialog):
 
     def OnBrowseSignature(self, event): # wxGlade: Create.<event_handler>
         path=self.Signature.GetValue()
-        defaultDir, defaultFile = os.path.split(path)   
+        defaultDir, defaultFile = os.path.split(path)
         dlg = wx.FileDialog(self,defaultDir = defaultDir, defaultFile = defaultFile, style = wx.OPEN|wx.DD_NEW_DIR_BUTTON)
         if dlg.ShowModal() == wx.ID_OK:
             path        = dlg.GetPath()
