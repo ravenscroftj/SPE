@@ -65,7 +65,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.config=config
         self.ignore=ignore
         if path and path not in sys.path: sys.path.append(path)
-        
+
         #INITIALIZE
         self.calltip    = 0 #calltip counter
         self.menu       = menu
@@ -74,22 +74,22 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         #KEYBOARD SHORTCUTS (what are they doing here?)
         self.CmdKeyAssign(ord('B'), wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_ZOOMIN)
         self.CmdKeyAssign(ord('N'), wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_ZOOMOUT)
-        
+
         #PYTHON
         self.SetLexer(wx_stc.STC_LEX_PYTHON)
         keywords=keyword.kwlist
         keywords.extend(['None','as','True','False'])
         self.SetKeyWords(0, " ".join(keywords))
-        
+
         #GENERAL
         self.AutoCompSetIgnoreCase(False)
-        
+
         #FOLDING
         self.SetProperty("fold", "1")
         self.SetProperty("tab.timmy.whinge.level", "1")
         self.SetProperty("fold.comment.python", "0")
         self.SetProperty("fold.quotes.python", "0")
-        
+
         #USER SETTINGS
         if self.config:
             self.update()
@@ -132,7 +132,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 ##        self.SetIndent(1)
         self.SetEdgeColumn(79)
         self.SetEdgeColour(wx.Colour(200,200,200))
-        
+
         #MARGINS
         self.SetMargins(0,0)
         #margin 1 for line numbers
@@ -195,14 +195,14 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if not event.ShiftDown():
             self.SetSelectionEnd(0)
         event.Skip()
-        
+
     def OnMiddleDown(self,event):
         code    = self.GetSelectedText()
         pos     = self.PositionFromPointClose(event.GetX(),event.GetY())
         event.Skip()
         self.SetSelection(pos,pos)
         self.ReplaceSelection(code)
-        
+
     def OnKeyDown(self, event):
         """"""
         key     = event.GetKeyCode()
@@ -399,7 +399,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 #---preferences-----------------------------------------------------------------
     def get(self,name):
         return self.config.get('Default',name)
-        
+
     def getint(self,name):
         try:
             return self.config.getint('Default',name)
@@ -408,7 +408,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                 return 1
             else:
                 return 0
-    
+
     def update(self):
         #general
         font,size=self.get('Font').split(',')
@@ -430,27 +430,28 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         else:
             self.indentation = " " * self.tabWidth
         self.SetWordChars(self.get('WordChars'))
-        
+
     def SetStyles(self):
         # anti-aliasing
         if hasattr(self,'SetUseAntiAliasing'):
             self.SetUseAntiAliasing(True)
-    
+
         #INDICATOR STYLES FOR ERRORS (self.errorMark)
         self.IndicatorSetStyle(2, wx_stc.STC_INDIC_SQUIGGLE)
         self.IndicatorSetForeground(2, wx.RED)
 
         import dialogs.stcStyleEditor
-        if not dialogs.stcStyleEditor.SetStyles(self, self.config):
+        if 1:#dialogs.stcStyleEditor.SetStyles(self, self.config):
+            self.StyleSetSpec(wx_stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % self.faces)
             self.StyleClearAll()
-    
+
             # Global default styles for all languages
             self.StyleSetSpec(wx_stc.STC_STYLE_DEFAULT,     "face:%(helv)s,size:%(size)d" % self.faces)
             self.StyleSetSpec(wx_stc.STC_STYLE_LINENUMBER,  "back:#C0C0C0,face:%(helv)s,size:%(size2)d" % self.faces)
             self.StyleSetSpec(wx_stc.STC_STYLE_CONTROLCHAR, "face:%(other)s" % self.faces)
             self.StyleSetSpec(wx_stc.STC_STYLE_BRACELIGHT,  "fore:#FFFFFF,back:#0000FF,bold")
             self.StyleSetSpec(wx_stc.STC_STYLE_BRACEBAD,    "fore:#000000,back:#FF0000,bold")
-    
+
             # Python styles
             # White space
             self.StyleSetSpec(wx_stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % self.faces)
@@ -480,7 +481,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             self.StyleSetSpec(wx_stc.STC_P_COMMENTBLOCK, "fore:#990000,back:#C0C0C0,italic,size:%(size)d" % self.faces)
             # End of line where string is not closed
             self.StyleSetSpec(wx_stc.STC_P_STRINGEOL, "fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % self.faces)
-    
+
     #---get
     def getWord(self,whole=None):
         for delta in (0,-1,1):
@@ -505,9 +506,9 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if not word:
             return []
         else:
-            return sm.unique([x for x in re.findall(r"\b" + word + r"\w+\b", self.GetText()) 
+            return sm.unique([x for x in re.findall(r"\b" + word + r"\w+\b", self.GetText())
                 if x.find(',')==-1 and x[0]!= ' '])
-        
+
     def getWordObject(self,word=None,whole=None):
         if not word: word=self.getWord(whole=whole)
         try:
@@ -538,7 +539,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
 
     def autoComplete(self,object=0):
         word    = self.getWord()
-        if not word: 
+        if not word:
             if object:
                 self.AddText('.')
             return
@@ -561,7 +562,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                 self.AutoCompShow(len(word), " ".join(words))
             except:
                 pass
-            
+
     def evaluate(self,word):
         if word in self.namespace.keys():return self.namespace[word]
         try:
@@ -590,17 +591,17 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     return mod
                 except:
                     return None
-                
+
     def markError(self,lineno,offset):
         self.StartStyling(self.PositionFromLine(lineno-1), wx_stc.STC_INDICS_MASK)
         self.SetStyling(offset, wx_stc.STC_INDIC2_MASK)
         self.Colourise(0, -1)
-                    
+
     def clearError(self,length):
         self.StartStyling(0, wx_stc.STC_INDICS_MASK)
         self.SetStyling(length, 0)
         self.Colourise(0, -1)
-                    
+
     def needsIndent(self,firstWord,lastChar):
         "Tests if a line needs extra indenting, ie if, while, def, etc "
         # remove trailing : on token
@@ -679,7 +680,7 @@ class PythonViewSTC(PythonBaseSTC):
         self.SetScrollbar(wx.VERTICAL, 0, 0, 0)
 ##        eventManager.Register(self.OnSplit,wx_gizmos.EVT_DYNAMIC_SASH_SPLIT,self)
 ##        eventManager.Register(self.OnUnify,wx_gizmos.EVT_DYNAMIC_SASH_UNIFY,self)
-        
+
     def SetupScrollBars(self):
         # hook the scrollbars provided by the wxDynamicSashWindow
         # to this view
@@ -698,11 +699,11 @@ class PythonViewSTC(PythonBaseSTC):
         # of its built-in ones.
         self.SetVScrollBar(v_bar)
         self.SetHScrollBar(h_bar)
-        
+
     def OnSetFocus(self,event):
         self.child.source = self
         event.Skip()
-        
+
     def OnSplit(self, evt):
         newview = PythonViewSTC(self.dyn_sash, child = self.child, *self._args, **self._kwds)
         newview.SetDocPointer(self.GetDocPointer())     # use the same document
@@ -738,7 +739,7 @@ if wx.Platform == "__WXMAC__":
     PythonSTC = PythonBaseSTC
 else:
     PythonSTC = PythonBaseSTC#PythonSashSTC
-    
+
 #-------------------------------------------------------------------------------
 
 def getargspec(func):
