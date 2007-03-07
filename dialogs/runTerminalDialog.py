@@ -14,7 +14,7 @@ class RunTerminalDialog(wx.Dialog):
         wx.Dialog.__init__(self, *args, **kwds)
         self.fileName = wx.StaticText(self, -1, _("File"))
         self.argumentsLabel = wx.StaticText(self, -1, _("Arguments"))
-        self.arguments = wx.ComboBox(self, -1, choices=runPreviousArguments, style=wx.CB_DROPDOWN)
+        self.arguments = wx.ComboBox(self, -1, choices=[], style=wx.CB_DROPDOWN)
         self.inspect = wx.CheckBox(self, -1, _("Inspect interactively after running script"))
         self.exit = wx.CheckBox(self, -1, _("Exit terminal after running script"))
         self.label = wx.StaticText(self, -1, _("Use Edit>Execute to run code snippets in shell"))
@@ -32,8 +32,8 @@ class RunTerminalDialog(wx.Dialog):
         #todo: comment out self.arguments.SetSelection(-1)
         # begin wxGlade: RunTerminalDialog.__set_properties
         self.SetTitle(_("Stani's Python Editor - Run"))
-        #self.arguments.SetSelection(-1)
         self.label.Enable(False)
+        self.ok.SetDefault()
         # end wxGlade
 
     def __do_layout(self):
@@ -41,20 +41,18 @@ class RunTerminalDialog(wx.Dialog):
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_1.Add(self.fileName, 1, wx.ALL|wx.ADJUST_MINSIZE, 4)
-        sizer_2.Add(self.argumentsLabel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
-        sizer_2.Add(self.arguments, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
+        sizer_1.Add(self.fileName, 1, wx.ALL, 4)
+        sizer_2.Add(self.argumentsLabel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
+        sizer_2.Add(self.arguments, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
         sizer_1.Add(sizer_2, 1, wx.EXPAND, 0)
-        sizer_1.Add(self.inspect, 0, wx.ALL|wx.ADJUST_MINSIZE, 4)
-        sizer_1.Add(self.exit, 1, wx.ALL|wx.ADJUST_MINSIZE, 4)
-        sizer_3.Add(self.label, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
-        sizer_3.Add(self.cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
-        sizer_3.Add(self.ok, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 4)
+        sizer_1.Add(self.inspect, 0, wx.ALL, 4)
+        sizer_1.Add(self.exit, 1, wx.ALL, 4)
+        sizer_3.Add(self.label, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
+        sizer_3.Add(self.cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
+        sizer_3.Add(self.ok, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 4)
         sizer_1.Add(sizer_3, 1, wx.EXPAND, 0)
-        self.SetAutoLayout(True)
         self.SetSizer(sizer_1)
         sizer_1.Fit(self)
-        sizer_1.SetSizeHints(self)
         self.Layout()
         # end wxGlade
 

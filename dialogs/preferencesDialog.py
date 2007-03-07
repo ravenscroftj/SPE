@@ -163,6 +163,7 @@ class Create(wx.Dialog):
         self.WebBrowser.SetSelection(0)
         self.PythonDocs.SetSelection(0)
         self.WxPythonDocs.SetSelection(0)
+        self.save.SetDefault()
         # end wxGlade
 
     def __do_layout(self):

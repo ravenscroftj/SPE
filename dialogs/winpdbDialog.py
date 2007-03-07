@@ -94,6 +94,7 @@ class Create(wx.Dialog):
         #self.arguments.SetSelection(-1)
         self.status.Enable(False)
         # end wxGlade
+        self.debug.SetDefault()
         self.title.SetLabel("  Debug %s"%self.name)
         info                        = self.info
         options                     = self.options
