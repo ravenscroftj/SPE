@@ -40,10 +40,10 @@ def main(args):
 
     root = os.path.dirname(os.path.realpath(sys.argv[0]))
     pychecker2 = os.path.split(root)[0]
-    sys.path.append(pychecker2)
+    sys.path.append(pychecker2)    sys.path.append(pychecker2)    sys.path.append(pychecker2)    sys.path.append(pychecker2)
 
     return test(_modules(root), verbosity)
-        
+
 
 if __name__ == '__main__':
     try:

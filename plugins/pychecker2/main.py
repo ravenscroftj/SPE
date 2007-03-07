@@ -69,7 +69,7 @@ def create_checklist(options):
 
 def main():
     import cPickle
-    
+
     options = Options.Options()
     try:
         checker = cPickle.load(open(CACHE_FILE, 'rb'))

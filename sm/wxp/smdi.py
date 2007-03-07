@@ -987,6 +987,7 @@ class Child(Framework):
                         tabs.SetSelection(c)#adapt selection
                     child.frame.bindTabs()
                     c += 1
+            selected    = parentFrame.tabs.GetSelection()
         else:
             selected    = 0
         if children:
@@ -1175,6 +1176,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
 
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
+        self.parentFrame.setTitle(self._pageTitle,draw=draw)
         if new and draw:
             index   = self.getIndex()
             self.tabs.SetPageText(index,self._pageTitle)
@@ -1188,10 +1190,16 @@ class MdiSplitChildFrame(Child,wx.Panel):
         return True
 
     def Activate(self):
+        self.setTitle()
         self.parentFrame.tabs.SetSelection(self.getIndex())
 
     def Raise(self):
         self.Activate()
+
+    def onFrameActivate(self, event):
+        if self._isActiveEvent(event):
+            self.setTitle(new=False)
+        Child.onFrameActivate(self,event)
 
 ##    def onFrameActivate(self, event=None):
 ##        if (not event) or event.GetActive():

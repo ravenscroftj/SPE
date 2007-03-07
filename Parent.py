@@ -72,7 +72,8 @@ class Panel(wx.Notebook):
         self.pathImages     = os.path.join(self.pathSkins,  skin)
         self.pathPlugins    = os.path.join(self.path,       'plugins')
         self.pathTabs       = os.path.join(self.path,       'tabs')
-        sys.path.append(self.pathPlugins)
+        if self.pathPlugins not in sys.path:
+            sys.path.insert(0,self.pathPlugins)
         try:
             os.mkdir(INFO['userPath'])
         except:

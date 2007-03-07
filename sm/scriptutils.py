@@ -1,4 +1,4 @@
-#(c)www.stani.be (read __doc__ for more information)                            
+#(c)www.stani.be (read __doc__ for more information)
 import sm
 INFO=sm.INFO.copy()
 
@@ -27,7 +27,7 @@ def run(fileName=None,source=None,mainDict=__main__.__dict__,profiling=0):
         if fileName:
             path, base              = os.path.split(fileName)
             if path:
-                if path not in sys.path:sys.path.append(path)
+                if path not in sys.path:sys.path.insert(0,path)
                 osPath              = os.getcwd()
                 os.chdir(path)
         if source:
@@ -92,7 +92,8 @@ def importMod(pathName,mainDict=None):
                 break
     else: # for not broken
         modName, newPath = GetPackageModuleName(pathName)
-        if newPath: sys.path.append(newPath)
+        if newPath and newPath not in sys.path:
+            sys.path.insert(0,newPath)
     if sys.modules.has_key(modName):
         bNeedReload = 1
         what = "reload"
@@ -238,7 +239,7 @@ def _HandlePythonFailure(what, syntaxErrorPathName = None,status=smPrintStatus,
         except (TypeError, ValueError):
             msg = str(details)
         status('Failed to ' + what + ' - syntax error - %s' % msg)
-    else:   
+    else:
         traceback.print_exc()
         status('Failed to ' + what + ' - ' + str(details) )
     tb = None # Clean up a cycle.
