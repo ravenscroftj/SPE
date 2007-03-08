@@ -684,6 +684,7 @@ class PythonViewSTC(PythonBaseSTC):
         wx_gizmos.EVT_DYNAMIC_SASH_SPLIT(self,-1,self.OnSplit)
         wx_gizmos.EVT_DYNAMIC_SASH_UNIFY(self,-1,self.OnUnify)
         wx.EVT_SET_FOCUS(self,self.OnSetFocus)
+        wx.EVT_KILL_FOCUS(self,self.OnKillFocus)
         self.SetScrollbar(wx.HORIZONTAL, 0, 0, 0)
         self.SetScrollbar(wx.VERTICAL, 0, 0, 0)
 ##        eventManager.Register(self.OnSplit,wx_gizmos.EVT_DYNAMIC_SASH_SPLIT,self)
@@ -710,6 +711,10 @@ class PythonViewSTC(PythonBaseSTC):
 
     def OnSetFocus(self,event):
         self.child.source = self
+        event.Skip()
+
+    def OnKillFocus(self,event):
+        self.AutoCompCancel()
         event.Skip()
 
     def OnSplit(self, evt):

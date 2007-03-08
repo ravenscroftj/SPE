@@ -140,7 +140,7 @@ class Panel(wx.SplitterWindow):
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
         if info.WIN:
             #Mac has already always triangles
-            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
+            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_UP,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
@@ -643,6 +643,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             self.updateStatus()
         if hasattr(self,'source'):
             self.source.SetFocus()
+            
+    def onDeactivate(self):
+        if hasattr(self,'source'):
+            self.source.AutoCompCancel()
+            self.source.CallTipCancel()
 
     def onClose(self, event=None):
         if self.confirmSave():

@@ -929,6 +929,12 @@ class Panel(wx.Notebook):
         except Exception,m:
             if self.app.DEBUG:
                 print 'Warning: Parent: %s.onActivate failed\n%s\n%s\n'%(self.__class__,Exception,m)
+                
+    def onDeactivate(self,event=None):
+        childActive = self.app.childActive
+        if (not self.frame.dead) and childActive and hasattr(childActive,'source'):
+            childActive.source.AutoCompCancel()
+            childActive.source.CallTipCancel()
 
     def onClose(self,event=None):
         """Called when the parent frame is closed."""
