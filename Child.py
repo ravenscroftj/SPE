@@ -138,7 +138,7 @@ class Panel(wx.SplitterWindow):
         self.source.SetModEventMask(wx.stc.STC_MOD_DELETETEXT | wx.stc.STC_PERFORMED_USER)
         eventManager.Register(self.onSourceChange,wx.stc.EVT_STC_CHANGE,self.source)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
-        if not info.DARWIN:
+        if info.WIN:
             #Mac has already always triangles
             eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
