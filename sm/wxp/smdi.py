@@ -1203,7 +1203,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
     def Raise(self):
         self.Activate()
 
-    def onFrameActivate(self, event):
+    def onFrameActivate(self, event=None):
         if self._isActiveEvent(event):
             self.setTitle(new=False)
         Child.onFrameActivate(self,event)

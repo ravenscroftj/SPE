@@ -641,7 +641,8 @@ class Panel(wx.Notebook):
         beep                = runDialog.beep.GetValue()
         runDialog.Destroy()
         if answer == wx.ID_OK:
-            self.argumentsPrevious.append(arguments)
+            if not (arguments in self.argumentsPrevious):
+                self.argumentsPrevious.insert(0,arguments)
             self.beepPrevious   = beep
             self.run_with_arguments(arguments,beep=beep,confirm=False)
         else:

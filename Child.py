@@ -1227,7 +1227,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def scrollTo(self,line=0,column=0,select='pos',scroll=0):
         source  = self.source
         source.EnsureVisible(line)
-        line    = source.VisibleFromDocLine(line)
+        #line    = source.VisibleFromDocLine(line)
         linePos = source.PositionFromLine(line)
         pos     = linePos+column
         if select=='line':
