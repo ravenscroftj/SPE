@@ -644,7 +644,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if hasattr(self,'source'):
             self.source.SetFocus()
             
-    def onDeactivate(self):
+    def onDeactivate(self,event=None):
         if hasattr(self,'source'):
             self.source.AutoCompCancel()
             self.source.CallTipCancel()
