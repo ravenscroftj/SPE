@@ -851,6 +851,13 @@ class MdiSplitParentFrame(Parent,wx.Frame):
             self.app.children[index].frame.onFrameActivate()
         event.Skip()
 
+    def setTitle(self,page='',extra='',draw=True,colour=None):
+        if draw:
+            t           = self.app.title
+            if page:
+                t       = '%s - %s - %s'%(page,os.path.dirname(extra),t)
+            self.SetTitle(t)
+
 class SdiParentFrame(TabPlatform,Parent,wx.Frame):
     """Uniformed parent Mdi/Sdi class based on Sdi."""
     def __init__(self,app,
@@ -1176,7 +1183,7 @@ class MdiSplitChildFrame(Child,wx.Panel):
 
     def setTitle(self,page='',extra='',new=True,draw=True,colour=None):
         Child.setTitle(self,page,extra,new)
-        self.parentFrame.setTitle(self._pageTitle,draw=draw)
+        self.parentFrame.setTitle(self._pageTitle,extra=self.extraTitle,draw=draw)
         if new and draw:
             index   = self.getIndex()
             self.tabs.SetPageText(index,self._pageTitle)
