@@ -522,6 +522,17 @@ class Panel(wx.Notebook):
         for child in self.app.children:
             child.source.SetViewWhiteSpace(event.IsChecked())
         self.set('ViewWhiteSpace',event.IsChecked())
+    
+    def linenumbers(self,event):
+        """Toggle visibility line numbers."""
+        print event.IsChecked()
+        for child in self.app.children:
+            if event.IsChecked():        
+                child.source.SetMarginWidth(1, 50)
+            else:
+                child.source.SetMarginWidth(1, 0)
+            
+        self.set('ViewLineNumbers',event.IsChecked())
 
     def indentation_guides(self,event):
         """Toggle visibility indentation guides."""

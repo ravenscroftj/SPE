@@ -114,7 +114,10 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetMargins(0,0)
         #margin 1 for line numbers
         self.SetMarginType(1, wx_stc.STC_MARGIN_NUMBER)
-        self.SetMarginWidth(1, 50)
+        if self.getint('ViewLineNumbers'):
+            self.SetMarginWidth(1, 50)
+        else:
+            self.SetMarginWidth(1, 0)
         #margin 2 for markers
         self.SetMarginType(2, wx_stc.STC_MARGIN_SYMBOL)
         self.SetMarginMask(2, wx_stc.STC_MASK_FOLDERS)
@@ -406,6 +409,13 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.SetTabWidth(self.getint('TabWidth'))
         self.SetUseTabs(self.getint('UseTabs'))
         self.SetViewWhiteSpace(self.getint('ViewWhiteSpace'))
+        #line numbers
+        if self.getint('ViewLineNumbers'):
+            self.SetMarginWidth(1, 50)
+        else:
+            self.SetMarginWidth(1, 0)
+        
+            
         if self.getint('UseTabs'):
             self.indentation = '\t'
         else:

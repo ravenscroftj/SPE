@@ -398,6 +398,10 @@ class Bar(wxgMenu.Bar):
     def menu_whitespace(self, event=None):
         """View > Whitespace"""
         self.parentPanel.whitespace(event)
+    
+    def menu_linenumbers(self, event=None):
+        """View > Linenumbers"""
+        self.parentPanel.linenumbers(event)
 
     def menu_indentation_guides(self, event=None):
         """View > Indentation guides"""
