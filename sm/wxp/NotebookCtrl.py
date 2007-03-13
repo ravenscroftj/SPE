@@ -1464,7 +1464,12 @@ class TabCtrl(wx.PyControl):
                 
         fullrect = self.GetClientSize()
         count = self._tabvisible[0:selection].count(0)
-        currect = self._tabrect[selection-self._firstvisible-count]
+        #stani patch: correct for too big values, play safe
+        sindex = selection-self._firstvisible-count 
+        if sindex >= len(self._tabrect):
+            sindex      = len(self._tabrect)-1
+            selection   = sindex+self._firstvisible+count 
+        currect = self._tabrect[sindex]
 
         spinval = self._spinbutton.GetValue()
         firstrect = self._initrect[spinval]
