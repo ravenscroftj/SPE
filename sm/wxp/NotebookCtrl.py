@@ -1461,16 +1461,17 @@ class TabCtrl(wx.PyControl):
 
         if not self.HasSpinButton():
             return
-                
+
         fullrect = self.GetClientSize()
         count = self._tabvisible[0:selection].count(0)
+
         #stani patch: correct for too big values, play safe
-        sindex = selection-self._firstvisible-count 
+        sindex = selection-self._firstvisible-count
         if sindex >= len(self._tabrect):
             sindex      = len(self._tabrect)-1
-            selection   = sindex+self._firstvisible+count 
+            selection   = sindex+self._firstvisible+count
         currect = self._tabrect[sindex]
-
+                
         spinval = self._spinbutton.GetValue()
         firstrect = self._initrect[spinval]
         if self._style & NC_LEFT or self._style & NC_RIGHT:
@@ -4887,7 +4888,7 @@ class NotebookCtrl(wx.Panel):
         if self.GetPageCount() > 0:
             if oldselection == nPage:
                 if self.GetSelection() > 0:
-                    self.SetSelection(self.GetSelection()-1)
+                    self.SetSelection(self.GetSelection())
                 else:
                     self.SetSelection(self.GetSelection())
                     self.bsizer.Show(self.GetSelection())

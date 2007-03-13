@@ -460,6 +460,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     doc.SetCurrentPos(firstChar + 1)
                 doc.DelLineLeft()
         doc.SetSelection(sel[0],doc.PositionFromLine(end+1))
+        doc.SetCurrentPos(doc.PositionFromLine(start))
         doc.EndUndoAction()
 
     def insert_separator(self):
@@ -601,13 +602,16 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 if exit:
                     commandList.append(['exit'])
                 sm.osx.startAppleScript(commandList, activateFlag=True)
+            elif os.path.isfile('/usr/bin/gnome-terminal'):
+                if exit:
+                    os.system("""/usr/bin/gnome-terminal --title "SPE - %(file)s - %(path)s - Press Ctrl+C to stop" --working-directory="%(path)s" -e '%(python)s "%(file)s" %(arguments)s' &"""%params)
+                else:
+                    os.system("""/usr/bin/gnome-terminal --title "SPE - %(file)s - %(path)s - Press Ctrl+C to stop" --working-directory="%(path)s" -x bash -c "%(python)s \\"%(file)s\\" %(arguments)s; cat" """%params)
             elif os.path.isfile('/usr/bin/konsole'):
                 if exit:
                     os.system("""/usr/bin/konsole --caption SPE --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
                 else:
-                    os.system("""/usr/bin/konsole --noclose --caption SPE --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
-            elif os.path.isfile('/usr/bin/gnome-terminal'):
-                os.system("""/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" -e '%(python)s "%(file)s" %(arguments)s' &"""%params)
+                    os.system("""/usr/bin/konsole --caption SPE --noclose --workdir "%(path)s" -e %(python)s "%(file)s" %(arguments)s &"""%params)
             else:
                 os.system('%(python)s "%(file)s" %(arguments)s'%params)
         else:
