@@ -774,10 +774,13 @@ class Panel(wx.Notebook):
             self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
-        if wx.Platform == "__WXMAC__":
-            os.system('open -a /Applications/SPE-OSX/XRCed.app')
-        else:
-            from wx.tools.XRCed.xrced import __file__ as xrced
+##        if wx.Platform == "__WXMAC__":
+##            os.system('open -a /Applications/SPE-OSX/XRCed.app')
+##        else:
+##            from wx.tools.XRCed.xrced import __file__ as xrced
+            from plugins.XRCed import __file__ as fileName
+            path    = info.dirname(fileName)
+            xrced   = '%s'%os.path.join(path,'xrced.py')
             if info.WIN and ' ' in xrced:
                 xrced   = '"%s"'%xrced
             os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,xrced)
