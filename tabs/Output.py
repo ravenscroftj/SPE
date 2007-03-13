@@ -46,7 +46,7 @@ class Output(html.HtmlWindow):
         if self.pid is -1:
             if not label: label = command
             #give feedback
-            self.AddText('<pre><table bgcolor=#CCCCCC width=100%%><tr><td><TT><img src="%s">&nbsp;%s</TT></td></tr></table>'%(RUN_ICON,label))
+            self.AddText('<table bgcolor=#CCCCCC width=100%%><tr><td><TT><img src="%s">&nbsp;%s</TT></td></tr></table>'%(RUN_ICON,label))
             self.SetStatusText(statustext)
             self.UpdateToolbar()
             self.Raise()
@@ -86,9 +86,10 @@ class Output(html.HtmlWindow):
         """Add text and in case of error, colour red and provide links."""
         text        = text.replace('\r\n','\n').replace("<string>","&lt;string&gt;")
         if error:
+            text    = escape(text)
             text    = RE_LINK.sub(r"\g<1><img src='%s'>&nbsp;<a href='\g<2>'>\g<2></a><br>"%FIND_ICON,text)
             text    = '<font color=red>%s</font>'%text
-        #text        = text.replace('\n','<br>')
+        text        = text.replace('\n','<br>')
         self.AppendToPage(text)
         self.Scroll(0,self.GetVirtualSize()[1]/self.GetScrollPixelsPerUnit()[1])
 
@@ -107,10 +108,10 @@ class Output(html.HtmlWindow):
     def OnIdle(self, event):
             if self.inputstream.CanRead():
                 text = self.inputstream.read()
-                self.AddText(escape(text))
+                self.AddText(escape(text).replace(' ','&nbsp;').replace('\t','&nbsp;'))
             if self.errorstream.CanRead():
                 text = self.errorstream.read()
-                self.AddText(escape(text),error=True)
+                self.AddText(text,error=True)
 
     def OnEndProcess(self, event):
         #unbind events
@@ -130,7 +131,6 @@ class Output(html.HtmlWindow):
             self.SetStatusText(message)
             self.AddText(message)#'</pre>'+
             wx.Bell()
-        self.AddText('</pre>')
         
     def OnLinkClicked(self,linkInfo):
         match   = RE_LOCATION.match(linkInfo.GetHref())
@@ -174,10 +174,14 @@ class TestFrame(wx.Frame):
 ##            while self.output.IsBusy():
 ##                print self.output.pid
 ##                time.sleep(1)
-        
-if __name__ == '__main__':
+
+def test():
     app = wx.PySimpleApp()
     frame = TestFrame()
     app.SetTopWindow(frame)
     wx.CallAfter(frame.test)
     app.MainLoop()
+        
+if __name__ == '__main__':
+    print "<hello world>"
+    print "             hello world"

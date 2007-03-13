@@ -27,6 +27,9 @@ import Child
 ####Constants-------------------------------------------------------------------
 DEFAULT         = "<default>"
 FIREFOX         = '/usr/bin/firefox'
+NAUTILUS        = '/usr/bin/nautilus'
+KONQUEROR       = '/usr/bin/konqueror'
+THUNAR          = '/usr/bin/thunar'
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
 MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
@@ -618,7 +621,14 @@ class Panel(wx.Notebook):
         else:
             path    = os.getcwd()
         if path[0] == '/': path = 'file://'+path
-        webbrowser.open(path)
+        if os.path.exists(NAUTILUS):
+            os.system('%s "%s"'%(NAUTILUS,path))
+        elif os.path.exists(KONQUEROR):
+            os.system('%s "%s"'%(KONQUEROR,path))
+        elif os.path.exists(THUNAR):
+            os.system('%s "%s"'%(THUNAR,path))
+        else:
+            webbrowser.open(path)
 
     def run(self):
         if self.output.IsBusy():

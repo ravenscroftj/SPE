@@ -140,7 +140,7 @@ class Panel(wx.SplitterWindow):
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_ACTIVATED,self.explore)
         if info.WIN:
             #Mac has already always triangles
-            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_UP,self.explore)
+            eventManager.Register(self.onToggleExploreTree,wx.EVT_LEFT_DOWN,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_MIDDLE_CLICK,self.explore)
         eventManager.Register(self.onSourceFromExplore,wx.EVT_TREE_ITEM_RIGHT_CLICK,self.explore)
         eventManager.Register(self.onSourceFromTodo,wx.EVT_LIST_ITEM_SELECTED,self.todo)
@@ -542,9 +542,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             elif os.path.isfile('/usr/bin/konsole'):
                 os.system('/usr/bin/konsole --caption SPE --workdir "%(path)s" &'%params)
             elif os.path.isfile('/usr/bin/gnome-terminal'):
-                os.system('/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" &')
+                os.system('/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" &'%params)
             else:
-                os.system('cd %(path)s;xterm &')
+                os.system('cd %(path)s;xterm &'%params)
         else:
             os.system(terminal%params)
 
