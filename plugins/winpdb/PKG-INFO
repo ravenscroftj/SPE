@@ -1,11 +1,11 @@
 Metadata-Version: 1.0
 Name: winpdb
-Version: 1.0.8
+Version: 1.0.9
 Summary: An advanced Python debugger.
 Home-page: http://www.digitalpeers.com/pythondebugger/
 Author: Nir Aides
 Author-email: nir@digitalpeers.com
-License: UNKNOWN
+License: GNU GPL
 Description: Winpdb is an advanced Python debugger with smart breakpoints,
         thread support, modifiable namespace, and password secured connections.
-Platform: UNKNOWN
+Platform: any

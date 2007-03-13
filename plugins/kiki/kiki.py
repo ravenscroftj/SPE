@@ -688,6 +688,7 @@ def speCreate(parent, info=None):
     global settings
     settings = Settings(dirname=".spe", filename="kikicfg.py", debugfile="kikidebug")        
     Kiki = MyFrameWithEvents(parent, -1, "")
+    Kiki.CentreOnParent(wx.BOTH)
     Kiki.SetTitle(Kiki.GetTitle() + " - the ferret in your Spe")
     if info and info.has_key('kikiPath'):
         kikipath = info['kikiPath']
