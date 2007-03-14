@@ -4,6 +4,8 @@
 
 import wx
 
+def _(x): return x
+
 class RunWinPdbDialog(wx.Dialog):
     def __init__(self, fileName, runPreviousArguments, runPreviousException, *args, **kwds):
         #todo: replace choices = [] with choices = runPreviousArguments
