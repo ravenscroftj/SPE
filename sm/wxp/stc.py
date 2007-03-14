@@ -159,11 +159,11 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         #EVENTS
         self.Bind(wx_stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
         self.Bind(wx_stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_CHAR, self.OnChar)
-        if wx.Platform!='__WXMAC__':
-            self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleDown)
+        if wx.Platform=='__WXMAC__':
+            self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleDown)
         if self.menu:
             self.UsePopUp(False)
             if wx.Platform=='__WXMAC__':
@@ -181,7 +181,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         code    = self.GetSelectedText()
         pos     = self.PositionFromPointClose(event.GetX(),event.GetY())
         event.Skip()
-        if code.strip():
+        if pos>-1 and code.strip():
             self.SetSelection(pos,pos)
             self.ReplaceSelection(code)
 

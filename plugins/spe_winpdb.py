@@ -40,6 +40,8 @@ from _spe.plugins.winpdb.winpdb import __file__ as WINPDB
 if info.WIN and ' ' in WINPDB:
     WINPDB = '"%s"'%WINPDB
     
+def _(x): return x
+
 class SessionManager(CSimpleSessionManager):
     
     command_line    = ''
