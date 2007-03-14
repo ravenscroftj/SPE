@@ -193,7 +193,8 @@ class Bar(wxgMenu.Bar):
 
     def skip(self,event):
         child               = self.app.childActive
-        child.statusBar.throbber.Play()
+        if child!= None:
+            child.statusBar.throbber.Play()
 
     def link(self,x,doc=None):
         self.parentPanel.messageHtml(x,doc=doc)
