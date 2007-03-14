@@ -4,12 +4,12 @@ import wx
 from wx.lib.evtmgr import eventManager
 import _spe.info as info
 
-if info.WIN:
+if 1 or info.WIN:
     QUOTE       = '"'
 else:
     QUOTE       = ''
 COLOR           = (wx.Colour(220,220,220),wx.Colour(255,255,255))
-IGNORE          = []#['Warnings...']
+IGNORE          = ['Warnings...']
 METHOD_NAMES    = ['byte code','compiler package']
 METHOD_PATHS    = [\
     '%s%s --stdlib --blacklist --varlist'%(os.path.join('pychecker','checker.py'),QUOTE),
@@ -87,7 +87,6 @@ class Panel(wx.ListCtrl):
                      QUOTE,
                      fileName,
                      QUOTE)
-                print cmd#*
                 pid = wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
         else:
             self.panel.parentPanel.message('Sorry, only one pycheck at a time.')
