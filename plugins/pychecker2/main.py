@@ -17,9 +17,9 @@ from pychecker2 import ConditionalChecks
 from pychecker2 import FormatStringChecks
 
 #Adapted by SM for spe (begin)
-from os.path import join
-from _spe.info import INFO
-CACHE_FILE = join(INFO['userPath'],'cache.tmp')
+import os
+CACHE_FILE = os.path.expanduser("~/.pychecker_cache")
+print repr(CACHE_FILE)
 #Adapted by SM for spe (end)
 
 def print_warnings(f, out):
