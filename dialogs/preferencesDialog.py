@@ -22,7 +22,7 @@ VALUES = ['AutoComplete','AutoReloadChangedFile','Backup','CallTips',
           'globalFolders','globalNotes','globalFileList','SaveOnExit',
           'SingleInstanceApp','ToolTipsForFileTabs',
           'CloseChildrenOnNewWorkspace','SaveWorkspaceOnFileSave',
-          'RememberLastWorkspace','ViewLineNumbers']#'ShowToolbar',
+          'RememberLastWorkspace',]#'ShowToolbar','ViewLineNumbers'
 
 def _(x):
     return x
