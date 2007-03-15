@@ -36,7 +36,9 @@ class Panel(wx.ListCtrl):
         self.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
                 heading='Remark',width=600)
         self.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, 
-                heading='File',width=400)
+                heading='File',width=200)
+        self.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, 
+                heading='Path',width=400)
 
         self.InsertStringItem(0,'')
         if info.DARWIN:
@@ -149,7 +151,8 @@ class Panel(wx.ListCtrl):
                 if not line.isdigit(): continue
                 self.InsertStringItem(self.index,line)
                 self.SetStringItem(self.index,1,remark)
-                self.SetStringItem(self.index,2,file)
+                self.SetStringItem(self.index,2,os.path.basename(file))
+                self.SetStringItem(self.index,3,os.path.dirname(file))
                 self.list.insert(self.index,(file,line))
                 if file != self.lastFile:
                     self.lastFile    = file
