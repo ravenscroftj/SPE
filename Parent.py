@@ -631,7 +631,6 @@ class Panel(wx.Notebook):
                 path    = os.getcwd()
         else:
             path    = os.getcwd()
-        if path[0] == '/': path = 'file://'+path
         if os.path.exists(NAUTILUS):
             os.system('%s "%s"'%(NAUTILUS,path))
         elif os.path.exists(KONQUEROR):
@@ -639,6 +638,7 @@ class Panel(wx.Notebook):
         elif os.path.exists(THUNAR):
             os.system('%s "%s"'%(THUNAR,path))
         else:
+            if path[0] == '/': path = 'file://'+path
             webbrowser.open(path)
 
     def run(self):
