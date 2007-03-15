@@ -623,8 +623,10 @@ class MyFrameWithEvents(MyFrame):
         # and has a reasonable size
         system = wx.SystemSettings_GetMetric
         pos = list(settings.get(WINDOWPOSITION, (-1,-1)))
-        if pos[0]<-1: pos[0] = 0
-        if pos[1]<-1: pos[1] = 0
+        x = system(wx.SYS_SCREEN_X)
+        y = system(wx.SYS_SCREEN_Y)
+        if pos[0]<=-1: pos[0] = (x/2)-320
+        if pos[1]<=-1: pos[1] = (y/2)-240
         if pos[0]>system(wx.SYS_SCREEN_X)-50:
             pos[0] = 0
         if pos[1]>system(wx.SYS_SCREEN_Y)-50:
@@ -688,7 +690,6 @@ def speCreate(parent, info=None):
     global settings
     settings = Settings(dirname=".spe", filename="kikicfg.py", debugfile="kikidebug")        
     Kiki = MyFrameWithEvents(parent, -1, "")
-    Kiki.CentreOnParent(wx.BOTH)
     Kiki.SetTitle(Kiki.GetTitle() + " - the ferret in your Spe")
     if info and info.has_key('kikiPath'):
         kikipath = info['kikiPath']
