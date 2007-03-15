@@ -330,6 +330,7 @@ class Panel(wx.Notebook):
         self.SetActiveStatusText(os.path.basename(file)[:-4],STATUS_TEXT_WORKSPACE_POS)
 
     def saveWorkspace(self,filelocation=None):
+        childActive = self.app.childActive
         fileList=[]
         if self.app.children:
             self.workspace['openfiles']=[]
@@ -355,6 +356,7 @@ class Panel(wx.Notebook):
         except Exception, message:
             print 'Spe warning: could not save workspace options in',filelocation
             print message
+        self.applyWorkspaceTab(childActive)
 
     def getWorkspaceValue(self,type,default=False):
         """        returns the value of the workspace config file key        """
@@ -453,11 +455,9 @@ class Panel(wx.Notebook):
         dlg.Destroy()
 
     def save(self):
-        try:
-            if self.getValue('SaveWorkspaceOnFileSave'):
-                self.saveWorkspace()
-        except:
-            pass
+        if self.getValue('SaveWorkspaceOnFileSave'):
+            self.saveWorkspace()
+
     #---Edit
     def browse_source(self, event=None):
         """Locate source file of word and open it."""
