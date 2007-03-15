@@ -39,7 +39,11 @@ class Panel(wx.ListCtrl):
                 heading='File',width=400)
 
         self.InsertStringItem(0,'')
-        self.SetStringItem(0,1,'Press Ctrl+Alt+C to check the current file [%s method]'%(METHOD_NAMES[self.methodIndex],))
+        if info.DARWIN:
+            ctrl    = 'Cmd'
+        else:
+            ctrl    = 'Ctrl'
+        self.SetStringItem(0,1,'Press %s+Alt+C to check the current file [%s method]'%(ctrl,METHOD_NAMES[self.methodIndex],))
 
         #events (eventManager doesn't work here ;-()
         wx.EVT_LIST_ITEM_SELECTED(self,-1,self.onSelect)
