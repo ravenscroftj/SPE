@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 
 """
-rpdb2.py - version 2.1.0
+rpdb2.py - version 2.0.9
 
-A remote Python debugger for CPython
+A remote Python debugger for Python 2.3 and Python 2.4
 
-Copyright (C) 2005-2007 Nir Aides
+Copyright (C) 2005-2006 Nir Aides
 
 This program is free software; you can redistribute it and/or modify it 
 under the terms of the GNU General Public License as published by the 
@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA    
 """
 
-COPYRIGHT_NOTICE = """Copyright (C) 2005-2007 Nir Aides"""
+COPYRIGHT_NOTICE = """Copyright (C) 2005-2006 Nir Aides"""
 
 LICENSE_NOTICE = """
 This program is free software; you can redistribute it and/or modify it 
@@ -263,9 +263,8 @@ import linecache
 import traceback
 import compiler
 import commands
-import tempfile
 import __main__
-import pickle
+import cPickle
 import httplib
 import os.path
 import socket
@@ -278,7 +277,6 @@ import atexit
 import time
 import copy
 import hmac
-import stat
 import sys
 import cmd
 import md5
@@ -421,7 +419,7 @@ def settrace():
 
 
 
-RPDB_VERSION = "RPDB_2_1_0"
+RPDB_VERSION = "RPDB_2_0_9"
 RPDB_COMPATIBILITY_VERSION = "RPDB_2_0_9"
 
 
@@ -1218,13 +1216,6 @@ class CException(Exception):
         Exception.__init__(self, *args)
 
 
-
-class NotImplemented(Exception):
-    """
-    Feature not implemented on this platform.
-    """
-
-    
     
 class InvalidScopeName(CException):
     """
@@ -1422,10 +1413,6 @@ XTERM = 'xterm'
 RXVT = 'rxvt'
 
 RPDB_SETTINGS_FOLDER = '.rpdb2_settings'
-RPDB_PWD_FOLDER = os.path.join(RPDB_SETTINGS_FOLDER, 'passwords')
-RPDB_BPL_FOLDER = os.path.join(RPDB_SETTINGS_FOLDER, 'breakpoints')
-RPDB_BPL_FOLDER_NT = 'rpdb2_breakpoints'
-MAX_BPL_FILES = 100
 
 IDLE_MAX_RATE = 2.0
 PING_TIMEOUT = 4.0
@@ -1462,7 +1449,7 @@ CONSOLE_WRAP_INDEX = 78
 CONSOLE_PROMPT = '\n> '
 CONSOLE_PROMPT_ANALYZE = '\nAnalayze> '
 CONSOLE_INTRO = ("""RPDB - The Remote Python Debugger, version %s,
-Copyright (C) 2005-2007 Nir Aides.
+Copyright (C) 2005-2006 Nir Aides.
 Type "help", "copyright", "license" for more information.""" % (RPDB_VERSION))
 
 PRINT_NOTICE_PROMPT = "Hit Return for more, or q (and Return) to quit:"
@@ -1480,14 +1467,9 @@ STR_OUTPUT_WARNING_ASYNC = "The operation will continue to run in the background
 STR_ANALYZE_GLOBALS_WARNING = "In analyze mode the globals and locals dictionaries are read only."
 STR_GLOBALS_WARNING = "Any changes made to the globals dictionay at this frame will be discarded."
 STR_BREAKPOINTS_LOADED = "Breakpoints were loaded."
-STR_NOT_IMPLEMENTED = "This feature is not available on this platform."
 STR_BREAKPOINTS_SAVED = "Breakpoints were saved."
-STR_BREAKPOINTS_SAVE_PROBLEM = "A problem occured while saving the breakpoints."
-STR_BREAKPOINTS_LOAD_PROBLEM = "A problem occured while loading the breakpoints."
 STR_BREAKPOINTS_NOT_SAVED = "Breakpoints were not saved."
-STR_BREAKPOINTS_NOT_LOADED = "Breakpoints were not loaded."
 STR_BREAKPOINTS_FILE_NOT_FOUND = "Breakpoints file was not found." 
-STR_BREAKPOINTS_NOT_FOUND = "No Breakpoints were found." 
 STR_BAD_FILENAME = "Bad File Name."
 STR_SOME_BREAKPOINTS_NOT_LOADED = "Some breakpoints were not loaded, because of an error."
 STR_BAD_EXPRESSION = "Bad expression '%s'."
@@ -2348,70 +2330,13 @@ def create_rpdb_settings_folder():
         return
         
     home = os.path.expanduser('~')
-
     rsf = os.path.join(home, RPDB_SETTINGS_FOLDER)
-    if not os.path.exists(rsf):
-        os.mkdir(rsf, 0700)
 
-    pwds = os.path.join(home, RPDB_PWD_FOLDER)    
-    if not os.path.exists(pwds):
-        os.mkdir(pwds, 0700)
-
-    bpl = os.path.join(home, RPDB_BPL_FOLDER)    
-    if not os.path.exists(bpl):
-        os.mkdir(bpl, 0700)
-
-
-
-def cleanup_bpl_folder(path):
-    if random.randint(0, 10) > 0:
-        return
-
-    l = os.listdir(path)
-    if len(l) < MAX_BPL_FILES:
-        return
-    
-    try:
-        ll = [(os.stat(os.path.join(path, f))[stat.ST_ATIME], f) for f in l]
-    except:
+    if os.path.exists(rsf):
         return
         
-    ll.sort()
+    os.mkdir(rsf, 0700)
 
-    print ll
-    
-    for (t, f) in ll[: -MAX_BPL_FILES]:
-        try:
-            os.remove(os.path.join(path, f))
-        except:
-            pass
-
-        
-
-def calc_bpl_filename(filename):
-    tmp_filename = md5.new(filename).hexdigest()[:10]
-
-    if os.name == POSIX:
-        home = os.path.expanduser('~')
-        bpldir = os.path.join(home, RPDB_BPL_FOLDER)
-        cleanup_bpl_folder(bpldir)
-        path = os.path.join(bpldir, tmp_filename)
-        return path + BREAKPOINTS_FILE_EXT
-
-    if os.name == 'nt':
-        tmpdir = tempfile.gettempdir()
-        bpldir = os.path.join(tmpdir, RPDB_BPL_FOLDER_NT)
-
-        if not os.path.exists(bpldir):
-            os.mkdir(bpldir, 0700)
-        else:    
-            cleanup_bpl_folder(bpldir)
-            
-        path = os.path.join(bpldir, tmp_filename)
-        return path + BREAKPOINTS_FILE_EXT
-    
-    raise NotImplemented
-    
 
     
 def calc_pwd_file_path(rid):
@@ -2421,7 +2346,7 @@ def calc_pwd_file_path(rid):
     """
     
     home = os.path.expanduser('~')
-    rsf = os.path.join(home, RPDB_PWD_FOLDER)
+    rsf = os.path.join(home, RPDB_SETTINGS_FOLDER)
     pwd_file_path = os.path.join(rsf, rid)
     
     return pwd_file_path
@@ -2670,12 +2595,12 @@ class CCrypto:
 
     def __sign(self, s):
         i = self.__get_next_index()
-        _s = pickle.dumps((self.m_index_anchor_ex, i, self.m_rid, s))
+        _s = cPickle.dumps((self.m_index_anchor_ex, i, self.m_rid, s))
         
         h = hmac.new(self.m_key, _s, md5)
         _d = h.digest()
         r = (_d, _s)
-        s_signed = pickle.dumps(r)
+        s_signed = cPickle.dumps(r)
 
         return s_signed
 
@@ -2693,7 +2618,7 @@ class CCrypto:
 
     def __verify_signature(self, s, fVerifyIndex):
         try:
-            r = pickle.loads(s)
+            r = cPickle.loads(s)
             
             (_d, _s) = r
             
@@ -2704,7 +2629,7 @@ class CCrypto:
                 self.__wait_a_little()
                 raise AuthenticationFailure
 
-            (anchor, i, id, s_original) = pickle.loads(_s)
+            (anchor, i, id, s_original) = cPickle.loads(_s)
                 
         except AuthenticationFailure:
             raise
@@ -6271,12 +6196,12 @@ class CPwdServerProxy:
                 #
                 # Decrypt response.
                 #
-                ((max_index, _r, _e), fe)= self.m_crypto.undo_crypto(r, fVerifyIndex = False)
+                ((max_index, _r, e), fe)= self.m_crypto.undo_crypto(r, fVerifyIndex = False)
                 
-                if _e is not None:
-                    raise _e
+                if e is not None:
+                    raise e
 
-            except sys.modules['rpdb2'].AuthenticationBadIndex, e:
+            except AuthenticationBadIndex, e:
                 self.m_crypto.set_index(e.m_max_index, e.m_anchor)
                 continue
 
@@ -6950,19 +6875,11 @@ class CSessionManagerInternal:
             return
 
         if self.m_state_manager.get_state() != STATE_DETACHED:
-            try:
-                self.save_breakpoints()
-            except:
-                pass
-                
+            self.save_breakpoints()
             self.stop_debuggee()
             
-        self.launch(self.m_last_fchdir, self.m_last_command_line)
-
-        try:
-            self.load_breakpoints()
-        except:
-            pass
+        self.launch(self.m_last_fchdir, self.m_last_command_line)        
+        self.load_breakpoints()
 
 
     def get_launch_args(self):    
@@ -7310,68 +7227,46 @@ class CSessionManagerInternal:
         return bpl
 
         
-    def save_breakpoints(self, filename = ''):
-        self.__verify_attached()
+    def save_breakpoints(self, _filename = ''):        
+        bpl = self.get_breakpoints()
+        sbpl = cPickle.dumps(bpl)
 
-        module_name = self.getSession().getServerInfo().m_module_name
-        if module_name[:1] == '<':
+        if _filename == '':
+            filename = self.getSession().getServerInfo().m_module_name + BREAKPOINTS_FILE_EXT
+        else: 
+            filename = _filename + BREAKPOINTS_FILE_EXT
+
+        if filename[:1] == '<':
             return
-
-        path = calc_bpl_filename(module_name + filename)
             
-        file = open(path, 'wb')
-
-        try:
-            try:
-                bpl = self.get_breakpoints()
-                sbpl = pickle.dumps(bpl)
-                file.write(sbpl)
-
-            except:
-                print_debug()
-                raise CException
-
-        finally:
-            file.close()
+        file = open(filename, 'wb')
+        file.write(sbpl)
+        file.close()
 
 
-    def load_breakpoints(self, filename = ''):
+    def load_breakpoints(self, _filename = ''):
         self.__verify_attached()
 
-        module_name = self.getSession().getServerInfo().m_module_name
-        if module_name[:1] == '<':
-            return
-
-        path = calc_bpl_filename(module_name + filename)
-                            
-        file = open(path, 'rb')
-
-        ferror = False
+        _e = None
         
+        if _filename == '':
+            filename = self.getSession().getServerInfo().m_module_name + BREAKPOINTS_FILE_EXT
+        else: 
+            filename = _filename + BREAKPOINTS_FILE_EXT
+
+        file = open(filename, 'rb')
         try:
-            try:
-                bpl = pickle.load(file)
-                self.delete_breakpoint([], True)
-
-            except:
-                print_debug()
-                raise CException
-
-            if filename == '' and len(bpl.values()) == 0:
-                raise IOError
-                
+            bpl = cPickle.load(file)
             for bp in bpl.values():
                 try:
                     self.set_breakpoint(bp.m_filename, bp.m_scope_fqn, bp.m_scope_offset, bp.m_fEnabled, bp.m_expr)
-                except:
-                    print_debug()
-                    ferror = True
-
-            if ferror:
-                raise CException
-                
+                except (socket.error, CConnectionException), e:
+                    _e = e
         finally:
             file.close()
+
+        if _e is not None:
+            raise _e
 
 
     def get_stack(self, tid_list, fAll):    
@@ -7840,7 +7735,11 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
                     
         try:
             self.m_session_manager.load_breakpoints()
-        except:
+            return
+            
+        except (socket.error, CConnectionException):
+            self.m_session_manager.report_exception(*sys.exc_info())
+        except IOError:
             pass
 
 
@@ -7913,10 +7812,6 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
 
         try:
             self.m_session_manager.save_breakpoints()
-        except:
-            pass
-
-        try:    
             self.m_session_manager.detach()
 
         except (socket.error, CConnectionException):
@@ -8202,35 +8097,27 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
             self.m_session_manager.save_breakpoints(arg)
             print >> self.stdout, STR_BREAKPOINTS_SAVED    
             return
+            
+        except (socket.error, CConnectionException):
+            self.m_session_manager.report_exception(*sys.exc_info())
+        except IOError:
+            self.printer(STR_BAD_FILENAME)
 
-        except NotAttached:
-            self.printer(STR_NOT_ATTACHED)
-            
-        except NotImplemented:
-            self.printer(STR_NOT_IMPLEMENTED)
-        
-        except (CException, IOError):
-            self.printer(STR_BREAKPOINTS_SAVE_PROBLEM)
-            
+        self.printer(STR_BREAKPOINTS_NOT_SAVED)
+
         
     def do_load(self, arg):
         try:
             self.m_session_manager.load_breakpoints(arg)
             print >> self.stdout, STR_BREAKPOINTS_LOADED    
             return
-
-        except NotAttached:
-            self.printer(STR_NOT_ATTACHED)
             
-        except NotImplemented:
-            self.printer(STR_NOT_IMPLEMENTED)
-        
-        except CException:
-            self.printer(STR_BREAKPOINTS_LOAD_PROBLEM)
-            
+        except (socket.error, CConnectionException):
+            self.m_session_manager.report_exception(*sys.exc_info())
+        except cPickle.PickleError:
+            self.printer(STR_BAD_FILE_DATA)
         except IOError:
-            error = [STR_BREAKPOINTS_FILE_NOT_FOUND, STR_BREAKPOINTS_NOT_FOUND][arg == '']
-            self.printer(error)
+            self.printer(STR_BREAKPOINTS_FILE_NOT_FOUND)
 
 
     def do_stack(self, arg):
@@ -8579,14 +8466,9 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
 
 
     def do_stop(self, arg):
-        self.printer(STR_KILL_NOTICE)
-        
         try:
+            self.printer(STR_KILL_NOTICE)
             self.m_session_manager.save_breakpoints()
-        except:
-            pass
-
-        try:    
             self.m_session_manager.stop_debuggee()
             
         except (socket.error, CConnectionException):
