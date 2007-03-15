@@ -84,14 +84,15 @@ class SessionManager(CSimpleSessionManager):
     #---exception callbacks
     def unhandled_exception_callback(self):
         #print "unhandled_exception_callback"
-        self._ask_to_launch_debugger(   status  = 'Unhandled exception at "%s"'%self.command_line,
-                                        message = 'An unhandled exception occurred.',
-                                        showDialog  = self.runner.exceptionPrevious)
+        wx.CallAfter(self._ask_to_launch_debugger,
+            status  = 'Unhandled exception at "%s"'%self.command_line,
+            message = 'An unhandled exception occurred.',
+            showDialog  = self.runner.exceptionPrevious)
         
     def script_about_to_terminate_callback(self):
         #print "script_about_to_terminate_callback"
         child               = self.app.childActive
-        child.setStatus('Terminating "%s"'%self.command_line)
+        wx.CallAfter(child.setStatus, 'Terminating "%s"'%self.command_line)
         self.request_go()
 ##        self._ask_to_launch_debugger(   status  = 'Terminating "%s"'%self.command_line,
 ##                                        message = 'The script has finished execution.',
@@ -99,7 +100,7 @@ class SessionManager(CSimpleSessionManager):
             
     def script_terminated_callback(self):
         #print "script_terminated_callback"
-        self._feedback_terminate()
+        wx.CallAfter(self._feedback_terminate)
         self.detach()
         
     #---public

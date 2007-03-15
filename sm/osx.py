@@ -213,8 +213,14 @@ def rmtree(p,output=0):
 ##    return savedir
 
 def userPath(dirname=''):
-    """Contributed by Greg Brunet based on Kevin Altis code."""
+    """'safer' function to find user path."""
     # 'safer' function to find user path: look for one of these directories
+    try:
+        path = os.path.expanduser("~")
+        if os.path.isdir(path):
+            return os.path.join(path, dirname)
+    except:
+        pass
     for evar in ('HOME', 'USERPROFILE', 'TMP'):
         try:
             path = os.environ[evar]

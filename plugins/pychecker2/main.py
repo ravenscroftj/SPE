@@ -1,7 +1,28 @@
 import sys
+from os.path import dirname, realpath
+
 #---Patched by Stani http://pythonide.stani.be (begin)
-from os.path import dirname, realpath, expanduser
-CACHE_FILE = expanduser("~/.pychecker_cache")
+import os
+def userPath(dirname=''):
+    """'safer' function to find user path."""
+    # 'safer' function to find user path: look for one of these directories
+    try:
+        path = os.path.expanduser("~")
+        if os.path.isdir(path):
+            return os.path.join(path, dirname)
+    except:
+        pass
+    for evar in ('HOME', 'USERPROFILE', 'TMP'):
+        try:
+            path = os.environ[evar]
+            if os.path.isdir(path):
+                return os.path.join(path, dirname)
+        except:
+            pass
+    #if no match found, use module directory
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), dirname)
+
+CACHE_FILE = userPath(".pychecker_cache")
 #Patched by Stani http://pythonide.stani.be (end)
 sys.path.append(dirname(dirname(realpath(sys.argv[0]))))
 
