@@ -34,7 +34,7 @@ INFO['description']=\
 __doc__ = INFO['doc']%INFO
     
 print """
-SPE v%(version)s (c)2003-2005 www.stani.be
+SPE v%(version)s (c)2003-2007 www.stani.be
 
 If spe fails to start:
  - type "%(python)s SPE.py --debug > debug.txt 2>&1" at the command prompt
@@ -86,7 +86,7 @@ else:
 
 __workspace = None
 
-parser      = OptionParser(usage="%prog [--debug] [ -w <WORKSPACE> | --workspace=<WORKSPACE>] [file1.py file2.py ... ]",version="SPE v%s (c)2003-2005 www.stani.be"%INFO['version'])
+parser      = OptionParser(usage="%prog [--debug] [ -w <WORKSPACE> | --workspace=<WORKSPACE>] [file1.py file2.py ... ]",version="SPE v%s (c)2003-2007 www.stani.be"%INFO['version'])
 parser.add_option("-w","--workspace",help="open a workspace file")
 parser.add_option("-d","--debug",action="store_true",help="turn on debug output")
 opts, args  = parser.parse_args()
