@@ -141,7 +141,7 @@ class Panel(wxgPanel):
         # When SPE is launched the first time you click on any folder in the browser
         #  it generates two selection events.  However after that first click events
         #  get generated normally.
-
+        if not self.depth: return
         self.panel.busyShow()
         recursion=self.depth.GetValue()
         folder=event.GetString()

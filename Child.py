@@ -1113,12 +1113,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def onSourceFromTodo(self,event):
         """Jump to source line by clicking task in todo."""
         line=event.GetData()
-        self.scrollTo(line-1,scroll=1)
+        self.scrollTo(line-1,scroll=1,select='line')
 
     def onSourceFromIndex(self,event):
         """Jump to source line by clicking task in todo."""
         line=event.GetData()
-        self.scrollTo(line,scroll=1)
+        self.scrollTo(line,scroll=1,select='line')
 
 #---methods---------------------------------------------------------------------
     def check(self):
