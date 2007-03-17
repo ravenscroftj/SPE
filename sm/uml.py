@@ -1,4 +1,4 @@
-import re
+import os, re
 import wx, wx.lib.ogl as ogl
 
 INITIALIZED = False
@@ -72,16 +72,16 @@ ID_Preview  = wx.NewId()
 ID_Print    = wx.NewId()
 
 BITMAP_TYPE = {
-                "bmp": wx.BITMAP_TYPE_BMP,      # Save a Windows bitmap file.
-                "eps": None,
-                "gif": wx.BITMAP_TYPE_GIF,      # Save a GIF file.
-                "jpg": wx.BITMAP_TYPE_JPEG,     # Save a JPG file.
-                "pcx": wx.BITMAP_TYPE_PCX,      # Save a PCX file.
-                "png": wx.BITMAP_TYPE_PNM,      # Save a PNG file.
-                "pnm": wx.BITMAP_TYPE_PNM,      # Save a PNM file.
-                "tif": wx.BITMAP_TYPE_TIF,      # Save a TIF file.
-                "xbm": wx.BITMAP_TYPE_XBM,      # Save an X bitmap file.
-                "xpm": wx.BITMAP_TYPE_XPM,      # Save an XPM bitmap file.
+                ".bmp": wx.BITMAP_TYPE_BMP,      # Save a Windows bitmap file.
+                ".eps": None,
+                ".gif": wx.BITMAP_TYPE_GIF,      # Save a GIF file.
+                ".jpg": wx.BITMAP_TYPE_JPEG,     # Save a JPG file.
+                ".pcx": wx.BITMAP_TYPE_PCX,      # Save a PCX file.
+                ".png": wx.BITMAP_TYPE_PNM,      # Save a PNG file.
+                ".pnm": wx.BITMAP_TYPE_PNM,      # Save a PNM file.
+                ".tif": wx.BITMAP_TYPE_TIF,      # Save a TIF file.
+                ".xbm": wx.BITMAP_TYPE_XBM,      # Save an X bitmap file.
+                ".xpm": wx.BITMAP_TYPE_XPM,      # Save an XPM bitmap file.
             }
 
 def wxTopLevelFrame(window):
@@ -194,30 +194,21 @@ class PrintCanvas(ogl.ShapeCanvas):
             dlg1    = wx.FileDialog(
                     self, 
                     "Save image as", ".", "",
-                    "|".join(["%s files (*.%s)|*.%s"%(t.upper(),t,t) for t in fileTypes]),
+                    "|".join(["%s files (*%s)|*%s"%(t.upper(),t,t) for t in fileTypes]),
                     wx.SAVE|wx.OVERWRITE_PROMPT
                     )
-            try:
-                while 1:
-                    if dlg1.ShowModal() == wx.ID_OK:
-                        fileName    = dlg1.GetPath()
-                        # Check for proper exension
-                        ext         = fileName[-3:].lower()
-                        if ext not in fileTypes:
-                            dlg2 = wx.MessageDialog(self, 'File name extension\n'
-                              'must be one of %s'%(", ".join(fileTypes)),
-                              'File Name Error', wx.OK | wx.ICON_ERROR)
-                            try:
-                                dlg2.ShowModal()
-                            finally:
-                                dlg2.Destroy()
-                        else:
-                            break # now save file
-                    else: # exit without saving
-                        return False
-            finally:
+            if dlg1.ShowModal() == wx.ID_OK:
+                fileName    = dlg1.GetPath()
+                # Check for proper exension
+                ext         = os.path.splitext(fileName)[-1]
+                if ext not in fileTypes:
+                    ext     = fileTypes[dlg1.GetFilterIndex()]
+                    fileName+=ext
                 dlg1.Destroy()
-
+            else: # exit without saving
+                dlg1.Destroy()
+                return False
+                
         tp          = BITMAP_TYPE[ext]
         # Save...
         w, h        = self.GetVirtualSize()
