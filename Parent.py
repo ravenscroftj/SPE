@@ -525,7 +525,6 @@ class Panel(wx.Notebook):
     
     def linenumbers(self,event):
         """Toggle visibility line numbers."""
-        print event.IsChecked()
         for child in self.app.children:
             if event.IsChecked():        
                 child.source.SetMarginWidth(1, 50)

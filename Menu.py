@@ -404,7 +404,7 @@ class Bar(wxgMenu.Bar):
         """View > Linenumbers"""
         self.parentPanel.linenumbers(event)
 
-    def menu_indentation_guides(self, event=None):
+    def menu_indentation(self, event=None):
         """View > Indentation guides"""
         self.parentPanel.indentation_guides(event)
 
