@@ -141,14 +141,10 @@ class PrintCanvas(ogl.ShapeCanvas):
         if not self.printSetup: self.OnPrintSetup()
 
     def OnPrintSetup(self, event=None):
-        data = wx.PrintDialogData(self.printData)
-        printerDialog = wx.PrintDialog(self, data)
-        printerDialog.GetPrintDialogData().SetSetupDialog(True)
-        printerDialog.ShowModal();
-        # this makes a copy of the wx.PrintData instead of just saving
-        # a reference to the one inside the PrintDialogData that will
-        # be destroyed when the dialog is destroyed
-        self.printData = wx.PrintData( printerDialog.GetPrintDialogData().GetPrintData() )
+        data = wx.PageSetupDialogData(self.printData)
+        printerDialog = wx.PageSetupDialog(self, data)
+        if printerDialog.ShowModal() == wx.ID_OK:
+            self.printData = wx.PrintData( printerDialog.GetPageSetupData().GetPrintData() )
         printerDialog.Destroy()
         self.pageSetup = True
 

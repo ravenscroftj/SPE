@@ -782,6 +782,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     #---Sidebar update methods & jump events
     def updateSidebar(self,event=None):
+        if self.frame.dead: return
         if event:
             tab = event.GetSelection()
             self.notebook.SetPageText(event.GetOldSelection(),'')
