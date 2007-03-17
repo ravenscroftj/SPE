@@ -14,7 +14,7 @@ __doc__=INFO['doc']%INFO
 import wx, re, os, sys
 import _spe.help
 
-INTRO   = """Portions Copyright 2003-2005 www.stani.be - see credits in manual for further copyright information.
+INTRO   = """Portions Copyright 2003-2007 www.stani.be - see credits in manual for further copyright information.
 Please donate if you find this program useful (see help menu). Double click to jump to error source code."""
 
 class Shell(wx.py.shell.Shell):
