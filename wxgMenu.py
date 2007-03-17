@@ -252,7 +252,7 @@ class Bar(wx.MenuBar):
         self.file.Append(SAVE_COPY, _("Sa&ve a Copy...\tShift+Ctrl+Alt+S"), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
         self.file.Append(OPEN_WORKSPACE, _("Open &Workspace"), "", wx.ITEM_NORMAL)
-        self.file.Append(SAVE_WORKSPACE, _("Save workspace"), "", wx.ITEM_NORMAL)
+        self.file.Append(SAVE_WORKSPACE, _("Save Workspace"), "", wx.ITEM_NORMAL)
         self.file.Append(SAVE_WORKSPACE_AS, _("Save Workspace As..."), "", wx.ITEM_NORMAL)
         self.file.AppendSeparator()
         self.file.Append(SAVE_UML_AS, _("Save Uml As...\tCtrl+Shift+S"), "", wx.ITEM_NORMAL)
