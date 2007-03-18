@@ -68,10 +68,8 @@ class Output(html.HtmlWindow):
             self.beep           = beep         
            
     def Kill(self):
-        if self.pid != -1 and self.process and hasattr(self.process,'Kill'):
-            #result = self.process.Kill(self.pid,wx.SIGKILL,wx.KILL_CHILDREN)
-            #result = self.process.Kill(self.pid,wx.SIGTERM,wx.KILL_CHILDREN)
-            result = self.process.Kill(self.pid)#,wx.SIGNONE)#,wx.KILL_CHILDREN)
+        if wx.Process.Exists(self.pid) and self.pid != -1:
+            result = wx.Process.Kill(self.pid, wx.SIGKILL, flags=wx.KILL_CHILDREN)
             self.OnEndProcess(event=None)
             message     = 'Script stopped by user (%s).'%KILL_ERROR.get(result,'unknown error')
             self.SetStatusText(message)
@@ -120,7 +118,8 @@ class Output(html.HtmlWindow):
         #check for any leftover output.
         self.OnIdle(event)
         #destroy process
-        self.process.Destroy()
+        if event != None:
+            self.process.Destroy()
         self.process    = None
         self.pid        = -1
         #give feedback
