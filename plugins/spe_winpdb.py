@@ -32,10 +32,22 @@ import wx
 import _spe.info as info
 import _spe.Menu as Menu
 
-#import winpdb
 from dialogs import winpdbDialog
-from _spe.plugins.winpdb.rpdb2 import CSimpleSessionManager
-from _spe.plugins.winpdb.winpdb import __file__ as WINPDB
+
+###import winpdb
+##from _spe.plugins.winpdb.rpdb2 import CSimpleSessionManager
+##from _spe.plugins.winpdb.winpdb import __file__ as WINPDB
+
+#import winpdb
+plugins_dir = os.path.dirname(__file__)
+winpdb_dir  = os.path.join(plugins_dir, 'winpdb')
+WINPDB      = os.path.join(winpdb_dir, 'winpdb.py')
+print WINPDB
+
+import sys
+sys.path.insert(0, winpdb_dir)
+from rpdb2 import CSimpleSessionManager
+del sys.path[0]
 
 if info.WIN and ' ' in WINPDB:
     WINPDB = '"%s"'%WINPDB
@@ -60,7 +72,7 @@ class SessionManager(CSimpleSessionManager):
         child.setStatus(status)
         if showDialog:
             dlg     = wx.MessageDialog(child.frame,
-                        '%s\nDo you want to analyze the script with WinPdb?\n\n(Type "analyze" in WinPdb command prompt.)'%message,
+                        '%s\nDo you want to launch the debugger?\n\n'%message,
                         'SPE - %s'%self.command_line,
                         wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
                        )

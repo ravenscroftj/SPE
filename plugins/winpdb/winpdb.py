@@ -5,7 +5,7 @@
 
     A GUI for rpdb2.py
 
-    Copyright (C) 2005 Nir Aides
+    Copyright (C) 2005-2007 Nir Aides
 
     This program is free software; you can redistribute it and/or modify it 
     under the terms of the GNU General Public License as published by the 
@@ -26,7 +26,7 @@ ABOUT_NOTICE = """winpdb.py
 
 A GUI for rpdb2.py
 
-Copyright (C) 2005 Nir Aides
+Copyright (C) 2005-2007 Nir Aides
 
 This program is free software; you can redistribute it and/or modify it 
 under the terms of the GNU General Public License as published by the 
@@ -37,7 +37,10 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 
-See the GNU General Public License for more details."""
+See the GNU General Public License for more details.
+
+Credits:
+Jurjen N.E. Bos - Compatibility with OS X."""
 
 LICENSE_NOTICE = """
 This program is free software; you can redistribute it and/or modify it 
@@ -310,7 +313,8 @@ import traceback
 import cStringIO
 import threading
 import xmlrpclib
-import cPickle
+import tempfile
+import pickle
 import keyword
 import base64
 import socket
@@ -348,6 +352,7 @@ DISABLED = False
 
 WINPDB_WILDCARD = "Python source (*.py)|*.py|All files (*.*)|*.*"
 
+MSG_WARNING_UNHANDLED_EXCEPTION = "An unhandled exception was caught. Would you like to analyze it?"
 MSG_WARNING_TITLE = "Warning"
 MSG_ERROR_TITLE = "Error"
 MSG_ERROR_HOST_TEXT = "Host '%s' not found."
@@ -395,8 +400,8 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.0.9"
-WINPDB_VERSION = "WINPDB_1_0_9"
+WINPDB_TITLE = "Winpdb 1.1.0"
+WINPDB_VERSION = "WINPDB_1_1_0"
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -407,10 +412,7 @@ SPLITTER_4_POS = "splitter_4_pos"
 
 WINPDB_SIZE_MIN = (640, 480)
 
-SETTINGS_FILENAME_EXT = ".cfg"
-
-WINPDB_SETTINGS_PATH = "winpdb"
-WINPDB_SETTINGS_FILENAME = "winpdb_settings"
+WINPDB_SETTINGS_FILENAME = "winpdb_settings.cfg"
 
 WINPDB_SETTINGS_DEFAULT = {
     WINPDB_SIZE: (800, 600),
@@ -423,6 +425,7 @@ WINPDB_SETTINGS_DEFAULT = {
 
 AC_CHAR = "\t"
 AC_EXIT = "Alt-X"
+AC_ANALYZE = "F3"
 AC_BREAK = "F4"
 AC_GO = "F5"
 AC_NEXT = "F6"
@@ -454,6 +457,7 @@ ML_LOAD = "&Load"
 ML_SAVE = "&Save"
 
 ML_CONTROL = "&Control"
+ML_ANALYZE = "&Toggle Analyze" + AC_CHAR + AC_ANALYZE 
 ML_GO = "&Go" + AC_CHAR + AC_GO
 ML_BREAK = "&Break" + AC_CHAR + AC_BREAK
 ML_STEP = "&Step" + AC_CHAR + AC_STEP
@@ -538,13 +542,13 @@ BITMAP = "Bitmap"
 
 STR_STATE_BROKEN = 'waiting at break point'
 
-STATE_SPAWNING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
-STATE_ATTACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
-STATE_BROKEN_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
-STATE_ANALYZE_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
-STATE_RUNNING_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
-STATE_DETACHED_MENU = {ENABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART]}
-STATE_DETACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
+STATE_SPAWNING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
+STATE_ATTACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
+STATE_BROKEN_MENU = {ENABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
+STATE_ANALYZE_MENU = {ENABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH]}
+STATE_RUNNING_MENU = {ENABLED: [ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART], DISABLED: [ML_ANALYZE, ML_PWD, ML_LAUNCH, ML_ATTACH]}
+STATE_DETACHED_MENU = {ENABLED: [ML_PWD, ML_LAUNCH, ML_ATTACH], DISABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_STOP, ML_DETACH, ML_RESTART]}
+STATE_DETACHING_MENU = {ENABLED: [ML_STOP, ML_DETACH], DISABLED: [ML_ANALYZE, ML_GO, ML_BREAK, ML_STEP, ML_NEXT, ML_RETURN, ML_GOTO, ML_TOGGLE, ML_DISABLE, ML_ENABLE, ML_CLEAR, ML_LOAD, ML_SAVE, ML_OPEN, ML_PWD, ML_LAUNCH, ML_ATTACH, ML_RESTART]}
 
 STATE_BROKEN_TOOLBAR = {ENABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO], DISABLED: [TB_BREAK]}
 STATE_ANALYZE_TOOLBAR = {ENABLED: [TB_EXCEPTION, TB_FILTER, TB_TOGGLE_BP], DISABLED: [TB_BREAK, TB_GO, TB_STEP, TB_NEXT, TB_RETURN, TB_GOTO]}
@@ -620,60 +624,48 @@ def clip_filename(path, n = DEFAULT_PATH_SUFFIX_LENGTH):
 
 
 class CSettings:
-    def __init__(self, path, filename, default_settings):
-        self.m_path = path
-        self.m_filename = filename
+    def __init__(self, default_settings):
         self.m_dict = default_settings
 
 
     def calc_path(self):
-        if os.name == 'nt' and os.environ.has_key('APPDATA'):
-            app_data = os.environ['APPDATA']
-            path = app_data + '\\' + self.m_path + '\\' + self.m_filename + SETTINGS_FILENAME_EXT
-            return path
-            
-        elif os.name == 'posix':
-            app_data = os.path.expanduser('~')
-            path = app_data + '/.' + self.m_filename
+        if os.name == rpdb2.POSIX:
+            home = os.path.expanduser('~')
+            path = os.path.join(home, '.' + WINPDB_SETTINGS_FILENAME)
             return path
 
-        path = self.m_filename + SETTINGS_FILENAME_EXT        
+        tmpdir = tempfile.gettempdir()
+        path = os.path.join(tmpdir, WINPDB_SETTINGS_FILENAME)
         return path
 
 
-    def create_path(self):
-        if os.name != 'nt':
-            return
-
-        path = self.calc_path()    
-        folder = os.path.dirname(path)
-        if os.path.isdir(folder):
-            return
-
-        os.mkdir(folder)        
-
-            
     def load_settings(self):
         try:
             path = self.calc_path()
             f = open(path, 'r')
+            
         except IOError:
             return 
             
         try:
-            d = cPickle.load(f)
+            d = pickle.load(f)
             self.m_dict.update(d)
+            
         finally:
             f.close()
 
             
     def save_settings(self):
-        self.create_path()
-
-        path = self.calc_path()
-        f = open(path, 'w')
         try:
-            cPickle.dump(self.m_dict, f)
+            path = self.calc_path()
+            f = open(path, 'w')
+            
+        except IOError:
+            return 
+            
+        try:
+            pickle.dump(self.m_dict, f)
+            
         finally:
             f.close()
 
@@ -715,7 +707,7 @@ class CMenuBar:
                     parent_label = sc[i - 1]
                     parent = self.m_cascades[parent_label]
                     child = wx.Menu()
-
+                    
                     if parent_label == ML_ROOT:
                         parent.Append(child, e)
                     else:
@@ -1035,6 +1027,13 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         wx.Frame.__init__(self, None, -1, WINPDB_TITLE, size = settings[WINPDB_SIZE],
                           style = wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE)
 
+        #
+        # Force 'Left to Right' as long as internationalization is not supported.
+        # Not available on wxPython 2.6
+        #
+        if hasattr(self, 'SetLayoutDirection'):
+            self.SetLayoutDirection(1)
+        
         self.Maximize(settings[WINPDB_MAXIMIZE])
         
         self.m_session_manager = session_manager
@@ -1070,12 +1069,13 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             "/1/" + ML_BREAKPOINTS + "/3/" + ML_CLEAR: {COMMAND: self.do_clear, TOOLTIP: CLEAR_TIP}, 
             "/1/" + ML_BREAKPOINTS + "/4/" + ML_LOAD: {COMMAND: self.do_load, TOOLTIP: LOAD_TIP}, 
             "/1/" + ML_BREAKPOINTS + "/5/" + ML_SAVE: {COMMAND: self.do_save, TOOLTIP: SAVE_TIP}, 
-            "/2/" + ML_CONTROL + "/0/" + ML_BREAK: {COMMAND: self.do_break}, 
-            "/2/" + ML_CONTROL + "/1/" + ML_GO: {COMMAND: self.do_go}, 
-            "/2/" + ML_CONTROL + "/2/" + ML_NEXT: {COMMAND: self.do_next}, 
-            "/2/" + ML_CONTROL + "/3/" + ML_STEP: {COMMAND: self.do_step}, 
-            "/2/" + ML_CONTROL + "/4/" + ML_GOTO: {COMMAND: self.do_goto}, 
-            "/2/" + ML_CONTROL + "/5/" + ML_RETURN: {COMMAND: self.do_return}, 
+            "/2/" + ML_CONTROL + "/0/" + ML_ANALYZE: {COMMAND: self.do_analyze_menu}, 
+            "/2/" + ML_CONTROL + "/1/" + ML_BREAK: {COMMAND: self.do_break}, 
+            "/2/" + ML_CONTROL + "/2/" + ML_GO: {COMMAND: self.do_go}, 
+            "/2/" + ML_CONTROL + "/3/" + ML_NEXT: {COMMAND: self.do_next}, 
+            "/2/" + ML_CONTROL + "/4/" + ML_STEP: {COMMAND: self.do_step}, 
+            "/2/" + ML_CONTROL + "/5/" + ML_GOTO: {COMMAND: self.do_goto}, 
+            "/2/" + ML_CONTROL + "/6/" + ML_RETURN: {COMMAND: self.do_return}, 
             "/3/" + ML_WINDOW + "/0/" + ML_EMPTY: None,
             "/4/" + ML_HELP +   "/0/" + ML_WEBSITE: {COMMAND: self.do_website, TOOLTIP: WEBSITE_TIP}, 
             "/4/" + ML_HELP +   "/1/" + ML_SUPPORT: {COMMAND: self.do_support, TOOLTIP: SUPPORT_TIP}, 
@@ -1164,6 +1164,9 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         event_type_dict = {rpdb2.CEventNamespace: {}}
         self.m_session_manager.register_callback(self.update_namespace, event_type_dict, fSingleUse = False)
+
+        event_type_dict = {rpdb2.CEventUnhandledException: {}}
+        self.m_session_manager.register_callback(self.update_unhandled_exception, event_type_dict, fSingleUse = False)
 
         event_type_dict = {rpdb2.CEventThreadBroken: {}}
         self.m_session_manager.register_callback(self.update_thread_broken, event_type_dict, fSingleUse = False)
@@ -1292,6 +1295,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     #----------------------------------------------------
     #
 
+    def do_analyze_menu(self, event):
+        state = self.m_session_manager.get_state()
+        f = (state != rpdb2.STATE_ANALYZE)
+
+        try:
+            self.m_session_manager.set_analyze(f)
+        except (socket.error, rpdb2.CConnectionException):
+            pass    
+
+
     def do_analyze(self, event):
         f = event.IsChecked()
 
@@ -1304,7 +1317,26 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def update_namespace(self, event):
         wx.CallAfter(self.m_namespace_viewer.update_namespace, self.m_stack)
 
+
+    def update_unhandled_exception(self, event):
+        wx.CallAfter(self.notify_unhandled_exception)
+
+
+    def notify_unhandled_exception(self):
+        dlg = wx.MessageDialog(self, MSG_WARNING_UNHANDLED_EXCEPTION, MSG_WARNING_TITLE, wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
+        res = dlg.ShowModal()
+        dlg.Destroy()
+
+        if res != wx.ID_YES:
+            return
+
+        try:
+            self.m_session_manager.set_analyze(True)
+
+        except (socket.error, rpdb2.CException):
+            pass    
         
+    
     def do_filter(self, event):
         f = event.IsChecked()
         self.m_namespace_viewer.set_filter(f)
@@ -1479,14 +1511,17 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def job_launch(self, fchdir, path):
         try:
             self.m_session_manager.launch(fchdir, path)
-            self.m_session_manager.load_breakpoints()
-            return
             
         except (socket.error, rpdb2.CConnectionException):
             pass
         except rpdb2.BadArgument:
             pass
         except IOError:
+            pass
+
+        try:
+            self.m_session_manager.load_breakpoints()
+        except:
             pass
 
 
@@ -1530,6 +1565,10 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def job_detach(self):    
         try:
             self.m_session_manager.save_breakpoints()
+        except:
+            pass
+
+        try:
             self.m_session_manager.detach()
         except (socket.error, rpdb2.CConnectionException):
             pass
@@ -1542,6 +1581,10 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def job_stop(self):    
         try:
             self.m_session_manager.save_breakpoints()
+        except:
+            pass
+
+        try:    
             self.m_session_manager.stop_debuggee()
         except (socket.error, rpdb2.CConnectionException):
             pass
@@ -1587,15 +1630,36 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def do_load(self, event):
         try:
             self.m_session_manager.load_breakpoints()
-        except (socket.error, rpdb2.CConnectionException):
-            pass
+            return
+
+        except rpdb2.NotAttached:
+            return
+            
+        except (socket.error, rpdb2.CException):
+            error = rpdb2.STR_BREAKPOINTS_LOAD_PROBLEM
+            
+        except IOError:
+            error = rpdb2.STR_BREAKPOINTS_NOT_FOUND
+            
+        dlg = wx.MessageDialog(self, error, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
+        dlg.ShowModal()
+        dlg.Destroy()
 
         
     def do_save(self, event):
         try:
             self.m_session_manager.save_breakpoints()
-        except (socket.error, rpdb2.CConnectionException):
-            pass
+            return
+            
+        except rpdb2.NotAttached:
+            return
+            
+        except (socket.error, rpdb2.CException, IOError):
+            error = rpdb2.STR_BREAKPOINTS_SAVE_PROBLEM
+            
+        dlg = wx.MessageDialog(self, error, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
+        dlg.ShowModal()
+        dlg.Destroy()
 
         
     def do_go(self, event):
@@ -1655,7 +1719,7 @@ class CWinpdbApp(wx.App):
         self.m_fAttach = fAttach
         self.m_fAllowUnencrypted = fAllowUnencrypted
         
-        self.m_settings = CSettings(WINPDB_SETTINGS_PATH, WINPDB_SETTINGS_FILENAME, WINPDB_SETTINGS_DEFAULT)
+        self.m_settings = CSettings(WINPDB_SETTINGS_DEFAULT)
 
         wx.App.__init__(self, redirect = False)
 
@@ -1735,7 +1799,14 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.m_margin_command = kwargs.pop('margin_command', None)
 
         stc.StyledTextCtrl.__init__(self, *args, **kwargs)
-        
+
+        #
+        # Force Left to Right since CStyledViewer is broken for Right to Left.
+        # Not available on wxPython 2.6
+        #
+        if hasattr(self, 'SetLayoutDirection'):
+            self.SetLayoutDirection(1)
+
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, " ".join(keyword.kwlist))
 
@@ -3220,7 +3291,7 @@ class CAttachDialog(wx.Dialog, CJobs):
             (self.m_server_list, self.m_errors) = self.m_session_manager.calc_server_list()
             return (True, host)
             
-        except UnsetPassword:
+        except rpdb2.UnsetPassword:
             return
         except socket.gaierror, e:
             return (False, host)
@@ -3580,8 +3651,8 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_0_9":
-        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_0_9", rpdb2.get_version())
+    if rpdb2.get_version() != "RPDB_2_1_0":
+        print STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_1_0", rpdb2.get_version())
         return
         
     return rpdb2.main(StartClient)

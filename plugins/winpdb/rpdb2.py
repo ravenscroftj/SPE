@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 
 """
-rpdb2.py - version 2.0.9
+rpdb2.py - version 2.1.0
 
-A remote Python debugger for Python 2.3 and Python 2.4
+A remote Python debugger for CPython
 
-Copyright (C) 2005-2006 Nir Aides
+Copyright (C) 2005-2007 Nir Aides
 
 This program is free software; you can redistribute it and/or modify it 
 under the terms of the GNU General Public License as published by the 
@@ -22,7 +22,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA    
 """
 
-COPYRIGHT_NOTICE = """Copyright (C) 2005-2006 Nir Aides"""
+COPYRIGHT_NOTICE = """Copyright (C) 2005-2007 Nir Aides"""
+
+CREDITS_NOTICE = """Jurjen N.E. Bos - Compatibility with OS X."""
 
 LICENSE_NOTICE = """
 This program is free software; you can redistribute it and/or modify it 
@@ -263,8 +265,9 @@ import linecache
 import traceback
 import compiler
 import commands
+import tempfile
 import __main__
-import cPickle
+import pickle
 import httplib
 import os.path
 import socket
@@ -277,6 +280,7 @@ import atexit
 import time
 import copy
 import hmac
+import stat
 import sys
 import cmd
 import md5
@@ -419,8 +423,8 @@ def settrace():
 
 
 
-RPDB_VERSION = "RPDB_2_0_9"
-RPDB_COMPATIBILITY_VERSION = "RPDB_2_0_9"
+RPDB_VERSION = "RPDB_2_1_0"
+RPDB_COMPATIBILITY_VERSION = "RPDB_2_1_0"
 
 
 
@@ -1216,7 +1220,7 @@ class CException(Exception):
         Exception.__init__(self, *args)
 
 
-    
+
 class InvalidScopeName(CException):
     """
     Invalid scope name.
@@ -1413,6 +1417,10 @@ XTERM = 'xterm'
 RXVT = 'rxvt'
 
 RPDB_SETTINGS_FOLDER = '.rpdb2_settings'
+RPDB_PWD_FOLDER = os.path.join(RPDB_SETTINGS_FOLDER, 'passwords')
+RPDB_BPL_FOLDER = os.path.join(RPDB_SETTINGS_FOLDER, 'breakpoints')
+RPDB_BPL_FOLDER_NT = 'rpdb2_breakpoints'
+MAX_BPL_FILES = 100
 
 IDLE_MAX_RATE = 2.0
 PING_TIMEOUT = 4.0
@@ -1449,8 +1457,8 @@ CONSOLE_WRAP_INDEX = 78
 CONSOLE_PROMPT = '\n> '
 CONSOLE_PROMPT_ANALYZE = '\nAnalayze> '
 CONSOLE_INTRO = ("""RPDB - The Remote Python Debugger, version %s,
-Copyright (C) 2005-2006 Nir Aides.
-Type "help", "copyright", "license" for more information.""" % (RPDB_VERSION))
+Copyright (C) 2005-2007 Nir Aides.
+Type "help", "copyright", "license", "credits" for more information.""" % (RPDB_VERSION))
 
 PRINT_NOTICE_PROMPT = "Hit Return for more, or q (and Return) to quit:"
 PRINT_NOTICE_LINES_PER_SECTION = 20
@@ -1468,8 +1476,12 @@ STR_ANALYZE_GLOBALS_WARNING = "In analyze mode the globals and locals dictionari
 STR_GLOBALS_WARNING = "Any changes made to the globals dictionay at this frame will be discarded."
 STR_BREAKPOINTS_LOADED = "Breakpoints were loaded."
 STR_BREAKPOINTS_SAVED = "Breakpoints were saved."
+STR_BREAKPOINTS_SAVE_PROBLEM = "A problem occured while saving the breakpoints."
+STR_BREAKPOINTS_LOAD_PROBLEM = "A problem occured while loading the breakpoints."
 STR_BREAKPOINTS_NOT_SAVED = "Breakpoints were not saved."
+STR_BREAKPOINTS_NOT_LOADED = "Breakpoints were not loaded."
 STR_BREAKPOINTS_FILE_NOT_FOUND = "Breakpoints file was not found." 
+STR_BREAKPOINTS_NOT_FOUND = "No Breakpoints were found." 
 STR_BAD_FILENAME = "Bad File Name."
 STR_SOME_BREAKPOINTS_NOT_LOADED = "Some breakpoints were not loaded, because of an error."
 STR_BAD_EXPRESSION = "Bad expression '%s'."
@@ -2330,13 +2342,72 @@ def create_rpdb_settings_folder():
         return
         
     home = os.path.expanduser('~')
-    rsf = os.path.join(home, RPDB_SETTINGS_FOLDER)
 
-    if os.path.exists(rsf):
+    rsf = os.path.join(home, RPDB_SETTINGS_FOLDER)
+    if not os.path.exists(rsf):
+        os.mkdir(rsf, 0700)
+
+    pwds = os.path.join(home, RPDB_PWD_FOLDER)    
+    if not os.path.exists(pwds):
+        os.mkdir(pwds, 0700)
+
+    bpl = os.path.join(home, RPDB_BPL_FOLDER)    
+    if not os.path.exists(bpl):
+        os.mkdir(bpl, 0700)
+
+
+
+def cleanup_bpl_folder(path):
+    if random.randint(0, 10) > 0:
+        return
+
+    l = os.listdir(path)
+    if len(l) < MAX_BPL_FILES:
+        return
+    
+    try:
+        ll = [(os.stat(os.path.join(path, f))[stat.ST_ATIME], f) for f in l]
+    except:
         return
         
-    os.mkdir(rsf, 0700)
+    ll.sort()
 
+    print ll
+    
+    for (t, f) in ll[: -MAX_BPL_FILES]:
+        try:
+            os.remove(os.path.join(path, f))
+        except:
+            pass
+
+        
+
+def calc_bpl_filename(filename):
+    tmp_filename = md5.new(filename).hexdigest()[:10]
+
+    if os.name == POSIX:
+        home = os.path.expanduser('~')
+        bpldir = os.path.join(home, RPDB_BPL_FOLDER)
+        cleanup_bpl_folder(bpldir)
+        path = os.path.join(bpldir, tmp_filename)
+        return path + BREAKPOINTS_FILE_EXT
+
+    tmpdir = tempfile.gettempdir()
+    bpldir = os.path.join(tmpdir, RPDB_BPL_FOLDER_NT)
+
+    if not os.path.exists(bpldir):
+        try:
+            os.mkdir(bpldir, 0700)
+        except:
+            print_debug()
+            raise CException
+
+    else:    
+        cleanup_bpl_folder(bpldir)
+        
+    path = os.path.join(bpldir, tmp_filename)
+    return path + BREAKPOINTS_FILE_EXT
+    
 
     
 def calc_pwd_file_path(rid):
@@ -2346,7 +2417,7 @@ def calc_pwd_file_path(rid):
     """
     
     home = os.path.expanduser('~')
-    rsf = os.path.join(home, RPDB_SETTINGS_FOLDER)
+    rsf = os.path.join(home, RPDB_PWD_FOLDER)
     pwd_file_path = os.path.join(rsf, rid)
     
     return pwd_file_path
@@ -2595,12 +2666,12 @@ class CCrypto:
 
     def __sign(self, s):
         i = self.__get_next_index()
-        _s = cPickle.dumps((self.m_index_anchor_ex, i, self.m_rid, s))
+        _s = pickle.dumps((self.m_index_anchor_ex, i, self.m_rid, s))
         
         h = hmac.new(self.m_key, _s, md5)
         _d = h.digest()
         r = (_d, _s)
-        s_signed = cPickle.dumps(r)
+        s_signed = pickle.dumps(r)
 
         return s_signed
 
@@ -2618,7 +2689,7 @@ class CCrypto:
 
     def __verify_signature(self, s, fVerifyIndex):
         try:
-            r = cPickle.loads(s)
+            r = pickle.loads(s)
             
             (_d, _s) = r
             
@@ -2629,7 +2700,7 @@ class CCrypto:
                 self.__wait_a_little()
                 raise AuthenticationFailure
 
-            (anchor, i, id, s_original) = cPickle.loads(_s)
+            (anchor, i, id, s_original) = pickle.loads(_s)
                 
         except AuthenticationFailure:
             raise
@@ -2733,6 +2804,13 @@ class CEventState(CEvent):
 
 
 
+class CEventUnhandledException(CEvent):
+    """
+    Sent when an unhandled exception is hit.
+    """
+
+
+    
 class CEventNamespace(CEvent):
     """
     Namespace has changed. 
@@ -2835,8 +2913,9 @@ class CEventSync(CEvent):
     the state of the debuggee.
     """
     
-    def __init__(self, fException):
+    def __init__(self, fException, fSendUnhandled):
         self.m_fException = fException
+        self.m_fSendUnhandled = fSendUnhandled
     
 
     
@@ -4525,6 +4604,7 @@ class CDebuggerCore:
         self.m_event_dispatcher = CEventDispatcher()
         self.m_state_manager = CStateManager(STATE_RUNNING, self.m_event_dispatcher, event_dispatcher_sync = self.m_event_dispatcher)
 
+        self.m_fUnhandledException = False        
         self.m_fBreak = False
 
         self.m_lastest_event = None
@@ -4769,12 +4849,17 @@ class CDebuggerCore:
             
         ctx.m_fBroken = True
         f_full_notification = False
+        f_uhe_notification = False
         
         try: 
             self.m_state_manager.acquire()
             if self.m_state_manager.get_state() != STATE_BROKEN:
                 self.set_break_dont_lock()
-            
+
+            if ctx.m_fUnhandledException and not self.m_fUnhandledException and not 'SCRIPT_TERMINATED' in frame.f_locals:
+                self.m_fUnhandledException = ctx.m_fUnhandledException
+                f_uhe_notification = True
+                
             if self.m_f_first_to_break or (self.m_current_ctx == ctx):                
                 self.m_current_ctx = ctx
                 self.m_lastest_event = event
@@ -4797,9 +4882,12 @@ class CDebuggerCore:
             self.notify_thread_broken(ctx.m_thread_id)
             self.notify_namespace()
 
+        if f_uhe_notification:
+            self.send_unhandled_exception_event()
+            
         state = self.m_state_manager.wait_for_state([STATE_RUNNING])
         
-        ctx.m_fUnhandledException = False        
+        ctx.m_fUnhandledException = False
         ctx.m_fBroken = False 
         ctx.set_tracers()
 
@@ -4901,6 +4989,7 @@ class CDebuggerCore:
                 
             self.verify_broken()
 
+            self.m_fUnhandledException = False
             self.m_state_manager.set_state(STATE_RUNNING, fLock = False)
             self.set_break_flag()
 
@@ -4950,6 +5039,7 @@ class CDebuggerCore:
             except NoThreads:
                 return
                 
+            self.m_fUnhandledException = False
             self.m_step_tid = ctx.m_thread_id
             self.m_next_frame = None
             self.m_return_frame = None       
@@ -4979,6 +5069,7 @@ class CDebuggerCore:
             if self.m_lastest_event in ['return', 'exception']:
                 return self.request_step(fLock = False)
 
+            self.m_fUnhandledException = False
             self.m_next_frame = ctx.m_frame
             self.m_return_frame = None
             
@@ -5006,6 +5097,7 @@ class CDebuggerCore:
             if self.m_lastest_event == 'return':
                 return self.request_step(fLock = False)
                 
+            self.m_fUnhandledException = False
             self.m_next_frame = None
             self.m_return_frame = ctx.m_frame
 
@@ -5091,6 +5183,7 @@ class CDebuggerEngine(CDebuggerCore):
             CEventNoThreads: {},
             CEventThreadBroken: {},
             CEventNamespace: {},
+            CEventUnhandledException: {},
             CEventStack: {},
             CEventExit: {}
             }
@@ -5120,7 +5213,7 @@ class CDebuggerEngine(CDebuggerCore):
         time.sleep(1.0)
 
         
-    def sync_with_events(self, fException):
+    def sync_with_events(self, fException, fSendUnhandled):
         """
         Send debugger state to client.
         """
@@ -5129,7 +5222,7 @@ class CDebuggerEngine(CDebuggerCore):
             self.wait_for_first_thread()
         
         index = self.m_event_queue.get_event_index()
-        event = CEventSync(fException)
+        event = CEventSync(fException, fSendUnhandled)
         self.m_event_dispatcher.fire_event(event)
         return index
 
@@ -5223,8 +5316,10 @@ class CDebuggerEngine(CDebuggerCore):
         
         if isinstance(event, CEventSync):
             fException = event.m_fException
+            fSendUnhandled = event.m_fSendUnhandled
         else:
             fException = False
+            fSendUnhandled = False
 
         try:
             self.send_stack_depth()
@@ -5232,6 +5327,9 @@ class CDebuggerEngine(CDebuggerCore):
             self.send_stack_event(fException)
             self.send_namespace_event()
 
+            if fSendUnhandled and self.m_fUnhandledException:
+                self.send_unhandled_exception_event()
+            
         except NoThreads:
             self.send_no_threads_event()
             
@@ -5239,7 +5337,12 @@ class CDebuggerEngine(CDebuggerCore):
             print_debug()
             raise
 
-    
+
+    def send_unhandled_exception_event(self):
+        event = CEventUnhandledException()
+        self.m_event_dispatcher.fire_event(event)
+
+        
     def send_stack_depth(self):
         """
         Send event with stack depth and exception stack depth.
@@ -6196,10 +6299,10 @@ class CPwdServerProxy:
                 #
                 # Decrypt response.
                 #
-                ((max_index, _r, e), fe)= self.m_crypto.undo_crypto(r, fVerifyIndex = False)
+                ((max_index, _r, _e), fe)= self.m_crypto.undo_crypto(r, fVerifyIndex = False)
                 
-                if e is not None:
-                    raise e
+                if _e is not None:
+                    raise _e
 
             except AuthenticationBadIndex, e:
                 self.m_crypto.set_index(e.m_max_index, e.m_anchor)
@@ -6432,8 +6535,8 @@ class CDebuggeeServer(CIOServer):
         si = CServerInfo(age, self.m_port, self.m_pid, self.m_filename, self.m_rid, state)
         return si
 
-    def export_sync_with_events(self, fException):
-        ei = self.m_debugger.sync_with_events(fException)
+    def export_sync_with_events(self, fException, fSendUnhandled):
+        ei = self.m_debugger.sync_with_events(fException, fSendUnhandled)
         return ei
 
     def export_wait_for_event(self, timeout, event_index):
@@ -6875,11 +6978,20 @@ class CSessionManagerInternal:
             return
 
         if self.m_state_manager.get_state() != STATE_DETACHED:
-            self.save_breakpoints()
+            try:
+                self.save_breakpoints()
+            except:
+                print_debug()
+                pass
+                
             self.stop_debuggee()
             
-        self.launch(self.m_last_fchdir, self.m_last_command_line)        
-        self.load_breakpoints()
+        self.launch(self.m_last_fchdir, self.m_last_command_line)
+
+        try:
+            self.load_breakpoints()
+        except:
+            pass
 
 
     def get_launch_args(self):    
@@ -7055,7 +7167,7 @@ class CSessionManagerInternal:
         
         self.m_server_info = self.get_server_info()
 
-        self.refresh()
+        self.refresh(True)
         self.__start_event_monitor()
 
         self.request_break()
@@ -7081,10 +7193,10 @@ class CSessionManagerInternal:
             raise DebuggerNotBroken
 
     
-    def refresh(self):
+    def refresh(self, fSendUnhandled = False):
         fAnalyzeMode = (self.m_state_manager.get_state() == STATE_ANALYZE) 
 
-        self.m_remote_event_index = self.getSession().getProxy().sync_with_events(fAnalyzeMode)
+        self.m_remote_event_index = self.getSession().getProxy().sync_with_events(fAnalyzeMode, fSendUnhandled)
         self.m_breakpoints_proxy.sync()
 
         
@@ -7227,46 +7339,66 @@ class CSessionManagerInternal:
         return bpl
 
         
-    def save_breakpoints(self, _filename = ''):        
-        bpl = self.get_breakpoints()
-        sbpl = cPickle.dumps(bpl)
-
-        if _filename == '':
-            filename = self.getSession().getServerInfo().m_module_name + BREAKPOINTS_FILE_EXT
-        else: 
-            filename = _filename + BREAKPOINTS_FILE_EXT
-
-        if filename[:1] == '<':
-            return
-            
-        file = open(filename, 'wb')
-        file.write(sbpl)
-        file.close()
-
-
-    def load_breakpoints(self, _filename = ''):
+    def save_breakpoints(self, filename = ''):
         self.__verify_attached()
 
-        _e = None
-        
-        if _filename == '':
-            filename = self.getSession().getServerInfo().m_module_name + BREAKPOINTS_FILE_EXT
-        else: 
-            filename = _filename + BREAKPOINTS_FILE_EXT
+        module_name = self.getSession().getServerInfo().m_module_name
+        if module_name[:1] == '<':
+            return
 
-        file = open(filename, 'rb')
+        path = calc_bpl_filename(module_name + filename)            
+        file = open(path, 'wb')
+
         try:
-            bpl = cPickle.load(file)
-            for bp in bpl.values():
-                try:
-                    self.set_breakpoint(bp.m_filename, bp.m_scope_fqn, bp.m_scope_offset, bp.m_fEnabled, bp.m_expr)
-                except (socket.error, CConnectionException), e:
-                    _e = e
+            try:
+                bpl = self.get_breakpoints()
+                sbpl = pickle.dumps(bpl)
+                file.write(sbpl)
+
+            except:
+                print_debug()
+                raise CException
+
         finally:
             file.close()
 
-        if _e is not None:
-            raise _e
+
+    def load_breakpoints(self, filename = ''):
+        self.__verify_attached()
+
+        module_name = self.getSession().getServerInfo().m_module_name
+        if module_name[:1] == '<':
+            return
+
+        path = calc_bpl_filename(module_name + filename)                            
+        file = open(path, 'rb')
+
+        ferror = False
+        
+        try:
+            try:
+                bpl = pickle.load(file)
+                self.delete_breakpoint([], True)
+
+            except:
+                print_debug()
+                raise CException
+
+            if filename == '' and len(bpl.values()) == 0:
+                raise IOError
+                
+            for bp in bpl.values():
+                try:
+                    self.set_breakpoint(bp.m_filename, bp.m_scope_fqn, bp.m_scope_offset, bp.m_fEnabled, bp.m_expr)
+                except:
+                    print_debug()
+                    ferror = True
+
+            if ferror:
+                raise CException
+                
+        finally:
+            file.close()
 
 
     def get_stack(self, tid_list, fAll):    
@@ -7735,11 +7867,7 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
                     
         try:
             self.m_session_manager.load_breakpoints()
-            return
-            
-        except (socket.error, CConnectionException):
-            self.m_session_manager.report_exception(*sys.exc_info())
-        except IOError:
+        except:
             pass
 
 
@@ -7812,6 +7940,11 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
 
         try:
             self.m_session_manager.save_breakpoints()
+        except:
+            print_debug()
+            pass
+
+        try:    
             self.m_session_manager.detach()
 
         except (socket.error, CConnectionException):
@@ -8097,27 +8230,29 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
             self.m_session_manager.save_breakpoints(arg)
             print >> self.stdout, STR_BREAKPOINTS_SAVED    
             return
+
+        except NotAttached:
+            self.printer(STR_NOT_ATTACHED)
             
-        except (socket.error, CConnectionException):
-            self.m_session_manager.report_exception(*sys.exc_info())
-        except IOError:
-            self.printer(STR_BAD_FILENAME)
-
-        self.printer(STR_BREAKPOINTS_NOT_SAVED)
-
+        except (socket.error, CException, IOError):
+            self.printer(STR_BREAKPOINTS_SAVE_PROBLEM)
+            
         
     def do_load(self, arg):
         try:
             self.m_session_manager.load_breakpoints(arg)
             print >> self.stdout, STR_BREAKPOINTS_LOADED    
             return
+
+        except NotAttached:
+            self.printer(STR_NOT_ATTACHED)
             
-        except (socket.error, CConnectionException):
-            self.m_session_manager.report_exception(*sys.exc_info())
-        except cPickle.PickleError:
-            self.printer(STR_BAD_FILE_DATA)
+        except (socket.error, CException):
+            self.printer(STR_BREAKPOINTS_LOAD_PROBLEM)
+            
         except IOError:
-            self.printer(STR_BREAKPOINTS_FILE_NOT_FOUND)
+            error = [STR_BREAKPOINTS_FILE_NOT_FOUND, STR_BREAKPOINTS_NOT_FOUND][arg == '']
+            self.printer(error)
 
 
     def do_stack(self, arg):
@@ -8466,9 +8601,15 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
 
 
     def do_stop(self, arg):
+        self.printer(STR_KILL_NOTICE)
+        
         try:
-            self.printer(STR_KILL_NOTICE)
             self.m_session_manager.save_breakpoints()
+        except:
+            print_debug()
+            pass
+
+        try:    
             self.m_session_manager.stop_debuggee()
             
         except (socket.error, CConnectionException):
@@ -8497,6 +8638,10 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
 
     def do_license(self, arg):
         self.print_notice(LICENSE_NOTICE + COPY_OF_THE_GPL_LICENSE)
+
+
+    def do_credits(self, arg):
+        self.print_notice(CREDITS_NOTICE)
 
 
     def do_help(self, arg):
@@ -8557,21 +8702,28 @@ License:
 ----------------
 
 copyright   - Print copyright notice.
-license     - Print license."""
+license     - Print license.
+credits     - Print credits information."""
 
             self.print_notice(help_notice)
 
         
-    def help_copyright(self, arg):
+    def help_copyright(self):
         print >> self.stdout, """copyright
 
 Print copyright notice."""  
 
 
-    def help_license(self, arg):
+    def help_license(self):
         print >> self.stdout, """license
 
 Print license."""  
+
+
+    def help_credits(self):
+        print >> self.stdout, """credits
+
+Print credits information."""  
 
 
     def help_help(self):
@@ -9038,16 +9190,13 @@ def StartServer(args, fchdir, pwd, fAllowUnencrypted, fAllowRemote, rid):
     except IOError:
         print 'File', args[0], ' not found.'
 
+    #
+    # Insert script directory in front of file search path
+    #
+    sys.path.insert(0, os.path.dirname(ExpandedFilename))
+
     if fchdir:   
-        #
-        # Insert script directory in front of file search path
-        #
-        sys.path.insert(0, os.path.dirname(ExpandedFilename))
         os.chdir(os.path.dirname(ExpandedFilename))
-    else:
-        cwd = os.getcwd()
-        if cwd not in sys.path:
-            sys.path.insert(0, cwd)
 
     sys.argv = args
 
@@ -9271,9 +9420,7 @@ def main(StartClient_func = StartClient):
     return 0
 
 
-#
-# When invoked as main program, invoke the debugger on a script
-#
+
 if __name__=='__main__':
     import rpdb2
 
@@ -9284,6 +9431,8 @@ if __name__=='__main__':
     # type 'help analyze' for more information.
     #
     ret = rpdb2.main()
+
+    SCRIPT_TERMINATED = True
 
     #
     # Debuggee breaks (pauses) here 
