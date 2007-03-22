@@ -499,7 +499,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if not word:
             return []
         else:
-            return sm.unique([x for x in re.findall(r"\b" + word + r"\w+\b", self.GetText())
+            return sm.unique([x for x in re.findall(r"\b" + word + r"\w*\b", self.GetText())
                 if x.find(',')==-1 and x[0]!= ' '])
 
     def getWordObject(self,word=None,whole=None):
@@ -567,15 +567,17 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
             self.AddText('.')
             word+='.'
         words   = self.getWords(word=word)
-        if word[-1] == '.':
-            try:
-                obj = self.getWordObject(word[:-1])
-                if obj:
-                    for attr in dir(obj):
-                        attr = '%s%s'%(word,attr)
-                        if attr not in words: words.append(attr)
-            except:
-                pass
+        for dot in range(len(word)):
+            if word[-dot-1] == '.':
+                try:
+                    obj = self.getWordObject(word[:-dot-1])
+                    if obj:
+                        for attr in dir(obj):
+                            attr = '%s%s'%(word[:-dot],attr)
+                            if attr not in words: words.append(attr)
+                except:
+                    pass
+                break
         if words:
             words.sort()
             try:
