@@ -72,7 +72,6 @@ class Panel(wx.ListCtrl):
                 #register idle event
                 eventManager.Register(self.OnIdle, wx.EVT_IDLE, self)
                 #initialize
-                import pychecker
                 self.index          = 1
                 self.methodIndex    = 1
                 self.started        = 1
@@ -83,9 +82,6 @@ class Panel(wx.ListCtrl):
                 self.process.Redirect()
                 #change path
                 os.chdir(path)
-                #cmd                 = 'cd %s'%os.path.dirname(fileName)
-                #cmd                 = 'cd %s%s%s'%(QUOTE,os.path.dirname(fileName),QUOTE)
-                #wx.Execute(cmd, wx.EXEC_ASYNC, self.process)
                 #run pychecker
                 cmd                 = 'python -u %s%s %s%s%s'%\
                     (QUOTE,
