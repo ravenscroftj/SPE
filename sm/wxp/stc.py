@@ -573,7 +573,8 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
                     obj = self.getWordObject(word[:-dot-1])
                     if obj:
                         for attr in dir(obj):
-                            attr = '%s%s'%(word[:-dot],attr)
+                            #attr = '%s%s'%(word[:-dot],attr)
+                            attr = '%s%s'%(word,attr)
                             if attr not in words: words.append(attr)
                 except:
                     pass

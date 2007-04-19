@@ -312,8 +312,10 @@ class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
         self.ReparentToFrame(nPage, False)
 
         event.Skip()
-
-
+##try:
+##    import wx.aui
+##    NotebookPlus        = wx.aui.AuiNotebook
+##except:
 if sys.platform.startswith('linux'):
     NotebookPlus    = NativeNotebookPlus
 else:
