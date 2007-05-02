@@ -238,6 +238,12 @@ class NativeNotebookPlus(wx.Notebook):
 
     def Tile(self,*args,**keyw):
         pass
+        
+    def BindPageChange(self,method):
+        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED,method,self)
+
+    def UnbindPageChange(self):
+        self.Unbind(wx.EVT_NOTEBOOK_PAGE_CHANGED)
 
 class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
     def __init__(self,app,*args,**keyw):
@@ -312,6 +318,14 @@ class AndreaNotebookPlus(NotebookCtrl.NotebookCtrl):
         self.ReparentToFrame(nPage, False)
 
         event.Skip()
+        
+    def BindPageChange(self,method):
+        self.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED,method)
+
+    def UnbindPageChange(self):
+        self.Unbind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED)
+
+
 ##try:
 ##    import wx.aui
 ##    NotebookPlus        = wx.aui.AuiNotebook
@@ -839,13 +853,11 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         self.bindTabs()
 
     def bindTabs(self,event=None):
-        self.tabs.Bind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED, self.onFrameTab)
-        #eventManager.Register(self.onFrameTab, wx.EVT_NOTEBOOK_PAGE_CHANGED, self.tabs)
+        self.tabs.BindPageChange(self.onFrameTab)
 
     def unbindTabs(self):
-        self.tabs.Unbind(NotebookCtrl.EVT_NOTEBOOKCTRL_PAGE_CHANGED)
-        #eventManager.DeregisterWindow(self.tabs)
-
+        self.tabs.UnbindPageChange()
+        
     def onFrameTab(self,event):
         index = event.GetSelection()
         #print index
