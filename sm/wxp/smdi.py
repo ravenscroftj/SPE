@@ -638,8 +638,10 @@ class Parent(Framework):
         if not self.dead: return
         #Avoid event exceptions of child frames
         for child in self.app.children:
-            eventManager.DeregisterWindow(child.frame)
-            child.dead = 1
+            if child:
+                if hasattr(child,'frame'):
+                    eventManager.DeregisterWindow(child.frame)
+                child.dead = 1
         #Destroy itself
         self.Destroy()
         if event: event.Skip()

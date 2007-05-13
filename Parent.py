@@ -987,7 +987,6 @@ class Panel(wx.Notebook):
 Spe Warning: can't save user settings (%s).
 Please report these details and operating system to %s."""%(message,INFO['author_email']))
         if not self.getValue('RememberLastWorkspace'): self.set('currentworkspace',"")
-        print 'ok'
         return 1
 
     def onClosePanelFrame(self,event=None):
