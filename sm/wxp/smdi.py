@@ -649,9 +649,10 @@ class Parent(Framework):
         self.child()
 
     def menu_close(self,event=None):
-        childActive = self.app.childActive
-        if childActive:
-            childActive.onFrameClose()
+        if self.app.children:
+            childActive = self.app.childActive
+            if childActive:
+                childActive.onFrameClose()
 
     #---parentPanel
     def child(self,*args,**keyw):
@@ -1462,8 +1463,9 @@ class TestParentPanel(wx.TextCtrl):
         self.app.ChildFrame(self.frame,page=value,value=value)
         self.test_child += 1
     def close(self):
-        active = self.app.childActive
-        if active: active.frame.onFrameClose()
+        if self.app.children:
+            active = self.app.childActive
+            if active: active.frame.onFrameClose()
 
 class TestChildPanel(wx.TextCtrl):
     def __init__(self,parent,**kwds):

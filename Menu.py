@@ -156,8 +156,9 @@ class Tool(wx.ToolBar):
 ##        wx.ToolBar.ToggleTool(*arg,**keyw)
 ##
     def skip(self):
-        child               = self.app.childActive
-        child.statusBar.throbber.Play()
+        if self.app.children:
+            child               = self.app.childActive
+            child.statusBar.throbber.Play()
 
 # end of class Tool
 
@@ -192,9 +193,10 @@ class Bar(wxgMenu.Bar):
         self.frame.Bind(*arg,**keyw)
 
     def skip(self,event):
-        child               = self.app.childActive
-        if child!= None:
-            child.statusBar.throbber.Play()
+        if self.app.children:
+            child               = self.app.childActive
+            if child!= None:
+                child.statusBar.throbber.Play()
 
     def link(self,x,doc=None):
         self.parentPanel.messageHtml(x,doc=doc)
@@ -277,28 +279,35 @@ class Bar(wxgMenu.Bar):
 
     def menu_save(self, event=None):
         """File > Save"""
-        self.app.childActive.save()
+        if self.app.children:
+            self.app.childActive.save()
         self.app.parentPanel.save()
 
     def menu_save_as(self, event=None):
         """File > Save As..."""
-        self.app.childActive.saveAs()
+        if self.app.children:
+            self.app.childActive.saveAs()
 
     def menu_save_uml_as(self, event=None):
-        self.app.childActive.saveUmlAs()
+        if self.app.children:
+            self.app.childActive.saveUmlAs()
 
     def menu_save_copy(self, event=None):
         """File > Save a Copy..."""
-        self.app.childActive.saveCopy()
+        if self.app.children:
+            self.app.childActive.saveCopy()
 
     def menu_print_uml(self, event=None):
-        self.app.childActive.printUml()
+        if self.app.children:
+            self.app.childActive.printUml()
 
     def menu_print_uml_preview(self, event=None):
-        self.app.childActive.printUmlPreview()
+        if self.app.children:
+            self.app.childActive.printUmlPreview()
 
     def menu_print_uml_setup(self, event=None):
-        self.app.childActive.printUmlSetup()
+        if self.app.children:
+            self.app.childActive.printUmlSetup()
 
     def menu_close(self, event=None):
         """File > Close"""
@@ -319,23 +328,28 @@ class Bar(wxgMenu.Bar):
 
     def menu_undo(self, event=None):
         """Edit > Undo"""
-        self.app.childActive.source.Undo()
+        if self.app.children:
+            self.app.childActive.source.Undo()
 
     def menu_redo(self, event=None):
         """Edit > Redo"""
-        self.app.childActive.source.Redo()
+        if self.app.children:
+            self.app.childActive.source.Redo()
 
     def menu_cut(self, event=None):
         """Edit > Cut"""
-        self.app.childActive.source.Cut()
+        if self.app.children:
+            self.app.childActive.source.Cut()
 
     def menu_copy(self, event=None):
         """Edit > Copy"""
-        self.app.childActive.source.Copy()
+        if self.app.children:
+            self.app.childActive.source.Copy()
 
     def menu_paste(self, event=None):
         """Edit > Paste"""
-        self.app.childActive.source.Paste()
+        if self.app.children:
+            self.app.childActive.source.Paste()
 
     def menu_find__replace(self, event=None):
         """Edit > Find & replace..."""
@@ -347,7 +361,8 @@ class Bar(wxgMenu.Bar):
 
     def menu_go_to_line(self, event=None):
         """Edit > Go to line..."""
-        self.app.childActive.go_to_line()
+        if self.app.children:
+            self.app.childActive.go_to_line()
 
     def menu_browse_source(self, event=None):
         """Edit > Browse source"""
@@ -355,34 +370,42 @@ class Bar(wxgMenu.Bar):
 
     def menu_auto_complete(self, event=None):
         """Edit > Auto complete"""
-        self.app.childActive.source.autoComplete()
+        if self.app.children:
+            self.app.childActive.source.autoComplete()
 
     def menu_show_docstring(self, event=None):
-        self.app.childActive.source.showCallTip()
+        if self.app.children:
+            self.app.childActive.source.showCallTip()
 
     def menu_indent(self, event=None):
         """Edit > Indent"""
-        self.app.childActive.source.CmdKeyExecute(wx.stc.STC_CMD_TAB)
+        if self.app.children:
+            self.app.childActive.source.CmdKeyExecute(wx.stc.STC_CMD_TAB)
 
     def menu_dedent(self, event=None):
         """Edit > Dedent"""
-        self.app.childActive.source.CmdKeyExecute(wx.stc.STC_CMD_BACKTAB)
+        if self.app.children:
+            self.app.childActive.source.CmdKeyExecute(wx.stc.STC_CMD_BACKTAB)
 
     def menu_comment(self, event=None):
         """Edit > Comment"""
-        self.app.childActive.comment()
+        if self.app.children:
+            self.app.childActive.comment()
 
     def menu_uncomment(self, event=None):
         """Edit > UnComment"""
-        self.app.childActive.uncomment()
+        if self.app.children:
+            self.app.childActive.uncomment()
 
     def menu_insert_separator(self, event=None):
         """Edit > Insert seperator..."""
-        self.app.childActive.insert_separator()
+        if self.app.children:
+            self.app.childActive.insert_separator()
 
     def menu_insert_signature(self, event=None):
         """Edit > Insert seperator..."""
-        self.app.childActive.insert_signature()
+        if self.app.children:
+            self.app.childActive.insert_signature()
 
     def menu_execute(self, event): # wxGlade: Bar.<event_handler>
         """Edit > Execute"""
@@ -427,7 +450,8 @@ class Bar(wxgMenu.Bar):
 
     def menu_sidebar(self, event=None):
         """View > Sidebar"""
-        self.app.childActive.toggle_sidebar(event)
+        if self.app.children:
+            self.app.childActive.toggle_sidebar(event)
 
     def menu_shell(self, event=None):
         """View > Shell"""
@@ -442,7 +466,8 @@ class Bar(wxgMenu.Bar):
 
     def menu_refresh(self, event=None):
         """View > Refresh"""
-        self.app.childActive.refresh()
+        if self.app.children:
+            self.app.childActive.refresh()
 
     def menu_toolbar(self, event):
         show = not self.parentPanel.getValue('ShowToolbar')
@@ -450,23 +475,29 @@ class Bar(wxgMenu.Bar):
 
     def menu_browse_folder(self, event=None):
         """Tools > Browse folder"""
-        self.parentPanel.browse_folder()
+        if self.app.children:
+            self.parentPanel.browse_folder()
 
     def menu_run(self, event): # wxGlade: Bar.<event_handler>
-        self.app.parentPanel.run()
+        if self.app.children:
+            self.app.parentPanel.run()
 
     def menu_run_without_arguments(self, event): # wxGlade: Bar.<event_handler>
-        self.app.parentPanel.run_with_arguments()
+        if self.app.children:
+            self.app.parentPanel.run_with_arguments()
 
     def menu_run_terminal(self, event=None):
         """Tools > Run"""
-        self.app.childActive.run()
+        if self.app.children:
+            self.app.childActive.run()
 
     def menu_run_terminal_without_arguments(self, event):
-        self.app.childActive.run_with_arguments(exit=False)
+        if self.app.children:
+            self.app.childActive.run_with_arguments(exit=False)
 
     def menu_run_terminal_without_arguments_exit(self,event):
-        self.app.childActive.run_with_arguments(exit=True)
+        if self.app.children:
+            self.app.childActive.run_with_arguments(exit=True)
 
     def menu_run_debug(self, event): # wxGlade: Bar.<event_handler>
         self.parentPanel.run_debug()
@@ -497,31 +528,38 @@ class Bar(wxgMenu.Bar):
 
     def menu_check_source_with_pychecker(self, event=None):
         """Tools > Check source with PyChecker"""
-        self.app.childActive.check_source_with_pychecker()
+        if self.app.children:
+            self.app.childActive.check_source_with_pychecker()
 
     def menu_open_terminal_emulator(self, event=None):
         """Tools > Open terminal emulator..."""
-        self.app.childActive.open_terminal_emulator()
+        if self.app.children:
+            self.app.childActive.open_terminal_emulator()
 
     def menu_run_in_terminal_emulator(self, event=None):
         """Tools > Run in terminal emulator..."""
-        self.app.childActive.run_in_terminal_emulator()
+        if self.app.children:
+            self.app.childActive.run_in_terminal_emulator()
 
     def menu_run_in_terminal_emulator__exit(self, event=None):
         """Tools > Run in terminal emulator & exit..."""
-        self.app.childActive.run_in_terminal_emulator_exit()
+        if self.app.children:
+            self.app.childActive.run_in_terminal_emulator_exit()
 
     def menu_load_in_blender(self, event=None):
         """Blender > Load in blender"""
-        self.app.childActive.load_in_blender()
+        if self.app.children:
+            self.app.childActive.load_in_blender()
 
     def menu_reference_in_blender(self, event=None):
         """Blender > Reference in Blender"""
-        self.app.childActive.reference_in_blender()
+        if self.app.children:
+            self.app.childActive.reference_in_blender()
 
     def menu_redraw_blender_window(self, event=None):
         """Blender > Redraw blender window"""
-        self.app.childActive.refresh()
+        if self.app.children:
+            self.app.childActive.refresh()
 
     def menu_blender_python_manual(self, event=None):
         """Blender > Blender python manual..."""
@@ -665,19 +703,23 @@ class Bar(wxgMenu.Bar):
 class PalettePanel(wxgMenu.Palette):
     def evt_indent(self, event):
         self.menuBar.menu_indent()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_dedent(self, event):
         self.menuBar.menu_dedent()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_comment(self, event):
         self.menuBar.menu_comment()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_uncomment(self, event):
         self.menuBar.menu_uncomment()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_run(self, event):
         self.menuBar.menu_run()
@@ -687,38 +729,46 @@ class PalettePanel(wxgMenu.Palette):
 
     def evt_find(self, event):
         self.menuBar.menu_find__replace()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_goto(self, event):
         self.menuBar.menu_go_to_line()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_browse_source(self, event):
         self.menuBar.menu_browse_source()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_shell(self, event):
         self.menuBar.menu_shell()
 
     def evt_check(self, event):
         self.menuBar.menu_check_source_with_pychecker()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_donate(self, event):
         self.menuBar.menu_donate()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_next(self, event):
         self.menuBar.menu_next()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_previous(self, event):
         self.menuBar.menu_previous()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_sidebar(self, event):
         self.menuBar.menu_sidebar()
-        self.app.childActive.source.SetFocus()
+        if self.app.children:
+            self.app.childActive.source.SetFocus()
 
     def evt_run_verbose(self, event):
         self.menuBar.menu_run_verbose()

@@ -330,33 +330,34 @@ class Panel(wx.Notebook):
         self.SetActiveStatusText(os.path.basename(file)[:-4],STATUS_TEXT_WORKSPACE_POS)
 
     def saveWorkspace(self,filelocation=None):
-        childActive = self.app.childActive
-        fileList=[]
         if self.app.children:
-            self.workspace['openfiles']=[]
-            for child in self.app.children:
-                if child.fileName != Child.NEWFILE:
-                    pos     = child.source.GetCurrentPos()
-                    lineno  = child.source.LineFromPosition(pos)
-                    col     = child.source.GetColumn(pos)
-                    fileList.append((child.fileName,lineno,col))
-                    self.workspace['openfiles'].append(child.fileName)
-                    self.applyWorkspaceTab(child)
-        self.setWorkspaceValue("notes",self.notes.GetValue())
-        self.setWorkspaceValue("openfiles",str(fileList))
-        self.setWorkspaceValue("recent",str(self.recent.files[:self.getValue('RecentFileAmount')]))
-        self.setWorkspaceValue("folders",str([self.browser.depth.GetValue()]+self.browser.getFolders()[1:]))
-        if not filelocation: filelocation=self.workspace['file']
-        try:
-            file=open(filelocation,'w')
-            self.workspace['config'].write(file)
-            file.close()
-            self.workspace['file']=filelocation
-            self.setWorkspaceStatusBarText(filelocation)
-        except Exception, message:
-            print 'Spe warning: could not save workspace options in',filelocation
-            print message
-        self.applyWorkspaceTab(childActive)
+            childActive = self.app.childActive
+            fileList=[]
+            if self.app.children:
+                self.workspace['openfiles']=[]
+                for child in self.app.children:
+                    if child.fileName != Child.NEWFILE:
+                        pos     = child.source.GetCurrentPos()
+                        lineno  = child.source.LineFromPosition(pos)
+                        col     = child.source.GetColumn(pos)
+                        fileList.append((child.fileName,lineno,col))
+                        self.workspace['openfiles'].append(child.fileName)
+                        self.applyWorkspaceTab(child)
+            self.setWorkspaceValue("notes",self.notes.GetValue())
+            self.setWorkspaceValue("openfiles",str(fileList))
+            self.setWorkspaceValue("recent",str(self.recent.files[:self.getValue('RecentFileAmount')]))
+            self.setWorkspaceValue("folders",str([self.browser.depth.GetValue()]+self.browser.getFolders()[1:]))
+            if not filelocation: filelocation=self.workspace['file']
+            try:
+                file=open(filelocation,'w')
+                self.workspace['config'].write(file)
+                file.close()
+                self.workspace['file']=filelocation
+                self.setWorkspaceStatusBarText(filelocation)
+            except Exception, message:
+                print 'Spe warning: could not save workspace options in',filelocation
+                print message
+            self.applyWorkspaceTab(childActive)
 
     def getWorkspaceValue(self,type,default=False):
         """        returns the value of the workspace config file key        """
@@ -398,7 +399,7 @@ class Panel(wx.Notebook):
             style=wx.OPEN|wx.MULTIPLE)
         if dlg.ShowModal() == wx.ID_OK:
             fileList = dlg.GetPaths()
-            if fileList:
+            if fileList and self.app.children:
                 child           = self.app.childActive
                 if child and child.fileName==Child.NEWFILE and not child.changed:
                     child.frame.onFrameClose()
@@ -461,54 +462,57 @@ class Panel(wx.Notebook):
     #---Edit
     def browse_source(self, event=None):
         """Locate source file of word and open it."""
-        fileName=self.app.childActive.source.getWordFileName(whole=1)
-        if fileName and fileName[0]!='"':
-            self.openList(fileName)
-        else:
-            if not fileName: fileName=''
-            self.SetActiveStatusText('Sorry, can not locate file %s'%fileName)
+        if self.app.children:
+            fileName=self.app.childActive.source.getWordFileName(whole=1)
+            if fileName and fileName[0]!='"':
+                self.openList(fileName)
+            else:
+                if not fileName: fileName=''
+                self.SetActiveStatusText('Sorry, can not locate file %s'%fileName)
 
     def find_replace(self, event=None):
         """Find and Replace dialog and action."""
-        #find string
-        findStr = self.app.childActive.source.GetSelectedText()
-        if findStr and self.findDialog:
-            self.findDialog.Destroy()
-            self.findDialog = None
-        #dialog already open, if yes give focus
-        if self.findDialog:
+        if self.app.children:
+            #find string
+            findStr = self.app.childActive.source.GetSelectedText()
+            if findStr and self.findDialog:
+                self.findDialog.Destroy()
+                self.findDialog = None
+            #dialog already open, if yes give focus
+            if self.findDialog:
+                self.findDialog.Show(1)
+                self.findDialog.Raise()
+                return
+            if not findStr:
+                    findStr = self.findStr
+            self.numberMessages=0
+            #find data
+            data    = wx.FindReplaceData(self.findFlags)
+            data.SetFindString(findStr)
+            data.SetReplaceString(self.replaceStr)
+            #dialog
+            self.findDialog = wx.FindReplaceDialog(self, data, "Find & Replace",
+                    wx.FR_REPLACEDIALOG|wx.FR_NOUPDOWN)
+            x, y    = self.frame.GetPosition()
+            self.findDialog.SetPosition((x+5,y+200))
             self.findDialog.Show(1)
-            self.findDialog.Raise()
-            return
-        if not findStr:
-                findStr = self.findStr
-        self.numberMessages=0
-        #find data
-        data    = wx.FindReplaceData(self.findFlags)
-        data.SetFindString(findStr)
-        data.SetReplaceString(self.replaceStr)
-        #dialog
-        self.findDialog = wx.FindReplaceDialog(self, data, "Find & Replace",
-                wx.FR_REPLACEDIALOG|wx.FR_NOUPDOWN)
-        x, y    = self.frame.GetPosition()
-        self.findDialog.SetPosition((x+5,y+200))
-        self.findDialog.Show(1)
-        self.findDialog.data = data  # save a reference to it...
+            self.findDialog.data = data  # save a reference to it...
 
     def execute(self):
         """Execute"""
-        child   = self.app.childActive
-        source  = child.source
-        code    = source.GetSelectedText()
-        if not code.strip():
-            if self.getValue('ExecuteWarning') and not self.messageConfirm('As there is no code selected,\nSPE will run the whole script.\n\nAre sure you want to continue?'):
-                return
-            if self.getValue('SaveBeforeRun') and not child.confirmSave():
-                return
-            child.setStatus('As there is no code selected, SPE will run the whole script.')
-            code = source.GetText()
-        self.shell.Execute(code)
-        #thread.start_new_thread(self.shell.Execute,(code,))
+        if self.app.children:
+            child   = self.app.childActive
+            source  = child.source
+            code    = source.GetSelectedText()
+            if not code.strip():
+                if self.getValue('ExecuteWarning') and not self.messageConfirm('As there is no code selected,\nSPE will run the whole script.\n\nAre sure you want to continue?'):
+                    return
+                if self.getValue('SaveBeforeRun') and not child.confirmSave():
+                    return
+                child.setStatus('As there is no code selected, SPE will run the whole script.')
+                code = source.GetText()
+            self.shell.Execute(code)
+            #thread.start_new_thread(self.shell.Execute,(code,))
 
     def preferences(self):
         """Show preferences dialog box."""
@@ -553,7 +557,8 @@ class Panel(wx.Notebook):
 
     def as_notebook(self,event):
         if hasattr(self.frame,'Tile'):
-            self.app.childActive.frame.Maximize()
+            if self.app.children:
+                self.app.childActive.frame.Maximize()
         else:
             tabs    = getattr(self.frame,'tabs',None)
             if tabs:
@@ -623,22 +628,23 @@ class Panel(wx.Notebook):
     #---Tools
     def browse_folder(self):
         """Browse folder"""
-        child           = self.app.childActive
-        if hasattr(child,'fileName'):
-            path        = info.dirname(child.fileName)
-            if not os.path.exists(path):
+        if self.app.children:
+            child           = self.app.childActive
+            if hasattr(child,'fileName'):
+                path        = info.dirname(child.fileName)
+                if not os.path.exists(path):
+                    path    = os.getcwd()
+            else:
                 path    = os.getcwd()
-        else:
-            path    = os.getcwd()
-        if os.path.exists(NAUTILUS):
-            os.system('%s "%s"'%(NAUTILUS,path))
-        elif os.path.exists(KONQUEROR):
-            os.system('%s "%s"'%(KONQUEROR,path))
-        elif os.path.exists(THUNAR):
-            os.system('%s "%s"'%(THUNAR,path))
-        else:
-            if path[0] == '/': path = 'file://'+path
-            webbrowser.open(path)
+            if os.path.exists(NAUTILUS):
+                os.system('%s "%s"'%(NAUTILUS,path))
+            elif os.path.exists(KONQUEROR):
+                os.system('%s "%s"'%(KONQUEROR,path))
+            elif os.path.exists(THUNAR):
+                os.system('%s "%s"'%(THUNAR,path))
+            else:
+                if path[0] == '/': path = 'file://'+path
+                webbrowser.open(path)
 
     def run(self):
         if self.output.IsBusy():
@@ -647,43 +653,45 @@ class Panel(wx.Notebook):
             else:
                 self.output._check_run(False)
             return
-        child = self.app.childActive
-        if not child.confirmSave():
-            return
-        from _spe.dialogs.runDialog import RunDialog
-        runDialog           = RunDialog(child.fileName,
-                                self.argumentsPrevious,
-                                self.beepPrevious,
-                                parent=self.frame,
-                                id=-1)
-        answer              = runDialog.ShowModal()
-        arguments           = runDialog.arguments.GetValue()
-        beep                = runDialog.beep.GetValue()
-        runDialog.Destroy()
-        if answer == wx.ID_OK:
-            if not (arguments in self.argumentsPrevious):
-                self.argumentsPrevious.insert(0,arguments)
-            self.beepPrevious   = beep
-            self.run_with_arguments(arguments,beep=beep,confirm=False)
-        else:
-            self.output._check_run(False)
+        if self.app.children:
+            child = self.app.childActive
+            if not child.confirmSave():
+                return
+            from _spe.dialogs.runDialog import RunDialog
+            runDialog           = RunDialog(child.fileName,
+                                    self.argumentsPrevious,
+                                    self.beepPrevious,
+                                    parent=self.frame,
+                                    id=-1)
+            answer              = runDialog.ShowModal()
+            arguments           = runDialog.arguments.GetValue()
+            beep                = runDialog.beep.GetValue()
+            runDialog.Destroy()
+            if answer == wx.ID_OK:
+                if not (arguments in self.argumentsPrevious):
+                    self.argumentsPrevious.insert(0,arguments)
+                self.beepPrevious   = beep
+                self.run_with_arguments(arguments,beep=beep,confirm=False)
+            else:
+                self.output._check_run(False)
 
     def run_with_arguments(self,arguments='',beep=True,confirm=True):
         if self.output.IsBusy():
             self.output.Kill()
             return
-        child = self.app.childActive
-        if confirm and not child.confirmSave():
-            return
-        # todo: input stuff from preferences dialog box!
-        path, fileName  = os.path.split(child.fileName)
-        params          = { 'file':         info.path(child.fileName),
-                            'path':         path,
-                            'arguments':    arguments,
-                            'python':       info.PYTHON_EXEC}
-        label = params['label'] = '"%(file)s" %(arguments)s'%params
-        os.chdir(path)
-        self.output.Execute("""%(python)s -u %(label)s"""%params,label=label,beep=beep)
+        if self.app.children:
+            child = self.app.childActive
+            if confirm and not child.confirmSave():
+                return
+            # todo: input stuff from preferences dialog box!
+            path, fileName  = os.path.split(child.fileName)
+            params          = { 'file':         info.path(child.fileName),
+                                'path':         path,
+                                'arguments':    arguments,
+                                'python':       info.PYTHON_EXEC}
+            label = params['label'] = '"%(file)s" %(arguments)s'%params
+            os.chdir(path)
+            self.output.Execute("""%(python)s -u %(label)s"""%params,label=label,beep=beep)
 
     def run_debug(self):
         """Run file"""
@@ -694,48 +702,25 @@ class Panel(wx.Notebook):
 
     def import_(self):
         """Import"""
-        child                   = self.app.childActive
-        if not self.getValue('SaveBeforeRun') or child.confirmSave():
-            self.busyShow()
-            name                = child.fileName
-            self.shell.write('Importing "%s" ...'%name)
-            self.shell.waiting  = 1
-            sm.scriptutils.importMod(name,mainDict=self.shell.locals)
-            self.shell.waiting  = 0
-            self.shell.prompt()
-            if self.redraw: self.redraw()
-            self.activateShell()
-            self.busyHide()
+        if self.app.children:
+            child                   = self.app.childActive
+            if not self.getValue('SaveBeforeRun') or child.confirmSave():
+                self.busyShow()
+                name                = child.fileName
+                self.shell.write('Importing "%s" ...'%name)
+                self.shell.waiting  = 1
+                sm.scriptutils.importMod(name,mainDict=self.shell.locals)
+                self.shell.waiting  = 0
+                self.shell.prompt()
+                if self.redraw: self.redraw()
+                self.activateShell()
+                self.busyHide()
 
     def debug(self):
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
         self.runner.debug()
-
-        return
-        child   = self.app.childActive
-        if child.confirmSave():
-            from dialogs import winpdbDialog
-            name            = child.fileName
-            debugDialog     = winpdbDialog.options(self,name)
-            if debugDialog.ShowModal()!=wx.ID_CANCEL:
-                _info       = self.app.debugInfo
-                args        = [os.P_NOWAIT,
-                               info.PYTHON_EXEC,
-                               info.PYTHON_EXEC]
-                args.extend(_info['parameters'])
-                if os.path.exists(name):
-                    if info.WIN and ' ' in name:
-                        name    = '"%s"'%name
-                    args.append(name)
-                    script_args = _info['arguments']
-                    if script_args:
-                        args.append(script_args)
-                os.spawnl(*args)
-                self.SetStatusText('WinPdb Debugger is succesfully started.',1)
-                return
-        self.SetStatusText('WinPdb Debugger was cancelled.',1)
 
     def browse_object_with_pyfilling(self):
         """Browse object with pyfilling"""
@@ -955,10 +940,11 @@ class Panel(wx.Notebook):
                 print 'Warning: Parent: %s.onActivate failed\n%s\n%s\n'%(self.__class__,Exception,m)
                 
     def onDeactivate(self,event=None):
-        childActive = self.app.childActive
-        if (not self.frame.dead) and childActive and hasattr(childActive,'source'):
-            childActive.source.AutoCompCancel()
-            childActive.source.CallTipCancel()
+        if self.app.children:
+            childActive = self.app.childActive
+            if (not self.frame.dead) and childActive and hasattr(childActive,'source'):
+                childActive.source.AutoCompCancel()
+                childActive.source.CallTipCancel()
 
     def onClose(self,event=None):
         """Called when the parent frame is closed."""
@@ -1001,6 +987,7 @@ class Panel(wx.Notebook):
 Spe Warning: can't save user settings (%s).
 Please report these details and operating system to %s."""%(message,INFO['author_email']))
         if not self.getValue('RememberLastWorkspace'): self.set('currentworkspace',"")
+        print 'ok'
         return 1
 
     def onClosePanelFrame(self,event=None):
@@ -1010,9 +997,10 @@ Please report these details and operating system to %s."""%(message,INFO['author
     def onIdle(self,event=None):
         """Called when the parent frame is idle."""
         #child
-        child   = self.app.childActive
-        if child:
-            child.idle()
+        if self.app.children:
+            child   = self.app.childActive
+            if child:
+                child.idle()
         #redraw
         if self.redraw:
             newTime=time.time()
@@ -1041,73 +1029,76 @@ Please report these details and operating system to %s."""%(message,INFO['author
         webbrowser.open('''mailto:%s?subject=SPE %s error report&body="%s %s\n%s"'''%(INFO['author_email'],type,type,value,traceback))
 
     def onFind(self,event,message=1):
-        source=self.app.childActive.source
-        try:
-            self.findStr=event.GetFindString()
-            self.findFlags=event.GetFlags()
-            flags=0
-            if wx.FR_WHOLEWORD & self.findFlags:
-                flags|=wx.stc.STC_FIND_WHOLEWORD
-            if wx.FR_MATCHCASE & self.findFlags:
-                flags|=wx.stc.STC_FIND_MATCHCASE
-            self.stcFindFlags=flags
-        except:
-            pass
-        current=source.GetCurrentPos()
-        position=source.FindText(current,len(source.GetText()),self.findStr,
-                self.stcFindFlags)
-        if position==-1:#wrap around
-            self.wrapped=1
-            position=source.FindText(0,current+len(self.findStr),self.findStr,self.stcFindFlags)
-            self.SetActiveStatusText("Wrapped around to find '%s'"%self.findStr,1)
-        if position==-1 and message and self.numberMessages<1:
-            self.numberMessages=1
-            self.message("'%s' not found!"%self.findStr)
-            self.numberMessages=0
-        source.GotoPos(position)
-        source.SetSelection(position,position+len(self.findStr))
-        #self.WarpPointer(0,0)
-        return position
+        if self.app.children:
+            source=self.app.childActive.source
+            try:
+                self.findStr=event.GetFindString()
+                self.findFlags=event.GetFlags()
+                flags=0
+                if wx.FR_WHOLEWORD & self.findFlags:
+                    flags|=wx.stc.STC_FIND_WHOLEWORD
+                if wx.FR_MATCHCASE & self.findFlags:
+                    flags|=wx.stc.STC_FIND_MATCHCASE
+                self.stcFindFlags=flags
+            except:
+                pass
+            current=source.GetCurrentPos()
+            position=source.FindText(current,len(source.GetText()),self.findStr,
+                    self.stcFindFlags)
+            if position==-1:#wrap around
+                self.wrapped=1
+                position=source.FindText(0,current+len(self.findStr),self.findStr,self.stcFindFlags)
+                self.SetActiveStatusText("Wrapped around to find '%s'"%self.findStr,1)
+            if position==-1 and message and self.numberMessages<1:
+                self.numberMessages=1
+                self.message("'%s' not found!"%self.findStr)
+                self.numberMessages=0
+            source.GotoPos(position)
+            source.SetSelection(position,position+len(self.findStr))
+            #self.WarpPointer(0,0)
+            return position
 
     def onFindClose(self,event):
         event.GetDialog().Destroy()
         self.numberMessages=0
 
     def onReplace(self,event,message=1):
-        ## Next line avoid infinite loop
-        findStr=event.GetFindString()
-        self.replaceStr=event.GetReplaceString()
-        if findStr==self.replaceStr:
-            return -1
-        source=self.app.childActive.source
-        selection=source.GetSelectedText()
-        if not(event.GetFlags() & wx.FR_WHOLEWORD):
-            findStr=findStr.lower()
-            selection=selection.lower()
-            if findStr==self.replaceStr.lower():
+        if self.app.children:
+            ## Next line avoid infinite loop
+            findStr=event.GetFindString()
+            self.replaceStr=event.GetReplaceString()
+            if findStr==self.replaceStr:
                 return -1
-        if selection==findStr:
-            position=source.GetSelectionStart()
-            source.ReplaceSelection(self.replaceStr)
-            source.SetSelection(position,position+len(self.replaceStr))
-        position=self.onFind(event,message=message)
-        return position
+            source=self.app.childActive.source
+            selection=source.GetSelectedText()
+            if not(event.GetFlags() & wx.FR_WHOLEWORD):
+                findStr=findStr.lower()
+                selection=selection.lower()
+                if findStr==self.replaceStr.lower():
+                    return -1
+            if selection==findStr:
+                position=source.GetSelectionStart()
+                source.ReplaceSelection(self.replaceStr)
+                source.SetSelection(position,position+len(self.replaceStr))
+            position=self.onFind(event,message=message)
+            return position
 
     def onReplaceAll(self,event):
-        source=self.app.childActive.source
-        count=0
-        self.wrapped=0
-        position=start=source.GetCurrentPos()
-        while position>-1 and ((not self.wrapped) or position<start):
-            position=self.onReplace(event,message=0)
-            if position != -1: count+=1
-        if count:
-            self.SetActiveStatusText("'%s' is %s times replaced with '%s'"%\
-                (event.GetFindString(),count,event.GetReplaceString()),1)
-        elif not count and self.numberMessages<1:
-            self.numberMessages=1
-            self.message("'%s' not found!"%event.GetFindString())
-            self.numberMessages=0
+        if self.app.children:
+            source=self.app.childActive.source
+            count=0
+            self.wrapped=0
+            position=start=source.GetCurrentPos()
+            while position>-1 and ((not self.wrapped) or position<start):
+                position=self.onReplace(event,message=0)
+                if position != -1: count+=1
+            if count:
+                self.SetActiveStatusText("'%s' is %s times replaced with '%s'"%\
+                    (event.GetFindString(),count,event.GetReplaceString()),1)
+            elif not count and self.numberMessages<1:
+                self.numberMessages=1
+                self.message("'%s' not found!"%event.GetFindString())
+                self.numberMessages=0
 
     ####Tabs
     def onTab(self,event):
@@ -1215,7 +1206,10 @@ Please report these details and operating system to %s."""%(message,INFO['author
 
     def SetActiveStatusText(self,x,pos=1):
         try:
-            self.app.childActive.SetStatusText(x,pos)
+            if self.app.children:
+                self.app.childActive.SetStatusText(x,pos)
+            else:
+                self.SetStatusText(x,pos)
         except:
             self.SetStatusText(x,pos)
 
@@ -1233,7 +1227,10 @@ Please report these details and operating system to %s."""%(message,INFO['author
     #---get
     def getChildByFileName(self,fileName):
         if fileName=='<source>':
-            return self.app.childActive
+            if self.app.children:
+                return self.app.childActive
+            else:
+                return None
         fileName = os.path.normcase(fileName)
         for child in self.app.children:
             if os.path.normcase(child.fileName)==fileName:
@@ -1245,7 +1242,10 @@ Please report these details and operating system to %s."""%(message,INFO['author
 
     def getText(self):
         """Get raw text of current script window."""
-        return self.app.childActive.source.GetText()
+        if self.app.children:
+            return self.app.childActive.source.GetText()
+        else:
+            return ''
 
     #---messages
     def message(self,message,style=wx.OK | wx.ICON_INFORMATION):

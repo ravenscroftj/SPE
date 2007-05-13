@@ -679,7 +679,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if self.app.DEBUG:
             print 'Event:  Child: %s: %s.onSetFocus(dead=%s)'%(self.fileName, self.__class__,self.frame.dead)
         event.Skip()
-        if self.app.childActive != self and sm.wxp.smdi.MdiSplitChildFrame == self.frame.__class__:
+        if self.app.children and self.app.childActive != self and sm.wxp.smdi.MdiSplitChildFrame == self.frame.__class__:
             self.frame.onFrameActivate()
 
     #---Source events

@@ -35,11 +35,12 @@ class Output(html.HtmlWindow):
     #---execute
     def _check_run(self,bool):
         #assing method for check run tool button
-        child                   = self.app.childActive
-        if child.frame.menuBar:
-            child.frame.menuBar.check_run(bool)
-        else:
-            child.parentFrame.menuBar.check_run(bool)
+        if self.app.children:
+            child                   = self.app.childActive
+            if child.frame.menuBar:
+                child.frame.menuBar.check_run(bool)
+            else:
+                child.parentFrame.menuBar.check_run(bool)
     
     def Execute(self, command, label = None, statustext = "Running script...",beep=False):
         """Executes a command of which the output will be redirected by OnIdle and OnEndProcess."""
