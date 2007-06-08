@@ -1015,6 +1015,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                             if uml and self.umlClass: self.umlClass.append(l)
                             colour          = wx.Colour(0,0,intensity)
                             icon            = iconExpand = 'def.png'
+                        self.explore.SetItemBold(item,False)
                         self.explore.SetItemTextColour(item,colour)
                         self.explore.SetItemImage(item,
                             self.parentPanel.iconsListIndex[icon],
