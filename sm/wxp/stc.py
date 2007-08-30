@@ -433,7 +433,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         self.IndicatorSetStyle(2, wx_stc.STC_INDIC_SQUIGGLE)
         self.IndicatorSetForeground(2, wx.RED)
 
-        import dialogs.stcStyleEditor
+        #import dialogs.stcStyleEditor
         if 1:#dialogs.stcStyleEditor.SetStyles(self, self.config):
             self.StyleSetSpec(wx_stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % self.faces)
             self.StyleClearAll()

@@ -689,7 +689,8 @@ class Panel(wx.Notebook):
                                 'path':         path,
                                 'arguments':    arguments,
                                 'python':       info.PYTHON_EXEC}
-            label = params['label'] = '"%(file)s" %(arguments)s'%params
+            #label = params['label'] = '"%(file)s" %(arguments)s'%params
+            label = params['label'] = '%(file)s %(arguments)s'%params
             os.chdir(path)
             self.output.Execute("""%(python)s -u %(label)s"""%params,label=label,beep=beep)
 

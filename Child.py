@@ -322,7 +322,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
             #backup file
             if self.parentPanel.getValue('Backup') and os.path.exists(self.fileName):
-                backup  = self.fileName + ".bak"
+                backup  = self.fileName + (sys.platform == 'win32' and '.bak' or '~')
                 try:
                     os.remove(backup)
                 except:
