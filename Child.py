@@ -468,8 +468,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         separatorDialog.create(self).ShowModal()
 
     def insert_signature(self):
+        '''Insert asignature into the current document'''
         signature   = self.parentPanel.get('Signature')
         if not os.path.exists(signature):
+            # No or invalid signature in preferences
             dlg = wx.FileDialog(self,
                 message="SPE - Choose a signature file",
                 #defaultDir  = os.getcwd(),
@@ -481,10 +483,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             signature   = dlg.GetPath()
             dlg.Destroy()
             if answer == wx.ID_CANCEL: return
-        else:
-            self.setStatus('SPE could not open signature %s!'%signature)
-            return
-        self.source.ReplaceSelection(open(signature).read()+'\n')
+        # Have a signature file
+        try:
+            self.source.ReplaceSelection(open(signature).read()+'\n')
+        except:
+            self.setStatus('SPE could not open signature "%s"!'% signature)
+        return
 
     def go_to_line(self,scroll=1):
         """Go to line dialog & action"""
