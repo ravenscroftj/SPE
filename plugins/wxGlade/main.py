@@ -405,7 +405,7 @@ class wxGladeFrame(wx.Frame):
         common.property_panel = property_panel
         # Tree of widgets
         self.tree_frame = wx.Frame(self, -1, _('wxGlade: Tree'),
-                                  style=frame_style)
+                                  style=wx.FRAME_FLOAT_ON_PARENT|frame_style)
         self.tree_frame.SetIcon(icon)
         
         import application
