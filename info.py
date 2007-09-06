@@ -37,7 +37,7 @@ PATH                        = os.path.dirname(__file__)
 _PATH                       = os.path.dirname(PATH)
 
 def path(p):
-    if WIN and ' ' in p:
+    if (WIN or LINUX) and ' ' in p:
         return '"%s"'%p
     else:
         return p
