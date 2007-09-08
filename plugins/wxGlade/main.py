@@ -450,9 +450,9 @@ class wxGladeFrame(wx.Frame):
                 w += 10
             self.frame2.SetPosition((x, y+h))
             self.tree_frame.SetPosition((x+w, y))
+        self.Show()
         self.tree_frame.Show()
         self.frame2.Show()    
-        self.Show()
 
         #self._skip_activate = False
 ##         if frame_tool_win:

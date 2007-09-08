@@ -647,7 +647,7 @@ class Bar(wxgMenu.Bar):
 
     def menu_manual(self, event=None):
         """Help > Manual..."""
-        self.link('http://pythonide.stani.be/manual/html/manual.html')
+        self.link('http://stani.tradebit.com/files.php/7007')
 
     def menu_keyboard_shortcuts(self, event=None):
         """Help > Keyboard shortcuts..."""
@@ -679,7 +679,8 @@ class Bar(wxgMenu.Bar):
 
     def menu_donate(self, event=None):
         """Help > Donate..."""
-        self.parentPanel.messageHtml('donate.html',doc=self.parentPanel.path)
+        self.link('http://stani.tradebit.com/files.php/7007')
+        #self.parentPanel.messageHtml('donate.html',doc=self.parentPanel.path)
 
     def menu_about(self, event=None):
         """Help > About..."""
