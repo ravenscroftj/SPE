@@ -551,7 +551,7 @@ class FindReplace(FindReplaceEngine):
 
             for i in range(len(names)):
                 filename = self._getValidFilename(names[i])
-                if not filename and os.path.exists(filename): continue
+                if not (filename and os.path.exists(filename)): continue
                 results[names[i]] = self._findAllInSource(open(filename).read(), pattern, 0)#(lineNo+1, index+1, line)
                 if not dlg.Update(i, "Searching in file '%s'"%filename):
                     try:

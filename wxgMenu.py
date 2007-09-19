@@ -14,6 +14,8 @@ SAVE_COPY, SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 REMEMBER_OPEN_FILES,
 
+EDIT_CUT, EDIT_COPY, EDIT_PASTE,
+
 GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
@@ -43,13 +45,13 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(82)]
+[wx.NewId() for x in range(85)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
-wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE,
+wx.ID_UNDO, wx.ID_REDO, EDIT_CUT, EDIT_COPY, EDIT_PASTE, wx.ID_REPLACE,
 wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, 
@@ -269,9 +271,9 @@ class Bar(wx.MenuBar):
         self.edit.Append(wx.ID_UNDO, _("&Undo\tCtrl+Z"), "", wx.ITEM_NORMAL)
         self.edit.Append(wx.ID_REDO, _("&Redo\tCtrl+Y"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
-        self.edit.Append(wx.ID_CUT, _("Cut"), "", wx.ITEM_NORMAL)
-        self.edit.Append(wx.ID_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
-        self.edit.Append(wx.ID_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
+        self.edit.Append(EDIT_CUT, _("Cut"), "", wx.ITEM_NORMAL)
+        self.edit.Append(EDIT_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
+        self.edit.Append(EDIT_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(EXECUTE, _("&Execute in shell\tCtrl+Shift+E"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
@@ -396,9 +398,9 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_remember_open_files, id=REMEMBER_OPEN_FILES)
         self.Bind(wx.EVT_MENU, self.menu_undo, id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, self.menu_redo, id=wx.ID_REDO)
-        self.Bind(wx.EVT_MENU, self.menu_cut, id=wx.ID_CUT)
-        self.Bind(wx.EVT_MENU, self.menu_copy, id=wx.ID_COPY)
-        self.Bind(wx.EVT_MENU, self.menu_paste, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU, self.menu_cut, id=EDIT_CUT)
+        self.Bind(wx.EVT_MENU, self.menu_copy, id=EDIT_COPY)
+        self.Bind(wx.EVT_MENU, self.menu_paste, id=EDIT_PASTE)
         self.Bind(wx.EVT_MENU, self.menu_execute, id=EXECUTE)
         self.Bind(wx.EVT_MENU, self.menu_find__replace, id=wx.ID_REPLACE)
         self.Bind(wx.EVT_MENU, self.menu_find_next, id=wx.ID_FIND)

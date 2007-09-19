@@ -74,6 +74,20 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         #KEYBOARD SHORTCUTS (what are they doing here?)
         self.CmdKeyAssign(ord('B'), wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_ZOOMIN)
         self.CmdKeyAssign(ord('N'), wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_ZOOMOUT)
+        
+        #KEYPAD DEFINITIONS
+        self.CmdKeyAssign(wx.WXK_NUMPAD_UP, 0, wx_stc.STC_CMD_LINEUP)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_DOWN, 0, wx_stc.STC_CMD_LINEDOWN)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_LEFT, 0, wx_stc.STC_CMD_CHARLEFT)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_RIGHT, 0, wx_stc.STC_CMD_CHARRIGHT)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_HOME, 0, wx_stc.STC_CMD_HOME)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_END, 0, wx_stc.STC_CMD_LINEEND)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_HOME, wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_DOCUMENTSTART)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_END, wx_stc.STC_SCMOD_CTRL, wx_stc.STC_CMD_DOCUMENTEND)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_PAGEUP, 0, wx_stc.STC_CMD_PAGEUP)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_PAGEDOWN, 0, wx_stc.STC_CMD_PAGEDOWN)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_INSERT, 0, wx_stc.STC_CMD_EDITTOGGLEOVERTYPE)
+        self.CmdKeyAssign(wx.WXK_NUMPAD_DELETE, 0, wx_stc.STC_CMD_CLEAR)
 
         #PYTHON
         self.SetLexer(wx_stc.STC_LEX_PYTHON)
