@@ -866,6 +866,7 @@ class Panel(wx.Notebook):
         for fileName in fileList:
             if type(fileName)==types.TupleType:
                 fileName, lineno, col = fileName
+            if not os.path.exists(fileName): continue
             if self.app.DEBUG:
                 print 'Opening %s'%fileName
             child=self.getChildByFileName(fileName)

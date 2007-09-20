@@ -44,7 +44,8 @@ class Panel(wx.ListCtrl):
         
     def add(self,fileList):
         """Register file list as recent."""
-        files   = [file for file in self.files if file not in fileList]
+        files   = [file for file in self.files \
+            if file not in fileList and os.path.exists(file)]
         if len(self.files)-len(files)!=len(fileList):
             fileList.extend(files)
             self.files=fileList
