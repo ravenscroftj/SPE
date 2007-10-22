@@ -750,13 +750,13 @@ class Panel(wx.Notebook):
         self.SetStatusText('Kiki is succesfully started.',1)
 
     def design_a_gui_with_wxglade(self):
-            from plugins.wxGlade import __file__ as fileName
-            path    = info.dirname(fileName)
-            glade   = '%s'%os.path.join(path,'wxglade.py')
-            if info.WIN and ' ' in glade:
-                glade = '"%s"'%glade
-            os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
-            self.SetStatusText('wxGlade is succesfully started.',1)
+        from plugins.wxGlade import __file__ as fileName
+        path    = info.dirname(fileName)
+        glade   = '%s'%os.path.join(path,'wxglade.py')
+        if info.WIN and ' ' in glade:
+            glade = '"%s"'%glade
+        os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
+        self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
 ##        if wx.Platform == "__WXMAC__":

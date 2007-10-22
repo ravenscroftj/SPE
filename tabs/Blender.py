@@ -21,7 +21,7 @@ class wxgPanel(wx.Panel):
         kwds["style"] = wx.TAB_TRAVERSAL
         wx.Panel.__init__(self, *args, **kwds)
         self.logo = wx.StaticBitmap(self, -1, wx.Bitmap("../skins/default/blenpy.png", wx.BITMAP_TYPE_ANY))
-        self.modules = wx.ListBox(self, -1, choices=["Blender", "Armatures", "BezTriples", "Cameras", "CurNurbs", "Curves", "Effects", "Images", "Ipos", "IpoCurves", "Keys", "Lamps", "Lattices", "Materials", "Meshes", "Metaballs", "NMeshes", "Objects", "Registry", "Scenes", "Sounds", "Texts", "Text3ds", "Textures", "Worlds"], style=wx.LB_SINGLE)
+        self.modules = wx.ListBox(self, -1, choices=["Blender", "Armatures", "BezTriples", "Cameras", "Curves", "Effects", "Groups", "Images", "Ipos",              "Keys", "Lamps", "Lattices", "Materials", "Meshes", "Metaballs", "NMeshes", "Objects", "Registry", "Scenes", "Sounds", "Texts", "Text3ds", "Textures", "Worlds"], style=wx.LB_SINGLE)
         self.filling = wx.StaticText(self, -1, "Only available when Spe is launched from Blender. How? Open the file _spe/spe.blend and press Alt+P in the lower right text window.\n\nBlender is a free 3d modeller, renderer and animation program with a Python scripting engine (http://www.blender.org).")
 
         self.__set_properties()
@@ -88,7 +88,8 @@ class Panel(wxgPanel):
                     NMesh       = self.Blender.NMesh
                     names       = NMesh.GetNames()
                     object      = [NMesh.GetRaw(name) for name in names]
-                    welcome     = welcome%(l,('is only','are')[len(object)-1],len(object),l[:-1],('','s')[len(object)-1],', '.join(names))
+                    multi       = min(len(object)-1,1)
+                    welcome     = welcome%(l,('is only','are')[multi],len(object),'nmesh',('','es')[multi],', '.join(names))
                 else:
                     if label in ['Meshes']:
                         attr    = label[:-2]
@@ -99,7 +100,8 @@ class Panel(wxgPanel):
                     except:
                         object  = []
                         welcome += 'There was an error retrieving the list.'
-                    welcome     = welcome%(l,('is only','are')[len(object)-1],len(object),l[:-1],('','s')[len(object)-1],', '.join([str(o) for o in object]))
+                    multi       = min(len(object)-1,1)
+                    welcome     = welcome%(l,('is only','are')[multi],len(object),l[:-1],('','s')[multi],', '.join([str(o) for o in object]))
                 label   = 'Blender.%s.Get()'%attr
             self.main.Remove(self.filling)
             self.filling.Destroy()

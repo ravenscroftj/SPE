@@ -48,6 +48,9 @@ UML_PAGE                = 1
 STATUS_TEXT_LINE_POS    = 3
 STATUS_TEXT_COL_POS     = STATUS_TEXT_LINE_POS+1
 
+BLENDER_REF_SIGNATURE   = "Blender_signature.py" #you may customize this file
+BLENDER_REF_TRACE       = "#!BPY" #required first characters of the Blender signature 
+
 ####Utilities-------------------------------------------------------------------
 def umlAdd(classes, umlClass):
     """Add umlClass to classes dictionary"""
@@ -632,14 +635,66 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             child   = self.app.childActive
             answer  = child.confirmSave('Only saved contents will be loaded in Blender.')
             if answer:
-                import blenpy.pyGui
-                blenpy.pyGui.pythonLoad(child.fileName)
+                import Blender
+                #first: let's remove previous copies of this file from Blender's Texts
+                for t in filter(lambda x: x.filename == child.fileName, Blender.Text.Get()) : 
+                    Blender.Text.unlink(t)
+                #second: let's load the just saved file. 
+                Blender.Text.Load(child.fileName)
+                #BEWARE: this text will not be the selected text in Blender -
+                #you still have to select it as the actual.
+                self.setStatus(("File successfully loaded as a Blender's Text Editor item, named '%s'" % os.path.basename(child.fileName)))
 
     def reference_in_blender(self):
         """Reference in blender"""
         if self.parentPanel.checkBlender():
-            import blenpy.plugins.mouse
-            blenpy.plugins.mouse.reference(self.parentPanel.childActive.fileName)
+            import Blender
+            child   = self.app.childActive
+            msg = "" #message text, that will be displayed on the status bar
+            
+            #Check: maybe it is a cmpletly new file?:
+            if child.fileName==NEWFILE: child.saveAs()
+            #It will be still named NEWFILE, if the user has declined to reference it
+            if child.fileName==NEWFILE:  return #nothing to do - user has changed his mind
+
+            #First: add the Blender signature at the beginning of the file
+            doc = child.source
+            #let's move to begining of the file and check, if the Blender signature already exists:
+            doc.ScrollToLine(0)
+            doc.SetSelection(0,len(BLENDER_REF_TRACE))
+            if doc.GetSelectedText() == BLENDER_REF_TRACE:
+                msg = "File alread contains reference to Blender menus"
+            else:
+                template = os.path.join(child.parentPanel.path,BLENDER_REF_SIGNATURE)
+                if not os.path.exists(template):
+                    child.parentPanel.messageError("Template file:\n%s\nnot found.\n\nCannot reference this script to Blender menu." % template)
+                    return
+                else: #adding the content of Blender signature file to the source
+                    import getpass
+                    values = {  'Command':os.path.basename(child.fileName), \
+                                'Blender version':Blender.Get('version'), \
+                                'User':getpass.getuser()                      }
+                    text = open(template).read()
+                    text = text % values #apply values into signature
+                    doc.SetSelection(0,0)
+                    doc.ReplaceSelection(text + "\n")
+                    doc.ScrollToLine(0) #It looks better
+                    msg = "Blender's signature added."
+            # Second: if the script is not located in Blender directory - move it there
+            actdir = os.path.dirname(child.fileName)
+            if actdir != Blender.Get('uscriptsdir') and actdir != Blender.Get('scriptsdir'):
+                if Blender.Get('uscriptsdir')==None:
+                    varname = 'scriptsdir'
+                else:
+                    varname = 'uscriptsdir'
+                child.save(os.path.join(Blender.Get(varname),os.path.basename(child.fileName)))
+                msg = ("File saved as '%s'" % child.fileName) + ", " + msg
+            else:
+                child.save() #we have save it, to be referenced in Blender menus.
+            #Third: let the script appear in the Blender menu
+            Blender.UpdateMenus()
+            #Four: feedback for the user
+            self.setStatus(msg)
 
     ####Events------------------------------------------------------------------
     #---Smdi events

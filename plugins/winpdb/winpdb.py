@@ -2142,7 +2142,7 @@ class CSourceManager:
                 
             u = _source.decode(se, 'ignore')
             source = u.encode(de, 'ignore')
-            _time = 0
+            _time = time.time() # mod. 009: W.Jaworski, 2007-10-21
         
         elif t == rpdb2.NotPythonSource and fComplain:
             dlg = wx.MessageDialog(None, MSG_ERROR_FILE_NOT_PYTHON % (filename, ), MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)

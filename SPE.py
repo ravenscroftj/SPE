@@ -9,7 +9,10 @@ GET_WXPYTHON    = 'Get it from http://www.wxpython.org!'
 
 try:
     import wxversion
-    wxversion.ensureMinimal(MIN_WX_VERSION)
+    if sys.modules.has_key('wx') or sys.modules.has_key('wxPython'):
+        pass    #probably not the first call to this module: wxPython already loaded
+    else:
+		wxversion.ensureMinimal(MIN_WX_VERSION)
 except ImportError:
     #the old fashioned way as not everyone seems to have wxversion installed
     try:
