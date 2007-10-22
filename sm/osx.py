@@ -232,44 +232,44 @@ def userPath(dirname=''):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), dirname)
 
 def startAppleScript(commandList, activateFlag = True):
-	"""Start a list of commands in the terminal window.
-	Each command is a list of program name, parameters.
-	Handles the quoting properly through shell, applescript and shell again.
-	"""
-	def adjustParameter(parameter):
-		"""Adjust a parameter for the shell.
-		Adds single quotes,
-		unless the parameter consists of letters only
-		(to make shell builtins work)
-		or if the parameter is a list
-		(to flag that it already is list a parameters).
-		"""
-		if isinstance(parameter, list): return parameter[0]
-		if parameter.isalpha(): return parameter
-		#the single quote proper is replaced by '\'' since
-		#backslashing a single quote doesn't work inside a string
-		return "'%s'"%parameter.replace("'",r"'\''")
-	command = ';'.join([
-		' '.join([
-			adjustParameter(parameter)
-			for parameter in command
-			])
-		for command in commandList
-	])
-	#make Applescript string from this command line:
-	#put backslashes before double quotes and backslashes
-	command = command.replace('\\','\\\\').replace('"','\\"')
-	#make complete Applescript command containing this string
-	command = 'tell application "Terminal" to do script "%s"'%command
-	#make a shell parameter (single quote handling as above)
-	command = command.replace("'","'\\''")
-	#make complete shell command
-	command = "osascript -e '%s'"%command
-	#prepend activate command if needed
-	if activateFlag:
-		command = "osascript -e 'tell application \"Terminal\" to activate';"+command
-	#go!
-	os.popen(command)
+    """Start a list of commands in the terminal window.
+    Each command is a list of program name, parameters.
+    Handles the quoting properly through shell, applescript and shell again.
+    """
+    def adjustParameter(parameter):
+        """Adjust a parameter for the shell.
+        Adds single quotes,
+        unless the parameter consists of letters only
+        (to make shell builtins work)
+        or if the parameter is a list
+        (to flag that it already is list a parameters).
+        """
+        if isinstance(parameter, list): return parameter[0]
+        if parameter.isalpha(): return parameter
+        #the single quote proper is replaced by '\'' since
+        #backslashing a single quote doesn't work inside a string
+        return "'%s'"%parameter.replace("'",r"'\''")
+    command = ';'.join([
+        ' '.join([
+            adjustParameter(parameter)
+            for parameter in command
+            ])
+        for command in commandList
+    ])
+    #make Applescript string from this command line:
+    #put backslashes before double quotes and backslashes
+    command = command.replace('\\','\\\\').replace('"','\\"')
+    #make complete Applescript command containing this string
+    command = 'tell application "Terminal" to do script "%s"'%command
+    #make a shell parameter (single quote handling as above)
+    command = command.replace("'","'\\''")
+    #make complete shell command
+    command = "osascript -e '%s'"%command
+    #prepend activate command if needed
+    if activateFlag:
+        command = "osascript -e 'tell application \"Terminal\" to activate';"+command
+    #go!
+    os.popen(command)
 
 #---registry--------------------------------------------------------------------
 

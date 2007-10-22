@@ -30,12 +30,12 @@ its window, but all its commands are not availabe. In fact, you can
 control it by issuing a Blender API calls from Spe's shell console.<br>
 Typical patter of usage:<br>
 When you have finished to modify a script in SPE:<br>
-	- transfer it into Blender's Text Editor (using Spe 'Load into Blender' menu command),<br>
-	- close the SPE,<br>
-	- select the script in Text Editor,<br>
-	- run it to test (you can use to track it in the WinPdb debugger).<br>
+    - transfer it into Blender's Text Editor (using Spe 'Load into Blender' menu command),<br>
+    - close the SPE,<br>
+    - select the script in Text Editor,<br>
+    - run it to test (you can use to track it in the WinPdb debugger).<br>
 Then, when you will have to make another non-trivial modification to script,<br>
-	- open the Spe again.<br>
+    - open the Spe again.<br>
 It will open with the same file, at the same position, where you have closed it.<br>
 Make the change, transfer to Blender, and test again. 
 """

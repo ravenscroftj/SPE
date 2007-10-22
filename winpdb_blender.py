@@ -32,9 +32,9 @@ its screen).
 
 USAGE:
 To break into a script:<br>
-	- press "Break" button in WinPdb;
-	- load the script to Blender's Text Editor;
-	- run the script, pressing Alt-P
+    - press "Break" button in WinPdb;
+    - load the script to Blender's Text Editor;
+    - run the script, pressing Alt-P
 
 The WindPdb window will appear. You can debug your script there.
 The WinPdb should be attached to the Blender only once per session. You can 
@@ -49,7 +49,7 @@ it just before closing the Blender session.
 
 #helper parameters - usually you do not need to change them:
 WAIT_TIMEOUT  = 15  #time that this script will wait for attaching a Winpdb program instance
-PASSWORD	  = 'blender' #password, that should be used in WinPdb
+PASSWORD      = 'blender' #password, that should be used in WinPdb
 
 
 import rpdb2
@@ -58,27 +58,27 @@ import sys
 import subprocess
 
 def debug(what):
-	"""
-		Opens the WinPdb window with Blender script attached to it.
-		Arguments:
-		what - name of the script text, as is visible at WinPdb
-	"""
-	#WinPdb arguments : attach to <what>, with given password:
-	#I am very sorry, that I was not able to use the os.executable field
-	#but the explicite Python executable name. It is because inside Blender
-	#the os.executable points to Blender.exe, not the Python executable.
-	#This makes this script useful for Windows, only.
-	#I welcome anybody to prepare an Linux version! 
-	args = ["pythonw.exe", \
-			os.path.join(os.path.dirname(rpdb2.__file__),"winpdb.py"), \
-			"-a", \
-			"-p" + PASSWORD, \
-			what]
-	#Run WinPdb...
-	pid = subprocess.Popen(args)
-	#....and let it to connect, waiting for <timeout> seconds:
-	rpdb2.start_embedded_debugger(PASSWORD, \
-								  fAllowUnencrypted = True, \
-								  timeout = WAIT_TIMEOUT)
+    """
+        Opens the WinPdb window with Blender script attached to it.
+        Arguments:
+        what - name of the script text, as is visible at WinPdb
+    """
+    #WinPdb arguments : attach to <what>, with given password:
+    #I am very sorry, that I was not able to use the os.executable field
+    #but the explicite Python executable name. It is because inside Blender
+    #the os.executable points to Blender.exe, not the Python executable.
+    #This makes this script useful for Windows, only.
+    #I welcome anybody to prepare an Linux version! 
+    args = ["pythonw.exe", \
+            os.path.join(os.path.dirname(rpdb2.__file__),"winpdb.py"), \
+            "-a", \
+            "-p" + PASSWORD, \
+            what]
+    #Run WinPdb...
+    pid = subprocess.Popen(args)
+    #....and let it to connect, waiting for <timeout> seconds:
+    rpdb2.start_embedded_debugger(PASSWORD, \
+                                  fAllowUnencrypted = True, \
+                                  timeout = WAIT_TIMEOUT)
 
 debug("<string>") #every script in Blender is represented by such name 

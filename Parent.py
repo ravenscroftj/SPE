@@ -973,7 +973,7 @@ class Panel(wx.Notebook):
             if info.DARWIN and wx.VERSION_STRING>'2.8':
                 self.set("sizey",selfSize.GetSize().y-47) #dirty hack
             else:
-            	self.set("sizey",selfSize.GetSize().y)
+                self.set("sizey",selfSize.GetSize().y)
             self.set("posx",selfSize.GetPosition().x)
             self.set("posy",selfSize.GetPosition().y)
             self.set("maximize","False")
