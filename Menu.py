@@ -254,23 +254,23 @@ class Bar(wxgMenu.Bar):
         app = self.app
         #Blender
         if app.Blender:
-        	self.CHILD_MENUS += wxgMenu.BLENDER_MENUS
-        	self.CHILD_TOOLS += BLENDER_TOOLS
+            self.CHILD_MENUS += wxgMenu.BLENDER_MENUS
+            self.CHILD_TOOLS += BLENDER_TOOLS
         else:
-        	#maybe weird to remove it afterwards but keeps wxGlade intact
-        	self.Remove(BLENDER)
+            #maybe weird to remove it afterwards but keeps wxGlade intact
+            self.Remove(BLENDER)
         if app.mdi not in [smdi.SDI]:#[smdi.MDI_SPLIT,smdi.SDI]:
-       	if app.Blender:
-        		self.Remove(WINDOW+1) #When Blender menu was not removed, the first Window menu has higher number!
-        	else:
-       		self.Remove(WINDOW)
-        	self.CHILD_MENUS.remove(wxgMenu.NEXT)
-        	self.CHILD_MENUS.remove(wxgMenu.PREVIOUS)
+            if app.Blender:
+                self.Remove(WINDOW+1) #When Blender menu was not removed, the first Window menu has higher number!
+            else:
+                self.Remove(WINDOW)
+            self.CHILD_MENUS.remove(wxgMenu.NEXT)
+            self.CHILD_MENUS.remove(wxgMenu.PREVIOUS)
         #mdi
         if not app.mdi:
-        	self.Enable(wxgMenu.SHELL,0)
-        	if self.toolBar:
-        		self.toolBar.EnableTool(TOOL_SHELL,0)
+            self.Enable(wxgMenu.SHELL,0)
+            if self.toolBar:
+                self.toolBar.EnableTool(TOOL_SHELL,0)
 
     def menu_new(self, event=None):
         """File > New"""
