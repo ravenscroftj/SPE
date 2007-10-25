@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 
 if sys.platform.startswith('win') and sys.executable.lower().endswith('pythonw.exe'):
