@@ -1937,6 +1937,7 @@ DEFAULT_PATH_SUFFIX_LENGTH = 55
 ELLIPSIS_UNICODE = as_unicode('...')
 ELLIPSIS_BYTES = as_bytes('...')
 
+ERROR_NO_ATTRIBUTE = 'Error: No attribute.'
 
 
 g_server_lock = threading.RLock()
@@ -2124,6 +2125,9 @@ def _print(s, f = sys.stdout, feol = True):
 
 def detect_locale():
     encoding = locale.getdefaultlocale()[1]
+
+    if encoding == None:
+        return 'ascii'
 
     try:
         codecs.lookup(encoding)
@@ -3580,37 +3584,49 @@ def CalcIdentity(r, fFilter):
 
 
 
+def getattr_nothrow(o, a):
+    try:
+        return getattr(o, a)
+
+    except AttributeError:
+        return ERROR_NO_ATTRIBUTE
+
+    except:
+        print_debug_exception()
+        return ERROR_NO_ATTRIBUTE
+
+
+
 def CalcDictKeys(r, fFilter):
     d = CalcFilteredDir(r, fFilter)
     rs = set(d)
 
-    if hasattr(r, '__class__'):
-        c = getattr(r, '__class__')
+    c = getattr_nothrow(r, '__class__')
+    if c != ERROR_NO_ATTRIBUTE:
         d = CalcFilteredDir(c, fFilter)
         cs = set(d)
         s = rs & cs
 
         for e in s:
-            o1 = getattr(r, e)
-            o2 = getattr(c, e)
+            o1 = getattr_nothrow(r, e)
+            o2 = getattr_nothrow(c, e)
 
-            if CalcIdentity(o1, fFilter) is CalcIdentity(o2, fFilter):
+            if o1 == ERROR_NO_ATTRIBUTE or CalcIdentity(o1, fFilter) is CalcIdentity(o2, fFilter):
                 rs.discard(e)
 
-    if hasattr(r, '__bases__'):
-        bl = getattr(r, '__bases__')
-        if type(bl) == tuple:
-            for b in bl:
-                d = CalcFilteredDir(b, fFilter)
-                bs = set(d)
-                s = rs & bs
+    bl = getattr_nothrow(r, '__bases__')
+    if type(bl) == tuple:
+        for b in bl:
+            d = CalcFilteredDir(b, fFilter)
+            bs = set(d)
+            s = rs & bs
 
-                for e in s:
-                    o1 = getattr(r, e)
-                    o2 = getattr(b, e)
+            for e in s:
+                o1 = getattr_nothrow(r, e)
+                o2 = getattr_nothrow(b, e)
 
-                    if CalcIdentity(o1, fFilter) is CalcIdentity(o2, fFilter):
-                        rs.discard(e)
+                if o1 == ERROR_NO_ATTRIBUTE or CalcIdentity(o1, fFilter) is CalcIdentity(o2, fFilter):
+                    rs.discard(e)
       
     l = [a for a in rs]
 
@@ -4286,9 +4302,18 @@ class CEvent(object):
 
 class CEventNull(CEvent):
     """
-    The Null event is fired just to make the event waiter return.
+    Sent to release event listeners (Internal, speeds up shutdown).
     """
     
+    pass
+
+
+
+class CEventClearSourceCache(CEvent):
+    """
+    Sent when the source cache is cleared.
+    """
+
     pass
 
 
@@ -4332,7 +4357,7 @@ class CEventEncoding(CEvent):
 
 class CEventPsycoWarning(CEvent):
     """
-    The psyco module was detected. Rpdb2 is incompatible with this module.
+    The psyco module was detected. rpdb2 is incompatible with this module.
     """
     
     pass
@@ -4341,7 +4366,8 @@ class CEventPsycoWarning(CEvent):
 
 class CEventSyncReceivers(CEvent):
     """
-    A base class for events that sync all receivers before being fired.
+    A base class for events that need to be received by all listeners at
+    the same time. The synchronization mechanism is internal to rpdb2.
     """
 
     def __init__(self, sync_n):
@@ -6501,7 +6527,17 @@ class CDebuggerCore:
             if handler in [signal.SIG_IGN, signal.SIG_DFL]:
                 continue
 
-            signal.signal(value, handler)
+            try:
+                signal.signal(value, handler)
+            except:
+                print_debug('Failed to set signal handler for signal %s(%d)' % (key, value))
+
+
+    def clear_source_cache(self):
+        g_lines_cache.clear()
+        
+        event = CEventClearSourceCache()
+        self.m_event_dispatcher.fire_event(event)
 
 
     def trace_dispatch_init(self, frame, event, arg):   
@@ -6532,7 +6568,7 @@ class CDebuggerCore:
         self.m_threads[ctx.m_thread_id] = ctx
 
         if len(self.m_threads) == 1:
-            g_lines_cache.clear()
+            self.clear_source_cache()
             
             self.m_current_ctx = ctx
             self.notify_first_thread()
@@ -7150,7 +7186,8 @@ class CDebuggerEngine(CDebuggerCore):
             CEventForkMode: {},
             CEventPsycoWarning: {},
             CEventSignalIntercepted: {},
-            CEventSignalException: {}
+            CEventSignalException: {},
+            CEventClearSourceCache: {}
             }
 
         self.m_event_queue = CEventQueue(self.m_event_dispatcher)

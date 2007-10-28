@@ -7,19 +7,19 @@
 
     Copyright (C) 2005-2007 Nir Aides
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or any later
+    This program is free software; you can redistribute it and/or modify it 
+    under the terms of the GNU General Public License as published by the 
+    Free Software Foundation; either version 2 of the License, or any later 
     version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    This program is distributed in the hope that it will be useful, 
+    but WITHOUT ANY WARRANTY; without even the implied warranty of 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
     See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02111-1307 USA
+    You should have received a copy of the GNU General Public License along 
+    with this program; if not, write to the Free Software Foundation, Inc., 
+    51 Franklin Street, Fifth Floor, Boston, MA 02111-1307 USA    
 """
 
 ABOUT_NOTICE = """winpdb.py
@@ -28,14 +28,14 @@ A GUI for rpdb2.py
 
 Copyright (C) 2005-2007 Nir Aides
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2 of the License, or any later
+This program is free software; you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 2 of the License, or any later 
 version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 
 See the GNU General Public License for more details.
 
@@ -43,230 +43,230 @@ Credits:
 Jurjen N.E. Bos - Compatibility with OS X."""
 
 LICENSE_NOTICE = """
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2 of the License, or any later
+This program is free software; you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 2 of the License, or any later 
 version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 See the GNU General Public License for more details.
 
-A copy of the GPL with the precise terms and conditions for
+A copy of the GPL with the precise terms and conditions for 
 copying, distribution and modification follow:
 """
 
 COPY_OF_THE_GPL_LICENSE = """
 TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
-0.
-This License applies to any program or other work which contains a notice
-placed by the copyright holder saying it may be distributed under the terms
-of this General Public License. The "Program", below, refers to any such
-program or work, and a "work based on the Program" means either the Program
-or any derivative work under copyright law: that is to say, a work containing
-the Program or a portion of it, either verbatim or with modifications and/or
-translated into another language. (Hereinafter, translation is included
-without limitation in the term "modification".) Each licensee is addressed
+0. 
+This License applies to any program or other work which contains a notice 
+placed by the copyright holder saying it may be distributed under the terms 
+of this General Public License. The "Program", below, refers to any such 
+program or work, and a "work based on the Program" means either the Program 
+or any derivative work under copyright law: that is to say, a work containing 
+the Program or a portion of it, either verbatim or with modifications and/or 
+translated into another language. (Hereinafter, translation is included 
+without limitation in the term "modification".) Each licensee is addressed 
 as "you".
 
-Activities other than copying, distribution and modification are not covered
-by this License; they are outside its scope. The act of running the Program
-is not restricted, and the output from the Program is covered only if its
-contents constitute a work based on the Program (independent of having been
-made by running the Program). Whether that is true depends on what the
+Activities other than copying, distribution and modification are not covered 
+by this License; they are outside its scope. The act of running the Program 
+is not restricted, and the output from the Program is covered only if its 
+contents constitute a work based on the Program (independent of having been 
+made by running the Program). Whether that is true depends on what the 
 Program does.
 
-1.
-You may copy and distribute verbatim copies of the Program's source code as
-you receive it, in any medium, provided that you conspicuously and
-appropriately publish on each copy an appropriate copyright notice and
-disclaimer of warranty; keep intact all the notices that refer to this
-License and to the absence of any warranty; and give any other recipients of
+1. 
+You may copy and distribute verbatim copies of the Program's source code as 
+you receive it, in any medium, provided that you conspicuously and 
+appropriately publish on each copy an appropriate copyright notice and 
+disclaimer of warranty; keep intact all the notices that refer to this 
+License and to the absence of any warranty; and give any other recipients of 
 the Program a copy of this License along with the Program.
 
-You may charge a fee for the physical act of transferring a copy, and you
+You may charge a fee for the physical act of transferring a copy, and you 
 may at your option offer warranty protection in exchange for a fee.
 
-2.
-You may modify your copy or copies of the Program or any portion of it, thus
-forming a work based on the Program, and copy and distribute such modifications
-or work under the terms of Section 1 above, provided that you also meet all
+2. 
+You may modify your copy or copies of the Program or any portion of it, thus 
+forming a work based on the Program, and copy and distribute such modifications 
+or work under the terms of Section 1 above, provided that you also meet all 
 of these conditions:
 
-    a) You must cause the modified files to carry prominent notices stating
+    a) You must cause the modified files to carry prominent notices stating 
     that you changed the files and the date of any change.
 
-    b) You must cause any work that you distribute or publish, that in whole
-    or in part contains or is derived from the Program or any part thereof,
-    to be licensed as a whole at no charge to all third parties under the
+    b) You must cause any work that you distribute or publish, that in whole 
+    or in part contains or is derived from the Program or any part thereof, 
+    to be licensed as a whole at no charge to all third parties under the 
     terms of this License.
 
-    c) If the modified program normally reads commands interactively when
-    run, you must cause it, when started running for such interactive use in
-    the most ordinary way, to print or display an announcement including an
-    appropriate copyright notice and a notice that there is no warranty (or
-    else, saying that you provide a warranty) and that users may redistribute
-    the program under these conditions, and telling the user how to view a
-    copy of this License. (Exception: if the Program itself is interactive
-    but does not normally print such an announcement, your work based on the
+    c) If the modified program normally reads commands interactively when 
+    run, you must cause it, when started running for such interactive use in 
+    the most ordinary way, to print or display an announcement including an 
+    appropriate copyright notice and a notice that there is no warranty (or 
+    else, saying that you provide a warranty) and that users may redistribute 
+    the program under these conditions, and telling the user how to view a 
+    copy of this License. (Exception: if the Program itself is interactive 
+    but does not normally print such an announcement, your work based on the 
     Program is not required to print an announcement.)
 
-These requirements apply to the modified work as a whole. If identifiable
-sections of that work are not derived from the Program, and can be reasonably
-considered independent and separate works in themselves, then this License,
-and its terms, do not apply to those sections when you distribute them as
-separate works. But when you distribute the same sections as part of a whole
-which is a work based on the Program, the distribution of the whole must be
-on the terms of this License, whose permissions for other licensees extend to
+These requirements apply to the modified work as a whole. If identifiable 
+sections of that work are not derived from the Program, and can be reasonably 
+considered independent and separate works in themselves, then this License, 
+and its terms, do not apply to those sections when you distribute them as 
+separate works. But when you distribute the same sections as part of a whole 
+which is a work based on the Program, the distribution of the whole must be 
+on the terms of this License, whose permissions for other licensees extend to 
 the entire whole, and thus to each and every part regardless of who wrote it.
 
-Thus, it is not the intent of this section to claim rights or contest your
-rights to work written entirely by you; rather, the intent is to exercise the
-right to control the distribution of derivative or collective works based on
+Thus, it is not the intent of this section to claim rights or contest your 
+rights to work written entirely by you; rather, the intent is to exercise the 
+right to control the distribution of derivative or collective works based on 
 the Program.
 
-In addition, mere aggregation of another work not based on the Program with
-the Program (or with a work based on the Program) on a volume of a storage or
-distribution medium does not bring the other work under the scope of this
+In addition, mere aggregation of another work not based on the Program with 
+the Program (or with a work based on the Program) on a volume of a storage or 
+distribution medium does not bring the other work under the scope of this 
 License.
 
-3. You may copy and distribute the Program (or a work based on it, under
-Section 2) in object code or executable form under the terms of Sections 1
+3. You may copy and distribute the Program (or a work based on it, under 
+Section 2) in object code or executable form under the terms of Sections 1 
 and 2 above provided that you also do one of the following:
 
-    a) Accompany it with the complete corresponding machine-readable source
-    code, which must be distributed under the terms of Sections 1 and 2 above
+    a) Accompany it with the complete corresponding machine-readable source 
+    code, which must be distributed under the terms of Sections 1 and 2 above 
     on a medium customarily used for software interchange; or,
 
-    b) Accompany it with a written offer, valid for at least three years, to
-    give any third party, for a charge no more than your cost of physically
-    performing source distribution, a complete machine-readable copy of the
-    corresponding source code, to be distributed under the terms of Sections
+    b) Accompany it with a written offer, valid for at least three years, to 
+    give any third party, for a charge no more than your cost of physically 
+    performing source distribution, a complete machine-readable copy of the 
+    corresponding source code, to be distributed under the terms of Sections 
     1 and 2 above on a medium customarily used for software interchange; or,
 
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed only
-    for noncommercial distribution and only if you received the program in
-    object code or executable form with such an offer, in accord with
+    c) Accompany it with the information you received as to the offer to 
+    distribute corresponding source code. (This alternative is allowed only 
+    for noncommercial distribution and only if you received the program in 
+    object code or executable form with such an offer, in accord with 
     Subsection b above.)
 
-The source code for a work means the preferred form of the work for making
-modifications to it. For an executable work, complete source code means all
-the source code for all modules it contains, plus any associated interface
-definition files, plus the scripts used to control compilation and
-installation of the executable. However, as a special exception, the source
-code distributed need not include anything that is normally distributed (in
-either source or binary form) with the major components (compiler, kernel,
-and so on) of the operating system on which the executable runs, unless that
+The source code for a work means the preferred form of the work for making 
+modifications to it. For an executable work, complete source code means all 
+the source code for all modules it contains, plus any associated interface 
+definition files, plus the scripts used to control compilation and 
+installation of the executable. However, as a special exception, the source 
+code distributed need not include anything that is normally distributed (in 
+either source or binary form) with the major components (compiler, kernel, 
+and so on) of the operating system on which the executable runs, unless that 
 component itself accompanies the executable.
 
-If distribution of executable or object code is made by offering access to
-copy from a designated place, then offering equivalent access to copy the
-source code from the same place counts as distribution of the source code,
-even though third parties are not compelled to copy the source along with
+If distribution of executable or object code is made by offering access to 
+copy from a designated place, then offering equivalent access to copy the 
+source code from the same place counts as distribution of the source code, 
+even though third parties are not compelled to copy the source along with 
 the object code.
 
-4. You may not copy, modify, sublicense, or distribute the Program except as
-expressly provided under this License. Any attempt otherwise to copy, modify,
-sublicense or distribute the Program is void, and will automatically
-terminate your rights under this License. However, parties who have received
-copies, or rights, from you under this License will not have their licenses
+4. You may not copy, modify, sublicense, or distribute the Program except as 
+expressly provided under this License. Any attempt otherwise to copy, modify, 
+sublicense or distribute the Program is void, and will automatically 
+terminate your rights under this License. However, parties who have received 
+copies, or rights, from you under this License will not have their licenses 
 terminated so long as such parties remain in full compliance.
 
-5. You are not required to accept this License, since you have not signed it.
-However, nothing else grants you permission to modify or distribute the
-Program or its derivative works. These actions are prohibited by law if you
-do not accept this License. Therefore, by modifying or distributing the
-Program (or any work based on the Program), you indicate your acceptance of
-this License to do so, and all its terms and conditions for copying,
+5. You are not required to accept this License, since you have not signed it. 
+However, nothing else grants you permission to modify or distribute the 
+Program or its derivative works. These actions are prohibited by law if you 
+do not accept this License. Therefore, by modifying or distributing the 
+Program (or any work based on the Program), you indicate your acceptance of 
+this License to do so, and all its terms and conditions for copying, 
 distributing or modifying the Program or works based on it.
 
-6. Each time you redistribute the Program (or any work based on the Program),
-the recipient automatically receives a license from the original licensor to
-copy, distribute or modify the Program subject to these terms and conditions.
-You may not impose any further restrictions on the recipients' exercise of
-the rights granted herein. You are not responsible for enforcing compliance
+6. Each time you redistribute the Program (or any work based on the Program), 
+the recipient automatically receives a license from the original licensor to 
+copy, distribute or modify the Program subject to these terms and conditions. 
+You may not impose any further restrictions on the recipients' exercise of 
+the rights granted herein. You are not responsible for enforcing compliance 
 by third parties to this License.
 
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or otherwise)
-that contradict the conditions of this License, they do not excuse you from
-the conditions of this License. If you cannot distribute so as to satisfy
-simultaneously your obligations under this License and any other pertinent
-obligations, then as a consequence you may not distribute the Program at all.
-For example, if a patent license would not permit royalty-free redistribution
-of the Program by all those who receive copies directly or indirectly through
-you, then the only way you could satisfy both it and this License would be to
+7. If, as a consequence of a court judgment or allegation of patent 
+infringement or for any other reason (not limited to patent issues), 
+conditions are imposed on you (whether by court order, agreement or otherwise) 
+that contradict the conditions of this License, they do not excuse you from 
+the conditions of this License. If you cannot distribute so as to satisfy 
+simultaneously your obligations under this License and any other pertinent 
+obligations, then as a consequence you may not distribute the Program at all. 
+For example, if a patent license would not permit royalty-free redistribution 
+of the Program by all those who receive copies directly or indirectly through 
+you, then the only way you could satisfy both it and this License would be to 
 refrain entirely from distribution of the Program.
 
-If any portion of this section is held invalid or unenforceable under any
-particular circumstance, the balance of the section is intended to apply and
+If any portion of this section is held invalid or unenforceable under any 
+particular circumstance, the balance of the section is intended to apply and 
 the section as a whole is intended to apply in other circumstances.
 
-It is not the purpose of this section to induce you to infringe any patents
-or other property right claims or to contest validity of any such claims;
-this section has the sole purpose of protecting the integrity of the free
-software distribution system, which is implemented by public license
-practices. Many people have made generous contributions to the wide range of
-software distributed through that system in reliance on consistent
-application of that system; it is up to the author/donor to decide if he or
-she is willing to distribute software through any other system and a licensee
+It is not the purpose of this section to induce you to infringe any patents 
+or other property right claims or to contest validity of any such claims; 
+this section has the sole purpose of protecting the integrity of the free 
+software distribution system, which is implemented by public license 
+practices. Many people have made generous contributions to the wide range of 
+software distributed through that system in reliance on consistent 
+application of that system; it is up to the author/donor to decide if he or 
+she is willing to distribute software through any other system and a licensee 
 cannot impose that choice.
 
-This section is intended to make thoroughly clear what is believed to be a
+This section is intended to make thoroughly clear what is believed to be a 
 consequence of the rest of this License.
 
-8. If the distribution and/or use of the Program is restricted in certain
-countries either by patents or by copyrighted interfaces, the original
-copyright holder who places the Program under this License may add an
-explicit geographical distribution limitation excluding those countries,
-so that distribution is permitted only in or among countries not thus
-excluded. In such case, this License incorporates the limitation as if
+8. If the distribution and/or use of the Program is restricted in certain 
+countries either by patents or by copyrighted interfaces, the original 
+copyright holder who places the Program under this License may add an 
+explicit geographical distribution limitation excluding those countries, 
+so that distribution is permitted only in or among countries not thus 
+excluded. In such case, this License incorporates the limitation as if 
 written in the body of this License.
 
-9. The Free Software Foundation may publish revised and/or new versions of
-the General Public License from time to time. Such new versions will be
-similar in spirit to the present version, but may differ in detail to
+9. The Free Software Foundation may publish revised and/or new versions of 
+the General Public License from time to time. Such new versions will be 
+similar in spirit to the present version, but may differ in detail to 
 address new problems or concerns.
 
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and
-"any later version", you have the option of following the terms and
-conditions either of that version or of any later version published by the
-Free Software Foundation. If the Program does not specify a version number
-of this License, you may choose any version ever published by the
+Each version is given a distinguishing version number. If the Program 
+specifies a version number of this License which applies to it and 
+"any later version", you have the option of following the terms and 
+conditions either of that version or of any later version published by the 
+Free Software Foundation. If the Program does not specify a version number 
+of this License, you may choose any version ever published by the 
 Free Software Foundation.
 
-10. If you wish to incorporate parts of the Program into other free programs
-whose distribution conditions are different, write to the author to ask for
-permission. For software which is copyrighted by the Free Software
-Foundation, write to the Free Software Foundation; we sometimes make
-exceptions for this. Our decision will be guided by the two goals of
-preserving the free status of all derivatives of our free software and of
+10. If you wish to incorporate parts of the Program into other free programs 
+whose distribution conditions are different, write to the author to ask for 
+permission. For software which is copyrighted by the Free Software 
+Foundation, write to the Free Software Foundation; we sometimes make 
+exceptions for this. Our decision will be guided by the two goals of 
+preserving the free status of all derivatives of our free software and of 
 promoting the sharing and reuse of software generally.
 
 NO WARRANTY
 
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR
-THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE
-STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE
-PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND
-PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE,
+11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR 
+THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE 
+STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE 
+PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, 
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND 
+PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, 
 YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
-INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
-OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO
-LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR
-THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
-PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING 
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR 
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, 
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING 
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO 
+LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR 
+THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER 
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE 
 POSSIBILITY OF SUCH DAMAGES.
 
 END OF TERMS AND CONDITIONS
@@ -288,7 +288,7 @@ You can find more information on wxPython at http://www.wxpython.org/
 The Unicode version of wxPython is recommended for Winpdb.
 To use the debugger without a GUI, run rpdb2."""
 
-STR_X_ERROR_MSG = """It was not possible to start Winpdb.
+STR_X_ERROR_MSG = """It was not possible to start Winpdb. 
 A possible reason is that the X server (Windowing system) is not started.
 Start the X server or try to use rpdb2 instead of winpdb."""
 
@@ -300,11 +300,11 @@ import rpdb2
 
 if 'wx' not in sys.modules and 'wxPython' not in sys.modules:
     try:
-        import wxversion
+        import wxversion   
         wxversion.ensureMinimal(WXVER)
     except ImportError:
         rpdb2._print(STR_WXPYTHON_ERROR_MSG, sys.__stderr__)
-
+        
         try:
             import Tkinter
             import tkMessageBox
@@ -322,7 +322,7 @@ if 'wx' not in sys.modules and 'wxPython' not in sys.modules:
 import wx
 
 assert wx.VERSION_STRING >= WXVER
-
+        
 import wx.lib.wxpTag
 import wx.gizmos
 import wx.html
@@ -380,7 +380,7 @@ WINPDB_WILDCARD = "Python source (*.py;*.pyw)|*.py;*.pyw|All files (*)|*"
 PYTHON_WARNING_TITLE = "Python Interpreter Warning"
 PYTHON_WARNING_MSG = """Winpdb was started with the wrong Python interpreter version.
 
-Winpdb path is:
+Winpdb path is: 
 %s
 
 Python interpreter path is:
@@ -395,11 +395,11 @@ MSG_ERROR_FILE_NOT_PYTHON = "'%s' does not seem to be a Python source file. Only
 
 STR_FILE_LOAD_ERROR = "Failed to load source file '%s' from debuggee."
 STR_FILE_LOAD_ERROR2 = """Failed to load source file '%s' from debuggee.
-You may continue to debug, but you will not see
+You may continue to debug, but you will not see 
 source lines from this file."""
 STR_BLENDER_SOURCE_WARNING = "You attached to a Blender Python script. To be able to see the script's source you need to load it into the Blender text window and launch the script from there."
 STR_EMBEDDED_WARNING = "You attached to an embedded debugger. Winpdb may become unresponsive during periods in which the Python interpreter is inactive."
-STR_EXIT_WARNING = """The debugger is attached to a script. Would you like to stop the script?
+STR_EXIT_WARNING = """The debugger is attached to a script. Would you like to stop the script? 
 If you click 'No' the debugger will attempt to detach before exiting."""
 STR_WXPYTHON_ANSI_WARNING_TITLE = 'wxPython ANSI Warning'
 STR_WXPYTHON_ANSI_WARNING_MSG = """The version of wxPython that was found does not support Unicode. wxPython is the graphical user interface toolkit used by Winpdb. You may experience some functionality limitations when debugging Unicode programs with this version of wxPython. If you need to debug Unicode programs it is recommended that you install the Unicode version of wxPython. You can find more information on wxPython at http://www.wxpython.org/"""
@@ -416,20 +416,20 @@ STATIC_EXPR = """The new expression will be evaluated at the debuggee
 and its value will be set to the item."""
 CHECKBOX_ENCODING = "Output non ASCII characters as an escape sequence."
 STATIC_ENCODING = """The encoding is used as source encoding for the name-space viewer and for the exec and eval console commands. Valid values are either 'auto' or an encoding known by the codecs module. If 'auto' is specified, the encoding used will be the source encoding of the active scope, which is utf-8 by default."""
-STATIC_ENCODING_SPLIT = """The encoding is used as source encoding for
-the name-space viewer and for the exec and eval
-console commands. Valid values are either 'auto'
-or an encoding known by the codecs module.
-If 'auto' is specified, the encoding used will
-be the source encoding of the active scope,
+STATIC_ENCODING_SPLIT = """The encoding is used as source encoding for 
+the name-space viewer and for the exec and eval 
+console commands. Valid values are either 'auto' 
+or an encoding known by the codecs module. 
+If 'auto' is specified, the encoding used will 
+be the source encoding of the active scope, 
 which is utf-8 by default."""
 STATIC_PWD = """The password is used to secure communication between the debugger console and the debuggee. Debuggees with un-matching passwords will not appear in the attach query list."""
-STATIC_PWD_SPLIT = """The password is used to secure communication
-between the debugger console and the debuggee.
-Debuggees with un-matching passwords will not
+STATIC_PWD_SPLIT = """The password is used to secure communication 
+between the debugger console and the debuggee. 
+Debuggees with un-matching passwords will not 
 appear in the attach query list."""
 STATIC_LAUNCH_ENV = """To set environment variables for the new script use the 'env' console command."""
-STATIC_LAUNCH_ENV_SPLIT = """To set environment variables for the new script use the 'env'
+STATIC_LAUNCH_ENV_SPLIT = """To set environment variables for the new script use the 'env' 
 console command."""
 STATIC_OPEN = """The source file entered will be fetched from the debugee."""
 LABEL_EXPR = "New Expression:"
@@ -518,7 +518,7 @@ ML_SAVE = "&Save"
 ML_MORE = "&More..."
 
 ML_CONTROL = "&Control"
-ML_ANALYZE = "&Toggle Analyze" + AC_CHAR + AC_ANALYZE
+ML_ANALYZE = "&Toggle Analyze" + AC_CHAR + AC_ANALYZE 
 ML_GO = "&Go" + AC_CHAR + AC_GO
 ML_BREAK = "&Break" + AC_CHAR + AC_BREAK
 ML_STEP = "&Step Into" + AC_CHAR + AC_STEP
@@ -644,8 +644,8 @@ STATE_MAP = {
     rpdb2.STATE_BROKEN: (STATE_BROKEN_MENU, STATE_BROKEN_TOOLBAR),
     rpdb2.STATE_ANALYZE: (STATE_ANALYZE_MENU, STATE_ANALYZE_TOOLBAR),
     rpdb2.STATE_RUNNING: (STATE_RUNNING_MENU, STATE_RUNNING_TOOLBAR),
-    rpdb2.STATE_DETACHED: (STATE_DETACHED_MENU, STATE_DETACHED_TOOLBAR),
-    rpdb2.STATE_DETACHING: (STATE_DETACHING_MENU, STATE_DETACHING_TOOLBAR)
+    rpdb2.STATE_DETACHED: (STATE_DETACHED_MENU, STATE_DETACHED_TOOLBAR),    
+    rpdb2.STATE_DETACHING: (STATE_DETACHING_MENU, STATE_DETACHING_TOOLBAR)    
 }
 
 LICENSE_TITLE = 'License.'
@@ -675,6 +675,8 @@ STR_NAMESPACE_DEADLOCK = 'Data Retrieval Timeout'
 STR_NAMESPACE_LOADING = 'Loading...'
 
 BAD_FILE_WARNING_TIMEOUT_SEC = 10.0
+DIRTY_CACHE = 1
+
 POSITION_TIMEOUT = 2.0
 
 
@@ -695,7 +697,7 @@ def open_new(url):
             os.popen(cmd)
             return
 
-    webbrowser.open_new(url)
+    webbrowser.open_new(url) 
 
 
 
@@ -707,7 +709,7 @@ def image_from_base64(str_b64):
 
     return image
 
-
+    
 
 class CSettings:
     def __init__(self, default_settings):
@@ -721,10 +723,10 @@ class CSettings:
             return path
 
         #
-        # gettempdir() is used since it works with unicode user names on
+        # gettempdir() is used since it works with unicode user names on 
         # Windows.
         #
-
+        
         tmpdir = tempfile.gettempdir()
         path = os.path.join(tmpdir, WINPDB_SETTINGS_FILENAME)
         return path
@@ -734,49 +736,49 @@ class CSettings:
         try:
             path = self.calc_path()
             f = open(path, 'r')
-
+            
         except IOError:
-            return
-
+            return 
+            
         try:
             d = cPickle.load(f)
             self.m_dict.update(d)
-
+            
         finally:
             f.close()
 
-
+            
     def save_settings(self):
         try:
             path = self.calc_path()
             f = open(path, 'w')
-
+            
         except IOError:
-            return
-
+            return 
+            
         try:
             cPickle.dump(self.m_dict, f)
-
+            
         finally:
             f.close()
 
-
+        
     def __getitem__(self, key):
         return self.m_dict[key]
 
 
     def __setitem__(self, key, value):
         self.m_dict[key] = value
+        
 
-
-
+    
 class CMenuBar:
     def __init__(self):
         self.m_menubar = None
-
+        
         self.m_encapsulating_menu_items = {}
         self.m_cascades = {}
-
+        
     def init_menubar(self, resource):
         if 'wxMac' in wx.PlatformInfo:
              wx.MenuBar.SetAutoWindowMenu(False)
@@ -786,7 +788,7 @@ class CMenuBar:
         self.SetMenuBar(self.m_menubar)
 
         self.m_cascades = {ML_ROOT: self.m_menubar}
-
+        
         k = resource.keys()
         k.sort()
 
@@ -798,7 +800,7 @@ class CMenuBar:
                     parent_label = sc[i - 1]
                     parent = self.m_cascades[parent_label]
                     child = wx.Menu()
-
+                    
                     if parent_label == ML_ROOT:
                         parent.Append(child, e)
                     else:
@@ -813,18 +815,18 @@ class CMenuBar:
 
             if item_label == ML_EMPTY:
                 continue
-
+                
             if item_label == ML_SEPARATOR:
                 parent.AppendSeparator()
                 continue
 
             command = resource[c][COMMAND]
             tip = resource[c].get(TOOLTIP, wx.EmptyString)
-
+            
             item = parent.Append(-1, item_label, tip)
             self.Bind(wx.EVT_MENU, command, item)
 
-            self.m_encapsulating_menu_items[item_label] = parent
+            self.m_encapsulating_menu_items[item_label] = parent 
 
     def set_menu_items_state(self, state_label_dict):
         for state, label_list in state_label_dict.items():
@@ -841,14 +843,14 @@ class CMenuBar:
         item = parent.Append(-1, item_label)
         self.Bind(wx.EVT_MENU, command, item)
 
-    def clear_menu_items(self, menu_label):
+    def clear_menu_items(self, menu_label):    
         parent = self.m_cascades[menu_label]
 
         while parent.GetMenuItemCount() > 0:
             i = parent.FindItemByPosition(0)
             parent.DeleteItem(i)
 
-
+        
 
 class CToolBar:
     def __init__(self):
@@ -859,7 +861,7 @@ class CToolBar:
     def init_toolbar(self, resource):
         self.m_toolbar = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT)
         self.m_toolbar.SetToolBitmapSize(TOOLBAR_BITMAP_SIZE)
-
+        
         for e in resource:
             item_label = e[LABEL]
 
@@ -893,7 +895,7 @@ class CToolBar:
                 self.m_toolbar.AddSimpleTool(id, bitmap, item_label)
                 self.m_items[item_label] = {ID: id}
                 self.Bind(wx.EVT_TOOL, command, id = id)
-
+            
         self.m_toolbar.Realize()
 
 
@@ -913,7 +915,7 @@ class CToolBar:
 
                 if (wx.Platform == '__WXGTK__') and (state == ENABLED):
                     self.__gtk_enable_tool(id)
-                else:
+                else:    
                     self.m_toolbar.EnableTool(id, [True, False][state == DISABLED])
 
 
@@ -928,7 +930,7 @@ class CToolBar:
         self.m_toolbar.EnableTool(id, True)
 
         if r.Inside(p):
-            self.m_toolbar.WarpPointer(p.x, p.y)
+            self.m_toolbar.WarpPointer(p.x, p.y) 
 
 
     def set_toggle(self, label, fToggle):
@@ -938,13 +940,13 @@ class CToolBar:
 
         tool = self.m_toolbar.FindById(id)
         tool.SetNormalBitmap(bitmap)
-
+        
         self.m_toolbar.ToggleTool(id, fToggle)
-
+        
         if wx.Platform == '__WXMSW__':
             self.m_toolbar.Realize()
-        else:
-            self.m_toolbar.ToggleTool(id, not fToggle);
+        else:    
+            self.m_toolbar.ToggleTool(id, not fToggle);   
             self.m_toolbar.ToggleTool(id, fToggle);
 
 
@@ -956,10 +958,10 @@ class CToolBar:
 
         label = tool.GetShortHelp()
         f = event.IsChecked()
-
+        
         self.set_toggle(label, f)
 
-        event.Skip()
+        event.Skip()  
 
 
 
@@ -975,16 +977,16 @@ class CStatusBar:
 
         self.sizeChanged = False
 
-
+        
     def init_statusbar(self, resource):
         self.m_widths = [e[WIDTH] for e in resource]
         self.m_formats = [e.get(FORMAT, "") for e in resource]
         self.m_keys = [e.get(KEYS, []) for e in resource]
-
+        
         self.m_statusbar = self.CreateStatusBar(1, wx.ST_SIZEGRIP)
         self.m_statusbar.SetFieldsCount(len(self.m_widths))
         self.m_statusbar.SetStatusWidths(self.m_widths)
-
+        
         self.m_statusbar.Bind(wx.EVT_SIZE, self.OnSize)
         self.m_statusbar.Bind(wx.EVT_IDLE, self.OnIdle)
 
@@ -1006,25 +1008,25 @@ class CStatusBar:
         if not i in self.m_bitmaps:
             if data is None:
                 return
-
+                
             image = image_from_base64(data)
             bitmap = wx.BitmapFromImage(image)
             p = wx.Panel(self.m_statusbar)
             sb = wx.StaticBitmap(p, -1, bitmap)
 
             self.m_bitmaps[i] = (p, sb, tooltip)
-
+            
         else:
             if data is None:
                 self.m_bitmaps[i][0].Hide()
             else:
                 image = image_from_base64(data)
                 bitmap = wx.BitmapFromImage(image)
-
+                
                 self.m_bitmaps[i][1].SetBitmap(bitmap)
                 self.m_bitmaps[i][0].Show()
 
-        self.reposition()
+        self.reposition()    
 
 
     def reposition(self):
@@ -1036,7 +1038,7 @@ class CStatusBar:
             sb.SetToolTipString(tooltip)
             p.SetToolTipString(tooltip)
             p.SetClientSize(sb.GetSize())
-
+            
         self.sizeChanged = False
 
 
@@ -1048,7 +1050,7 @@ class CStatusBar:
     def OnIdle(self, event):
         if self.sizeChanged:
             self.reposition()
-
+            
 
 
 class CJobs:
@@ -1057,12 +1059,12 @@ class CJobs:
         self.__m_n_expected_jobs = 0
         self.__m_f_shutdown = False
 
-
+        
     def init_jobs(self):
         pass
 
 
-    def shutdown_jobs(self):
+    def shutdown_jobs(self):    
         self.__m_f_shutdown = True
 
         while 1:
@@ -1072,34 +1074,34 @@ class CJobs:
                 if self.__m_n_expected_jobs == 0:
                     return
 
-            finally:
+            finally:        
                 self.__m_jobs_lock.release()
 
-            time.sleep(0.1)
+            time.sleep(0.1)    
 
-
+        
     def job_post(self, job, args, kwargs = {}, callback = None):
         threading.Thread(target = self.job_do, args = (job, args, kwargs, callback)).start()
 
-
+        
     def job_do(self, job, args, kwargs, callback):
         try:
             self.__m_jobs_lock.acquire()
 
             if self.__m_f_shutdown:
                 return
-
+            
             if self.__m_n_expected_jobs == 0:
                 wx.CallAfter(self.set_cursor, wx.CURSOR_WAIT)
 
             self.__m_n_expected_jobs += 1
 
-        finally:
+        finally:        
             self.__m_jobs_lock.release()
 
         r = None
         exc_info = (None, None, None)
-
+        
         try:
             r = job(*args, **kwargs)
         except:
@@ -1110,25 +1112,25 @@ class CJobs:
 
         if callback is not None:
             wx.CallAfter(callback, r, exc_info)
-
+            
         try:
             self.__m_jobs_lock.acquire()
-
+            
             self.__m_n_expected_jobs -= 1
 
             if self.__m_n_expected_jobs == 0:
                 wx.CallAfter(self.set_cursor, wx.CURSOR_ARROW)
 
-        finally:
+        finally:        
             self.__m_jobs_lock.release()
 
 
     def set_cursor(self, id):
         cursor = wx.StockCursor(id)
-        self.SetCursor(cursor)
+        self.SetCursor(cursor)        
+        
 
-
-
+    
 class CMainWindow(CMenuBar, CToolBar, CStatusBar, CJobs):
     def __init__(self):
         CMenuBar.__init__(self)
@@ -1158,10 +1160,10 @@ class CAsyncSessionManagerCall:
             finally:
                 if self.m_ftrace:
                     rpdb2.print_debug('Returned from %s' % repr(self.m_f))
-
+            
         try:
             self.m_f(*args, **kwargs)
-
+            
         except rpdb2.FirewallBlock:
             self.m_session_manager.report_exception(*sys.exc_info())
 
@@ -1177,11 +1179,11 @@ class CAsyncSessionManagerCall:
             self.m_session_manager.report_exception(*sys.exc_info())
             rpdb2.print_debug_exception(True)
 
-
+    
     def __call__(self, *args, **kwargs):
         if self.m_job_manager == None:
             return
-
+            
         self.m_job_manager.job_post(self.__wrapper, args, kwargs, self.m_callback)
 
 
@@ -1193,7 +1195,7 @@ class CAsyncSessionManager:
         self.m_ftrace = ftrace
 
         self.m_weakref_job_manager = None
-
+        
         if job_manager != None:
             self.m_weakref_job_manager = weakref.ref(job_manager)
 
@@ -1203,7 +1205,7 @@ class CAsyncSessionManager:
             job_manager = self.m_weakref_job_manager()
         else:
             job_manager = None
-
+        
         asm = CAsyncSessionManager(self.m_session_manager, job_manager, callback, ftrace)
         return asm
 
@@ -1217,11 +1219,11 @@ class CAsyncSessionManager:
             job_manager = self.m_weakref_job_manager()
         else:
             job_manager = None
-
+        
         return CAsyncSessionManagerCall(self.m_session_manager, job_manager, f, self.m_callback, self.m_ftrace)
 
-
-
+    
+        
 class CWinpdbWindow(wx.Frame, CMainWindow):
     def __init__(self, session_manager, settings):
         CMainWindow.__init__(self)
@@ -1235,7 +1237,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         #
         if hasattr(self, 'SetLayoutDirection'):
             self.SetLayoutDirection(1)
-
+        
         image = image_from_base64(BASE64_ICON_16)
         bitmap = wx.BitmapFromImage(image)
         icon16 = wx.EmptyIcon()
@@ -1259,62 +1261,62 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.SetIcons(ibundle)
 
         self.Maximize(settings[WINPDB_MAXIMIZE])
-
+        
         self.m_session_manager = session_manager
         self.m_async_sm = CAsyncSessionManager(session_manager, self)
-
+        
         self.m_source_manager = CSourceManager(self, session_manager)
 
         self.m_settings = settings
 
         self.m_stack = None
-
+        
         self.m_state = rpdb2.STATE_DETACHED
         self.m_fembedded_warning = True
-
+        
         self.SetMinSize(WINPDB_SIZE_MIN)
         self.SetSize(settings[WINPDB_SIZE])
         self.Centre(wx.BOTH)
 
         self.init_jobs()
-
-        menu_resource = {
-            "/0/" + ML_FILE +   "/0/" + ML_PWD: {COMMAND: self.do_password, TOOLTIP: PWD_TIP},
-            "/0/" + ML_FILE +   "/1/" + ML_LAUNCH: {COMMAND: self.do_launch, TOOLTIP: LAUNCH_TIP},
-            "/0/" + ML_FILE +   "/2/" + ML_ATTACH: {COMMAND: self.do_attach, TOOLTIP: ATTACH_TIP},
-            "/0/" + ML_FILE +   "/3/" + ML_OPEN: {COMMAND: self.do_open, TOOLTIP: OPEN_TIP},
-            "/0/" + ML_FILE +   "/4/" + ML_DETACH: {COMMAND: self.do_detach, TOOLTIP: DETACH_TIP},
-            "/0/" + ML_FILE +   "/5/" + ML_STOP: {COMMAND: self.do_stop, TOOLTIP: STOP_TIP},
-            "/0/" + ML_FILE +   "/6/" + ML_RESTART: {COMMAND: self.do_restart, TOOLTIP: RESTART_TIP},
-            "/0/" + ML_FILE +   "/7/" + ML_SEPARATOR: None,
-            "/0/" + ML_FILE +   "/8/" + ML_EXIT: {COMMAND: self.do_exit},
-            "/1/" + ML_BREAKPOINTS + "/0/" + ML_TOGGLE: {COMMAND: self.toggle_breakpoint, TOOLTIP: TOGGLE_TIP},
-            "/1/" + ML_BREAKPOINTS + "/1/" + ML_DISABLE: {COMMAND: self.do_disable, TOOLTIP: DISABLE_TIP},
-            "/1/" + ML_BREAKPOINTS + "/2/" + ML_ENABLE: {COMMAND: self.do_enable, TOOLTIP: ENABLE_TIP},
-            "/1/" + ML_BREAKPOINTS + "/3/" + ML_CLEAR: {COMMAND: self.do_clear, TOOLTIP: CLEAR_TIP},
-            "/1/" + ML_BREAKPOINTS + "/4/" + ML_LOAD: {COMMAND: self.do_load, TOOLTIP: LOAD_TIP},
-            "/1/" + ML_BREAKPOINTS + "/5/" + ML_SAVE: {COMMAND: self.do_save, TOOLTIP: SAVE_TIP},
-            "/1/" + ML_BREAKPOINTS + "/6/" + ML_MORE: {COMMAND: self.do_more_bp, TOOLTIP: MORE_TIP},
-            "/2/" + ML_CONTROL + "/0/" + ML_ANALYZE: {COMMAND: self.do_analyze_menu, TOOLTIP: ANALYZE_TIP},
-            "/2/" + ML_CONTROL + "/1/" + ML_BREAK: {COMMAND: self.do_break, TOOLTIP: BREAK_TIP},
-            "/2/" + ML_CONTROL + "/2/" + ML_GO: {COMMAND: self.do_go, TOOLTIP: GO_TIP},
-            "/2/" + ML_CONTROL + "/3/" + ML_NEXT: {COMMAND: self.do_next, TOOLTIP: NEXT_TIP},
-            "/2/" + ML_CONTROL + "/4/" + ML_STEP: {COMMAND: self.do_step, TOOLTIP: STEP_TIP},
-            "/2/" + ML_CONTROL + "/5/" + ML_GOTO: {COMMAND: self.do_goto, TOOLTIP: GOTO_TIP},
-            "/2/" + ML_CONTROL + "/6/" + ML_RETURN: {COMMAND: self.do_return, TOOLTIP: RETURN_TIP},
-            "/2/" + ML_CONTROL + "/7/" + ML_JUMP: {COMMAND: self.do_jump, TOOLTIP: JUMP_TIP},
+        
+        menu_resource = { 
+            "/0/" + ML_FILE +   "/0/" + ML_PWD: {COMMAND: self.do_password, TOOLTIP: PWD_TIP}, 
+            "/0/" + ML_FILE +   "/1/" + ML_LAUNCH: {COMMAND: self.do_launch, TOOLTIP: LAUNCH_TIP}, 
+            "/0/" + ML_FILE +   "/2/" + ML_ATTACH: {COMMAND: self.do_attach, TOOLTIP: ATTACH_TIP}, 
+            "/0/" + ML_FILE +   "/3/" + ML_OPEN: {COMMAND: self.do_open, TOOLTIP: OPEN_TIP}, 
+            "/0/" + ML_FILE +   "/4/" + ML_DETACH: {COMMAND: self.do_detach, TOOLTIP: DETACH_TIP}, 
+            "/0/" + ML_FILE +   "/5/" + ML_STOP: {COMMAND: self.do_stop, TOOLTIP: STOP_TIP}, 
+            "/0/" + ML_FILE +   "/6/" + ML_RESTART: {COMMAND: self.do_restart, TOOLTIP: RESTART_TIP}, 
+            "/0/" + ML_FILE +   "/7/" + ML_SEPARATOR: None, 
+            "/0/" + ML_FILE +   "/8/" + ML_EXIT: {COMMAND: self.do_exit}, 
+            "/1/" + ML_BREAKPOINTS + "/0/" + ML_TOGGLE: {COMMAND: self.toggle_breakpoint, TOOLTIP: TOGGLE_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/1/" + ML_DISABLE: {COMMAND: self.do_disable, TOOLTIP: DISABLE_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/2/" + ML_ENABLE: {COMMAND: self.do_enable, TOOLTIP: ENABLE_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/3/" + ML_CLEAR: {COMMAND: self.do_clear, TOOLTIP: CLEAR_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/4/" + ML_LOAD: {COMMAND: self.do_load, TOOLTIP: LOAD_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/5/" + ML_SAVE: {COMMAND: self.do_save, TOOLTIP: SAVE_TIP}, 
+            "/1/" + ML_BREAKPOINTS + "/6/" + ML_MORE: {COMMAND: self.do_more_bp, TOOLTIP: MORE_TIP}, 
+            "/2/" + ML_CONTROL + "/0/" + ML_ANALYZE: {COMMAND: self.do_analyze_menu, TOOLTIP: ANALYZE_TIP}, 
+            "/2/" + ML_CONTROL + "/1/" + ML_BREAK: {COMMAND: self.do_break, TOOLTIP: BREAK_TIP}, 
+            "/2/" + ML_CONTROL + "/2/" + ML_GO: {COMMAND: self.do_go, TOOLTIP: GO_TIP}, 
+            "/2/" + ML_CONTROL + "/3/" + ML_NEXT: {COMMAND: self.do_next, TOOLTIP: NEXT_TIP}, 
+            "/2/" + ML_CONTROL + "/4/" + ML_STEP: {COMMAND: self.do_step, TOOLTIP: STEP_TIP}, 
+            "/2/" + ML_CONTROL + "/5/" + ML_GOTO: {COMMAND: self.do_goto, TOOLTIP: GOTO_TIP}, 
+            "/2/" + ML_CONTROL + "/6/" + ML_RETURN: {COMMAND: self.do_return, TOOLTIP: RETURN_TIP}, 
+            "/2/" + ML_CONTROL + "/7/" + ML_JUMP: {COMMAND: self.do_jump, TOOLTIP: JUMP_TIP}, 
             "/3/" + ML_WINDOW + "/0/" + ML_EMPTY: None,
-            "/4/" + ML_HELP +   "/0/" + ML_WEBSITE: {COMMAND: self.do_website, TOOLTIP: WEBSITE_TIP},
-            "/4/" + ML_HELP +   "/1/" + ML_SUPPORT: {COMMAND: self.do_support, TOOLTIP: SUPPORT_TIP},
-            "/4/" + ML_HELP +   "/2/" + ML_DOCS: {COMMAND: self.do_docs, TOOLTIP: DOCS_TIP},
-            "/4/" + ML_HELP +   "/3/" + ML_EXT_DOCS: {COMMAND: self.do_ext_docs, TOOLTIP: EXT_DOCS_TIP},
-            "/4/" + ML_HELP +   "/4/" + ML_UPDATES: {COMMAND: self.do_updates, TOOLTIP: UPDATES_TIP},
-            "/4/" + ML_HELP +   "/5/" + ML_ABOUT: {COMMAND: self.do_about},
+            "/4/" + ML_HELP +   "/0/" + ML_WEBSITE: {COMMAND: self.do_website, TOOLTIP: WEBSITE_TIP}, 
+            "/4/" + ML_HELP +   "/1/" + ML_SUPPORT: {COMMAND: self.do_support, TOOLTIP: SUPPORT_TIP}, 
+            "/4/" + ML_HELP +   "/2/" + ML_DOCS: {COMMAND: self.do_docs, TOOLTIP: DOCS_TIP}, 
+            "/4/" + ML_HELP +   "/3/" + ML_EXT_DOCS: {COMMAND: self.do_ext_docs, TOOLTIP: EXT_DOCS_TIP}, 
+            "/4/" + ML_HELP +   "/4/" + ML_UPDATES: {COMMAND: self.do_updates, TOOLTIP: UPDATES_TIP}, 
+            "/4/" + ML_HELP +   "/5/" + ML_ABOUT: {COMMAND: self.do_about}, 
             "/4/" + ML_HELP +   "/6/" + ML_LICENSE: {COMMAND: self.do_license}
         }
-
+        
         self.init_menubar(menu_resource)
-
+        
         toolbar_resource = [
             {LABEL: TB_BREAK,   DATA: BASE64_BREAK, COMMAND: self.do_break},
             {LABEL: TB_GO,      DATA: BASE64_GO,    COMMAND: self.do_go},
@@ -1336,7 +1338,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         ftrap = self.m_session_manager.get_trap_unhandled_exceptions()
         self.set_toggle(TB_TRAP, ftrap)
-
+       
         statusbar_resource = [
             {WIDTH: -2},
             {WIDTH: -1, FORMAT: SB_STATE + ": %(" + SB_STATE + ")s", KEYS: [SB_STATE]},
@@ -1349,7 +1351,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_splitterv = wx.SplitterWindow(self, -1, style = wx.SP_LIVE_UPDATE | wx.SP_NOBORDER)
         self.m_splitterv.SetMinimumPaneSize(100)
         self.m_splitterv.SetSashGravity(0.5)
-
+        
         self.m_splitterh1 = wx.SplitterWindow(self.m_splitterv, -1, style = wx.SP_LIVE_UPDATE | wx.SP_NOBORDER)
         self.m_splitterh1.SetMinimumPaneSize(70)
         self.m_splitterh1.SetSashGravity(0.67)
@@ -1357,7 +1359,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_splitterh2 = wx.SplitterWindow(self.m_splitterh1, -1, style = wx.SP_LIVE_UPDATE | wx.SP_NOBORDER)
         self.m_splitterh2.SetMinimumPaneSize(70)
         self.m_splitterh2.SetSashGravity(0.5)
-
+        
         self.m_namespace_viewer = CNamespaceViewer(self.m_splitterh2, style = wx.NO_BORDER, session_manager = self.m_session_manager)
         self.m_namespace_viewer.set_filter(True)
         self.set_toggle(TB_FILTER, True)
@@ -1369,16 +1371,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_splitterh3 = wx.SplitterWindow(self.m_splitterv, -1, style = wx.SP_LIVE_UPDATE | wx.SP_NOBORDER)
         self.m_splitterh3.SetMinimumPaneSize(100)
         self.m_splitterh3.SetSashGravity(1.0)
-
-        self.m_code_viewer = CCodeViewer(self.m_splitterh3, style = wx.NO_BORDER | wx.TAB_TRAVERSAL, session_manager = self.m_session_manager, source_manager = self.m_source_manager, notify_filename = self.do_notify_filename)
+        
+        self.m_code_viewer = CCodeViewer(self.m_splitterh3, style = wx.NO_BORDER | wx.TAB_TRAVERSAL, session_manager = self.m_session_manager, source_manager = self.m_source_manager, notify_filename = self.do_notify_filename)        
 
         self.m_console = CConsole(self.m_splitterh3, style = wx.NO_BORDER | wx.TAB_TRAVERSAL, session_manager = self.m_session_manager, exit_command = self.do_exit)
-
+        
         self.m_splitterh2.SplitHorizontally(self.m_namespace_viewer, self.m_threads_viewer)
         self.m_splitterh1.SplitHorizontally(self.m_splitterh2, self.m_stack_viewer)
         self.m_splitterv.SplitVertically(self.m_splitterh1, self.m_splitterh3)
         self.m_splitterh3.SplitHorizontally(self.m_code_viewer, self.m_console)
-
+        
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(wx.EVT_SIZE, self.OnSizeWindow)
 
@@ -1421,6 +1423,9 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         event_type_dict = {rpdb2.CEventEncoding: {}}
         self.m_session_manager.register_callback(self.update_encoding, event_type_dict, fSingleUse = False)
 
+        event_type_dict = {rpdb2.CEventClearSourceCache: {}}
+        self.m_session_manager.register_callback(self.update_source_cache, event_type_dict, fSingleUse = False)
+
         wx.CallAfter(self.__init2)
 
 
@@ -1429,11 +1434,11 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         if fAttach:
             self.m_async_sm.attach(command_line, encoding = rpdb2.detect_locale())
-
+            
         elif command_line != '':
             self.m_async_sm.launch(fchdir, command_line, encoding = rpdb2.detect_locale())
 
-
+        
     #
     #--------------------------------------------------
     #
@@ -1447,7 +1452,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.CheckInterpreterConflict()
 
 
-    def CheckInterpreterConflict(self):
+    def CheckInterpreterConflict(self): 
         """
         On Windows, Winpdb can be started with a double click.
         The Python interpreter is chosen according to extension binding.
@@ -1456,7 +1461,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         the wrong python interpreter. This can lead to confusion and is
         prevented with this code.
         """
-
+        
         if os.name != 'nt':
             return
 
@@ -1464,16 +1469,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             path_m = sys.modules['__main__'].__file__.lower()
             if not os.path.dirname(path_m)[1:] in [r':\python23\scripts', r':\python24\scripts', r':\python25\scripts']:
                 return
-
+                
         except:
             return
-
+            
         path_e = sys.executable.lower()
         if path_m[: 12] != path_e[: 12]:
             dlg = wx.MessageDialog(self, PYTHON_WARNING_MSG % (path_m, path_e), PYTHON_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
             dlg.ShowModal()
             dlg.Destroy()
-
+            
 
 
     #
@@ -1483,7 +1488,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
     def OnThreadSelected(self, tid):
         self.m_async_sm.set_thread(tid)
-
+        
 
     def update_threads(self, event):
         wx.CallAfter(self.m_threads_viewer.update_threads_list, event.m_current_thread, event.m_thread_list)
@@ -1515,14 +1520,14 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def toggle_breakpoint(self, event):
         self.m_code_viewer.toggle_breakpoint()
 
-
+        
     #
     #------------------- Frame Select Logic -------------
     #
-
-    def OnFrameSelected(self, event):
+    
+    def OnFrameSelected(self, event):    
         self.m_async_sm.set_frame_index(event.m_itemIndex)
-
+        
 
     def update_frame(self, event):
         wx.CallAfter(self.do_update_frame, event.m_frame_index)
@@ -1536,7 +1541,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     #
     #----------------------------------------------------------
     #
-
+    
     def update_stack(self, event):
         self.m_stack = event.m_stack
         wx.CallAfter(self.do_update_stack, event.m_stack)
@@ -1546,7 +1551,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_stack = _stack
 
         self.m_stack_viewer.update_stack_list(self.m_stack)
-
+        
         index = self.m_session_manager.get_frame_index()
         self.do_update_frame(index)
 
@@ -1554,7 +1559,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def do_set_position(self, index):
         s = self.m_stack[rpdb2.DICT_KEY_STACK]
         e = s[-(1 + index)]
-
+        
         filename = e[0]
         lineno = e[1]
 
@@ -1564,7 +1569,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         self.m_code_viewer.set_position(filename, lineno, __event)
 
-
+        
     #
     #----------------------------------------------------
     #
@@ -1596,7 +1601,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def update_trap(self, event):
         wx.CallAfter(self.set_toggle, TB_TRAP, event.m_ftrap)
 
-
+        
     def do_trap(self, event):
         f = event.IsChecked()
 
@@ -1639,21 +1644,21 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         dlg = wx.MessageDialog(self, rpdb2.STR_PSYCO_WARNING, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
         dlg.Destroy()
-
-
+        
+    
     def do_filter(self, event):
         f = event.IsChecked()
         self.m_namespace_viewer.set_filter(f)
         self.m_namespace_viewer.update_namespace(self.m_stack)
 
-
+    
     def do_notify_filename(self, filename, command):
         if command is not None:
             self.add_menu_item(ML_WINDOW, filename, command)
-
+            
         self.m_console.set_filename(filename)
 
-
+    
     def OnSizeWindow(self, event):
         if not self.IsMaximized():
             #
@@ -1667,10 +1672,10 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             self.m_settings[WINPDB_SIZE] = (w, h)
 
         event.Skip()
-
-
+        
+        
     def OnCloseWindow(self, event):
-        if event.CanVeto() and self.m_session_manager.get_state() != rpdb2.STATE_DETACHED:
+        if event.CanVeto() and self.m_session_manager.get_state() != rpdb2.STATE_DETACHED:    
             dlg = wx.MessageDialog(self, STR_EXIT_WARNING, MSG_WARNING_TITLE, wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT | wx.ICON_WARNING)
             res = dlg.ShowModal()
             dlg.Destroy()
@@ -1681,21 +1686,21 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
             if res == wx.ID_NO:
                 f = lambda r, exc_info: self.Close()
-                self.m_async_sm.with_callback(f).detach()
+                self.m_async_sm.with_callback(f).detach()                
                 event.Veto()
                 return
-
+                
         try:
-            self.m_session_manager.stop_debuggee()
+            self.m_session_manager.stop_debuggee()    
         except:
-            pass
-
+            pass            
+            
         self.m_settings[WINPDB_MAXIMIZE] = self.IsMaximized()
         self.m_settings[SPLITTER_1_POS] = self.m_splitterh2.GetSashPosition()
         self.m_settings[SPLITTER_2_POS] = self.m_splitterh1.GetSashPosition()
         self.m_settings[SPLITTER_3_POS] = self.m_splitterv.GetSashPosition()
         self.m_settings[SPLITTER_4_POS] = self.m_splitterh3.GetSashPosition()
-
+        
         self.m_console.stop()
         self.shutdown_jobs()
         self.Destroy()
@@ -1705,14 +1710,23 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
     def set_cursor(self, id):
         cursor = wx.StockCursor(id)
-        self.SetCursor(cursor)
-        self.m_code_viewer.set_cursor(id)
-        self.m_threads_viewer.set_cursor(id)
-        self.m_stack_viewer.set_cursor(id)
+        self.SetCursor(cursor)        
+        self.m_code_viewer.set_cursor(id)        
+        self.m_threads_viewer.set_cursor(id)        
+        self.m_stack_viewer.set_cursor(id)        
 
 
     def do_none(self, event):
         pass
+
+
+    def update_source_cache(self, event):
+        wx.CallAfter(self.callback_source_cache, event)
+
+
+    def callback_source_cache(self, event):
+        self.m_source_manager.mark_files_dirty()
+        self.m_code_viewer.refresh()
 
 
     def update_encoding(self, event):
@@ -1727,7 +1741,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
                 codecs.lookup(encoding)
             except:
                 encoding += ' (?)'
-
+              
         if fraw:
             encoding += ', ' + rpdb2.ENCODING_RAW
 
@@ -1753,16 +1767,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         except ValueError:
             pass
-
+            
         state_text = self.m_state
         if state_text == rpdb2.STATE_BROKEN:
             state_text = rpdb2.STR_STATE_BROKEN
-
-        self.set_statusbar_data({SB_STATE: state_text.upper()})
+            
+        self.set_statusbar_data({SB_STATE: state_text.upper()}) 
 
         if self.m_state == rpdb2.STATE_DETACHED:
             self.m_fembedded_warning = True
-
+            
             self.set_statusbar_data({SB_ENCRYPTION: (None, None)})
             self.clear_menu_items(ML_WINDOW)
             self.m_source_manager._clear()
@@ -1771,20 +1785,20 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
             self.m_stack_viewer._clear()
             self.m_threads_viewer._clear()
             self.m_console.set_focus()
-
+            
         elif (old_state in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_SPAWNING, rpdb2.STATE_ATTACHING]) and (self.m_state not in [rpdb2.STATE_DETACHED, rpdb2.STATE_DETACHING, rpdb2.STATE_SPAWNING, rpdb2.STATE_ATTACHING]):
             try:
                 f = self.m_session_manager.get_encryption()
             except rpdb2.NotAttached:
                 f = False
-
-            data = [BASE64_UNLOCKED, BASE64_LOCKED][f]
+                
+            data = [BASE64_UNLOCKED, BASE64_LOCKED][f] 
             tooltip = [TOOLTIP_UNLOCKED, TOOLTIP_LOCKED][f]
             self.set_statusbar_data({SB_ENCRYPTION: (data, tooltip)})
 
         if self.m_state == rpdb2.STATE_BROKEN:
             self.set_toggle(TB_EXCEPTION, False)
-
+            
             #self.m_code_viewer._enable()
             self.m_namespace_viewer._enable()
             self.m_stack_viewer._enable()
@@ -1796,7 +1810,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
                 self.m_fembedded_warning = False
 
                 warning = STR_EMBEDDED_WARNING
-
+                
                 if not warning in g_ignored_warnings:
                     dlg = wx.MessageDialog(self, MSG_WARNING_TEMPLATE % (warning, ), MSG_WARNING_TITLE, wx.OK | wx.CANCEL | wx.YES_DEFAULT | wx.ICON_WARNING)
                     res = dlg.ShowModal()
@@ -1804,16 +1818,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
                     if res == wx.ID_CANCEL:
                         g_ignored_warnings[warning] = True
-
+            
         elif self.m_state == rpdb2.STATE_ANALYZE:
             self.set_toggle(TB_EXCEPTION, True)
-
+            
             #self.m_code_viewer._enable()
             self.m_namespace_viewer._enable()
             self.m_stack_viewer._enable()
             self.m_threads_viewer._disable()
             self.m_console.set_focus()
-
+            
         else:
             #self.m_code_viewer._disable()
             self.m_namespace_viewer._disable()
@@ -1863,7 +1877,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
             try:
                 self.m_session_manager.set_password(pwd)
-            except rpdb2.AlreadyAttached:
+            except rpdb2.AlreadyAttached:    
                 assert(0)
 
         pwd_dialog.Destroy()
@@ -1874,26 +1888,26 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
         if None in (fchdir, command_line):
             (fchdir, command_line) = (True, '')
-
+            
         launch_dialog = CLaunchDialog(self, fchdir, command_line)
         r = launch_dialog.ShowModal()
         if r == wx.ID_OK:
             (command_line, fchdir) = launch_dialog.get_command_line()
             self.m_async_sm.launch(fchdir, command_line)
-
+            
         launch_dialog.Destroy()
 
 
     def do_open(self, event):
         host = self.m_session_manager.get_host().lower()
         flocal = (host in [rpdb2.LOCALHOST, rpdb2.LOOPBACK])
-
+        
         open_dialog = COpenDialog(self, flocal)
         r = open_dialog.ShowModal()
         if r == wx.ID_OK:
             file_name = open_dialog.get_file_name()
             self.m_code_viewer.set_file(file_name, fComplain = True)
-
+            
         open_dialog.Destroy()
 
 
@@ -1914,33 +1928,33 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
     def do_stop(self, event):
         self.m_async_sm.stop_debuggee()
 
-
+        
     def do_restart(self, event):
         self.m_async_sm.restart()
 
-
+        
     def do_disable(self, event):
         self.m_async_sm.disable_breakpoint([], True)
 
-
+        
     def do_enable(self, event):
         self.m_async_sm.enable_breakpoint([], True)
 
-
+        
     def do_clear(self, event):
         self.m_async_sm.delete_breakpoint([], True)
 
-
+        
     def do_load(self, event):
         self.m_async_sm.with_callback(self.callback_load).load_breakpoints()
 
 
     def callback_load(self, r, exc_info):
         (t, v, tb) = exc_info
-
-        if t == socket.error or isinstance(v, rpdb2.CException):
+           
+        if t == socket.error or isinstance(v, rpdb2.CException):    
             error = rpdb2.STR_BREAKPOINTS_LOAD_PROBLEM
-        elif t == IOError:
+        elif t == IOError:     
             error = rpdb2.STR_BREAKPOINTS_NOT_FOUND
         else:
             return
@@ -1949,7 +1963,7 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         dlg.ShowModal()
         dlg.Destroy()
 
-
+        
     def do_save(self, event):
         self.m_async_sm.with_callback(self.callback_save).save_breakpoints()
 
@@ -1968,42 +1982,42 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
 
     def callback_save(self, r, exc_info):
         (t, v, tb) = exc_info
-
-        if t in (socket.error, IOError) or isinstance(v, rpdb2.CException):
+           
+        if t in (socket.error, IOError) or isinstance(v, rpdb2.CException):    
             error = rpdb2.STR_BREAKPOINTS_SAVE_PROBLEM
         else:
             return
-
+            
         dlg = wx.MessageDialog(self, error, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
         dlg.Destroy()
 
-
+        
     def do_go(self, event):
         self.m_async_sm.request_go()
 
-
+        
     def do_break(self, event):
         self.m_async_sm.request_break()
 
-
+        
     def do_step(self, event):
         self.m_async_sm.request_step()
 
-
+        
     def do_next(self, event):
         self.m_async_sm.request_next()
 
-
+        
     def do_return(self, event):
         self.m_async_sm.request_return()
 
-
+            
     def do_goto(self, event):
         (filename, lineno) = self.m_code_viewer.get_file_lineno()
         self.m_async_sm.request_go_breakpoint(filename, '', lineno)
 
-
+            
     def do_exit(self, event = None):
         self.Close()
 
@@ -2017,7 +2031,7 @@ class CWinpdbApp(wx.App):
         self.m_command_line = command_line
         self.m_fAttach = fAttach
         self.m_fAllowUnencrypted = fAllowUnencrypted
-
+        
         self.m_settings = CSettings(WINPDB_SETTINGS_DEFAULT)
 
         wx.App.__init__(self, redirect = False)
@@ -2027,13 +2041,13 @@ class CWinpdbApp(wx.App):
         wx.SystemOptions.SetOptionInt("mac.window-plain-transition", 1)
 
         self.m_settings.load_settings()
-
+        
         if (not self.m_fAllowUnencrypted) and not rpdb2.is_encryption_supported():
             dlg = wx.MessageDialog(None, rpdb2.STR_ENCRYPTION_SUPPORT_ERROR, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
             return True
-
+        
         self.m_frame = CWinpdbWindow(self.m_session_manager, self.m_settings)
         self.m_frame.Show()
         self.m_frame.start(self.m_fchdir, self.m_command_line, self.m_fAttach)
@@ -2045,18 +2059,18 @@ class CWinpdbApp(wx.App):
 
     def OnExit(self):
         self.m_settings.save_settings()
-
+        
 
 
 class CCaption(wx.Panel):
     def __init__(self, *args, **kwargs):
         label = kwargs.pop("label", "")
-
+        
         wx.Panel.__init__(self, *args, **kwargs)
 
         self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INACTIVECAPTION))
         self.SetForegroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_CAPTIONTEXT))
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
 
         self.m_static_text = wx.StaticText(self, -1, label)
@@ -2078,9 +2092,9 @@ class CCaptionManager:
 
         self.m_n_focus = 0
 
-    def OnGainFocus(self, event):
+    def OnGainFocus(self, event):        
         self.m_n_focus += 1
-
+        
         self.m_caption.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
         self.m_caption.Refresh()
         event.Skip()
@@ -2089,13 +2103,13 @@ class CCaptionManager:
         self.m_n_focus -= 1
         if self.m_n_focus > 0:
             return
-
+            
         self.m_caption.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INACTIVECAPTION))
         self.m_caption.Refresh()
         event.Skip()
 
-
-
+        
+    
 class CStyledViewer(stc.StyledTextCtrl):
     def __init__(self, *args, **kwargs):
         self.m_margin_command = kwargs.pop('margin_command', None)
@@ -2120,7 +2134,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.SetEOLMode(stc.STC_EOL_LF)
         self.SetViewEOL(False)
         self.SetProperty("fold", "0")
-
+        
         self.SetMarginType(0, stc.STC_MARGIN_NUMBER)
         self.SetMarginMask(0, 0x0)
         self.SetMarginWidth(0, 40)
@@ -2143,8 +2157,8 @@ class CStyledViewer(stc.StyledTextCtrl):
 
         self.StyleClearAll()
         self.SetTabWidth(4)
-
-        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, 'fore:#000000,back:#99A9C2')
+        
+        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, 'fore:#000000,back:#99A9C2')    
         self.StyleSetSpec(stc.STC_STYLE_BRACELIGHT, 'fore:#00009D,back:#FFFF00')
         self.StyleSetSpec(stc.STC_STYLE_BRACEBAD, 'fore:#00009D,back:#FF0000')
         self.StyleSetSpec(stc.STC_STYLE_INDENTGUIDE, "fore:#CDCDCD")
@@ -2180,7 +2194,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.SetReadOnly(False)
         self.ClearAll()
         self.SetReadOnly(True)
-
+        
     def load_source(self, value):
         self.SetReadOnly(False)
         self.ClearAll()
@@ -2189,7 +2203,7 @@ class CStyledViewer(stc.StyledTextCtrl):
         self.GotoLine(0)
         self.EmptyUndoBuffer()
         self.SetSavePoint()
-
+      
     def OnKeyReleased(self, event):
         key_code = event.GetKeyCode()
 
@@ -2197,7 +2211,7 @@ class CStyledViewer(stc.StyledTextCtrl):
             self.GetParent().GetEventHandler().ProcessEvent(event)
 
         event.Skip()
-
+            
     def OnKeyPressed(self, event):
         key_code = event.GetKeyCode()
 
@@ -2207,7 +2221,7 @@ class CStyledViewer(stc.StyledTextCtrl):
             if switch:
                 self.GetParent().GetEventHandler().ProcessEvent(event)
                 return
-
+            
             ne = wx.NavigationKeyEvent()
             ne.SetDirection(forward)
             ne.SetCurrentFocus(self)
@@ -2215,7 +2229,7 @@ class CStyledViewer(stc.StyledTextCtrl):
             self.GetParent().GetEventHandler().ProcessEvent(ne)
             event.Skip()
             return
-
+            
         event.Skip()
 
 
@@ -2235,51 +2249,58 @@ class CSourceManager:
         self.m_files = {}
 
 
+    def mark_files_dirty(self):
+        for k, v in list(self.m_files.items()):
+            self.m_files[k] = (DIRTY_CACHE, rpdb2.as_string(''))
+
+
     def is_in_files(self, filename):
         for k in list(self.m_files.keys()):
             if filename in k:
                 return True
 
         return False
-
-
+        
+    
     def get_source(self, filename):
         for k, v in list(self.m_files.items()):
             if not filename in k:
                 continue
 
-            if v[0] == 0:
-                return (k, v[1])
+            (_time, source) = v
+
+            if _time == 0:        
+                return (k, source)
 
             t = time.time()
-            if t - v[0] < BAD_FILE_WARNING_TIMEOUT_SEC:
-                return (k, v[1])
+            if t - _time < BAD_FILE_WARNING_TIMEOUT_SEC:
+                return (k, source)    
 
             #del self.m_files[k]
             raise KeyError
 
         raise KeyError
 
-
+        
     def load_source(self, filename, callback, args, fComplain):
-        f = lambda r, exc_info: self.callback_load_source(r, exc_info, filename, callback, args, fComplain)
+        f = lambda r, exc_info: self.callback_load_source(r, exc_info, filename, callback, args, fComplain)        
         self.m_async_sm.with_callback(f, ftrace = True).get_source_file(filename, -1, -1)
 
-
+        
     def callback_load_source(self, r, exc_info, filename, callback, args, fComplain):
         (t, v, tb) = exc_info
 
+        if self.m_session_manager.get_state() == rpdb2.STATE_DETACHED:
+            return
+
         if t == None:
-# Begin of mod. 009 W.Jaworski 2007-10-23
-            #_time = 0
-            _time = time.time()
-# End of mod. 009 W.Jaworski 2007-10-23
+            _time = 0
             _filename = r[rpdb2.DICT_KEY_FILENAME]
             source_lines = r[rpdb2.DICT_KEY_LINES]
             source = string.join(source_lines, '')
             if not g_fUnicode:
                 source = rpdb2.as_string(source, wx.GetDefaultPyEncoding())
-
+        
         elif t == rpdb2.NotPythonSource and fComplain:
             dlg = wx.MessageDialog(None, MSG_ERROR_FILE_NOT_PYTHON % (filename, ), MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
             dlg.ShowModal()
@@ -2297,13 +2318,13 @@ class CSourceManager:
                 dlg = wx.MessageDialog(None, STR_BLENDER_SOURCE_WARNING, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
                 dlg.ShowModal()
                 dlg.Destroy()
-
+            
             _time = time.time()
             _filename = filename
             source = STR_FILE_LOAD_ERROR2 % (filename, )
             if not g_fUnicode:
                 source = rpdb2.as_string(source, wx.GetDefaultPyEncoding())
-
+        
         else:
             rpdb2.print_debug('get_source_file() returned the following error: %s' % repr(t))
 
@@ -2312,8 +2333,8 @@ class CSourceManager:
             source = STR_FILE_LOAD_ERROR2 % (filename, )
             if not g_fUnicode:
                 source = rpdb2.as_string(source, wx.GetDefaultPyEncoding())
-
-        try:
+                    
+        try:    
             self.m_lock.acquire()
 
             fNotify = not self.is_in_files(_filename)
@@ -2327,16 +2348,16 @@ class CSourceManager:
         callback(*_args)
 
 
-
+        
 class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
     def __init__(self, *args, **kwargs):
         self.m_session_manager = kwargs.pop('session_manager')
         self.m_notify_filename = kwargs.pop('notify_filename', None)
         self.m_source_manager = kwargs.pop('source_manager')
-
+        
         wx.Panel.__init__(self, *args, **kwargs)
         CJobs.__init__(self)
-
+        
         self.init_jobs()
 
         self.m_async_sm = CAsyncSessionManager(self.m_session_manager, self)
@@ -2346,7 +2367,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
         self.m_fSwitch = False
         self.m_swiched_original = None
-
+        
         self.m_files = {}
 
         self.m_cur_filename = None
@@ -2356,12 +2377,12 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         self.m_pos_event = None
 
         self.m_breakpoint_lines = {}
-
+        
         self.m_request_number = 0
         self.m_last_position_time = 0
 
         self.m_event2Marker = {'running': MARKER_RUNNING, 'call': MARKER_CALL, 'line': MARKER_LINE, 'return': MARKER_RETURN,  'exception': MARKER_EXCEPTION}
-
+        
         _sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerv = wx.BoxSizer(wx.VERTICAL)
         _sizerv.Add(sizerv, 1, wx.EXPAND | wx.ALL, 3)
@@ -2386,14 +2407,14 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
     def OnDestroyWindow(self, event):
         self.shutdown_jobs()
 
-
+        
     def set_cursor(self, id):
-        self.m_viewer.SetSTCCursor([stc.STC_CURSORNORMAL, stc.STC_CURSORWAIT][id == wx.CURSOR_WAIT])
+        self.m_viewer.SetSTCCursor([stc.STC_CURSORNORMAL, stc.STC_CURSORWAIT][id == wx.CURSOR_WAIT])        
 
 
     def on_margin_clicked(self, event):
         lineno = self.m_viewer.LineFromPosition(event.GetPosition()) + 1
-        self.__toggle_breakpoint(lineno)
+        self.__toggle_breakpoint(lineno)        
         event.Skip()
 
 
@@ -2404,22 +2425,22 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
 
     def toggle_breakpoint(self):
-        lineno = self.m_viewer.GetCurrentLine() + 1
-        self.__toggle_breakpoint(lineno)
+        lineno = self.m_viewer.GetCurrentLine() + 1 
+        self.__toggle_breakpoint(lineno)        
 
-
+        
     def __toggle_breakpoint(self, lineno):
         try:
             bpl = self.m_session_manager.get_breakpoints()
         except rpdb2.NotAttached:
             return
-
+            
         id = self.m_breakpoint_lines.get(lineno, None)
         if id is not None:
             bp = bpl.get(id, None)
-
+            
         if (id is None) or (bp is None):
-            self.m_async_sm.set_breakpoint(self.m_cur_filename, '', lineno, True, '')
+            self.m_async_sm.set_breakpoint(self.m_cur_filename, '', lineno, True, '')            
             return
 
         self.m_async_sm.delete_breakpoint([id], False)
@@ -2437,40 +2458,40 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         self.m_history_index = (self.m_history_index + [-1, 1][fBack]) % len(self.m_history)
         return self.m_history[self.m_history_index]
 
-
+        
     def set_history(self, value):
         if value in self.m_history:
             self.m_history.remove(value)
-
+            
         self.m_history.insert(0, value)
         self.m_history = self.m_history[:50]
-
+        
         self.m_history_index = 0
 
 
     def OnKeyPressed(self, event):
         if len(self.m_history) < 2:
             return
-
+            
         if self.m_fSwitch == False:
             self.m_fSwitch = True
             self.m_swiched_original = self.m_cur_filename
+        
+        value = self.get_history(event.ShiftDown())  
 
-        value = self.get_history(event.ShiftDown())
+        self.set_file(value, fNoHistory = True)    
 
-        self.set_file(value, fNoHistory = True)
-
-
+        
     def OnKeyReleased(self, event):
         if self.m_fSwitch == False:
             return
 
         if self.m_swiched_original == self.m_cur_filename:
             return
-
+            
         self.set_history(self.m_cur_filename)
 
-
+        
     def _clear(self):
         self.m_history = []
         self.m_history_index = 0
@@ -2486,20 +2507,30 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         self.m_pos_lineno = None
         self.m_pos_event = None
 
-        self.m_viewer._clear()
+        self.m_viewer._clear()        
 
 
     def __notify_filename(self, filename, fNew):
         if self.m_notify_filename is None:
             return
 
-        if fNew:
+        if fNew:    
             def command(event, filename = filename):
                 self.set_file(filename)
         else:
             command = None
 
         self.m_notify_filename(filename, command)
+
+    
+    def refresh(self):
+        if self.m_cur_filename == None:
+            return
+
+        filename = self.m_cur_filename
+        self.m_cur_filename = None
+
+        self.set_file(filename)
 
 
     def set_file(self, filename, fNoHistory = False, request_number = 0, fNotify = False, fComplain = False):
@@ -2514,28 +2545,28 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
         if self.m_cur_filename == filename:
             return
-
+            
         try:
             (_filename, source) = self.m_source_manager.get_source(filename)
-        except KeyError:
+        except KeyError:    
             self.m_source_manager.load_source(filename, self.set_file, (fNoHistory, request_number,), fComplain)
             return
 
         if self.m_cur_filename == _filename:
             return
-
+            
         self.__notify_filename(filename, fNew = False)
-
+        
         if self.m_cur_filename is not None:
-            self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1
+            self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1  
 
         lineno = self.m_files.get(_filename, 1)
-
+        
         self.m_viewer.load_source(source)
-
+    
         self.m_viewer.EnsureVisibleEnforcePolicy(lineno - 1)
         self.m_viewer.GotoLine(lineno - 1)
-
+      
         displayed_filename = _filename
         if not g_fUnicode:
             displayed_filename = rpdb2.as_string(displayed_filename, wx.GetDefaultPyEncoding())
@@ -2551,11 +2582,11 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         if fNoHistory == False:
             self.set_history(self.m_cur_filename)
 
-
+        
     def set_position(self, filename, lineno, event, request_number = 0, fNotify = False):
         if fNotify:
             self.__notify_filename(filename, fNew = True)
-
+        
         if request_number == 0:
             self.m_request_number += 1
             request_number = self.m_request_number
@@ -2565,20 +2596,20 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
         if self.m_cur_filename != filename:
             try:
                 (_filename, source) = self.m_source_manager.get_source(filename)
-            except KeyError:
+            except KeyError:    
                 self.m_source_manager.load_source(filename, self.set_position, (lineno, event, request_number), fComplain = False)
                 return
 
             self.__notify_filename(filename, fNew = False)
-
+            
             if self.m_cur_filename is not None:
-                self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1
+                self.m_files[self.m_cur_filename] = self.m_viewer.GetCurrentLine() + 1 
 
             self.m_viewer.load_source(source)
 
         self.m_viewer.EnsureVisibleEnforcePolicy(lineno - 1)
         self.m_viewer.GotoLine(lineno - 1)
-
+        
         displayed_filename = filename
         if not g_fUnicode:
             displayed_filename = rpdb2.as_string(displayed_filename, wx.GetDefaultPyEncoding())
@@ -2599,7 +2630,7 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
         self.m_last_position_time = time.time()
 
-
+        
     def update_bp(self, event):
         if self.m_pos_filename is None:
             return
@@ -2610,16 +2641,16 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
             if self.m_cur_filename == event.m_bp.m_filename:
                 lineno = event.m_bp.m_lineno
                 self.m_viewer.EnsureVisibleEnforcePolicy(lineno - 1)
-                self.m_viewer.GotoLine(lineno - 1)
-
+                self.m_viewer.GotoLine(lineno - 1)            
+            
         self.set_markers()
 
-
+        
     def set_markers(self):
         for marker in MARKER_LIST:
             self.m_viewer.MarkerDeleteAll(marker)
 
-        if self.m_pos_filename == self.m_cur_filename:
+        if self.m_pos_filename == self.m_cur_filename:    
             self.m_viewer.MarkerAdd(self.m_pos_lineno - 1, self.m_event2Marker[self.m_pos_event])
 
         f_current_line = False
@@ -2630,13 +2661,13 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
             return
 
         self.m_breakpoint_lines = {}
-
+        
         for bp in bpl.values():
             if bp.m_filename != self.m_cur_filename:
                 continue
 
             self.m_breakpoint_lines[bp.m_lineno] = bp.m_id
-
+            
             if (self.m_pos_filename == self.m_cur_filename) and (bp.m_lineno == self.m_pos_lineno) and bp.m_fEnabled:
                 self.m_viewer.MarkerAdd(self.m_pos_lineno - 1, MARKER_CURRENT_LINE_HIT)
                 f_current_line = True
@@ -2646,8 +2677,8 @@ class CCodeViewer(wx.Panel, CJobs, CCaptionManager):
 
         if (self.m_pos_filename == self.m_cur_filename) and not f_current_line:
             self.m_viewer.MarkerAdd(self.m_pos_lineno - 1, MARKER_CURRENT_LINE)
-
-
+        
+        
 
 class CConsole(wx.Panel, CCaptionManager):
     def __init__(self, *args, **kwargs):
@@ -2666,11 +2697,11 @@ class CConsole(wx.Panel, CCaptionManager):
 
         self.m_history = ['']
         self.m_history_index = 0
-
+        
         self.m_console = rpdb2.CConsole(self.m_session_manager, stdin = self, stdout = self, fSplit = True)
 
         self.m_queue = Queue.Queue()
-
+        
         _sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerv = wx.BoxSizer(wx.VERTICAL)
         _sizerv.Add(sizerv, 1, wx.EXPAND | wx.ALL, 3)
@@ -2686,7 +2717,7 @@ class CConsole(wx.Panel, CCaptionManager):
 
         sizerh = wx.BoxSizer(wx.HORIZONTAL)
         sizerv.Add(sizerh, 0, wx.EXPAND | wx.ALL, 0)
-
+        
         label = wx.StaticText(self, -1, LABEL_CONSOLE, style = wx.TAB_TRAVERSAL)
         sizerh.Add(label, 0, wx.ALIGN_CENTRE | wx.ALL, 0)
 
@@ -2696,7 +2727,7 @@ class CConsole(wx.Panel, CCaptionManager):
         self.m_console_in.SetFocus()
         self.m_console_in.Bind(wx.EVT_CHAR, self.OnChar)
         self.m_console_in.Bind(wx.EVT_TEXT_ENTER, self.OnSendText)
-        sizerh.Add(self.m_console_in, 1, wx.EXPAND | wx.ALL, 0)
+        sizerh.Add(self.m_console_in, 1, wx.EXPAND | wx.ALL, 0)       
 
         self.SetSizer(_sizerv)
         _sizerv.Fit(self)
@@ -2707,8 +2738,8 @@ class CConsole(wx.Panel, CCaptionManager):
 
         if key_code != wx.WXK_TAB:
             return
-
-        forward = not event.ShiftDown()
+            
+        forward = not event.ShiftDown()            
         ne = wx.NavigationKeyEvent()
         ne.SetDirection(forward)
         ne.SetCurrentFocus(self.m_console_out)
@@ -2716,12 +2747,12 @@ class CConsole(wx.Panel, CCaptionManager):
         self.GetEventHandler().ProcessEvent(ne)
 
         event.Skip()
-
-
+            
+        
     def set_focus(self):
         self.m_console_in.SetFocus()
 
-
+        
     def set_filename(self, filename):
         self.m_console.set_filename(filename)
 
@@ -2735,15 +2766,15 @@ class CConsole(wx.Panel, CCaptionManager):
         else:
             face = "Courier"
             point_size = font.GetPointSize()
-
+            
         new_font = wx.Font(pointSize = point_size, family = font.GetFamily(), style = font.GetStyle(), weight = font.GetWeight(), face = face)
         ctrl.SetFont(new_font)
 
-
+        
     def start(self):
         self.m_console.start()
 
-
+        
     def stop(self):
         self.m_queue.put('exit\n')
         self.m_console.join()
@@ -2756,17 +2787,17 @@ class CConsole(wx.Panel, CCaptionManager):
             _str = rpdb2.as_unicode(_str, self.encoding)
 
         sl = _str.split('\n')
-
+        
         _str = ''
-
+        
         for s in sl:
             while True:
                 _str += '\n' + s[:81]
-                s = s[81:]
+                s = s[81:] 
                 if len(s) == 0:
                     break
-
-        wx.CallAfter(self.m_console_out.write, _str[1:])
+            
+        wx.CallAfter(self.m_console_out.write, _str[1:])    
 
 
     def flush(self):
@@ -2780,22 +2811,22 @@ class CConsole(wx.Panel, CCaptionManager):
 
     def OnChar(self, event):
         key = event.GetKeyCode()
-
+        
         if key in [wx.WXK_UP, wx.WXK_DOWN]:
             value = self.m_console_in.GetValue()
             _value = self.get_history(key == wx.WXK_UP, value)
             self.m_console_in.SetValue(_value)
             self.m_console_in.SetInsertionPointEnd()
             return
-
-        event.Skip()
+            
+        event.Skip()    
 
 
     def OnSendText(self, event):
         value = self.m_console_in.GetValue()
         self.set_history(value)
 
-        self.m_console_out.write(CONSOLE_PROMPT + value + '\n')
+        self.m_console_out.write(CONSOLE_PROMPT + value + '\n') 
         self.m_console_in.Clear()
 
         if value in ['exit', 'EOF']:
@@ -2803,24 +2834,24 @@ class CConsole(wx.Panel, CCaptionManager):
             return
 
         value = rpdb2.as_unicode(value, wx.GetDefaultPyEncoding())
-
+        
         self.m_queue.put(value + '\n')
 
-
+            
     def get_history(self, fBack, value = None):
         if (value is not None) and (value != self.m_history[self.m_history_index]):
             self.m_history[0] = value
             self.m_history_index = 0
-
+            
         self.m_history_index = (self.m_history_index + [-1, 1][fBack]) % len(self.m_history)
         return self.m_history[self.m_history_index]
 
-
+        
     def set_history(self, value):
         self.m_history[0] = ''
         self.m_history.insert(1, value)
         self.m_history = self.m_history[:50]
-
+        
         self.m_history_index = 0
 
 
@@ -2828,11 +2859,11 @@ class CConsole(wx.Panel, CCaptionManager):
 class CThreadsViewer(wx.Panel, CCaptionManager):
     def __init__(self, *args, **kwargs):
         self.m_select_command = kwargs.pop('select_command', None)
-
+        
         wx.Panel.__init__(self, *args, **kwargs)
 
         self.m_suppress_recursion = 0
-
+        
         _sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerv = wx.BoxSizer(wx.VERTICAL)
         _sizerv.Add(sizerv, 1, wx.EXPAND | wx.ALL, 3)
@@ -2849,15 +2880,15 @@ class CThreadsViewer(wx.Panel, CCaptionManager):
 
         if self.m_select_command:
             self.m_threads.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnThreadSelected)
-
+                    
         self.SetSizer(_sizerv)
         _sizerv.Fit(self)
 
 
     def set_cursor(self, id):
         cursor = wx.StockCursor(id)
-        self.SetCursor(cursor)
-        self.m_threads.SetCursor(cursor)
+        self.SetCursor(cursor)        
+        self.m_threads.SetCursor(cursor)        
 
 
     def _clear(self):
@@ -2892,12 +2923,12 @@ class CThreadsViewer(wx.Panel, CCaptionManager):
 
         return index
 
-
+        
     def update_threads_list(self, current_thread, threads_list):
         if self.m_suppress_recursion > 0:
             self.m_suppress_recursion -= 1
             return
-
+            
         self.m_threads.DeleteAllItems()
 
         j = None
@@ -2922,7 +2953,7 @@ class CThreadsViewer(wx.Panel, CCaptionManager):
             self.m_threads.Select(j)
 
 
-    def OnThreadSelected(self, event):
+    def OnThreadSelected(self, event):                
         if self.m_suppress_recursion == 0:
             self.m_suppress_recursion += 1
             index = event.m_itemIndex
@@ -2934,14 +2965,14 @@ class CThreadsViewer(wx.Panel, CCaptionManager):
         event.Skip()
 
 
-
+        
 class CNamespacePanel(wx.Panel, CJobs):
     def __init__(self, *args, **kwargs):
         self.m_session_manager = kwargs.pop('session_manager')
 
         wx.Panel.__init__(self, *args, **kwargs)
         CJobs.__init__(self)
-
+        
         self.init_jobs()
 
         self.m_async_sm = CAsyncSessionManager(self.m_session_manager, self)
@@ -2949,21 +2980,21 @@ class CNamespacePanel(wx.Panel, CJobs):
         self.m_lock = threading.RLock()
         self.m_jobs = []
         self.m_n_workers = 0
-
+        
         self.m_fFilter = False
         self.m_key = None
 
         sizerv = wx.BoxSizer(wx.VERTICAL)
-
+        
         self.m_tree = wx.gizmos.TreeListCtrl(self, -1, style = wx.TR_HIDE_ROOT | wx.TR_DEFAULT_STYLE | wx.TR_FULL_ROW_HIGHLIGHT | wx.NO_BORDER)
 
         self.m_tree.AddColumn(TLC_HEADER_NAME)
         self.m_tree.AddColumn(TLC_HEADER_TYPE)
         self.m_tree.AddColumn(TLC_HEADER_REPR)
         self.m_tree.SetColumnWidth(2, 800)
-        self.m_tree.SetMainColumn(0)
+        self.m_tree.SetMainColumn(0) 
         self.m_tree.SetLineSpacing(0)
-
+        
         self.m_tree.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.OnItemExpanding)
         self.m_tree.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.OnItemCollapsing)
         self.m_tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnItemActivated)
@@ -2983,7 +3014,7 @@ class CNamespacePanel(wx.Panel, CJobs):
     def OnDestroyWindow(self, event):
         self.shutdown_jobs()
 
-
+        
     def _clear(self):
         self.m_tree.DeleteAllItems()
 
@@ -2991,12 +3022,12 @@ class CNamespacePanel(wx.Panel, CJobs):
     def set_filter(self, fFilter):
         self.m_fFilter = fFilter
 
-
+        
     def bind_caption(self, caption_manager):
         w = self.m_tree.GetMainWindow()
         caption_manager.bind_caption(w)
 
-
+        
     def OnItemActivated(self, event):
         item = event.GetItem()
         (expr, is_valid) = self.m_tree.GetPyData(item)
@@ -3021,7 +3052,7 @@ class CNamespacePanel(wx.Panel, CJobs):
         expr_dialog.Destroy()
 
         _suite = "%s = %s" % (expr, _expr)
-
+        
         self.m_async_sm.with_callback(self.callback_execute).execute(_suite)
 
 
@@ -3033,7 +3064,7 @@ class CNamespacePanel(wx.Panel, CJobs):
             return
 
         (warning, error) = r
-
+        
         if error != '':
             dlg = wx.MessageDialog(self, error, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
@@ -3046,15 +3077,15 @@ class CNamespacePanel(wx.Panel, CJobs):
 
             if res == wx.ID_CANCEL:
                 g_ignored_warnings[warning] = True
-
-
+        
+        
     def OnItemToolTip(self, event):
         item = event.GetItem()
 
         tt = self.m_tree.GetItemText(item, 2)[1:]
         event.SetToolTip(tt)
 
-
+       
     def OnItemCollapsing(self, event):
         item = event.GetItem()
 
@@ -3064,7 +3095,7 @@ class CNamespacePanel(wx.Panel, CJobs):
     def GetChildrenCount(self, item):
         n = self.m_tree.GetChildrenCount(item)
         if n != 1:
-            return n
+            return n 
 
         child = self.get_children(item)[0]
         (expr, is_valid) = self.m_tree.GetPyData(child)
@@ -3073,31 +3104,31 @@ class CNamespacePanel(wx.Panel, CJobs):
             return 0
 
         return 1
-
-
+        
+        
     def expand_item(self, item, _map, froot = False, fskip_expansion_check = False):
         if not self.m_tree.ItemHasChildren(item):
             return
-
+        
         if not froot and not fskip_expansion_check and self.m_tree.IsExpanded(item):
             return
 
         if self.GetChildrenCount(item) > 0:
             return
-
+        
         (expr, is_valid) = self.m_tree.GetPyData(item)
 
         l = [e for e in _map if e.get(rpdb2.DICT_KEY_EXPR, None) == expr]
         if l == []:
             return None
 
-        _r = l[0]
+        _r = l[0] 
         if _r is None:
-            return
+            return   
 
         if rpdb2.DICT_KEY_ERROR in _r:
             return
-
+        
         if _r[rpdb2.DICT_KEY_N_SUBNODES] == 0:
             self.m_tree.SetItemHasChildren(item, False)
             return
@@ -3108,8 +3139,8 @@ class CNamespacePanel(wx.Panel, CJobs):
         # In case of a list, no sorting is needed.
         #
 
-        snl = _r[rpdb2.DICT_KEY_SUBNODES]
-
+        snl = _r[rpdb2.DICT_KEY_SUBNODES] 
+       
         for r in snl:
             if g_fUnicode:
                 _name = r[rpdb2.DICT_KEY_NAME]
@@ -3120,7 +3151,9 @@ class CNamespacePanel(wx.Panel, CJobs):
                 _type = rpdb2.as_string(r[rpdb2.DICT_KEY_TYPE], wx.GetDefaultPyEncoding())
                 _repr = rpdb2.as_string(r[rpdb2.DICT_KEY_REPR], wx.GetDefaultPyEncoding())
 
-            identation = ['', '  '][os.name == rpdb2.POSIX and r[rpdb2.DICT_KEY_N_SUBNODES] == 0]
+            identation = '' 
+            #identation = ['', '  '][os.name == rpdb2.POSIX and r[rpdb2.DICT_KEY_N_SUBNODES] == 0]
+
             child = self.m_tree.AppendItem(item, identation + _name)
             self.m_tree.SetItemText(child, ' ' + _repr, 2)
             self.m_tree.SetItemText(child, ' ' + _type, 1)
@@ -3129,21 +3162,21 @@ class CNamespacePanel(wx.Panel, CJobs):
 
         self.m_tree.Expand(item)
 
-
+    
     def OnItemExpanding(self, event):
-        item = event.GetItem()
+        item = event.GetItem()        
 
         if not self.m_tree.ItemHasChildren(item):
             event.Skip()
             return
-
+        
         if self.GetChildrenCount(item) > 0:
             event.Skip()
             self.m_tree.Refresh();
             return
-
+            
         self.m_tree.DeleteChildren(item)
-
+        
         child = self.m_tree.AppendItem(item, STR_NAMESPACE_LOADING)
         self.m_tree.SetItemText(child, ' ' + STR_NAMESPACE_LOADING, 2)
         self.m_tree.SetItemText(child, ' ' + STR_NAMESPACE_LOADING, 1)
@@ -3151,9 +3184,9 @@ class CNamespacePanel(wx.Panel, CJobs):
 
         (expr, is_valid) = self.m_tree.GetPyData(item)
 
-        f = lambda r, exc_info: self.callback_ns(r, exc_info, expr)
+        f = lambda r, exc_info: self.callback_ns(r, exc_info, expr)        
         self.m_async_sm.with_callback(f).get_namespace([(expr, True)], self.m_fFilter)
-
+        
         event.Skip()
 
 
@@ -3163,9 +3196,9 @@ class CNamespacePanel(wx.Panel, CJobs):
         item = self.find_item(expr)
         if item == None:
             return
-
+        
         self.m_tree.DeleteChildren(item)
-
+    
         if t != None or r is None or len(r) == 0:
             child = self.m_tree.AppendItem(item, STR_NAMESPACE_DEADLOCK)
             self.m_tree.SetItemText(child, ' ' + STR_NAMESPACE_DEADLOCK, 2)
@@ -3173,35 +3206,35 @@ class CNamespacePanel(wx.Panel, CJobs):
             self.m_tree.SetItemPyData(child, (STR_NAMESPACE_DEADLOCK, False))
             self.m_tree.Expand(item)
             return
-
-        self.expand_item(item, r, False, True)
+            
+        self.expand_item(item, r, False, True)  
 
         self.m_tree.Refresh()
-
+        
 
     def find_item(self, expr):
         item = self.m_tree.GetRootItem()
         while item:
             (expr2, is_valid) = self.m_tree.GetPyData(item)
             if expr2 == expr:
-                return item
-
+                return item               
+                
             item = self.m_tree.GetNext(item)
 
-        return None
-
+        return None    
+    
 
     def get_children(self, item):
         (child, cookie) = self.m_tree.GetFirstChild(item)
         cl = []
-
+        
         while child and child.IsOk():
             cl.append(child)
             (child, cookie) = self.m_tree.GetNextChild(item, cookie)
 
-        return cl
+        return cl    
 
-
+                             
     def get_expression_list(self):
         if self.m_tree.GetCount() == 0:
             return None
@@ -3222,7 +3255,7 @@ class CNamespacePanel(wx.Panel, CJobs):
             items = self.get_children(item)
             s = items + s
 
-        return el
+        return el    
 
 
     def update_namespace(self, key, el):
@@ -3248,13 +3281,13 @@ class CNamespacePanel(wx.Panel, CJobs):
         if self.m_n_workers == 0:
             self.job_post(self.job_update_namespace, ())
 
-
+        
     def job_update_namespace(self):
         while len(self.m_jobs) > 0:
             self.m_lock.acquire()
             self.m_n_workers += 1
             self.m_lock.release()
-
+            
             try:
                 del self.m_jobs[1:]
                 (el, fFilter) = self.m_jobs.pop()
@@ -3263,7 +3296,7 @@ class CNamespacePanel(wx.Panel, CJobs):
 
             except (rpdb2.ThreadDone, rpdb2.NoThreads):
                 wx.CallAfter(self.m_tree.DeleteAllItems)
-
+                
             except:
                 rpdb2.print_debug_exception()
 
@@ -3271,8 +3304,8 @@ class CNamespacePanel(wx.Panel, CJobs):
             self.m_n_workers -= 1
             self.m_lock.release()
 
-
-    def do_update_namespace(self, rl):
+        
+    def do_update_namespace(self, rl):    
         self.m_tree.DeleteAllItems()
 
         root = self.m_tree.AddRoot('root')
@@ -3284,7 +3317,7 @@ class CNamespacePanel(wx.Panel, CJobs):
         while len(s) > 0:
             item = s.pop(0)
             self.expand_item(item, rl, item is root)
-
+            
             items = self.get_children(item)
             s = items + s
 
@@ -3300,27 +3333,27 @@ class CNamespacePanel(wx.Panel, CJobs):
 class CLocals(CNamespacePanel):
     def get_root_expr(self):
         return 'locals()'
+        
 
-
-
+    
 class CGlobals(CNamespacePanel):
     def get_root_expr(self):
         return 'globals()'
-
-
-
+        
+        
+        
 class CException(CNamespacePanel):
     def get_root_expr(self):
         return rpdb2.RPDB_EXEC_INFO
+        
 
-
-
+    
 class CNamespaceViewer(wx.Panel, CCaptionManager):
     def __init__(self, *args, **kwargs):
         self.m_session_manager = kwargs.pop('session_manager')
 
         self.m_key_map = {}
-
+        
         wx.Panel.__init__(self, *args, **kwargs)
 
         _sizerv = wx.BoxSizer(wx.VERTICAL)
@@ -3345,9 +3378,9 @@ class CNamespaceViewer(wx.Panel, CCaptionManager):
         self.m_exception.bind_caption(self)
 
         sizerv.Add(self.m_notebook, 1, wx.EXPAND | wx.ALL, 0)
-
+        
         self.SetSizer(_sizerv)
-        _sizerv.Fit(self)
+        _sizerv.Fit(self)        
 
 
     def _clear(self):
@@ -3362,14 +3395,14 @@ class CNamespaceViewer(wx.Panel, CCaptionManager):
         self.m_globals.Disable()
         self.m_exception.Disable()
 
-
+        
     def _enable(self):
         self.m_notebook.Enable()
         self.m_locals.Enable()
         self.m_globals.Enable()
         self.m_exception.Enable()
 
-
+        
     def set_filter(self, fFilter):
         self.m_locals.set_filter(fFilter)
         self.m_globals.set_filter(fFilter)
@@ -3380,28 +3413,28 @@ class CNamespaceViewer(wx.Panel, CCaptionManager):
         frame_index = self.m_session_manager.get_frame_index()
         c = _stack.get(rpdb2.DICT_KEY_CODE_LIST, [])
         key = c[-(1 + frame_index)]
-        return key
+        return key        
 
-
+            
     def get_global_key(self, _stack):
         frame_index = self.m_session_manager.get_frame_index()
         s = _stack.get(rpdb2.DICT_KEY_STACK, [])
         key = s[-(1 + frame_index)][0]
         return key
 
-
+            
     def update_namespace(self, _stack):
         try:
             key = self.get_local_key(_stack)
             el = self.m_key_map.get(key, None)
             (key0, el0) = self.m_locals.update_namespace(key, el)
             self.m_key_map[key0] = el0
-
+            
             key = self.get_global_key(_stack)
             el = self.m_key_map.get(key, None)
             (key1, el1) = self.m_globals.update_namespace(key, el)
             self.m_key_map[key1] = el1
-
+            
             key = 'exception'
             el = self.m_key_map.get(key, None)
             (key1, el1) = self.m_exception.update_namespace(key, el)
@@ -3410,16 +3443,16 @@ class CNamespaceViewer(wx.Panel, CCaptionManager):
         except rpdb2.NotAttached:
             return
 
-
+        
 
 class CStackViewer(wx.Panel, CCaptionManager):
     def __init__(self, *args, **kwargs):
         self.m_select_command = kwargs.pop('select_command', None)
-
+        
         wx.Panel.__init__(self, *args, **kwargs)
 
         self.m_suppress_recursion = 0
-
+        
         _sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerv = wx.BoxSizer(wx.VERTICAL)
         _sizerv.Add(sizerv, 1, wx.EXPAND | wx.ALL, 3)
@@ -3439,15 +3472,15 @@ class CStackViewer(wx.Panel, CCaptionManager):
 
         if self.m_select_command:
             self.m_stack.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnFrameSelected)
-
+                    
         self.SetSizer(_sizerv)
         _sizerv.Fit(self)
 
 
     def set_cursor(self, id):
         cursor = wx.StockCursor(id)
-        self.SetCursor(cursor)
-        self.m_stack.SetCursor(cursor)
+        self.SetCursor(cursor)        
+        self.m_stack.SetCursor(cursor)        
 
 
     def _clear(self):
@@ -3470,11 +3503,11 @@ class CStackViewer(wx.Panel, CCaptionManager):
         self.m_stack.DeleteAllItems()
 
         s = st.get(rpdb2.DICT_KEY_STACK, [])
-
+        
         i = 0
         while i < len(s):
             e = s[-(1 + i)]
-
+            
             filename = e[0]
             lineno = e[1]
             function = e[2]
@@ -3491,7 +3524,7 @@ class CStackViewer(wx.Panel, CCaptionManager):
             self.m_stack.SetItemData(index, i)
 
             i += 1
-
+            
         self.m_stack.set_columns_width()
 
         self.m_suppress_recursion += 1
@@ -3502,17 +3535,17 @@ class CStackViewer(wx.Panel, CCaptionManager):
         if self.m_suppress_recursion > 0:
             self.m_suppress_recursion -= 1
             return
-
+            
         if (index < 0) or (index > self.m_stack.GetItemCount()):
             return
 
         if self.m_stack.IsSelected(index):
             return
-
+            
         self.m_suppress_recursion += 1
         self.m_stack.Select(index)
 
-
+    
     def OnFrameSelected(self, event):
         if self.m_suppress_recursion == 0:
             self.m_suppress_recursion += 1
@@ -3520,7 +3553,7 @@ class CStackViewer(wx.Panel, CCaptionManager):
         else:
             self.m_suppress_recursion -= 1
 
-        event.Skip()
+        event.Skip()    
 
 
 
@@ -3537,7 +3570,7 @@ class CHTMLDialog(wx.Dialog):
             self.m_html.SetStandardFonts()
 
         self.m_html.SetPage(self.get_html_text(text))
-
+        
         ir = self.m_html.GetInternalRepresentation()
         self.m_html.SetSize((ir.GetWidth() + 25, min(500, ir.GetHeight() + 25)))
 
@@ -3557,7 +3590,7 @@ class CHTMLDialog(wx.Dialog):
     def get_html_text(self, text):
         tl = text.split('\n')
         t = '<br>'.join(tl)
-
+        
         return ABOUT_HTML_PREFIX + t + ABOUT_HTML_SUFFIX
 
 
@@ -3572,30 +3605,30 @@ class CListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
         n = self.GetColumnCount()
 
         for i in range(0, n - 1):
-            self.SetColumnWidth(i, wx.LIST_AUTOSIZE_USEHEADER)
+            self.SetColumnWidth(i, wx.LIST_AUTOSIZE_USEHEADER)               
 
         if wx.Platform != '__WXMSW__':
             a = [self.GetColumnWidth(i) for i in range(0, n - 1)]
-
+            
             for i in range(0, n - 1):
-                self.SetColumnWidth(i, wx.LIST_AUTOSIZE)
+                self.SetColumnWidth(i, wx.LIST_AUTOSIZE)               
 
             b = [self.GetColumnWidth(i) for i in range(0, n - 1)]
 
             c = [max(i) for i in zip(a, b)]
-
+            
             for i in range(0, n - 1):
                 self.SetColumnWidth(i, c[i])
-
+            
         self.resizeLastColumn(50)
 
 
-
+    
 class CAttachDialog(wx.Dialog, CJobs):
     def __init__(self, parent, session_manager):
         wx.Dialog.__init__(self, parent, -1, DLG_ATTACH_TITLE)
         CJobs.__init__(self)
-
+        
         self.init_jobs()
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
@@ -3605,7 +3638,7 @@ class CAttachDialog(wx.Dialog, CJobs):
         self.m_server_list = None
         self.m_errors = {}
         self.m_index = None
-
+                        
         sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerh = wx.BoxSizer(wx.HORIZONTAL)
         sizerv.Add(sizerh, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
@@ -3617,7 +3650,7 @@ class CAttachDialog(wx.Dialog, CJobs):
         self.m_entry_host = wx.TextCtrl(self, value = host, size = (200, -1))
         self.m_entry_host.SetFocus()
         sizerh.Add(self.m_entry_host, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-
+        
         btn = wx.Button(self, label = BUTTON_ATTACH_REFRESH)
         self.Bind(wx.EVT_BUTTON, self.do_refresh, btn)
         btn.SetDefault()
@@ -3667,21 +3700,21 @@ class CAttachDialog(wx.Dialog, CJobs):
         pwd_dialog.Destroy()
 
         try:
-            self.m_session_manager.set_password(pwd)
+            self.m_session_manager.set_password(pwd)            
 
-        except rpdb2.AlreadyAttached:
+        except rpdb2.AlreadyAttached:    
             assert(0)
 
             self.Close()
             return
-
+            
         self.do_refresh()
 
-
+                
     def set_cursor(self, id):
         cursor = wx.StockCursor(id)
-        self.SetCursor(cursor)
-        self.m_listbox_scripts.SetCursor(cursor)
+        self.SetCursor(cursor)        
+        self.m_listbox_scripts.SetCursor(cursor)        
 
 
     def OnCloseWindow(self, event):
@@ -3692,7 +3725,7 @@ class CAttachDialog(wx.Dialog, CJobs):
     def get_server(self):
         return self.m_server_list[self.m_index]
 
-
+        
     def do_refresh(self, event = None):
         host = self.m_entry_host.GetValue()
         if host == '':
@@ -3703,7 +3736,7 @@ class CAttachDialog(wx.Dialog, CJobs):
         f = lambda r, exc_info: self.callback_sethost(r, exc_info, host)
         self.m_async_sm.with_callback(f).set_host(host)
 
-
+        
     def callback_sethost(self, r, exc_info, host):
         (t, v, tb) = exc_info
 
@@ -3711,7 +3744,7 @@ class CAttachDialog(wx.Dialog, CJobs):
             dlg = wx.MessageDialog(self, rpdb2.MSG_ERROR_HOST_TEXT % (host, v), MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
-
+            
             host = self.m_session_manager.get_host()
             self.m_entry_host.SetValue(host)
             return
@@ -3722,7 +3755,7 @@ class CAttachDialog(wx.Dialog, CJobs):
 
         self.m_async_sm.with_callback(self.update_body).calc_server_list()
 
-
+        
     def update_body(self, r, exc_info):
         (t, v, tb) = exc_info
 
@@ -3736,7 +3769,7 @@ class CAttachDialog(wx.Dialog, CJobs):
             return
 
         (self.m_server_list, self.m_errors) = r
-
+        
         if len(self.m_errors) > 0:
             for k, el in self.m_errors.items():
                 if k in [rpdb2.AuthenticationBadData, rpdb2.AuthenticationFailure]:
@@ -3744,14 +3777,14 @@ class CAttachDialog(wx.Dialog, CJobs):
 
                 elif k == rpdb2.EncryptionNotSupported:
                     self.report_attach_warning(rpdb2.STR_DEBUGGEE_NO_ENCRYPTION)
-
+                    
                 elif k == rpdb2.EncryptionExpected:
                     self.report_attach_warning(rpdb2.STR_ENCRYPTION_EXPECTED)
 
                 elif k == rpdb2.BadVersion:
                     for (t, v, tb) in el:
                         self.report_attach_warning(rpdb2.STR_BAD_VERSION % {'value': v})
-
+            
         self.m_ok.Disable()
 
         host = self.m_session_manager.get_host()
@@ -3761,7 +3794,7 @@ class CAttachDialog(wx.Dialog, CJobs):
 
         for i, s in enumerate(self.m_server_list):
             index = self.m_listbox_scripts.InsertStringItem(sys.maxint, repr(s.m_pid))
-
+            
             filename = s.m_filename
             if not g_fUnicode:
                 filename = rpdb2.as_string(filename, wx.GetDefaultPyEncoding())
@@ -3775,8 +3808,8 @@ class CAttachDialog(wx.Dialog, CJobs):
     def report_attach_warning(self, warning):
         dlg = wx.MessageDialog(self, warning, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
-        dlg.Destroy()
-
+        dlg.Destroy()   
+        
 
     def OnItemSelected(self, event):
         self.m_index = event.m_itemIndex
@@ -3789,20 +3822,20 @@ class CAttachDialog(wx.Dialog, CJobs):
         if self.m_listbox_scripts.GetSelectedItemCount() == 0:
             self.m_ok.Disable()
 
-        event.Skip()
+        event.Skip()    
 
-
+        
     def OnItemActivated(self, event):
         self.m_index = event.m_itemIndex
 
         self.EndModal(wx.ID_OK)
-
-
+        
+        
 
 class CExpressionDialog(wx.Dialog):
     def __init__(self, parent, default_value):
         wx.Dialog.__init__(self, parent, -1, DLG_EXPR_TITLE)
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
 
         label = wx.StaticText(self, -1, STATIC_EXPR)
@@ -3821,10 +3854,10 @@ class CExpressionDialog(wx.Dialog):
         self.m_entry_expr.SetFocus()
         self.Bind(wx.EVT_TEXT, self.OnText, self.m_entry_expr)
         sizerh.Add(self.m_entry_expr, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-
+        
         btnsizer = wx.StdDialogButtonSizer()
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
-
+        
         self.m_ok = wx.Button(self, wx.ID_OK)
         self.m_ok.SetDefault()
         self.m_ok.Disable()
@@ -3835,7 +3868,7 @@ class CExpressionDialog(wx.Dialog):
         btnsizer.Realize()
 
         self.SetSizer(sizerv)
-        sizerv.Fit(self)
+        sizerv.Fit(self)        
 
 
     def OnText(self, event):
@@ -3844,9 +3877,9 @@ class CExpressionDialog(wx.Dialog):
         else:
             self.m_ok.Enable()
 
-        event.Skip()
+        event.Skip()        
 
-
+                   
     def get_expression(self):
         expr = self.m_entry_expr.GetValue()
         expr = rpdb2.as_unicode(expr, wx.GetDefaultPyEncoding())
@@ -3854,11 +3887,11 @@ class CExpressionDialog(wx.Dialog):
         return expr
 
 
-
+    
 class CEncodingDialog(wx.Dialog):
     def __init__(self, parent, current_encoding, current_fraw):
         wx.Dialog.__init__(self, parent, -1, DLG_ENCODING_TITLE)
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
 
         label = wx.StaticText(self, -1, STATIC_ENCODING, size = (300, -1))
@@ -3882,14 +3915,14 @@ class CEncodingDialog(wx.Dialog):
         self.m_entry_encoding.SetFocus()
         self.Bind(wx.EVT_TEXT, self.OnText, self.m_entry_encoding)
         sizerh.Add(self.m_entry_encoding, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-
+        
         self.m_cb = wx.CheckBox(self, -1, CHECKBOX_ENCODING)
         self.m_cb.SetValue(current_fraw)
         sizerv.Add(self.m_cb, 0, wx.ALIGN_LEFT | wx.ALL, 5)
-
+        
         btnsizer = wx.StdDialogButtonSizer()
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
-
+        
         self.m_ok = wx.Button(self, wx.ID_OK)
         self.m_ok.SetDefault()
         self.Bind(wx.EVT_BUTTON, self.do_ok, self.m_ok)
@@ -3902,7 +3935,7 @@ class CEncodingDialog(wx.Dialog):
         btnsizer.Realize()
 
         self.SetSizer(sizerv)
-        sizerv.Fit(self)
+        sizerv.Fit(self)        
 
 
     def OnText(self, event):
@@ -3911,9 +3944,9 @@ class CEncodingDialog(wx.Dialog):
         else:
             self.m_ok.Enable()
 
-        event.Skip()
+        event.Skip()        
 
-
+                   
     def get_encoding(self):
         encoding = self.m_entry_encoding.GetValue()
         encoding = rpdb2.as_unicode(encoding, wx.GetDefaultPyEncoding())
@@ -3936,9 +3969,9 @@ class CEncodingDialog(wx.Dialog):
         dlg = wx.MessageDialog(self, rpdb2.STR_ENCODING_BAD, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
         dlg.Destroy()
-
+        
         return True
-
+        
 
     def do_ok(self, event):
         f = self.do_validate()
@@ -3948,11 +3981,11 @@ class CEncodingDialog(wx.Dialog):
         event.Skip()
 
 
-
+    
 class CPwdDialog(wx.Dialog):
     def __init__(self, parent, current_password):
         wx.Dialog.__init__(self, parent, -1, DLG_PWD_TITLE)
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
 
         label = wx.StaticText(self, -1, STATIC_PWD, size = (300, -1))
@@ -3977,10 +4010,10 @@ class CPwdDialog(wx.Dialog):
         self.m_entry_pwd.SetFocus()
         self.Bind(wx.EVT_TEXT, self.OnText, self.m_entry_pwd)
         sizerh.Add(self.m_entry_pwd, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-
+        
         btnsizer = wx.StdDialogButtonSizer()
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
-
+        
         self.m_ok = wx.Button(self, wx.ID_OK)
         self.m_ok.SetDefault()
         self.Bind(wx.EVT_BUTTON, self.do_ok, self.m_ok)
@@ -3993,7 +4026,7 @@ class CPwdDialog(wx.Dialog):
         btnsizer.Realize()
 
         self.SetSizer(sizerv)
-        sizerv.Fit(self)
+        sizerv.Fit(self)        
 
 
     def OnText(self, event):
@@ -4002,9 +4035,9 @@ class CPwdDialog(wx.Dialog):
         else:
             self.m_ok.Enable()
 
-        event.Skip()
+        event.Skip()        
 
-
+                   
     def get_password(self):
         pwd = self.m_entry_pwd.GetValue()
         pwd = rpdb2.as_unicode(pwd, wx.GetDefaultPyEncoding())
@@ -4019,9 +4052,9 @@ class CPwdDialog(wx.Dialog):
         dlg = wx.MessageDialog(self, rpdb2.STR_PASSWORD_BAD, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
         dlg.Destroy()
-
+        
         return False
-
+        
 
     def do_ok(self, event):
         f = self.do_validate()
@@ -4031,11 +4064,11 @@ class CPwdDialog(wx.Dialog):
         event.Skip()
 
 
-
+    
 class COpenDialog(wx.Dialog):
     def __init__(self, parent, fLocal):
         wx.Dialog.__init__(self, parent, -1, DLG_OPEN_TITLE)
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
 
         label = wx.StaticText(self, -1, STATIC_OPEN)
@@ -4059,7 +4092,7 @@ class COpenDialog(wx.Dialog):
 
         btnsizer = wx.StdDialogButtonSizer()
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
-
+        
         self.m_ok = wx.Button(self, wx.ID_OK)
         self.m_ok.Disable()
         self.m_ok.SetDefault()
@@ -4070,7 +4103,7 @@ class COpenDialog(wx.Dialog):
         btnsizer.Realize()
 
         self.SetSizer(sizerv)
-        sizerv.Fit(self)
+        sizerv.Fit(self)        
 
 
     def OnText(self, event):
@@ -4079,9 +4112,9 @@ class COpenDialog(wx.Dialog):
         else:
             self.m_ok.Enable()
 
-        event.Skip()
+        event.Skip()        
 
-
+            
     def do_browse(self, event = None):
         command_line = self.m_entry.GetValue()
         (_path, filename, args) = rpdb2.split_command_line_path_filename_args(command_line)
@@ -4098,7 +4131,7 @@ class COpenDialog(wx.Dialog):
             abs_path = command_line
 
         dlg.Destroy()
-
+        
         self.m_entry.SetValue(abs_path)
 
 
@@ -4113,7 +4146,7 @@ class COpenDialog(wx.Dialog):
 class CLaunchDialog(wx.Dialog):
     def __init__(self, parent, fchdir = True, command_line = ''):
         wx.Dialog.__init__(self, parent, -1, DLG_LAUNCH_TITLE)
-
+        
         sizerv = wx.BoxSizer(wx.VERTICAL)
         sizerh = wx.BoxSizer(wx.HORIZONTAL)
         sizerv.Add(sizerh, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
@@ -4128,7 +4161,7 @@ class CLaunchDialog(wx.Dialog):
         self.m_entry_commandline.SetFocus()
         self.Bind(wx.EVT_TEXT, self.OnText, self.m_entry_commandline)
         sizerh.Add(self.m_entry_commandline, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-
+        
         btn = wx.Button(self, label = BUTTON_LAUNCH_BROWSE)
         self.Bind(wx.EVT_BUTTON, self.do_browse, btn)
         sizerh.Add(btn, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
@@ -4136,7 +4169,7 @@ class CLaunchDialog(wx.Dialog):
         self.m_cb = wx.CheckBox(self, -1, CHECKBOX_LAUNCH)
         self.m_cb.SetValue(fchdir)
         sizerv.Add(self.m_cb, 0, wx.ALIGN_LEFT | wx.ALL, 5)
-
+        
         label = wx.StaticText(self, -1, STATIC_LAUNCH_ENV, size = (400, -1))
         try:
             label.Wrap(400)
@@ -4144,7 +4177,7 @@ class CLaunchDialog(wx.Dialog):
             label.SetLabel(STATIC_LAUNCH_ENV_SPLIT)
 
         sizerv.Add(label, 1, wx.ALIGN_LEFT | wx.ALL, 5)
-
+        
         btnsizer = wx.StdDialogButtonSizer()
 
         self.m_ok = wx.Button(self, wx.ID_OK)
@@ -4162,8 +4195,8 @@ class CLaunchDialog(wx.Dialog):
         sizerv.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
 
         self.SetSizer(sizerv)
-        sizerv.Fit(self)
-
+        sizerv.Fit(self)        
+        
 
     def OnText(self, event):
         if event.GetString() == '':
@@ -4171,16 +4204,16 @@ class CLaunchDialog(wx.Dialog):
         else:
             self.m_ok.Enable()
 
-        event.Skip()
+        event.Skip()        
 
-
-    def do_browse(self, event = None):
+            
+    def do_browse(self, event = None):        
         command_line = self.m_entry_commandline.GetValue()
         (_path, filename, args) = rpdb2.split_command_line_path_filename_args(command_line)
         _abs_path = os.path.abspath(_path)
 
         cwd = os.getcwdu()
-
+            
         dlg = wx.FileDialog(self, defaultDir = _abs_path, defaultFile = filename, wildcard = WINPDB_WILDCARD, style = wx.OPEN | wx.CHANGE_DIR)
         r = dlg.ShowModal()
 
@@ -4195,33 +4228,33 @@ class CLaunchDialog(wx.Dialog):
             abs_path = command_line
 
         dlg.Destroy()
-
+        
         self.m_entry_commandline.SetValue(abs_path)
 
-
+        
     def do_validate(self):
         command_line = self.m_entry_commandline.GetValue()
         command_line = rpdb2.as_unicode(command_line, wx.GetDefaultPyEncoding())
-
+        
         (_path, filename, args)  = rpdb2.split_command_line_path_filename_args(command_line)
-
+        
         try:
             _filename = os.path.join(_path, filename)
             abs_path = rpdb2.FindFile(_filename)
 
-        except IOError:
+        except IOError:                    
             dlg = wx.MessageDialog(self, MSG_ERROR_FILE_NOT_FOUND, MSG_ERROR_TITLE, wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
             return False
-
+        
         if ' ' in abs_path:
             command_line = ('"' + abs_path + '" ' + args).strip()
         else:
             command_line = (abs_path + ' ' + args).strip()
-
+            
         self.m_entry_commandline.SetValue(command_line)
-
+        
         return True
 
 
@@ -4232,7 +4265,7 @@ class CLaunchDialog(wx.Dialog):
 
         event.Skip()
 
-
+        
     def get_command_line(self):
         command_line = self.m_entry_commandline.GetValue()
         command_line = rpdb2.as_unicode(command_line, wx.GetDefaultPyEncoding())
@@ -4253,12 +4286,12 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
             sys.exit(1)
 
         raise
-
+        
     if not 'unicode' in wx.PlatformInfo:
         dlg = wx.MessageDialog(None, STR_WXPYTHON_ANSI_WARNING_MSG, STR_WXPYTHON_ANSI_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
         dlg.Destroy()
-
+    
     app.MainLoop()
 
 
@@ -4267,7 +4300,7 @@ def main():
     if rpdb2.get_version() != "RPDB_2_2_5":
         rpdb2._print(STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_2_5", rpdb2.get_version()))
         return
-
+        
     return rpdb2.main(StartClient)
 
 
@@ -4281,5 +4314,5 @@ if __name__=='__main__':
     ret = main()
     sys.exit(ret)
 
-
-
+    
+    
