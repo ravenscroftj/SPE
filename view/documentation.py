@@ -18,8 +18,12 @@ import os, nturl2path, sys
 import pydoc
 
 ERROR = "<h1>"+_("Error")+"</h1><br>"+\
-        _("SPE could not generate documentation for")+\
+        _("SPE could not generate documentation for ")+\
         _("<b>%s</b>:<br><br><i>%s</i>")
+
+ERROR_UNNAMED = "<h1>"+_("Error")+"</h1><br>"+\
+        _("SPE can't generate documentation of unnamed files.<br>")+\
+        _("Please save your file first.")
 
 def my_import(name):
     mod = __import__(name)
@@ -45,6 +49,9 @@ save them first before generating any documentation.
 """)):
             try:
                 fileName        = self.childPanel.fileName
+                if fileName == 'unnamed':
+                    self.SetPage(ERROR_UNNAMED)
+                    return
                 path            = os.path.dirname(fileName)
                 moduleName      = os.path.splitext(os.path.basename(fileName))[0]
                 if path:          os.chdir(path)
