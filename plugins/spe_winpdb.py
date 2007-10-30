@@ -42,7 +42,6 @@ from dialogs import winpdbDialog
 plugins_dir = os.path.dirname(__file__)
 winpdb_dir  = os.path.join(plugins_dir, 'winpdb')
 WINPDB      = os.path.join(winpdb_dir, 'winpdb.py')
-print WINPDB
 
 import sys
 sys.path.insert(0, winpdb_dir)

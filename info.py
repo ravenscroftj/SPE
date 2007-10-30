@@ -44,9 +44,9 @@ def path(p):
 
 #---Append sm
 if PATH not in sys.path:
-    sys.path.append(PATH)
+    sys.path.insert(0,PATH)
 if _PATH not in sys.path:
-    sys.path.append(_PATH)
+    sys.path.insert(0,_PATH)
 
 import sm.osx
 
