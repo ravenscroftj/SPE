@@ -415,14 +415,14 @@ DLG_ATTACH_TITLE = "Attach"
 STATIC_EXPR = """The new expression will be evaluated at the debuggee
 and its value will be set to the item."""
 CHECKBOX_ENCODING = "Output non ASCII characters as an escape sequence."
-STATIC_ENCODING = """The encoding is used as source encoding for the name-space viewer and for the exec and eval console commands. Valid values are either 'auto' or an encoding known by the codecs module. If 'auto' is specified, the encoding used will be the source encoding of the active scope, which is utf-8 by default."""
-STATIC_ENCODING_SPLIT = """The encoding is used as source encoding for 
-the name-space viewer and for the exec and eval 
-console commands. Valid values are either 'auto' 
-or an encoding known by the codecs module. 
-If 'auto' is specified, the encoding used will 
-be the source encoding of the active scope, 
-which is utf-8 by default."""
+STATIC_ENCODING = """The specified encoding is used as source encoding for the name-space viewer and for the exec and eval console commands. Valid values are either 'auto' or an encoding known by the codecs module. If 'auto' is specified, the source encoding of the active scope will be used, which is utf-8 by default."""
+STATIC_ENCODING_SPLIT = """The specified encoding is used as source encoding 
+for the name-space viewer and for the exec and 
+eval console commands. Valid values are either 
+'auto' or an encoding known by the codecs module. 
+If 'auto' is specified, the source encoding of 
+the active scope will be used, which is utf-8 
+by default."""
 STATIC_PWD = """The password is used to secure communication between the debugger console and the debuggee. Debuggees with un-matching passwords will not appear in the attach query list."""
 STATIC_PWD_SPLIT = """The password is used to secure communication 
 between the debugger console and the debuggee. 
@@ -459,9 +459,9 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.2.5"
-WINPDB_VERSION = "WINPDB_1_2_5"
-VERSION = (1, 2, 5, 0, '')
+WINPDB_TITLE = "Winpdb 1.3.0"
+WINPDB_VERSION = "WINPDB_1_3_0"
+VERSION = (1, 3, 0, 0, '')
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -1405,8 +1405,8 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         event_type_dict = {rpdb2.CEventUnhandledException: {}}
         self.m_session_manager.register_callback(self.update_unhandled_exception, event_type_dict, fSingleUse = False)
 
-        event_type_dict = {rpdb2.CEventPsycoWarning: {}}
-        self.m_session_manager.register_callback(self.update_psyco_warning, event_type_dict, fSingleUse = False)
+        event_type_dict = {rpdb2.CEventConflictingModules: {}}
+        self.m_session_manager.register_callback(self.update_conflicting_modules, event_type_dict, fSingleUse = False)
 
         event_type_dict = {rpdb2.CEventThreadBroken: {}}
         self.m_session_manager.register_callback(self.update_thread_broken, event_type_dict, fSingleUse = False)
@@ -1636,12 +1636,16 @@ class CWinpdbWindow(wx.Frame, CMainWindow):
         self.m_async_sm.set_analyze(True)
 
 
-    def update_psyco_warning(self, event):
-        wx.CallAfter(self.notify_psyco_warning)
+    def update_conflicting_modules(self, event):
+        wx.CallAfter(self.notify_conflicting_modules, event)
 
 
-    def notify_psyco_warning(self):
-        dlg = wx.MessageDialog(self, rpdb2.STR_PSYCO_WARNING, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
+    def notify_conflicting_modules(self, event):
+        s = ', '.join(event.m_modules_list)
+        if not g_fUnicode:
+            s = rpdb2.as_string(s, wx.GetDefaultPyEncoding())
+
+        dlg = wx.MessageDialog(self, rpdb2.STR_CONFLICTING_MODULES % s, MSG_WARNING_TITLE, wx.OK | wx.ICON_WARNING)
         dlg.ShowModal()
         dlg.Destroy()
         
@@ -4297,8 +4301,8 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_2_5":
-        rpdb2._print(STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_2_5", rpdb2.get_version()))
+    if rpdb2.get_version() != "RPDB_2_3_0":
+        rpdb2._print(STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_3_0", rpdb2.get_version()))
         return
         
     return rpdb2.main(StartClient)

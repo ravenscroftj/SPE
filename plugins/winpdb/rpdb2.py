@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 """
-    rpdb2.py - version 2.2.5
+    rpdb2.py - version 2.3.0
 
     A remote Python debugger for CPython
 
@@ -482,9 +482,9 @@ def setbreak():
 
 
 
-VERSION = (2, 2, 5, 0, '')
-RPDB_VERSION = "RPDB_2_2_5"
-RPDB_COMPATIBILITY_VERSION = "RPDB_2_2_5"
+VERSION = (2, 3, 0, 0, '')
+RPDB_VERSION = "RPDB_2_3_0"
+RPDB_COMPATIBILITY_VERSION = "RPDB_2_3_0"
 
 
 
@@ -642,7 +642,6 @@ class CSimpleSessionManager:
             #
             # This is a user breakpoint (e.g. rpdb2.setbreak())
             #
-            print_debug('Simple session manager continues on user break point.')
             self.script_paused()
             return
 
@@ -1733,6 +1732,7 @@ STR_ILEGAL_ANALYZE_MODE_CMD = "Command is not allowed in analyze mode. Type 'hel
 STR_ANALYZE_MODE_TOGGLE = "Analyze mode was set to: %s."
 STR_BAD_ARGUMENT = "Bad Argument."
 STR_PSYCO_WARNING = "The psyco module was detected. The debugger is incompatible with the psyco module and will not function correctly as long as the psyco module is imported and used."
+STR_CONFLICTING_MODULES = "The modules: %s, which are incompatible with the debugger were detected and will likely cause the debugger to fail."
 STR_SIGNAL_INTERCEPT = "The signal %s(%d) was intercepted inside debugger tracing logic. It will be held pending until the debugger continues. Any exceptions raised by the handler will be ignored!"
 STR_SIGNAL_EXCEPTION = "Exception %s raised by handler of signal %s(%d) inside debugger tracing logic was ignored!"
 STR_DEBUGGEE_TERMINATED = "Debuggee has terminated."
@@ -1924,6 +1924,8 @@ DISPACHER_METHOD = 'dispatcher_method'
 
 BASIC_TYPES_LIST = ['bytes', 'str', 'str8', 'unicode', 'int', 'long', 'float', 'bool', 'NoneType']
 
+CONFLICTING_MODULES = ['psyco', 'pdb', 'bdb', 'doctest']
+
 XML_DATA = """<?xml version='1.0'?>
 <methodCall>
 <methodName>dispatcher_method</methodName>
@@ -2011,7 +2013,7 @@ g_fos_exit = False
 #
 g_module_main = None
 
-g_fsent_psyco_warning = False
+g_found_conflicting_modules = []
 
 g_fignore_atexit = False
 g_ignore_broken_pipe = 0
@@ -2451,7 +2453,15 @@ def print_debug(_str):
     l = time.localtime(t)
     s = time.strftime('%H:%M:%S', l) + '.%03d' % ((t - int(t)) * 1000)
 
-    _print(s + ' RPDB2: ' + _str, sys.__stderr__)
+    f = sys._getframe(1)
+    
+    filename = os.path.basename(f.f_code.co_filename)
+    lineno = f.f_lineno
+    name = f.f_code.co_name
+
+    str = '%s %s:%d in %s: %s' % (s, filename, lineno, name, _str)
+
+    _print(str, sys.__stderr__)
 
 
 
@@ -3179,8 +3189,13 @@ def get_source_line(filename, lineno):
 
 
 def is_provider_filesystem(filename):
-    (lines, encoding, ffilesystem) = lines_cache(filename)
-    return ffilesystem
+    try:
+        (lines, encoding, ffilesystem) = lines_cache(filename)
+        return ffilesystem
+
+    except IOError:
+        v = sys.exc_info()[1]
+        return not (BLENDER_SOURCE_NOT_AVAILABLE in v.args or SOURCE_NOT_AVAILABLE in v.args)
 
 
 
@@ -4364,6 +4379,16 @@ class CEventPsycoWarning(CEvent):
     """
     
     pass
+
+
+
+class CEventConflictingModules(CEvent):
+    """
+    Conflicting modules were detected. rpdb2 is incompatible with these modules.
+    """
+    
+    def __init__(self, modules_list):
+        self.m_modules_list = modules_list
 
 
 
@@ -7188,6 +7213,7 @@ class CDebuggerEngine(CDebuggerCore):
             CEventTrap: {},
             CEventForkMode: {},
             CEventPsycoWarning: {},
+            CEventConflictingModules: {},
             CEventSignalIntercepted: {},
             CEventSignalException: {},
             CEventClearSourceCache: {}
@@ -7221,16 +7247,33 @@ class CDebuggerEngine(CDebuggerCore):
         return index
 
 
-    def trap_psyco_module(self):
-        global g_fsent_psyco_warning
-       
-        if g_fsent_psyco_warning or not 'psyco' in sys.modules:
-            return
+    def trap_conflicting_modules(self):
+        modules_list = []
 
-        g_fsent_psyco_warning = True
+        for m in CONFLICTING_MODULES:
+            if m in g_found_conflicting_modules:
+                continue
 
-        event = CEventPsycoWarning()
+            if not m in sys.modules:
+                continue
+
+            if m == 'psyco':
+                #
+                # Old event kept for compatibility.
+                # 
+                event = CEventPsycoWarning()
+                self.m_event_dispatcher.fire_event(event)
+            
+            g_found_conflicting_modules.append(m)
+            modules_list.append(as_unicode(m))
+
+        if modules_list == []:
+            return False
+
+        event = CEventConflictingModules(modules_list)
         self.m_event_dispatcher.fire_event(event)
+
+        return True
 
 
     def wait_for_event(self, timeout, event_index):
@@ -7239,9 +7282,13 @@ class CDebuggerEngine(CDebuggerCore):
         """
 
         self.cancel_request_go_timer()
-        self.trap_psyco_module()
+        self.trap_conflicting_modules()
 
         (new_event_index, sel) = self.m_event_queue.wait_for_event(timeout, event_index)
+
+        if self.trap_conflicting_modules():
+            (new_event_index, sel) = self.m_event_queue.wait_for_event(timeout, event_index)
+
         return (new_event_index, sel)
 
 
@@ -9444,8 +9491,8 @@ class CSessionManagerInternal:
         event_type_dict = {CEventExit: {}}
         self.register_callback(self.on_event_exit, event_type_dict, fSingleUse = False)
 
-        event_type_dict = {CEventPsycoWarning: {}}
-        self.register_callback(self.on_event_psyco, event_type_dict, fSingleUse = False)
+        event_type_dict = {CEventConflictingModules: {}}
+        self.register_callback(self.on_event_conflicting_modules, event_type_dict, fSingleUse = False)
         
         event_type_dict = {CEventSignalIntercepted: {}}
         self.register_callback(self.on_event_signal_intercept, event_type_dict, fSingleUse = False)
@@ -9909,8 +9956,9 @@ class CSessionManagerInternal:
                 return
 
 
-    def on_event_psyco(self, event):
-        self.m_printer(STR_PSYCO_WARNING)
+    def on_event_conflicting_modules(self, event):
+        s = ', '.join(event.m_modules_list)
+        self.m_printer(STR_CONFLICTING_MODULES % s)
 
 
     def on_event_signal_intercept(self, event):
@@ -12187,15 +12235,13 @@ Type 'help up' or 'help down' for more information on focused frames.""", self.m
     def help_encoding(self):
         _print("""encoding [<encoding> [, raw]]
 
-Set the encoding that will be used as source encoding for 
-exec and eval commands.
+Set the source encoding for the exec and eval commands.
 
 Without an argument returns the current encoding.
 
-The encoding value can be either 'auto' or any encoding accepted 
-by the codecs module. If 'auto' is specified, the encoding used 
-will be the source encoding of the active scope, 
-which is utf-8 by default.
+The specified encoding can be either 'auto' or any encoding accepted 
+by the codecs module. If 'auto' is specified, the source encoding of 
+the active scope will be used, which is utf-8 by default.
 
 The default encoding value is 'auto'.
 
@@ -12658,6 +12704,7 @@ def __start_embedded_debugger(_rpdb2_pwd, fAllowUnencrypted, fAllowRemote, timeo
         
         if g_debugger is not None:
             f = sys._getframe(2)
+            g_debugger.record_client_heartbeat(0, True, False)
             g_debugger.setbreak(f)
             return
 
@@ -12824,16 +12871,28 @@ def PrintUsage(fExtended = False):
     scriptName = os.path.basename(sys.argv[0])
     _print(""" %(rpdb)s [options] [<script-name> [<script-args>...]]
 
-    Where the options can be a combination of the following:
-    -h, --help      print this help.
-    -d, --debuggee  start debuggee and break into it, without starting a 
-                    debugger console. 
-    -a, --attach    Attach to an already started debuggee.
-    -o, --host      Specify host for attachment.
+    %(rpdb)s uses the client-server model where the debugger UI/console is
+    the client and the debugged script is the server (also called debuggee).
+    The client and the server are separate processes and communicate over 
+    sockets.
+
+    Example: The following command starts the debugger UI/console and then 
+    launches and attaches to the specified script:
+    %(rpdb)s some_script.py 
+
+    Options can be a combination of the following:
+    -h, --help      Print this help.
+    -d, --debuggee  Start the debugged script (server) paused and wait for a 
+                    debugger console (client) to attach. 
+    -a, --attach    Start the debugger console (client) and attach to the 
+                    specified debugged script (server) which is assumed to 
+                    be running already.
+    -o, --host=     Specify host (or IP address) for remote connections.
     -r, --remote    Allow debuggees to accept connections from remote machines.
-    -e, --encrypt   Force encrypted connections between debugger and debuggees.
-    -p, --pwd       Password. This flag is available only on NT systems. 
-                    On other systems the password will be queried interactively 
+    -e, --encrypt   Force encrypted socket communication.
+    -p, --pwd=      Specify password for socket communication. 
+                    This flag is available only on NT systems. On other 
+                    systems the password will be queried interactively 
                     if it is needed.
     -s, --screen    Use the Unix screen utility when starting the debuggee.
                     Note that the debugger should be started as follows:
