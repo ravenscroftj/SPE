@@ -46,6 +46,7 @@ WINPDB      = os.path.join(winpdb_dir, 'winpdb.py')
 import sys
 sys.path.insert(0, winpdb_dir)
 from rpdb2 import CSimpleSessionManager
+from rpdb2 import start_embedded_debugger
 del sys.path[0]
 
 if info.WIN and ' ' in WINPDB:
@@ -105,9 +106,6 @@ class SessionManager(CSimpleSessionManager):
         child               = self.app.childActive
         wx.CallAfter(child.setStatus, 'Terminating "%s"'%self.command_line)
         self.request_go()
-##        self._ask_to_launch_debugger(   status  = 'Terminating "%s"'%self.command_line,
-##                                        message = 'The script has finished execution.',
-##                                        showDialog  = self.runner.exitPrevious)
             
     def script_terminated_callback(self):
         #print "script_terminated_callback"
