@@ -7,9 +7,13 @@
 #Tooltip: 'Enables a Python debugger for Blender scripts'
 #"""
 
+#
+# Copy this script to the .blender/scripts directory. or user scripts directory
+#
+
 __author__ = "Nir Aides"
 __url__ = ("http://www.digitalpeers.com/pythondebugger")
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __email__ = ("witold-jaworski@poczta.neostrada.pl")
 __bpydoc__ = """\
 Winpdb, created by Nir Aides, is a platform independent GPL Python debugger,<br>
@@ -36,10 +40,9 @@ To break into a script:<br>
     - load the script to Blender's Text Editor;<br>
     - run the script, pressing Alt-P
 
-WindPdb main window will appear. You can debug your script there. Once you have 
-attached WinPdb, you can use it for the whole Blender session. You can
-control, when the code has to be debugged, by pressing the WinPdb "break" command 
-button. This attachement do not disturb any other programs.
+The WindPdb window will appear. You can debug your script there.
+You can control, wheter the code has or not have to be debugged, by pressing the WinPdb
+"break" command button.
 
 Remember: Use Winpdb by setting the break mode when it is needed, as long, as you
 run Blender session. Always close Blender first, unless you have detached the WinPdb
@@ -48,58 +51,76 @@ before (using "Detach" command from the File menu - it is preffered way, but not
 during shutdown. (Because in such case Winpdb tries to stop Blender's Python
 engine).
 """
-#copy this script to the .blender/scripts directory or user scripts directory
+
 import os
 import sys
 import subprocess
-#import rpdb2: see below (because it requires an implicit search path)
 
-#helper parameters - usually you do not need to change them:
-WAIT_TIMEOUT  = 15  #time that this script will wait for attaching a Winpdb program instance
-PASSWORD      = 'blender' #password, the same should be passed to WinPdb
+#
+# helper parameters - usually you do not need to change them:
+#
+WAIT_TIMEOUT  = 15        #time that this script will wait for attaching a Winpdb 
+PASSWORD      = 'blender' #Winpdb requires a password between the client and 
+                          #the server, so this is the one we will use.
 
-try: #the imprort of rpdb2 may fail, if it is installed as a part of SPE: 
-    import rpdb2 #so: we will try...
-except ImportError: #...No standalone? try localize it within SPE directories:..
-    import _spe #import this just to find the proper SPE directory
-    #then we have to add the Winpdb directory to PYTHONPATH:
-    #in the lines below I am trying to create the winpdb path in a
-    #system - independent way :)
-    winpdbdir = os.path.dirname(_spe.__file__) #take the _spe directory...
-    winpdbdir = os.path.join(winpdbdir, "plugins") #... append /plugins ...
-    winpdbdir = os.path.join(winpdbdir, "winpdb")  #.. and /winpdb.
-    #OK, let's append it to actual PYTHONPATH...
-    sys.path.append(winpdbdir)
-    #...just to import the rpdb2, because it requires an implicit search path!
+#
+# We will try to load rpdb2 from implicit path. It may work for a standalone 
+# Winpdb installation. This way this script may work with newer version of 
+# Winpdb, than this one that is shipped with SPE:
+#
+try:#looking for the default path:
     import rpdb2
+except ImportError: #we will try localize it within SPE directories:
+    import _spe.plugins.spe_winpdb #this line imports rpdb2 internally
+
+from rpdb2 import start_embedded_debugger, __file__ as rpdb2_file
 
 def debug(what):
-    """
-        Opens the WinPdb window with Blender script attached to it.
-        Arguments:
-        what - name of the script text, as is visible at WinPdb
-    """
-    #WinPdb arguments : attach to <what>, with given password:
+    #
+    # We will form the argument list for Winpdb invocation:
+    # 
+
+    #
+    # Argument 1: Python executable name. 
+    #
+    args = ["python"] #we cannot utilize here os.executable, because it returns
+                      #"Blender.exe", instead "python.exe"
+    #
+    # Argument 2: full path to Winpdb.py script name 
+    #
+    args.append(os.path.join(os.path.dirname(rpdb2_file),"winpdb.py"))
+    #
+    # Argument 3: -a(ttach) specified script
+    #
+    args.append("-a")
+    #
+    # Argument 4: -p(assword): it is only available on nt systems.
+    #
+    if os.name == "nt": 
+        args.append("-p" + PASSWORD)
+    #
+    # Argument 5: name of the debugged script
+    #
+    args.append(what)
+    #
+    # Finally: run WinPdb...
+    #
     if os.name == "nt":
-        #I am very sorry, that I was not able to use the os.executable field
-        #but the explicite Python executable name. It is because inside Blender
-        #the os.executable points to Blender.exe, not the Python executable.
-        args = ["pythonw.exe"]
-    else:#in linux theres no need to prefix the interpreter: winpdb.py run itself!
-        # Maybe this line should look like: args = ["python"]? I have not tested it
-        args = ["python"]
+        pid = subprocess.Popen(args) 
+        
+    else:
+        #
+        # On Linux systems: we have to pass the password with stdin!
+        #
+        pid = subprocess.Popen(args, stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+        pid.stdin.write(PASSWORD + "\n")
+        pid.stdin.flush()
+    #
+    # ....and let it to connect, waiting for <timeout> seconds:
+    #
+    start_embedded_debugger(PASSWORD, timeout = WAIT_TIMEOUT)
 
-    #I have no possibility to test it, but it should work for Linux, also,
-    #if the winpdb.py has the "executable" attribute:
-    args.extend([os.path.join(os.path.dirname(rpdb2.__file__),"winpdb.py"), \
-                "-a", \
-                "-p" + PASSWORD, \
-                what])
-    #Run WinPdb...
-    pid = subprocess.Popen(args)
-    #....and let it to connect, waiting for <timeout> seconds:
-    rpdb2.start_embedded_debugger(PASSWORD, \
-                                  fAllowUnencrypted = True, \
-                                  timeout = WAIT_TIMEOUT)
-
-debug("<string>") #every script in Blender is represented by such name
+#
+# Every script in Blender is represented by the same name: <string>
+#
+debug("<string>")
