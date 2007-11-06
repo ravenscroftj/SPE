@@ -1,7 +1,7 @@
 #!BPY
 
 #"""
-#Name: 'Attach the Winpdb debugger'
+#Name: 'Attach Winpdb debugger'
 #Blender: 243
 #Group: 'System'
 #Tooltip: 'Enables a Python debugger for Blender scripts'
@@ -9,8 +9,8 @@
 
 __author__ = "Nir Aides"
 __url__ = ("http://www.digitalpeers.com/pythondebugger")
-__version__ = "1.22"
-__email__ = ("witold.jaworski@tadmar.com.pl")
+__version__ = "1.3.0"
+__email__ = ("witold-jaworski@poczta.neostrada.pl")
 __bpydoc__ = """\
 Winpdb, created by Nir Aides, is a platform independent GPL Python debugger,<br>
 with support for:<br>
@@ -36,10 +36,10 @@ To break into a script:<br>
     - load the script to Blender's Text Editor;<br>
     - run the script, pressing Alt-P
 
-The WindPdb window will appear. You can debug your script there.
-The WinPdb should be attached to the Blender only once per session. You can
-control, wheter the code has or not have to be debugged, by pressing the WinPdb
-"break" command button.
+WindPdb main window will appear. You can debug your script there. Once you have 
+attached WinPdb, you can use it for the whole Blender session. You can
+control, when the code has to be debugged, by pressing the WinPdb "break" command 
+button. This attachement do not disturb any other programs.
 
 Remember: Use Winpdb by setting the break mode when it is needed, as long, as you
 run Blender session. Always close Blender first, unless you have detached the WinPdb
@@ -48,48 +48,19 @@ before (using "Detach" command from the File menu - it is preffered way, but not
 during shutdown. (Because in such case Winpdb tries to stop Blender's Python
 engine).
 """
-#copy this script to the .blender/scripts directory
-
-
-#helper parameters - usually you do not need to change them:
-WAIT_TIMEOUT  = 15  #time that this script will wait for attaching a Winpdb program instance
-PASSWORD      = 'blender' #password, that should be used in WinPdb
-
-
+#copy this script to the .blender/scripts directory or user scripts directory
 import os
 import sys
 import subprocess
-#import rpdb2: delcalred below (because it requires an implicit search path)
+#import rpdb2: see below (because it requires an implicit search path)
 
-def debug(what):
-    """
-        Opens the WinPdb window with Blender script attached to it.
-        Arguments:
-        what - name of the script text, as is visible at WinPdb
-    """
-    #WinPdb arguments : attach to <what>, with given password:
-    if sys.platform == "win32":
-        #I am very sorry, that I was not able to use the os.executable field
-        #but the explicite Python executable name. It is because inside Blender
-        #the os.executable points to Blender.exe, not the Python executable.
-        args = ["pythonw.exe"]
-    else:#in linux theres no need to prefix the interpreter: winpdb.py run itself!
-        # Maybe this line should look like: args = ["python"]? I have not tested it
-        args = []
+#helper parameters - usually you do not need to change them:
+WAIT_TIMEOUT  = 15  #time that this script will wait for attaching a Winpdb program instance
+PASSWORD      = 'blender' #password, the same should be passed to WinPdb
 
-    #I have no possibility to test it, but it should work for Linux, also:
-    args.extend([os.path.join(os.path.dirname(rpdb2.__file__),"winpdb.py"), \
-                "-a", \
-                "-p" + PASSWORD, \
-                what])
-    #Run WinPdb...
-    pid = subprocess.Popen(args)
-    #....and let it to connect, waiting for <timeout> seconds:
-    rpdb2.start_embedded_debugger(PASSWORD, \
-                                  fAllowUnencrypted = True, \
-                                  timeout = WAIT_TIMEOUT)
-
-if not sys.modules.has_key('rpdb2'): #first call: rpdb2 is not imported, yet.
+try: #the imprort of rpdb2 may fail, if it is installed as a part of SPE: 
+    import rpdb2 #so: we will try...
+except ImportError: #...No standalone? try localize it within SPE directories:..
     import _spe #import this just to find the proper SPE directory
     #then we have to add the Winpdb directory to PYTHONPATH:
     #in the lines below I am trying to create the winpdb path in a
@@ -102,9 +73,33 @@ if not sys.modules.has_key('rpdb2'): #first call: rpdb2 is not imported, yet.
     #...just to import the rpdb2, because it requires an implicit search path!
     import rpdb2
 
-    debug("<string>") #every script in Blender is represented by such name
+def debug(what):
+    """
+        Opens the WinPdb window with Blender script attached to it.
+        Arguments:
+        what - name of the script text, as is visible at WinPdb
+    """
+    #WinPdb arguments : attach to <what>, with given password:
+    if os.name == "nt":
+        #I am very sorry, that I was not able to use the os.executable field
+        #but the explicite Python executable name. It is because inside Blender
+        #the os.executable points to Blender.exe, not the Python executable.
+        args = ["pythonw.exe"]
+    else:#in linux theres no need to prefix the interpreter: winpdb.py run itself!
+        # Maybe this line should look like: args = ["python"]? I have not tested it
+        args = ["python"]
 
-else: #Winpdb cannot be connected for second time (embedded rpdb2 is not responding):
-    import Blender
-    Blender.Draw.PupMenu("Cannot run Winpdb:%t|You can run Winpdb during Blender session only once. Close Blender and run it again.")
+    #I have no possibility to test it, but it should work for Linux, also,
+    #if the winpdb.py has the "executable" attribute:
+    args.extend([os.path.join(os.path.dirname(rpdb2.__file__),"winpdb.py"), \
+                "-a", \
+                "-p" + PASSWORD, \
+                what])
+    #Run WinPdb...
+    pid = subprocess.Popen(args)
+    #....and let it to connect, waiting for <timeout> seconds:
+    rpdb2.start_embedded_debugger(PASSWORD, \
+                                  fAllowUnencrypted = True, \
+                                  timeout = WAIT_TIMEOUT)
 
+debug("<string>") #every script in Blender is represented by such name

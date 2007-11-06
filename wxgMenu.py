@@ -14,8 +14,6 @@ SAVE_COPY, SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
 REMEMBER_OPEN_FILES,
 
-EDIT_CUT, EDIT_COPY, EDIT_PASTE,
-
 GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, PREFERENCES,
@@ -34,6 +32,7 @@ RUN_IN_TERMINAL_EMULATOR__EXIT,
 LOAD_IN_BLENDER, REFERENCE_IN_BLENDER, REDRAW_BLENDER_WINDOW,
 BLENDER_PYTHON_MANUAL, BLENDER_PYTHON_TUTORIAL, BLENDER_HOMEPAGE,
 DOWNLOAD_BLENDER, FORUM_BLENDER_PYTHON, FORUM_ELYSIUN_PYTHON,
+ADD_SPE_TO_BLENDER,
 
 SPE_HOMEPAGE, FORUM_SPE, AUTHORS_HOMEPAGE, CONTACT_AUTHOR, PYTHON_HOMEPAGE,
 PYTHON_ANNOUNCEMENTS,
@@ -45,13 +44,13 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(85)]
+[wx.NewId() for x in range(83)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
 SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
-wx.ID_UNDO, wx.ID_REDO, EDIT_CUT, EDIT_COPY, EDIT_PASTE, wx.ID_REPLACE,
+wx.ID_UNDO, wx.ID_REDO, wx.ID_CUT, wx.ID_COPY, wx.ID_PASTE, wx.ID_REPLACE,
 wx.ID_FIND, GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
 INSERT_SIGNATURE, EXECUTE, 
@@ -271,9 +270,9 @@ class Bar(wx.MenuBar):
         self.edit.Append(wx.ID_UNDO, _("&Undo\tCtrl+Z"), "", wx.ITEM_NORMAL)
         self.edit.Append(wx.ID_REDO, _("&Redo\tCtrl+Y"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
-        self.edit.Append(EDIT_CUT, _("Cut"), "", wx.ITEM_NORMAL)
-        self.edit.Append(EDIT_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
-        self.edit.Append(EDIT_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
+        self.edit.Append(wx.ID_CUT, _("Cut"), "", wx.ITEM_NORMAL)
+        self.edit.Append(wx.ID_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
+        self.edit.Append(wx.ID_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(EXECUTE, _("&Execute in shell\tCtrl+Shift+E"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
@@ -333,18 +332,20 @@ class Bar(wx.MenuBar):
         self.tools.Append(OPEN_TERMINAL_EMULATOR, _("Open &terminal...\tCtrl+Shift+T"), "", wx.ITEM_NORMAL)
         self.Append(self.tools, _("&Tools"))
         self.blender = wx.Menu()
-        self.blender.Append(LOAD_IN_BLENDER, _("&Load in blender\tCtrl+B"), "", wx.ITEM_NORMAL)
+        self.blender.Append(LOAD_IN_BLENDER, _("&Load into Blender\tCtrl+B"), "", wx.ITEM_NORMAL)
         self.blender.Append(REFERENCE_IN_BLENDER, _("&Reference in Blender\tCtrl+Alt+B"), "", wx.ITEM_NORMAL)
         self.blender.AppendSeparator()
-        self.blender.Append(REDRAW_BLENDER_WINDOW, _("Re&draw blender window\tF5"), "", wx.ITEM_NORMAL)
+        self.blender.Append(REDRAW_BLENDER_WINDOW, _("Re&draw Blender window\tF5"), "", wx.ITEM_NORMAL)
         self.blender.AppendSeparator()
-        self.blender.Append(BLENDER_PYTHON_MANUAL, _("Blender python &manual..."), "", wx.ITEM_NORMAL)
-        self.blender.Append(BLENDER_PYTHON_TUTORIAL, _("Blender python &tutorial..."), "", wx.ITEM_NORMAL)
+        self.blender.Append(BLENDER_PYTHON_MANUAL, _("Blender Python &manual..."), "", wx.ITEM_NORMAL)
+        self.blender.Append(BLENDER_PYTHON_TUTORIAL, _("Blender Python &tutorial..."), "", wx.ITEM_NORMAL)
         self.blender.AppendSeparator()
         self.blender.Append(BLENDER_HOMEPAGE, _("Blender &homepage..."), "", wx.ITEM_NORMAL)
-        self.blender.Append(DOWNLOAD_BLENDER, _("&Download blender..."), "", wx.ITEM_NORMAL)
-        self.blender.Append(FORUM_BLENDER_PYTHON, _("Forum &blender python..."), "", wx.ITEM_NORMAL)
-        self.blender.Append(FORUM_ELYSIUN_PYTHON, _("Forum &elYsiun python..."), "", wx.ITEM_NORMAL)
+        self.blender.Append(DOWNLOAD_BLENDER, _("&Download Blender..."), "", wx.ITEM_NORMAL)
+        self.blender.Append(FORUM_BLENDER_PYTHON, _("Forum &Blender Python..."), "", wx.ITEM_NORMAL)
+        self.blender.Append(FORUM_ELYSIUN_PYTHON, _("Forum &Blenderartists Python..."), "", wx.ITEM_NORMAL)
+        self.blender.AppendSeparator()
+        self.blender.Append(ADD_SPE_TO_BLENDER, _("&Add SPE and Winpdb to Blender menu..."), "", wx.ITEM_NORMAL)
         self.Append(self.blender, _("&Blender"))
         self.links = wx.Menu()
         self.links.Append(SPE_HOMEPAGE, _("&Spe homepage..."), "", wx.ITEM_NORMAL)
@@ -398,9 +399,9 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_remember_open_files, id=REMEMBER_OPEN_FILES)
         self.Bind(wx.EVT_MENU, self.menu_undo, id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, self.menu_redo, id=wx.ID_REDO)
-        self.Bind(wx.EVT_MENU, self.menu_cut, id=EDIT_CUT)
-        self.Bind(wx.EVT_MENU, self.menu_copy, id=EDIT_COPY)
-        self.Bind(wx.EVT_MENU, self.menu_paste, id=EDIT_PASTE)
+        self.Bind(wx.EVT_MENU, self.menu_cut, id=wx.ID_CUT)
+        self.Bind(wx.EVT_MENU, self.menu_copy, id=wx.ID_COPY)
+        self.Bind(wx.EVT_MENU, self.menu_paste, id=wx.ID_PASTE)
         self.Bind(wx.EVT_MENU, self.menu_execute, id=EXECUTE)
         self.Bind(wx.EVT_MENU, self.menu_find__replace, id=wx.ID_REPLACE)
         self.Bind(wx.EVT_MENU, self.menu_find_next, id=wx.ID_FIND)
@@ -449,6 +450,7 @@ class Bar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.menu_download_blender, id=DOWNLOAD_BLENDER)
         self.Bind(wx.EVT_MENU, self.menu_forum_blender_python, id=FORUM_BLENDER_PYTHON)
         self.Bind(wx.EVT_MENU, self.menu_forum_elysiun_python, id=FORUM_ELYSIUN_PYTHON)
+        self.Bind(wx.EVT_MENU, self.menu_add_spe_to_blender, id=ADD_SPE_TO_BLENDER)
         self.Bind(wx.EVT_MENU, self.menu_spe_homepage, id=SPE_HOMEPAGE)
         self.Bind(wx.EVT_MENU, self.menu_forum_spe, id=FORUM_SPE)
         self.Bind(wx.EVT_MENU, self.menu_python_announcements, id=PYTHON_ANNOUNCEMENTS)
@@ -789,6 +791,10 @@ class Bar(wx.MenuBar):
 
     def menu_clear_output(self, event): # wxGlade: Bar.<event_handler>
         print "Event handler `menu_clear_output' not implemented"
+        event.Skip()
+
+    def menu_add_spe_to_blender(self, event): # wxGlade: Bar.<event_handler>
+        print "Event handler `menu_add_spe_to_blender' not implemented"
         event.Skip()
 
 # end of class Bar

@@ -105,7 +105,7 @@ class Tool(wx.ToolBar):
         self.AddLabelTool(TOOL_CHECK_SOURCE_WITH_PYCHECKER, "", wx.Bitmap("skins/default/pychecker.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Check source with pychecker | Ctrl+Alt+C"), "")
         self.AddSeparator()
         if app.Blender:
-            self.AddLabelTool(TOOL_LOAD_IN_BLENDER, "", wx.Bitmap("skins/default/blender.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Load in Blender | Ctrl+B"), "")
+            self.AddLabelTool(TOOL_LOAD_IN_BLENDER, "", wx.Bitmap("skins/default/blender.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Load into Blender | Ctrl+B"), "")
             self.AddLabelTool(TOOL_REFERENCE_IN_BLENDER, "", wx.Bitmap("skins/default/blenderRef.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Reference in Blender | Ctrl+Alt+B"), "")
             self.AddSeparator()
         self.AddLabelTool(TOOL_DONATE, "", wx.Bitmap("skins/default/donate.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, _("Please donate, if you enjoy SPE."), "")
@@ -566,7 +566,7 @@ class Bar(wxgMenu.Bar):
 
     def menu_blender_python_manual(self, event=None):
         """Blender > Blender python manual..."""
-        self.link("http://members.optusnet.com.au/cjbarton/BPY_API/index.html")
+        self.link("http://www.blender.org/documentation/245PythonDoc/index.html")
 
     def menu_blender_python_tutorial(self, event=None):
         """Blender > Blender python tutorial..."""
@@ -585,8 +585,12 @@ class Bar(wxgMenu.Bar):
         self.link('http://www.blender.org/modules.php?op=modload&name=phpBB2&file=viewforum&f=9')
 
     def menu_forum_elysiun_python(self, event=None):
-        """Blender > Forum elYsiun python..."""
-        self.link('http://www.elysiun.com/forum/viewforum.php?f=5&sid=1fcd71798ef503d8b093d597d1da142a')
+        """Blender > Forum Blenderatists Python..."""
+        self.link('http://blenderartists.org/forum/forumdisplay.php?f=11')
+        
+    def menu_add_spe_to_blender(self, event=None):
+        #Witold, please fill in here
+        pass
 
     def menu_spe_homepage(self, event=None):
         """Links > Spe homepage..."""
