@@ -578,19 +578,19 @@ class Bar(wxgMenu.Bar):
 
     def menu_download_blender(self, event=None):
         """Blender > Download blender..."""
-        self.link('http://www.blender3d.org/Download/')
+        self.link('http://www.blender.org/download/get-blender')
 
     def menu_forum_blender_python(self, event=None):
         """Blender > Forum blender python..."""
-        self.link('http://www.blender.org/modules.php?op=modload&name=phpBB2&file=viewforum&f=9')
+        self.link('http://www.blender.org/forum/viewforum&f=9')
 
     def menu_forum_elysiun_python(self, event=None):
         """Blender > Forum Blenderatists Python..."""
         self.link('http://blenderartists.org/forum/forumdisplay.php?f=11')
         
     def menu_add_spe_to_blender(self, event=None):
-        #Witold, please fill in here
-        pass
+        """Blender > Add SPE And Winpdb to Blender menu..."""
+        self.parentPanel.add_spe_to_blender()
 
     def menu_spe_homepage(self, event=None):
         """Links > Spe homepage..."""

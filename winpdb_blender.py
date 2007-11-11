@@ -68,10 +68,10 @@ PASSWORD      = 'blender' #Winpdb requires a password between the client and
 # Winpdb installation. This way this script may work with newer version of 
 # Winpdb, than this one that is shipped with SPE:
 #
-try:#looking for the default path:
+try:#looking for the default/standalone  winpdb installation:
     import rpdb2
 except ImportError: #we will try localize it within SPE directories:
-    import _spe.plugins.spe_winpdb #this line imports rpdb2 internally
+    import _spe.plugins.spe_winpdb #import this, to use winpdb packed with SPE
 
 from rpdb2 import start_embedded_debugger, __file__ as rpdb2_file
 
@@ -82,9 +82,11 @@ def debug(what):
 
     #
     # Argument 1: Python executable name. 
+    # (We cannot utilize here os.executable, because it returns "Blender.exe", 
+    # instead "python.exe)"
     #
-    args = ["python"] #we cannot utilize here os.executable, because it returns
-                      #"Blender.exe", instead "python.exe"
+    if os.name in ("nt","mac"): args=["pythonw"] # On Windows and Mac use this
+    else: args = ["python"] #On Linux and other systems - standard python
     #
     # Argument 2: full path to Winpdb.py script name 
     #

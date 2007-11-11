@@ -51,6 +51,8 @@ else:
     STYLE       = wx.NB_BOTTOM
 
 
+BLENDER_SHORTCUT_SPE    = "spe_blender.py" #a shortcut to SPE from Blender
+BLENDER_SHORTCUT_WINPDB = "winpdb_blender.py" #a shortcut to Winpdb from Blender
 
 ####Subclassed Parent class-----------------------------------------------------
 class Panel(wx.Notebook):
@@ -520,6 +522,54 @@ class Panel(wx.Notebook):
         prefs=preferencesDialog.Create(self,-1,'')
         prefs.ShowModal()
 
+    #---Blender
+
+    def add_spe_to_blender(self):
+        """Adds SPE and Winpdb shortcuts to Blender menu"""
+        from distutils.file_util import copy_file 
+        import Blender
+        #important local variables
+        #
+        srcdir = info.PATH #_spe directory
+        dstdir = Blender.Get('uscriptsdir') #preferred Blender script directory (can be '')
+        altdir = Blender.Get('scriptsdir') #the other Blender script directory 
+        #'uscriptsdir' can be empty - in such case use 'scriptsdir': 
+        if not dstdir: dstdir, altdir = altdir, None
+        #
+        #2. Main operation: try to update the *.py file at dstdir,
+        #   optionally remove eventual old location from altdir:
+        #
+        cpyresult = rmresult = mresult = "" #helpers for message fromatting
+        for fname in (BLENDER_SHORTCUT_SPE,BLENDER_SHORTCUT_WINPDB):
+            src = os.path.join(srcdir,fname)
+            result = copy_file(src, os.path.join(dstdir,fname),update=1)
+            if result[1]: #copied! 
+                cpyresult += ", " + fname #if suceeded: add fname to the message
+                #
+                #if we have copied fname with success - there should not be 
+                # two fname scripts (one for every Blender scripts directory): 
+                # try to remove the unwanted one from the altdir (Blender 'scriptsdir')
+                #
+                if altdir and os.access(altdir,os.W_OK): 
+                    try: #let's try to remove it from unused dir:
+                        os.remove(os.path.join(altdir, fname)) 
+                        rmresult += ", " + fname #OK, succeed: add fname to the message
+                    except:
+                        pass #just continue - it is not a big problem
+        #
+        #3. Update Blender:
+        #
+        Blender.UpdateMenus()
+        #
+        #4. Final message to the user:
+        #
+        #([2:] is used in strings to discard leading ", "):
+        msg = "Blender menu updated.\n\n"
+        if cpyresult: msg+= "Copied %s to %s.\n\n" % (cpyresult[2:], dstdir)
+        if rmresult: msg+= "Removed %s from %s. " % (rmresult[2:], altdir)
+        self.message(msg)
+        #self.SetStatusText(msg,1)
+        
     #---View
     def whitespace(self,event):
         """Toggle visibility white space."""
