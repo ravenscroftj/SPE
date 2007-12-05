@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 """
-    rpdb2.py - version 2.3.0
+    rpdb2.py - version 2.3.2
 
     A remote Python debugger for CPython
 
@@ -434,7 +434,7 @@ def start_embedded_debugger_interactive_password(
             stdout.write('Please type password:')
             
         _rpdb2_pwd = stdin.readline().rstrip('\n')
-        _rpdb2_pwd = as_unicode(_rpdb2_pwd, stdin.encoding, fstrict = True)
+        _rpdb2_pwd = as_unicode(_rpdb2_pwd, detect_encoding(stdin), fstrict = True)
 
         try:
             return __start_embedded_debugger(
@@ -482,9 +482,9 @@ def setbreak():
 
 
 
-VERSION = (2, 3, 0, 0, '')
-RPDB_VERSION = "RPDB_2_3_0"
-RPDB_COMPATIBILITY_VERSION = "RPDB_2_3_0"
+VERSION = (2, 3, 2, 0, '')
+RPDB_VERSION = "RPDB_2_3_2"
+RPDB_COMPATIBILITY_VERSION = "RPDB_2_3_2"
 
 
 
@@ -1652,6 +1652,9 @@ RPDB_BPL_FOLDER = os.path.join(RPDB_SETTINGS_FOLDER, 'breakpoints')
 RPDB_BPL_FOLDER_NT = 'rpdb2_breakpoints'
 MAX_BPL_FILES = 100
 
+EMBEDDED_SYNC_THRESHOLD = 1.0
+EMBEDDED_SYNC_TIMEOUT = 5.0
+
 HEARTBEAT_TIMEOUT = 16
 IDLE_MAX_RATE = 2.0
 PING_TIMEOUT = 4.0
@@ -1732,7 +1735,7 @@ STR_ILEGAL_ANALYZE_MODE_CMD = "Command is not allowed in analyze mode. Type 'hel
 STR_ANALYZE_MODE_TOGGLE = "Analyze mode was set to: %s."
 STR_BAD_ARGUMENT = "Bad Argument."
 STR_PSYCO_WARNING = "The psyco module was detected. The debugger is incompatible with the psyco module and will not function correctly as long as the psyco module is imported and used."
-STR_CONFLICTING_MODULES = "The modules: %s, which are incompatible with the debugger were detected and will likely cause the debugger to fail."
+STR_CONFLICTING_MODULES = "The modules: %s, which are incompatible with the debugger were detected and will possibly cause the debugger to fail."
 STR_SIGNAL_INTERCEPT = "The signal %s(%d) was intercepted inside debugger tracing logic. It will be held pending until the debugger continues. Any exceptions raised by the handler will be ignored!"
 STR_SIGNAL_EXCEPTION = "Exception %s raised by handler of signal %s(%d) inside debugger tracing logic was ignored!"
 STR_DEBUGGEE_TERMINATED = "Debuggee has terminated."
@@ -2102,7 +2105,7 @@ def _raw_input(s):
         return input(s)
 
     i = raw_input(s)
-    i = as_unicode(i, sys.stdin.encoding, fstrict = True)
+    i = as_unicode(i, detect_encoding(sys.stdin), fstrict = True)
 
     return i
 
@@ -2111,12 +2114,7 @@ def _raw_input(s):
 def _print(s, f = sys.stdout, feol = True):
     s = as_unicode(s)
 
-    encoding = None
-    if hasattr(f, 'encoding'):
-        encoding = f.encoding
-
-    if encoding == None:
-        encoding = detect_locale()
+    encoding = detect_encoding(f)
 
     s = as_bytes(s, encoding, fstrict = False)
     s = as_string(s, encoding)
@@ -2125,6 +2123,29 @@ def _print(s, f = sys.stdout, feol = True):
         f.write(s + '\n')
     else:
         f.write(s)
+
+
+
+def detect_encoding(file):
+    try:
+        encoding = file.encoding
+        if encoding == None:
+            return detect_locale()
+
+    except:
+        return detect_locale()
+
+    try:
+        codecs.lookup(encoding)
+        return encoding
+
+    except:
+        pass
+
+    if encoding.lower().startswith('utf_8'):
+        return 'utf-8'
+
+    return 'ascii'
 
 
 
@@ -3107,7 +3128,7 @@ def source_provider_blender(filename):
 
 
 def source_provider_filesystem(filename):
-    f = open(filename, 'rb')
+    f = open(filename, 'r')
     l = f.read()
     f.close()
 
@@ -3716,7 +3737,7 @@ def recalc_sys_path(old_pythonpath):
 
 def calc_signame(signum):
     for k, v in vars(signal).items():
-        if not k.startswith('SIG') or k in ['SIG_IGN', 'SIG_DFL']:
+        if not k.startswith('SIG') or k in ['SIG_IGN', 'SIG_DFL', 'SIGRTMIN', 'SIGRTMAX']:
             continue
 
         if v == signum:
@@ -4327,6 +4348,16 @@ class CEventNull(CEvent):
 
 
 
+class CEventEmbeddedSync(CEvent):
+    """
+    Sent when an embedded interpreter becomes active if it needs to 
+    determine if there are pending break requests. (Internal)
+    """
+
+    pass
+
+
+
 class CEventClearSourceCache(CEvent):
     """
     Sent when the source cache is cleared.
@@ -4750,7 +4781,7 @@ class CEventQueue:
     def __init__(self, event_dispatcher, max_event_list_length = MAX_EVENT_LIST_LENGTH):
         self.m_event_dispatcher = event_dispatcher
 
-        self.m_event_lock = threading.Condition(threading.RLock())
+        self.m_event_lock = threading.Condition()
         self.m_max_event_list_length = max_event_list_length
         self.m_event_list = []
         self.m_event_index = 0
@@ -4838,7 +4869,7 @@ class CStateManager:
             if self.m_event_dispatcher_output is not None:
                 self.m_event_dispatcher_output.register_chain_override(event_type_dict)
 
-        self.m_state_lock = threading.Condition(threading.Lock())
+        self.m_state_lock = threading.Condition()
 
         self.m_state_queue = []
         self.m_state_index = 0        
@@ -5758,7 +5789,7 @@ class CDebuggerCoreThread:
         self.m_core = core_debugger
         self.m_bp_manager = core_debugger.m_bp_manager
 
-        self.m_frame_lock = threading.Condition(threading.Lock())
+        self.m_frame_lock = threading.Condition()
         self.m_frame_external_references = 0
 
         
@@ -6305,7 +6336,7 @@ class CDebuggerCore:
 
         self.m_timer_embedded_giveup = None
         
-        self.m_threads_lock = threading.Condition(threading.Lock())
+        self.m_threads_lock = threading.Condition()
 
         self.m_threads = {}
 
@@ -6331,6 +6362,9 @@ class CDebuggerCore:
         self.m_code_contexts = {None: None}
 
         self.m_fembedded = fembedded
+        self.m_embedded_event = threading.Event()
+        self.m_embedded_sync_t0 = 0
+        self.m_embedded_sync_t1 = 0
 
         self.m_heartbeats = {0: time.time() + 3600}
         
@@ -6387,12 +6421,26 @@ class CDebuggerCore:
         to attach.
         """
         
+        self.cancel_request_go_timer()
+
         if timeout is None:
             return
-            
-        _timeout = max(5.0, timeout)
-        self.m_timer_embedded_giveup = threading.Timer(_timeout, self.request_go)
+        
+        _timeout = max(1.0, timeout)
+
+        f = lambda: ( 
+            self.record_client_heartbeat(0, False, True),
+            self.request_go()
+            )
+ 
+        self.m_timer_embedded_giveup = threading.Timer(_timeout, f)
         self.m_timer_embedded_giveup.start()
+        
+        #
+        # sleep() releases control and allow timer thread to actually start 
+        # before this scope returns.
+        #
+        time.sleep(0.1)
 
     
     def cancel_request_go_timer(self):
@@ -6548,7 +6596,7 @@ class CDebuggerCore:
         Set rpdb2 to wrap all signal handlers.
         """
         for key, value in list(vars(signal).items()):
-            if not key.startswith('SIG') or key in ['SIG_IGN', 'SIG_DFL']:
+            if not key.startswith('SIG') or key in ['SIG_IGN', 'SIG_DFL', 'SIGRTMIN', 'SIGRTMAX']:
                 continue
 
             handler = signal.getsignal(value)
@@ -6593,9 +6641,20 @@ class CDebuggerCore:
 
         ctx = CDebuggerCoreThread(name, self, frame, event)
         ctx.set_tracers()
-        self.m_threads[ctx.m_thread_id] = ctx
 
-        if len(self.m_threads) == 1:
+        try:
+            self.m_threads_lock.acquire() 
+
+            self.m_threads[ctx.m_thread_id] = ctx
+            nthreads = len(self.m_threads)
+
+            if nthreads == 1:
+                self.prepare_embedded_sync()
+
+        finally:
+            self.m_threads_lock.release()
+
+        if nthreads == 1:
             self.clear_source_cache()
             
             self.m_current_ctx = ctx
@@ -6607,13 +6666,63 @@ class CDebuggerCore:
 
         sys.settrace(ctx.trace_dispatch_call)
         sys.setprofile(ctx.profile)
-        
+      
+        self.wait_embedded_sync(nthreads == 1)
+
         if event == 'call':
             return ctx.trace_dispatch_call(frame, event, arg)
         elif hasattr(frame, 'f_trace') and (frame.f_trace is not None):    
             return frame.f_trace(frame, event, arg)
         else:
             return None
+
+    
+    def prepare_embedded_sync(self):
+        if not self.m_fembedded:
+            return
+
+        t = time.time()
+        t0 = self.m_embedded_sync_t0
+
+        if t0 != 0:
+            self.fix_heartbeats(t - t0)
+
+        if self.get_clients_attached() == 0:
+            return
+
+        if t - t0 < EMBEDDED_SYNC_THRESHOLD:
+            return
+
+        self.m_embedded_sync_t1 = t
+        self.m_embedded_event.clear()
+
+
+    def wait_embedded_sync(self, ftrigger):
+        if not self.m_fembedded:
+            return
+
+        t = time.time()
+        t0 = self.m_embedded_sync_t0
+        t1 = self.m_embedded_sync_t1
+
+        if t - t0 < EMBEDDED_SYNC_THRESHOLD:
+            return
+
+        if t - t1 >= EMBEDDED_SYNC_TIMEOUT:
+            return
+
+        if ftrigger:
+            event = CEventEmbeddedSync()
+            self.m_event_dispatcher.fire_event(event)
+
+        safe_wait(self.m_embedded_event, EMBEDDED_SYNC_TIMEOUT - (t - t1))
+
+        if ftrigger:
+            self.m_embedded_sync_t1 = 0
+
+
+    def embedded_sync(self):
+        self.m_embedded_event.set()
 
 
     def set_all_tracers(self):
@@ -6633,7 +6742,7 @@ class CDebuggerCore:
                 self.m_current_ctx = list(self.m_threads.values())[0]
                 
         except (KeyError, IndexError):
-            pass            
+            self.m_embedded_sync_t0 = time.time()           
 
 
     def set_break_flag(self):
@@ -6675,6 +6784,11 @@ class CDebuggerCore:
             self.m_heartbeats[id] = time.time()
 
 
+    def fix_heartbeats(self, missing_pulse):
+        for k, v in list(self.m_heartbeats.items()):
+            self.m_heartbeats[k] = v + missing_pulse
+
+
     def get_clients_attached(self):
         n = 0
         t = time.time()
@@ -6684,6 +6798,16 @@ class CDebuggerCore:
                 n += 1
 
         return n
+
+
+    def is_waiting_for_attach(self):
+        if self.get_clients_attached() != 1:
+            return False
+
+        if list(self.m_heartbeats.keys()) != [0]:
+            return False
+
+        return True
 
 
     def _break(self, ctx, frame, event, arg):
@@ -6701,7 +6825,9 @@ class CDebuggerCore:
         ctx.m_fBroken = True
         f_full_notification = False
         f_uhe_notification = False
-        
+      
+        step_tid = self.m_step_tid
+
         try: 
             self.m_state_manager.acquire()
             if self.m_state_manager.get_state() != STATE_BROKEN:
@@ -6763,6 +6889,9 @@ class CDebuggerCore:
         elif self.get_clients_attached() == 0:
             #print_debug('state: %s' % self.m_state_manager.get_state())
             self.request_go_quiet()
+
+        elif step_tid == ctx.m_thread_id and frame.f_code.co_name == 'rpdb2_import_wrapper':
+            self.request_step_quiet()
 
         else:
             if f_full_notification:
@@ -6999,7 +7128,7 @@ class CDebuggerCore:
         """
         Let debugger run.
         """
-        
+       
         try:
             if fLock:
                 self.m_state_manager.acquire()
@@ -7044,6 +7173,14 @@ class CDebuggerCore:
 
         finally:    
             self.m_state_manager.release()
+
+
+    def request_step_quiet(self, fLock = True):
+        try:
+            self.request_step(fLock)
+        
+        except DebuggerNotBroken:
+            pass
 
 
     def request_step(self, fLock = True):
@@ -7216,7 +7353,8 @@ class CDebuggerEngine(CDebuggerCore):
             CEventConflictingModules: {},
             CEventSignalIntercepted: {},
             CEventSignalException: {},
-            CEventClearSourceCache: {}
+            CEventClearSourceCache: {},
+            CEventEmbeddedSync: {}
             }
 
         self.m_event_queue = CEventQueue(self.m_event_dispatcher)
@@ -9083,6 +9221,11 @@ class CDebuggeeServer(CIOServer):
         return 0
 
 
+    def export_embedded_sync(self):
+        self.m_debugger.embedded_sync()
+        return 0
+
+
         
 #
 # ------------------------------------- RPC Client --------------------------------------------
@@ -9499,6 +9642,9 @@ class CSessionManagerInternal:
         
         event_type_dict = {CEventSignalException: {}}
         self.register_callback(self.on_event_signal_exception, event_type_dict, fSingleUse = False)
+
+        event_type_dict = {CEventEmbeddedSync: {}}
+        self.register_callback(self.on_event_embedded_sync, event_type_dict, fSingleUse = False)
         
         event_type_dict = {CEventTrap: {}}
         self.m_event_dispatcher_proxy.register_callback(self.on_event_trap, event_type_dict, fSingleUse = False)
@@ -9619,7 +9765,7 @@ class CSessionManagerInternal:
             try:
                 self._spawn_server(fchdir, ExpandedFilename, args, rid)            
                 server = self.__wait_for_debuggee(rid)
-                self.attach(server.m_rid, server.m_filename, fsupress_pwd_warning = True, fsetenv = True, ffirewall_test = False, server = server)
+                self.attach(server.m_rid, server.m_filename, fsupress_pwd_warning = True, fsetenv = True, ffirewall_test = False, server = server, fload_breakpoints = fload_breakpoints)
 
                 self.m_last_command_line = command_line
                 self.m_last_fchdir = fchdir
@@ -9629,12 +9775,6 @@ class CSessionManagerInternal:
                     self.m_state_manager.set_state(STATE_DETACHED)
 
                 raise
-
-            try:
-                if fload_breakpoints:
-                    self.load_breakpoints()
-            except:
-                pass
 
         finally:
             delete_pwd_file(rid)
@@ -9752,7 +9892,7 @@ class CSessionManagerInternal:
             os.popen(command)
 
     
-    def attach(self, key, name = None, fsupress_pwd_warning = False, fsetenv = False, ffirewall_test = True, server = None):
+    def attach(self, key, name = None, fsupress_pwd_warning = False, fsetenv = False, ffirewall_test = True, server = None, fload_breakpoints = True):
         assert(is_unicode(key))
 
         self.__verify_unattached()
@@ -9797,7 +9937,12 @@ class CSessionManagerInternal:
                 self.m_printer(STR_MULTIPLE_DEBUGGEES % key)
             self.m_printer(STR_ATTACH_CRYPTO_MODE % ([' ' + STR_ATTACH_CRYPTO_MODE_NOT, ''][self.get_encryption()]))    
             self.m_printer(STR_ATTACH_SUCCEEDED % server.m_filename)
-            return
+
+            try:
+                if fload_breakpoints:
+                    self.load_breakpoints()
+            except:
+                pass
 
         except (socket.error, CConnectionException):
             self.m_printer(STR_ATTACH_FAILED_NAME % _name)
@@ -9970,6 +10115,14 @@ class CSessionManagerInternal:
         self.m_printer(STR_SIGNAL_EXCEPTION % (event.m_description, event.m_signame, event.m_signum))
 
 
+    def on_event_embedded_sync(self, event):
+        #
+        # time.sleep() allows pending break requests to go through...
+        #
+        time.sleep(0.001)
+        self.getSession().getProxy().embedded_sync()
+
+
     def on_event_exit(self, event):
         self.m_printer(STR_DEBUGGEE_TERMINATED)        
         threading.Thread(target = self.detach_job).start()
@@ -10115,7 +10268,7 @@ class CSessionManagerInternal:
             return
 
         path = calc_bpl_filename(module_name + filename)            
-        file = open(path, 'wb')
+        file = open(path, 'w')
 
         try:
             try:
@@ -10139,7 +10292,7 @@ class CSessionManagerInternal:
             return
 
         path = calc_bpl_filename(module_name + filename)                            
-        file = open(path, 'rb')
+        file = open(path, 'r')
 
         ferror = False
         
@@ -10631,18 +10784,9 @@ class CConsoleInternal(cmd.Cmd, threading.Thread):
         self.cmdqueue.insert(0, '')
 
         self.m_stdout = self.stdout
-        self.m_encoding = self.__detect_encoding(self.stdin)
+        self.m_encoding = detect_encoding(self.stdin)
 
         g_fDefaultStd = (stdin == None)
-
-
-    def __detect_encoding(self, file):
-        try:
-            return file.encoding
-        except:
-            pass
-
-        return detect_locale()
 
 
     def set_filename(self, filename):
@@ -12280,6 +12424,43 @@ last set, last evaluated.""", self.m_stdout)
 
 
 
+def rpdb2_import_wrapper(*args, **kwargs):
+    if len(args) > 0:
+        name = args[0]
+    elif 'name' in kwargs:
+        name = kwargs['name']
+    else:
+        return g_import(*args, **kwargs)
+
+    if name in sys.modules:
+        return g_import(*args, **kwargs)
+
+    #
+    # rpdb2 avoids stepping through this 
+    # function (rpdb2_import_wrapper) to
+    # prevent confusion when stepping into
+    # an import statement.
+    #
+    m = g_import(*args, **kwargs)
+
+    if name == 'gtk':
+        try:
+            m.gdk.threads_init()
+        except:
+            m.threads_init()
+
+    return m
+
+
+
+g_import = None
+
+if __name__ == 'rpdb2' and sys.modules['__builtin__'].__import__ != rpdb2_import_wrapper:
+    g_import = sys.modules['__builtin__'].__import__
+    sys.modules['__builtin__'].__import__ = rpdb2_import_wrapper
+
+
+
 def __find_eval_exec_frame_in_stack():
     f = sys._getframe(0)
     
@@ -12415,6 +12596,9 @@ def signal_handler(signum, frameobj):
 
     event = CEventSignalIntercepted(signum)
     g_debugger.m_event_dispatcher.fire_event(event)
+
+    if signum == signal.SIGINT and g_debugger.is_waiting_for_attach():
+        g_debugger.set_request_go_timer(0)
 
 
 
@@ -12667,7 +12851,7 @@ def _atexit(fabort = False):
         
 
 
-def myimport(*args, **kwargs):
+def my_pickle_import(*args, **kwargs):
     if len(args) != 1 or len(kwargs) != 0:
         return __import__(*args, **kwargs)
 
@@ -12686,7 +12870,7 @@ def workaround_import_deadlock():
     xmlrpclib.loads(XML_DATA)
     s = as_bytes('(S\'\\xb3\\x95\\xf9\\x1d\\x105c\\xc6\\xe2t\\x9a\\xa5_`\\xa59\'\np0\nS"(I0\\nI1\\nS\'5657827\'\\np0\\n(S\'server_info\'\\np1\\n(tI0\\ntp2\\ntp3\\n."\np1\ntp2\n.0000000')
     pickle.loads(s)
-    pickle.__import__ = myimport
+    pickle.__import__ = my_pickle_import
 
 
 
@@ -12751,21 +12935,6 @@ def __start_embedded_debugger(_rpdb2_pwd, fAllowUnencrypted, fAllowRemote, timeo
 
 
 
-def workaround_gtk_threading():
-    try:
-        import gtk
-
-        try:
-            gtk.gdk.threads_init()
-        
-        except:
-            gtk.threads_init()
-
-    except:
-        pass
-
-
-
 def StartServer(args, fchdir, _rpdb2_pwd, fAllowUnencrypted, fAllowRemote, rid): 
     assert(is_unicode(_rpdb2_pwd))
 
@@ -12790,7 +12959,6 @@ def StartServer(args, fchdir, _rpdb2_pwd, fAllowUnencrypted, fAllowRemote, rid):
 
     print_debug('Starting server with: %s' % ExpandedFilename)
 
-    workaround_gtk_threading()
     workaround_import_deadlock()
 
     #

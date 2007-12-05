@@ -106,7 +106,6 @@ def main():
     #---Patched by Stani http://pythonide.stani.be (begin)
     sys_path    = sys.path[:]
     for f in files:
-        print 'file', repr(f.name)
         f_dir   = dirname(f.name)
         sys.path= sys_path[:]
         if f_dir not in sys.path:

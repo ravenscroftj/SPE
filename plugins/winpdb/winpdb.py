@@ -388,7 +388,7 @@ Python interpreter path is:
 MSG_WARNING_TRAP = "Are you sure that you want to disable the trapping of unhandled exceptions? If you click Yes unhandled exceptions will not be caught."
 MSG_WARNING_UNHANDLED_EXCEPTION = "An unhandled exception was caught. Would you like to analyze it?"
 MSG_WARNING_TITLE = "Warning"
-MSG_WARNING_TEMPLATE = "%s\n\nClick 'Cancel' to ignore this warning in the future."
+MSG_WARNING_TEMPLATE = "%s\n\nClick 'Cancel' to ignore this warning in this session."
 MSG_ERROR_TITLE = "Error"
 MSG_ERROR_FILE_NOT_FOUND = "File not found."
 MSG_ERROR_FILE_NOT_PYTHON = "'%s' does not seem to be a Python source file. Only Python files are accepted."
@@ -459,9 +459,9 @@ TLC_HEADER_NAME = "Name"
 TLC_HEADER_REPR = "Repr"
 TLC_HEADER_TYPE = "Type"
 
-WINPDB_TITLE = "Winpdb 1.3.0"
-WINPDB_VERSION = "WINPDB_1_3_0"
-VERSION = (1, 3, 0, 0, '')
+WINPDB_TITLE = "Winpdb 1.3.2"
+WINPDB_VERSION = "WINPDB_1_3_2"
+VERSION = (1, 3, 2, 0, '')
 
 WINPDB_SIZE = "winpdb_size"
 WINPDB_MAXIMIZE = "winpdb_maximize"
@@ -2781,6 +2781,7 @@ class CConsole(wx.Panel, CCaptionManager):
         
     def stop(self):
         self.m_queue.put('exit\n')
+        self.m_queue.put('exit\n')
         self.m_console.join()
 
 
@@ -4301,8 +4302,8 @@ def StartClient(command_line, fAttach, fchdir, pwd, fAllowUnencrypted, fRemote, 
 
 
 def main():
-    if rpdb2.get_version() != "RPDB_2_3_0":
-        rpdb2._print(STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_3_0", rpdb2.get_version()))
+    if rpdb2.get_version() != "RPDB_2_3_2":
+        rpdb2._print(STR_ERROR_INTERFACE_COMPATIBILITY % ("RPDB_2_3_2", rpdb2.get_version()))
         return
         
     return rpdb2.main(StartClient)
@@ -4316,7 +4317,14 @@ def get_version():
 
 if __name__=='__main__':
     ret = main()
-    sys.exit(ret)
+
+    #
+    # Debuggee breaks (pauses) here 
+    # before program termination. 
+    #
+    # You can step to debug any exit handlers.
+    #
+    rpdb2.setbreak()
 
     
     

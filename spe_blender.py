@@ -1,14 +1,14 @@
 #!BPY
 
 #"""
-#Name: 'Stani´s Python Editor'
+#Name: 'Stani Python Editor'
 #Blender:243
 #Group: 'System'
 #Tooltip: 'Python IDE for Blender'
 #"""
 
-__author__ = "Stani Michiels"
-__url__ = ("http://spe.pycs.net/","http://projects.blender.org/projects/spe/")
+__author__ = "Stani (www.stani.be)"
+__url__ = ("http://pythonide.stani.be/")
 __email__ = ("witold-jaworski@poczta.neostrada.pl")
 __version__ = "0.8.4.b"
 __bpydoc__ = """

@@ -862,10 +862,11 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         self.tabs.UnbindPageChange()
         
     def onFrameTab(self,event):
-        index = event.GetSelection()
-        #print index
-        if index>-1:
-            self.app.children[index].frame.onFrameActivate()
+        if not self.dead:
+            index = event.GetSelection()
+            #print index
+            if index>-1:
+                self.app.children[index].frame.onFrameActivate()
         event.Skip()
 
     def setTitle(self,page='',extra='',draw=True,colour=None):
