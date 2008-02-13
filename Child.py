@@ -626,7 +626,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def check_source_with_pychecker(self):
         """Check source with pychecker"""
-        self.pychecker.check()
+        if self.confirmSave():
+            self.pychecker.check()
 
     #---Blender
     def load_in_blender(self):
@@ -1212,7 +1213,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def confirmSave(self, message=''):
         self.notesSave(file=1)
-        if self.changed>0:
+        if self.changed>0 or self.fileName == NEWFILE:
             self.Raise()
             message+='\nSave changes to "%s"?'%self.fileName
             answer=self.parentPanel.messageCancel(message)
