@@ -686,12 +686,12 @@ class Panel(wx.Notebook):
                     path    = os.getcwd()
             else:
                 path    = os.getcwd()
-            if os.path.exists(NAUTILUS):
+            if os.path.exists(THUNAR):
+                os.system('%s "%s"'%(THUNAR,path))
+            elif os.path.exists(NAUTILUS):
                 os.system('%s "%s"'%(NAUTILUS,path))
             elif os.path.exists(KONQUEROR):
                 os.system('%s "%s"'%(KONQUEROR,path))
-            elif os.path.exists(THUNAR):
-                os.system('%s "%s"'%(THUNAR,path))
             else:
                 if path[0] == '/': path = 'file://'+path
                 webbrowser.open(path)
@@ -746,6 +746,8 @@ class Panel(wx.Notebook):
 
     def run_debug(self):
         """Run file"""
+        if not child.confirmSave():
+            return
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
@@ -768,6 +770,8 @@ class Panel(wx.Notebook):
                 self.busyHide()
 
     def debug(self):
+        if not child.confirmSave():
+            return
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)

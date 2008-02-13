@@ -632,6 +632,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     #---Blender
     def load_in_blender(self):
         """Load in blender"""
+        if self.confirmSave():
+            return
         if self.parentPanel.checkBlender():
             child   = self.app.childActive
             answer  = child.confirmSave('Only saved contents will be loaded in Blender.')
@@ -648,6 +650,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def reference_in_blender(self):
         """Reference in blender"""
+        if self.confirmSave():
+            return
         if self.parentPanel.checkBlender():
             import Blender
             child   = self.app.childActive
