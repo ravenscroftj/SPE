@@ -706,6 +706,10 @@ class Panel(wx.Notebook):
         if self.app.children:
             child = self.app.childActive
             if not child.confirmSave():
+                self.output._check_run(False)
+                return
+            if child.isNew(): 
+                self.output._check_run(False)
                 return
             from _spe.dialogs.runDialog import RunDialog
             runDialog           = RunDialog(child.fileName,
@@ -733,6 +737,7 @@ class Panel(wx.Notebook):
             child = self.app.childActive
             if confirm and not child.confirmSave():
                 return
+            if child.isNew(): return
             # todo: input stuff from preferences dialog box!
             path, fileName  = os.path.split(child.fileName)
             params          = { 'file':         info.path(child.fileName),
@@ -746,8 +751,6 @@ class Panel(wx.Notebook):
 
     def run_debug(self):
         """Run file"""
-        if not child.confirmSave():
-            return
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
@@ -758,6 +761,7 @@ class Panel(wx.Notebook):
         if self.app.children:
             child                   = self.app.childActive
             if not self.getValue('SaveBeforeRun') or child.confirmSave():
+                if child.isNew(): return
                 self.busyShow()
                 name                = child.fileName
                 self.shell.write('Importing "%s" ...'%name)
@@ -770,8 +774,10 @@ class Panel(wx.Notebook):
                 self.busyHide()
 
     def debug(self):
+        child                   = self.app.childActive
         if not child.confirmSave():
             return
+        if child.isNew(): return
         if not self.runner:
             from _spe.plugins.spe_winpdb import Runner
             self.runner = Runner(self.app)
@@ -1250,6 +1256,15 @@ Please report these details and operating system to %s."""%(message,INFO['author
             self.messageError(BLENDER_MESSAGE)
             return 0
 
+    def _check_run_debug(self,bool):
+        #assing method for check run tool button
+        if self.app.children:
+            child                   = self.app.childActive
+            if child.frame.menuBar:
+                child.frame.menuBar.check_run(bool)
+            else:
+                self.frame.menuBar.check_run(bool)
+    
     def redirect(self,value):
         self.shell.redirectStdin(value)
         self.shell.redirectStdout(value)

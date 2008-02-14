@@ -170,7 +170,7 @@ class Runner:
 
     def _debug_childActive(self):
         child               = self.app.childActive
-        if child.confirmSave():
+        if child.confirmSave() and not child.isNew():
             name            = child.fileName
             debugDialog     = winpdbDialog.dialog(self.app.parentFrame,name)
             answer          = debugDialog.ShowModal()
@@ -191,18 +191,20 @@ class Runner:
                 os.spawnl(*args)
                 child.setStatus('WinPdb Debugger is succesfully started.',1)
             else:
+                self._check_run(False)
                 child.setStatus('WinPdb Debugger was cancelled.',1)
         else:
+            self._check_run(False)
             child.setStatus('File must be saved before WinPdb Debugger is launched.',1)
 
     def switch(self):
         "Run/stop file"
         #todo: update toolbar
-        child           = self.app.childActive
         if self.running:
             self.stop()
         else:
-            if child.confirmSave(): 
+            child           = self.app.childActive
+            if child.confirmSave() and not child.isNew(): 
                 self.run(child)
             else:
                 self.cancel()

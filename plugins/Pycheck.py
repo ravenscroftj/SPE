@@ -63,6 +63,7 @@ class Panel(wx.ListCtrl):
     def check(self):
         if not self.process:
             if self.panel.confirmSave('File must be saved to be analyzed by Pychecker.'):
+                if self.panel.isNew(): return
                 #update wx ListCtrl
                 self.DeleteAllItems()
                 self.InsertStringItem(0,'')

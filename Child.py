@@ -559,6 +559,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def run(self):
         if not self.confirmSave():
             return
+        if self.isNew(): return
         from _spe.dialogs.runTerminalDialog import RunTerminalDialog
         runTerminalDialog   = RunTerminalDialog(self.fileName,
                                 self.argumentsPrevious,
@@ -581,6 +582,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Run in terminal emulator"""
         if confirm and not self.confirmSave():
             return
+        if self.isNew(): return
         # todo: input stuff from preferences dialog box!
         path, fileName  = os.path.split(self.fileName)
         params          = { 'file':         fileName,
@@ -626,14 +628,14 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def check_source_with_pychecker(self):
         """Check source with pychecker"""
-        if self.confirmSave():
-            self.pychecker.check()
+        self.pychecker.check()
 
     #---Blender
     def load_in_blender(self):
         """Load in blender"""
         if self.confirmSave():
             return
+        if self.isNew(): return
         if self.parentPanel.checkBlender():
             child   = self.app.childActive
             answer  = child.confirmSave('Only saved contents will be loaded in Blender.')
@@ -652,6 +654,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Reference in blender"""
         if self.confirmSave():
             return
+        if self.isNew(): return
         if self.parentPanel.checkBlender():
             import Blender
             child   = self.app.childActive
@@ -1187,6 +1190,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         self.scrollTo(line,scroll=1,select='line')
 
 #---methods---------------------------------------------------------------------
+    def isNew(self):
+        return self.fileName == NEWFILE
+    
     def check(self):
         pythonFile=(os.path.splitext(self.fileName)[1].lower() in ['.py','.pyw'])
         if pythonFile:
