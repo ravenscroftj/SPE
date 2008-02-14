@@ -478,8 +478,8 @@ class Framework:
         eventManager.Register(self.onFrameSize,     wx.EVT_SIZE,        self)
         if self.menuBar:    self.menuBar.__events__()
         if self.toolBar:    self.toolBar.__events__()
-        if hasattr(self.panel,'onIdle'):
-            eventManager.Register(self.onFrameIdle, wx.EVT_IDLE, self)
+##        if hasattr(self.panel,'onIdle'):
+##            eventManager.Register(self.onFrameIdle, wx.EVT_IDLE, self)
 
     def onFrameActivate(self, event):
         """Activate event (to be overwritten)."""

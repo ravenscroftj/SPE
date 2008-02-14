@@ -757,6 +757,9 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         """Updates statusbar with current position."""
 
     def idle(self,event=None):
+        #check
+        if self.checkBusy:
+            return True
         #if dead, return immediately
         if self.frame.dead or self.parentFrame.dead or not hasattr(self,'source'):
             return
@@ -764,11 +767,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         pos = self.source.GetCurrentPos()
         if pos!= self.position:
             self.updateStatus(pos)
-        if self.toggleExploreSelection:
-            self.toggleExploreSelection = False
-            self.onToggleExploreSelection()
+##        if self.toggleExploreSelection:
+##            self.toggleExploreSelection = False
+##            self.onToggleExploreSelection()
         #only if source is changed...
-        if self.eventChanged:
+        if self.eventChanged: 
             self.eventChanged   = False
             #title
             if self.changed     == 0:
@@ -779,15 +782,11 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             #sidebar
             if self.parentPanel.get('UpdateSidebar')=='realtime':
                 self.updateSidebar()
-            #check
-            if self.checkBusy:
-                return
             if self.parentPanel.get('CheckSourceRealtime')=='compiler':
-                thread.start_new(self.idleCheck,())
+                thread.start_new(self.idleCheck,(self.source.GetText(),))
 
-    def idleCheck(self):
+    def idleCheck(self,source):
         self.checkBusy  = True
-        source          = self.source.GetText()
         length          = len(source)
         source          = source.replace('\r\n','\n') + '\n'
         try:
@@ -1168,7 +1167,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def onToggleExploreTree(self,event):
         event.Skip()
-        self.toggleExploreSelection = True
+        wx.CallAfter(self.onToggleExploreSelection)
+        #self.toggleExploreSelection = True
 
     def onToggleExploreSelection(self):
         self.explore.Toggle(self.explore.GetSelection())

@@ -45,6 +45,8 @@ RECENT          = 'recent.txt'
 FOLDERS         = 'folders.txt'
 NOTES           = 'notes.txt'
 REMEMBER        = 'remember.txt'
+INTERVAL        = 1000
+DEACTIVATE_INTERVAL = INTERVAL/1000.0
 if info.LINUX:
     STYLE       = wx.NB_TOP
 else:
@@ -69,7 +71,15 @@ class Panel(wx.Notebook):
                       'openfiles' : [],
                   'defaultconfig' : ConfigParser.ConfigParser()
                        }
+        self.__timer__()
 
+    def __timer__(self):
+        #self.Bind(wx.EVT_IDLE,self.onIdle)
+        self.Bind(wx.EVT_TIMER,self.onTimer)
+        #self.was_idle       = False
+        self.timer          = wx.Timer(self)
+        wx.CallAfter(self.timer.Start,INTERVAL)
+        
     def __paths__(self,path,skin='default'):
         self.path           = path
         self.pathDoc        = os.path.join(self.path,       'doc')
@@ -990,8 +1000,12 @@ class Panel(wx.Notebook):
         """Check and update, if files are changed when parent frame is activated."""
         if self.app.DEBUG:
             print 'Event:  Parent: %s.onActivate'%self.__class__
+        if not self.timer.IsRunning():
+            #self.Bind(wx.EVT_IDLE,self.onIdle)
+            self.Bind(wx.EVT_TIMER,self.onTimer)
+            self.timer.Start(INTERVAL)
+        reloaded=[]
         try:
-            reloaded=[]
             for child in self.app.children:
                 if child.checkTime():
                     reloaded.append(os.path.basename(child.fileName))
@@ -1007,6 +1021,12 @@ class Panel(wx.Notebook):
             if (not self.frame.dead) and childActive and hasattr(childActive,'source'):
                 childActive.source.AutoCompCancel()
                 childActive.source.CallTipCancel()
+        self.timer.Stop()
+        self.Unbind(wx.EVT_TIMER)
+##        #self.Unbind(wx.EVT_IDLE)
+##        #while self.was_idle:
+##        #    time.sleep(DEACTIVATE_INTERVAL)
+##        #    self.onTimer()
 
     def onClose(self,event=None):
         """Called when the parent frame is closed."""
@@ -1018,6 +1038,7 @@ class Panel(wx.Notebook):
                 child.SetStatusText('Please save this file before quitting SPE.')
                 return False
         eventManager.DeregisterWindow(self)
+        self.timer.Stop()
         self.frame.dead = 1
         #if (not self.app.DEBUG) and self.getValue('RedirectShell'):
         self.redirect(0)
@@ -1055,8 +1076,12 @@ Please report these details and operating system to %s."""%(message,INFO['author
         self.showShell(show=False,save=True)
         self.frame.menuBar.check_view()
 
-    def onIdle(self,event=None):
-        """Called when the parent frame is idle."""
+##    def onIdle(self,event=None):
+##        """Called when the parent frame is idle."""
+##        print 'idle'
+##        self.was_idle = True
+                
+    def onTimer(self,event=None):
         #child
         if self.app.children:
             child   = self.app.childActive
