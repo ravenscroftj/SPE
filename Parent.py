@@ -1371,11 +1371,11 @@ Please report these details and operating system to %s."""%(message,INFO['author
         WebBrowser=self.get('WebBrowser')
         if WebBrowser==DEFAULT:
             if os.path.isfile(FIREFOX):
-                os.system("%s %s"%(FIREFOX,fileName))
+                os.system("%s %s &"%(FIREFOX,fileName))
             else:
                 webbrowser.open(fileName, 1)
         else:
-            os.system("%s %s"%(WebBrowser,fileName))
+            os.system("%s %s &"%(WebBrowser,fileName))
 
     #---preferences
     def preferencesSave(self):
