@@ -23,6 +23,7 @@ class Shell(wx.py.shell.Shell):
         wx.py.shell.Shell.__init__(self,**keyw)
         self.SetUseAntiAliasing(True)
         self.Bind(wx.EVT_LEFT_DCLICK,self.jumpToSource) 
+        self.Unbind(wx.EVT_IDLE)
         
     def jumpToSource(self,event=None):
         line    = self.GetCurrentLine()

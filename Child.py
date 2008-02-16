@@ -547,10 +547,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                 os.system('start "Spe console - Press Ctrl+Break to stop" /D"%(path)s"'%params)
             elif info.DARWIN:
                 sm.osx.startAppleScript([['cd',params['path']]], activateFlag=True)
-            elif os.path.isfile('/usr/bin/konsole'):
-                os.system('/usr/bin/konsole --caption SPE --workdir "%(path)s" &'%params)
+            elif os.path.exists('/usr/bin/urxvt'):
+                os.system('cd "%(path)s"; /usr/bin/urxvt &'%params)
             elif os.path.isfile('/usr/bin/gnome-terminal'):
                 os.system('/usr/bin/gnome-terminal --title SPE --working-directory="%(path)s" &'%params)
+            elif os.path.isfile('/usr/bin/konsole'):
+                os.system('/usr/bin/konsole --caption SPE --workdir "%(path)s" &'%params)
             else:
                 os.system('cd %(path)s;xterm &'%params)
         else:
@@ -756,10 +758,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     def onSourcePositionChange(self,event=None):
         """Updates statusbar with current position."""
 
-    def idle(self,event=None):
-        #check
-        if self.checkBusy:
-            return True
+    def idle(self,event=None,end=False):
         #if dead, return immediately
         if self.frame.dead or self.parentFrame.dead or not hasattr(self,'source'):
             return
@@ -782,11 +781,20 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             #sidebar
             if self.parentPanel.get('UpdateSidebar')=='realtime':
                 self.updateSidebar()
-            if self.parentPanel.get('CheckSourceRealtime')=='compiler':
-                thread.start_new(self.idleCheck,(self.source.GetText(),))
+            if not end and self.parentPanel.get('CheckSourceRealtime')=='compiler':
+##                self._idleCheck(self.source.GetText())
+                thread.start_new(self.idleCheck,(self.source.GetText(),
+                    self.parentPanel.lock))
+                    
+    def idleCheck(self,source,lock):
+        lock.acquire()
+        try:
+            self._idleCheck(source)
+        except Exception, message:
+            pass
+        lock.release()
 
-    def idleCheck(self,source):
-        self.checkBusy  = True
+    def _idleCheck(self,source):
         length          = len(source)
         source          = source.replace('\r\n','\n') + '\n'
         try:
@@ -817,7 +825,6 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                     wx.CallAfter(self.source.clearError,length)
             self.warning = warning
             self.e       = e
-        self.checkBusy = False
 
     def onKillFocus(self,event=None):
         if self.app.DEBUG:

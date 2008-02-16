@@ -28,7 +28,9 @@ if WIN:
     if ' ' in PYTHON_EXEC:
         PYTHON_EXEC         = '"%s"'%PYTHON_EXEC
 elif DARWIN:
-    PYTHON_EXEC             = PYTHON_EXEC.replace('ython','ythonw')
+    pythonw                 = PYTHON_EXEC.replace('ython','ythonw')
+    if os.path.exists(pythonw):
+        PYTHON_EXEC         = pythonw
     PYTHON_COM              = False
 else:
     PYTHON_COM              = False

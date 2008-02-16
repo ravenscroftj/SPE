@@ -11,7 +11,7 @@ OPEN_WORKSPACE, SAVE_WORKSPACE, SAVE_WORKSPACE_AS,
 
 SAVE_COPY, SAVE_UML_AS, PRINT_UML_SETUP, PRINT_UML_PREVIEW, PRINT_UML,
 
-REMEMBER_OPEN_FILES,
+CUT, COPY, PASTE, REMEMBER_OPEN_FILES,
 
 GO_TO_LINE, BROWSE_SOURCE,
 AUTO_COMPLETE, SHOW_DOCSTRING, INDENT, DEDENT, COMMENT, UNCOMMENT, INSERT_SEPARATOR,
@@ -43,7 +43,7 @@ MANUAL, KEYBOARD_SHORTCUTS, PYTHON_LIBRARY, PYTHON_REFERENCE,
 PYTHON_DOCUMENTATION_SERVER, WXGLADE_MANUAL, WXGLADE_TUTORIAL, WXWINDOWS_DOCUMENTATION,
 DONATE, ABOUT
 ] =\
-[wx.NewId() for x in range(83)]
+[wx.NewId() for x in range(86)]
 
 CHILD_MENUS=[
 wx.ID_SAVE, wx.ID_SAVEAS, SAVE_COPY, wx.ID_CLOSE, REMEMBER_OPEN_FILES,
@@ -269,9 +269,9 @@ class Bar(wx.MenuBar):
         self.edit.Append(wx.ID_UNDO, _("&Undo\tCtrl+Z"), "", wx.ITEM_NORMAL)
         self.edit.Append(wx.ID_REDO, _("&Redo\tCtrl+Y"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
-        self.edit.Append(wx.ID_CUT, _("Cut"), "", wx.ITEM_NORMAL)
-        self.edit.Append(wx.ID_COPY, _("&Copy"), "", wx.ITEM_NORMAL)
-        self.edit.Append(wx.ID_PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
+        self.edit.Append(CUT, _("Cut"), "", wx.ITEM_NORMAL)
+        self.edit.Append(COPY, _("&Copy"), "", wx.ITEM_NORMAL)
+        self.edit.Append(PASTE, _("&Paste"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(EXECUTE, _("&Execute in shell\tCtrl+Shift+E"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()

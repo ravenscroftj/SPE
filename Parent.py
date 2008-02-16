@@ -27,9 +27,11 @@ import Child
 ####Constants-------------------------------------------------------------------
 DEFAULT         = "<default>"
 FIREFOX         = '/usr/bin/firefox'
-NAUTILUS        = '/usr/bin/nautilus'
+NAUTILUS        = '/usr/bin/nautilus --no-desktop'
+DOLPHIN         = '/usr/bin/dolphin'
 KONQUEROR       = '/usr/bin/konqueror'
 THUNAR          = '/usr/bin/thunar'
+PCMANFM         = '/usr/bin/pcmanfm'
 HELP_SORRY      = "Sorry, '%s' was not found on your system, getting it from internet instead."
 HELP_WWW        = 'http://www.python.org/doc/current/%s/%s.html'
 MAIL            = 'mailto:spe.stani.be@gmail.com?subject=About spe...'
@@ -45,8 +47,6 @@ RECENT          = 'recent.txt'
 FOLDERS         = 'folders.txt'
 NOTES           = 'notes.txt'
 REMEMBER        = 'remember.txt'
-INTERVAL        = 1000
-DEACTIVATE_INTERVAL = INTERVAL/1000.0
 if info.LINUX:
     STYLE       = wx.NB_TOP
 else:
@@ -71,14 +71,14 @@ class Panel(wx.Notebook):
                       'openfiles' : [],
                   'defaultconfig' : ConfigParser.ConfigParser()
                        }
-        self.__timer__()
 
     def __timer__(self):
+        self.lock           = thread.allocate_lock()
         #self.Bind(wx.EVT_IDLE,self.onIdle)
         self.Bind(wx.EVT_TIMER,self.onTimer)
         #self.was_idle       = False
         self.timer          = wx.Timer(self)
-        wx.CallAfter(self.timer.Start,INTERVAL)
+        wx.CallAfter(self.timer.Start,self.getValue('Redraw'))
         
     def __paths__(self,path,skin='default'):
         self.path           = path
@@ -96,7 +96,6 @@ class Panel(wx.Notebook):
                 print 'Warning: could not find or create user path (%s).'%INFO['userPath']
 
     def __settings__(self,openFiles,redirect,redraw=None,Blender=None,**kwds):
-        self.idleTime       = time.time()
         #arguments
         self._openFiles         = openFiles
         self._redirect          = redirect
@@ -171,6 +170,9 @@ class Panel(wx.Notebook):
             self.SetSelection(self.GetPageCount()-1)
             self.set('version',INFO['version'])
         eventManager.Register(self.onTab,wx.EVT_NOTEBOOK_PAGE_CHANGED,self)
+        if self.getValue('Redraw') < 10:
+            self.set('Redraw',self.getValue('Redraw')*1000)
+        self.__timer__()
 
     def __frame__(self):
         #parent frame
@@ -508,6 +510,7 @@ class Panel(wx.Notebook):
             x, y    = self.frame.GetPosition()
             self.findDialog.SetPosition((x+5,y+200))
             self.findDialog.Show(1)
+            self.findDialog.Raise()
             self.findDialog.data = data  # save a reference to it...
 
     def execute(self):
@@ -700,8 +703,12 @@ class Panel(wx.Notebook):
                 os.system('%s "%s"'%(THUNAR,path))
             elif os.path.exists(NAUTILUS):
                 os.system('%s "%s"'%(NAUTILUS,path))
+            elif os.path.exists(DOLPHIN):
+                os.system('%s "%s"'%(DOLPHIN,path))
             elif os.path.exists(KONQUEROR):
                 os.system('%s "%s"'%(KONQUEROR,path))
+            elif os.path.exists(PCMANFM):
+                os.system('%s "%s"'%(PCMANFM,path))
             else:
                 if path[0] == '/': path = 'file://'+path
                 webbrowser.open(path)
@@ -1003,7 +1010,7 @@ class Panel(wx.Notebook):
         if not self.timer.IsRunning():
             #self.Bind(wx.EVT_IDLE,self.onIdle)
             self.Bind(wx.EVT_TIMER,self.onTimer)
-            self.timer.Start(INTERVAL)
+            self.timer.Start(self.getValue('Redraw'))
         reloaded=[]
         try:
             for child in self.app.children:
@@ -1023,11 +1030,10 @@ class Panel(wx.Notebook):
                 childActive.source.CallTipCancel()
         self.timer.Stop()
         self.Unbind(wx.EVT_TIMER)
-##        #self.Unbind(wx.EVT_IDLE)
-##        #while self.was_idle:
-##        #    time.sleep(DEACTIVATE_INTERVAL)
-##        #    self.onTimer()
-
+##        wait    = self.getValue('Redraw')/1000.0
+##        while self.onTimer(None,end=True):
+##            time.sleep(wait)
+        
     def onClose(self,event=None):
         """Called when the parent frame is closed."""
         if self.app.DEBUG:
@@ -1076,23 +1082,18 @@ Please report these details and operating system to %s."""%(message,INFO['author
         self.showShell(show=False,save=True)
         self.frame.menuBar.check_view()
 
-##    def onIdle(self,event=None):
-##        """Called when the parent frame is idle."""
-##        print 'idle'
-##        self.was_idle = True
-                
-    def onTimer(self,event=None):
-        #child
-        if self.app.children:
-            child   = self.app.childActive
-            if child:
-                child.idle()
-        #redraw
-        if self.redraw:
-            newTime=time.time()
-            if newTime-self.idleTime>self.getValue('Redraw'):
-                self.idleTime=newTime
+    def onTimer(self,event=None,end=False):
+        if self.app.IsActive():
+            #child
+            if self.app.children:
+                child   = self.app.childActive
+                if not self.lock.locked():
+                    child.idle(None,end)
+            #redraw
+            if self.redraw:
                 self.redraw()
+        else:
+            self.onDeactivate()
 
     def onMove(self,event=None):
         """Called when the parent frame is moved."""
