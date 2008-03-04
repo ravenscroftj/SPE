@@ -634,14 +634,14 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     #---Blender
     def load_in_blender(self):
-        """Load in blender"""
-        if self.confirmSave():
-            return
-        if self.isNew(): return
+        """Load into blender"""
         if self.parentPanel.checkBlender():
             child   = self.app.childActive
-            answer  = child.confirmSave('Only saved contents will be loaded in Blender.')
-            if answer:
+            #do we need to save this file, before?
+            if self.changed or self.isNew(): child.confirmSave('Only saved contents will be loaded in Blender.')
+            if self.changed or self.isNew(): #if it is saved here - it means that the user has cancelled
+                self.setStatus( "File was not saved: operation cancelled.")
+            else:    
                 import Blender
                 #first: let's remove previous copies of this file from Blender's Texts
                 for t in filter(lambda x: x.filename == child.fileName, Blender.Text.Get()) : 
@@ -654,19 +654,15 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def reference_in_blender(self):
         """Reference in blender"""
-        if self.confirmSave():
-            return
-        if self.isNew(): return
         if self.parentPanel.checkBlender():
             import Blender
             child   = self.app.childActive
             msg = "" #message text, that will be displayed on the status bar
             
-            #Check: maybe it is a cmpletly new file?:
-            if child.fileName==NEWFILE: child.saveAs()
-            #It will be still named NEWFILE, if the user has declined to reference it
-            if child.fileName==NEWFILE:  return #nothing to do - user has changed his mind
-
+            #Check: maybe it is a completly new file?:
+            if child.isNew(): child.saveAs()
+            #It is still a new file, if the user has declined to reference it
+            if child.isNew():  return #nothing to do - user has changed his mind
             #First: add the Blender signature at the beginning of the file
             doc = child.source
             #let's move to begining of the file and check, if the Blender signature already exists:
