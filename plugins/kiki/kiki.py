@@ -134,7 +134,7 @@ class Settings(object):
                 savedir = debugmodule.savedir
             except: # if no override, then perform default actions
                 if savedir == None: # use $HOME/dirname
-                    savedir = os.path.expanduser('~/'+dirname)
+                    savedir = os.path.expanduser(os.path.join('~',dirname))
                     if len(savedir)<=len("c:\\/"+dirname): # sometimes $HOME points to root
                         # if this is the case, try using $USERPROFILE (see docstring)
                         temp = os.path.join(os.path.expandvars('$USERPROFILE'), dirname)

@@ -913,7 +913,7 @@ class Panel(wx.Notebook):
         if WxPythonDocs==DEFAULT:
             WxPythonDocs    = os.path.join(info.dirname(wx.__file__),'docs')
         WxPythonDocs2       = os.path.join(info.dirname(WxPythonDocs),'docs')
-        WxPythonDocs3        = 'C:\\Program Files\\wxPython2.5 Docs and Demos\\docs'
+        WxPythonDocs3        = 'C:\\Program Files\\wxPython2.8 Docs and Demos\\docs'
         path = None
         for dir in [WxPythonDocs,WxPythonDocs2,WxPythonDocs3]:
             for docs in ['wx.chm','wxPythonDocs.html','wxPythonManual.html']:
