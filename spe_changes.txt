@@ -1,4 +1,38 @@
 These are the changes of the public releases:
+Spe 0.8
+-------
+    [4.d]
+	Major bugfix release:
+	    * Rewrite of internal code to fix cpu leak when SPE is not in focus
+	    * Blender fix (Witold)
+	    * Kiki Windows path
+	    
+    [4.c]
+	New features:
+
+	    * new versions of WinPdb debugger, PyChecker, wxGlade & XRCed gui designer
+	    * clear output pane
+	    * support for wxPython 2.8
+	    * linux support for nautilus, gnome-terminal, konqueror, konsole, thunar
+	    * improved blender support up to 2.45 (by Witold)
+
+	Fixes:
+
+	    * sidebar sash more tolerant
+	    * show path in title (linux)
+	    * run with filename with spaces
+	    * nicer debug dialog box
+	    * kill process fix
+	    * notebook
+	    * insert signature
+	    * numpad keys (by isolationism)
+	    * find tab with nonexisting files
+	    * add environment to SPE.py (linux)
+	    * better warning for documentation for unsaved files
+	    * better handling of new empty files
+	    * many more...
+   
+    
     
 Spe 0.7
 -------
