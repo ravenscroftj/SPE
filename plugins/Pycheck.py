@@ -11,9 +11,19 @@ else:
 COLOR           = (wx.Colour(220,220,220),wx.Colour(255,255,255))
 IGNORE          = ['Warnings...']
 METHOD_NAMES    = ['byte code','compiler package']
+try:
+    import pychecker
+    PYCHECKER   = pychecker.__file__
+except ImportError:
+    PYCHECKER   = os.path.join('pychecker','checker.py')
+try:
+    import pychecker2
+    PYCHECKER2  = pychecker2.__file__
+except ImportError:
+    PYCHECKER2  = os.path.join('pychecker2','main.py')
 METHOD_PATHS    = [\
-    '%s%s --stdlib --blacklist --varlist'%(os.path.join('pychecker','checker.py'),QUOTE),
-    '%s%s --incremental'%(os.path.join('pychecker2','main.py'),QUOTE)
+    '%s%s --stdlib --blacklist --varlist'%(PYCHECKER,QUOTE),
+    '%s%s --incremental'%(PYCHECKER2,QUOTE)
     ]
 
 #----------------------------------------------------------------------

@@ -138,7 +138,10 @@ class Create(wx.Dialog):
         # end wxGlade
 
     def onDebug(self, event): # wxGlade: Create.<event_handler>
-        from plugins.winpdb import __file__ as fileName
+        try:
+            from winpdb import __file__ as fileName
+        except ImportError:
+            from plugins.winpdb import __file__ as fileName
         path        = os.path.dirname(fileName)
         _info       = self.info
         arguments   = _info['arguments']     = self.arguments.GetValue()

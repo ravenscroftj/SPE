@@ -38,8 +38,13 @@ from dialogs import winpdbDialog
 ##from _spe.plugins.winpdb.winpdb import __file__ as WINPDB
 
 #import winpdb
-plugins_dir = os.path.dirname(__file__)
-winpdb_dir  = os.path.join(plugins_dir, 'winpdb')
+try:
+    import winpdb
+    winpdb_dir  = os.path.dirname(winpdb.__file__)
+except ImportError:
+    plugins_dir = os.path.dirname(__file__)
+    winpdb_dir  = os.path.join(plugins_dir, 'winpdb')
+
 WINPDB      = os.path.join(winpdb_dir, 'winpdb.py')
 
 import sys
