@@ -668,7 +668,7 @@ class PythonBaseSTC(wx_stc.StyledTextCtrl):
         if type(obj) in [types.ClassType,types.TypeType] and hasattr(obj,'__init__'):
             init            = obj.__init__
             tip             = getargspec(init).strip()
-            if tip == '(self, *args, **kwargs)':
+            if tip in ['(self, *args, **kwargs)','(*args, **kwargs)']:
                 tip         = ""
             else:
                 tip         = "%s\n"%tip

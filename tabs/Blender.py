@@ -90,6 +90,7 @@ class Panel(wxgPanel):
                     multi       = min(len(object)-1,1)
                     welcome     = welcome%(l,('is only','are')[multi],len(object),'nmesh',('','es')[multi],', '.join(names))
                 else:
+                    #convert plural to singular
                     if label in ['Meshes']:
                         attr    = label[:-2]
                     else:

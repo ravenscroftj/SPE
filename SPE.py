@@ -38,7 +38,7 @@ INFO['description']=\
 __doc__ = INFO['doc']%INFO
     
 print """
-SPE v%(version)s (c)2003-2007 www.stani.be
+SPE v%(version)s (c)2003-2008 www.stani.be
 
 If spe fails to start:
  - type "%(python)s SPE.py --debug > debug.txt 2>&1" at the command prompt
