@@ -15,14 +15,16 @@ import wx
 WARNING = 'Warning: %s: please contact spe.stani.be at gmail.com'
 
 class Item:
-    backgroundColour    = (255,255,255)
-    data                = None
-    deleted             = False
-    textColour          = (0,0,0)
-    wx                  = None
+    def init(self):
+        self.backgroundColour   = (255,255,255)
+        self.data               = None
+        self.deleted            = False
+        self.textColour         = (0,0,0)
+        self.wx                 = None
+
     def reset(self):
-        self._update    = [] #lists should be created for each instance separately
-        self._updateAll = []
+        self._update            = [] #lists should be created for each instance separately
+        self._updateAll         = []
         
 class Ctrl:
     _base                   = None
@@ -106,6 +108,7 @@ class Ctrl:
             #recursive on its children
             if recursively:
                 self._update(child,True)
+        previousChildren.reverse()
         for abandoned in previousChildren:
             self._DeleteItem(abandoned)
         parent.previousChildren = children
@@ -133,7 +136,6 @@ class Ctrl:
             
 class TreeItem(Item):
     """All the wx actions are handled by the Tree class."""
-    bold = False
     
     def __init__(self,text,id):
         """self.wx holds the wx.TreeItemData"""
@@ -142,6 +144,7 @@ class TreeItem(Item):
         #
         self.previousChildren   = []
         self.image              = {}
+        self.init()
         self.reset()
         
     def _delete(self):
@@ -152,12 +155,16 @@ class TreeItem(Item):
             child.deleted = True
         self.deleted    = True
         
+    def init(self):
+        Item.init(self)
+        self.bold               = False
+        
     def reset(self):
         Item.reset(self)
         self.children           = []
         
+        
 class TreeCtrl(Ctrl,wx.TreeCtrl):
-    
     _base   = wx.TreeCtrl
     
     def __init__(self,*args,**kwargs):
@@ -282,7 +289,12 @@ class ListItem(Item):
         self.id                 = id
         #
         self.image              = None
+        self.init()
         self.reset()
+        
+    def init(self):
+        Item.init(self)
+        self.data               = 0
         
     def _delete(self):
         """Flag as deleted."""

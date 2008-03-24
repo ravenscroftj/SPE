@@ -26,7 +26,7 @@ from sidebar.Browser import Browser
 
 ####Constants-------------------------------------------------------------------
 DEFAULT                 = "<default>"
-MAXINT                  = sys.maxint #for ListCtrl
+MAXINT                  = sys.maxint #for ListCtrl (should be long)
 NEWFILE                 = 'unnamed'
 SPE_ALLOWED_EXTENSIONS  = ['.py','.pyw','.tpy','.txt','.htm','.html','.bak']
 STYLE_LIST              = wx.LC_REPORT
@@ -44,6 +44,11 @@ RE_TODO                 = re.compile('.*#[ ]*TODO[ ]*:(.+)', re.IGNORECASE)
 RE_SEPARATOR            = re.compile('^.*(#-{3})')
 RE_SEPARATOR_HIGHLIGHT  = re.compile('^.*(#{4})')
 RE_ENCODING             = re.compile('coding[:=]\s*([-\w.]+)', re.IGNORECASE)
+RE_DEF                  = re.compile('\s*def\s+(_*[^: ]+)')
+RE_CLASS                = re.compile('\s*class\s+(_*[^: ]+)')
+RE_TRY                  = re.compile('try\s*:')
+RE_EXCEPT               = re.compile('except\s*:')
+RE_FINALLY              = re.compile('finally\s*:')
 UML_PAGE                = 1
 STATUS_TEXT_LINE_POS    = 3
 STATUS_TEXT_COL_POS     = STATUS_TEXT_LINE_POS+1
@@ -955,24 +960,23 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         self.indexData      = []
         #loop through code
         for line in range(len(text)):
-            l               = text[line].split('#')[0].replace(':','').strip()
-            first           = l.split(' ')[0]
-            if first=='try:':
-                tryMode     += 1
-            elif first[:6]  =='except':
-                tryMode         = max(0,tryMode-1)
-            elif first[:7]  == 'finally':
-                tryMode         = max(0,tryMode-1)
-            elif first in ['class','def'] and l[:8]!='__init__':
-                if first    == 'class':
+            l           = text[line].split('#')[0]
+            def_match   = RE_DEF.match(l)
+            if def_match:
+                colour  = wx.Colour(0,0,255)
+                icon    = 'def.png'
+                l       = def_match.group(1)
+            else:
+                class_match = RE_CLASS.match(l)
+                if class_match:
                     colour  = wx.Colour(255,0,0)
                     icon    = 'class.png'
-                    l       = l.replace('class ','')
+                    l       = class_match.group(1)
                 else:
-                    colour  = wx.Colour(0,0,255)
-                    icon    = 'def.png'
-                    l       = l.replace('def ','')
-                self.indexData.append((l.replace('_','').strip().upper(),l,line+1,colour,
+                    continue
+            stripped    = l.replace('_','').strip().upper() #used for sorting
+            if stripped:
+                self.indexData.append((stripped,l,line+1,colour,
                     self.parentPanel.iconsListIndex[icon],self.fileName))
         #make index tab
         self.indexData.sort()
@@ -982,8 +986,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
             stripped, entry, line, colour, icon, fileName = element
             if stripped[0]!=firstLetter:
                 firstLetter = stripped[0]
-                item        = self.index.InsertImageStringItem(MAXINT, ' ', self.indexCharIcon)
-                self.index.SetStringItem(item,1,firstLetter)
+                item        = self.index.InsertImageStringItem(MAXINT, firstLetter, self.indexCharIcon)
+                self.index.SetStringItem(item,1,' ')
                 self.index.SetItemBackgroundColour(item,(230,230,230))
             item            = self.index.InsertImageStringItem(MAXINT, str(line), icon)
             self.index.SetStringItem(item, 1, entry)

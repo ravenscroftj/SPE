@@ -822,7 +822,7 @@ class Panel(wx.Notebook):
             self.kiki.Raise()
         except:
             try:
-                import kiki
+                from kiki import kiki
             except ImportError:
                 from plugins.kiki import kiki
             INFO['kikiPath']=info.dirname(kiki.__file__)
