@@ -1142,12 +1142,16 @@ Please report these details and operating system to %s."""%(message,INFO['author
                 position=source.FindText(0,current+len(self.findStr),self.findStr,self.stcFindFlags)
                 self.SetActiveStatusText("Wrapped around to find '%s'"%self.findStr,1)
             if position==-1 and message and self.numberMessages<1:
+                #not found
                 self.numberMessages=1
                 self.message("'%s' not found!"%self.findStr)
                 self.numberMessages=0
-            source.GotoPos(position)
-            source.SetSelection(position,position+len(self.findStr))
-            #self.WarpPointer(0,0)
+            else:
+                #found
+                line    = source.LineFromPosition(position)
+                source.EnsureVisible(line)
+                source.GotoPos(position)
+                source.SetSelection(position,position+len(self.findStr))
             return position
 
     def onFindClose(self,event):

@@ -284,8 +284,8 @@ class Bar(wx.MenuBar):
         self.edit.AppendSeparator()
         self.edit.Append(INDENT, _("&Indent"), "", wx.ITEM_NORMAL)
         self.edit.Append(DEDENT, _("&Dedent\tShift+Tab"), "", wx.ITEM_NORMAL)
-        self.edit.Append(COMMENT, _("Co&mment\tAlt+3"), "", wx.ITEM_NORMAL)
-        self.edit.Append(UNCOMMENT, _("U&nComment\tAlt+4"), "", wx.ITEM_NORMAL)
+        self.edit.Append(COMMENT, _("Co&mment\tCtrl+3"), "", wx.ITEM_NORMAL)
+        self.edit.Append(UNCOMMENT, _("U&nComment\tCtrl+4"), "", wx.ITEM_NORMAL)
         self.edit.AppendSeparator()
         self.edit.Append(INSERT_SEPARATOR, _("Insert &separator...\tAlt+I"), "", wx.ITEM_NORMAL)
         self.edit.Append(INSERT_SIGNATURE, _("Insert &signature\tCtrl+Shift+I"), "", wx.ITEM_NORMAL)
@@ -482,7 +482,6 @@ class Bar(wx.MenuBar):
         # end wxGlade
 
     def menu_new(self, event): # wxGlade: Bar.<event_handler>
-        print 'New'
         event.Skip()
 
     def menu_open(self, event): # wxGlade: Bar.<event_handler>
