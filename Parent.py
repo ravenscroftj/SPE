@@ -838,16 +838,13 @@ class Panel(wx.Notebook):
         glade   = '%s'%os.path.join(path,'wxglade.py')
         if info.WIN and ' ' in glade:
             glade = '"%s"'%glade
-        os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
+        print os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
         self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
-        try:
-            from wx.tools.XRCed import __file__ as fileName
-        except ImportError:
-            from plugins.XRCed import __file__ as fileName
-        path    = info.dirname(fileName)
-        xrced   = '%s'%os.path.join(path,'xrced.py')
+        import plugins
+        path   = os.path.dirname(plugins.__file__)
+        xrced   = '%s'%os.path.join(path,'spe_xrced.py')
         if info.WIN and ' ' in xrced:
             xrced   = '"%s"'%xrced
         os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,xrced)

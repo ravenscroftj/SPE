@@ -13,14 +13,14 @@ IGNORE          = ['Warnings...']
 METHOD_NAMES    = ['byte code','compiler package']
 try:
     import pychecker
-    PYCHECKER   = pychecker.__file__
 except ImportError:
-    PYCHECKER   = os.path.join('pychecker','checker.py')
+    import _spe.plugins.pychecker as pychecker
+PYCHECKER   = os.path.join(os.path.dirname(pychecker.__file__),'checker.py')
 try:
     import pychecker2
-    PYCHECKER2  = pychecker2.__file__
 except ImportError:
-    PYCHECKER2  = os.path.join('pychecker2','main.py')
+    import _spe.plugins.pychecker2 as pychecker2
+PYCHECKER2  = os.path.join(os.path.dirname(pychecker2.__file__),'main.py')
 METHOD_PATHS    = [\
     '%s%s --stdlib --blacklist --varlist'%(PYCHECKER,QUOTE),
     '%s%s --incremental'%(PYCHECKER2,QUOTE)
@@ -88,11 +88,11 @@ class Panel(wx.ListCtrl):
                 self.started        = 1
                 fileName            = self.panel.fileName
                 path                = os.path.dirname(fileName)
+                #change path
+                os.chdir(path)
                 #start process
                 self.process = wx.Process(self)
                 self.process.Redirect()
-                #change path
-                os.chdir(path)
                 #run pychecker
                 cmd                 = 'python -u %s%s %s%s%s'%\
                     (QUOTE,
