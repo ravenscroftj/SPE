@@ -35,12 +35,7 @@ class Panel(wx.ListCtrl):
         self.page       = page
         self.panel      = notebook.GetParent()
         self.process    = None
-
-        self.list   = [('','')]
-        self.fileIndex   = 0
-        self.lastFile    = 0
-        self.methodIndex    = 1
-
+        self.reset()
         self.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, 
                 heading='Line',width=40)
         self.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, 
@@ -63,6 +58,12 @@ class Panel(wx.ListCtrl):
         # or we can let wx.Process send this window an event that is
         # caught in the normal way...
         wx.EVT_END_PROCESS(self,-1,self.OnProcessEnded)
+        
+    def reset(self):
+        self.list   = [('','')]
+        self.fileIndex   = 0
+        self.lastFile    = 0
+        self.methodIndex    = 1
 
     def __del__(self):
         if self.process is not None:
@@ -74,6 +75,7 @@ class Panel(wx.ListCtrl):
         if not self.process:
             if self.panel.confirmSave('File must be saved to be analyzed by Pychecker.'):
                 if self.panel.isNew(): return
+                self.reset()
                 #update wx ListCtrl
                 self.DeleteAllItems()
                 self.InsertStringItem(0,'')
@@ -118,7 +120,7 @@ class Panel(wx.ListCtrl):
 
     def OnProcessEnded(self, evt):
         self.DeleteItem(0)
-        del self.list[0]
+        if self.list: del self.list[0]
         self.index -=1
         eventManager.DeregisterListener(self.OnIdle)
         self.focus()
