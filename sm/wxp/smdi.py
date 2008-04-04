@@ -865,7 +865,7 @@ class MdiSplitParentFrame(Parent,wx.Frame):
         if not self.dead:
             index = event.GetSelection()
             #print index
-            if index>-1:
+            if index>-1 and index<len(self.app.children):
                 self.app.children[index].frame.onFrameActivate()
         event.Skip()
 
