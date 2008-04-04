@@ -998,7 +998,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def updateExplore(self,uml=0):
         """Updates explore in sidebar."""
-        if not self or self.explore:
+        if not (self or self.explore):
             return
         #get text
         try:
