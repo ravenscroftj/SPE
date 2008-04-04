@@ -998,6 +998,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def updateExplore(self,uml=0):
         """Updates explore in sidebar."""
+        if not self or self.explore:
+            return
         #get text
         try:
             text=self.source.GetText().split('\n')
@@ -1014,7 +1016,10 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         hierarchy       = [(-1,self.root)]
         separators      = []
         self.encoding   = None
-        self.explore.CollapseAndReset(self.root)
+        try:
+            self.explore.CollapseAndReset(self.root)
+        except:
+            return
         for line in range(len(text)):
             l           = text[line].strip()
             first       = l.split(' ')[0]
