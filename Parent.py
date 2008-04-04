@@ -66,11 +66,7 @@ class Panel(wx.Notebook):
         self.__settings__(openFiles,redirect,**settings)
         self.__findReplaceEvents__()
         # Todo: make this a real class instead of this lazy one
-        self.workspace={ 'config' : ConfigParser.ConfigParser() ,
-                           'file' : "" ,
-                      'openfiles' : [],
-                  'defaultconfig' : ConfigParser.ConfigParser()
-                       }
+        self.workspace=self.emptyWorkspace()
 
     def __timer__(self):
         self.lock           = thread.allocate_lock()
@@ -256,24 +252,40 @@ class Panel(wx.Notebook):
             self._createNewDefaultWorkspace()
         self.workspace['defaultconfig']=ConfigParser.ConfigParser()
         self.workspace['defaultconfig'].read(file)
-
+        
         #read the specific workspace for the 'local' items
+        #this can be blocked in two ways:
+        # 1 self.getValue('RememberLastWorkspace') is False
+        # 2 incorrect workspace files
         self.workspace['config']=ConfigParser.ConfigParser()
-        try:
-            file=self.get("currentworkspace")
-            self.workspace['config'].read(file)
-            self.workspace['file']=file
-        except:
+        if self.getValue('RememberLastWorkspace'):
+            try:
+                file    = self.get("currentworkspace")
+                if not os.path.exists(file): file = ''
+            except:
+                file    = ''
+            try:
+                self.workspace['config'].read(file)
+                self.workspace['file']=file
+            except:
+                file    = ''
+        else:
+            file    = ''
+        if file is '':
             self.workspace['config']=self.workspace['defaultconfig']
-            self.workspace['file']=file
-        try:
-            openFiles=eval(self.getWorkspaceValue("OpenFiles"))
-            self.workspace['openfiles']=[]
-            for i in openFiles:
-                self.workspace['openfiles'].append(i[0])
-        except Exception,e:
-            if self.app.DEBUG:
-                self.SetStatusText("Error opening workspace file %s: %s"%(file,e))
+            self.workspace['file']=INFO['defaultWorkspace']
+        self.workspace['openfiles']=[]
+        if self.getValue('RememberLastWorkspace'):
+            #open the workspace files in SPE
+            try:
+                openFiles=eval(self.getWorkspaceValue("OpenFiles"))
+                for i in openFiles:
+                    self.workspace['openfiles'].append(i[0])
+            except Exception,e:
+                if self.app.DEBUG:
+                    self.SetStatusText("Error opening workspace file %s: %s"%(file,e))
+        else:
+            self.setWorkspaceValue("openfiles",str([]))
 
     def applyWorkspaceTab(self,child):
         """ this function will change the child tab to indicate that it is part of the workspace """
@@ -342,8 +354,16 @@ class Panel(wx.Notebook):
 
     def setWorkspaceStatusBarText(self,file):
         self.SetActiveStatusText(os.path.basename(file)[:-4],STATUS_TEXT_WORKSPACE_POS)
+        
+    def emptyWorkspace(self):
+        return { 'config' : ConfigParser.ConfigParser() ,
+                           'file' : "" ,
+                      'openfiles' : [],
+                  'defaultconfig' : ConfigParser.ConfigParser()
+                       }
 
     def saveWorkspace(self,filelocation=None):
+        if filelocation is '': return
         if self.app.children:
             childActive = self.app.childActive
             fileList=[]
@@ -1077,7 +1097,8 @@ class Panel(wx.Notebook):
             self.messageEmail("""\
 Spe Warning: can't save user settings (%s).
 Please report these details and operating system to %s."""%(message,INFO['author_email']))
-        if not self.getValue('RememberLastWorkspace'): self.set('currentworkspace',"")
+        if not self.getValue('RememberLastWorkspace'): 
+            self.set('currentworkspace',"")
         return 1
 
     def onClosePanelFrame(self,event=None):
@@ -1304,6 +1325,7 @@ Please report these details and operating system to %s."""%(message,INFO['author
 
     def rememberSet(self,value):
         self.remember   = value
+        self.set('RememberLastWorkspace',int(value))
         self.frame.menuBar.check_remember(self.remember)
 
     def SetActiveStatusText(self,x,pos=1):
