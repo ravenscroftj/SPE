@@ -1236,7 +1236,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def confirmSave(self, message=''):
         self.notesSave(file=1)
-        if self.changed>0 or self.fileName == NEWFILE:
+        if self.changed>0 or (self.fileName == NEWFILE and self.source.GetText()):
             self.Raise()
             message+='\nSave changes to "%s"?'%self.fileName
             answer=self.parentPanel.messageCancel(message)
