@@ -1209,24 +1209,30 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         else: return 1
 
     def checkTime(self):
-        if (not (self.frame.dead or self.parentFrame.dead)) and \
-            hasattr(self,'fileName') and os.path.exists(self.fileName):
+        if (self.frame.dead or self.parentFrame.dead) or \
+            not hasattr(self,'fileName'): return
+        baseName=os.path.basename(self.fileName)
+        if os.path.exists(self.fileName):
             try:
-                pos=self.source.GetCurrentPos()
                 fileTime=os.path.getmtime(self.fileName)
                 if fileTime>self.fileTime:
                     #file is modified
                     self.fileTime=fileTime
-                    baseName=os.path.basename(self.fileName)
                     message=baseName+' is modified externally.\nDo you want to reload it%s?'
-                    if  (self.changed>0 and self.parentPanel.messageConfirm(message%' and loose current changes')) or\
+                    if (self.changed>0 and self.parentPanel.messageConfirm(message%' and lose current changes')) or\
                     (not self.changed>0 and (self.parentPanel.getValue('AutoReloadChangedFile') or self.parentPanel.messageConfirm(message%''))):
+                        pos=self.source.GetCurrentPos()
                         self.revert()
                         self.source.GotoPos(pos)
                         return 1
             except:
                 return 0
-
+        elif self.fileName != NEWFILE:
+            #file does not exist anymore
+            if self.parentPanel.messageConfirm('Warning: the file "%s" has been deleted!\nDo you want to save it now?'%baseName):
+                self.save()
+            else:
+                self.eventChanged   = False
 
     def confirmSave(self, message=''):
         self.notesSave(file=1)
@@ -1285,6 +1291,8 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         self.notes.SetValue(self.notesText)
         self.frame.setTitle()
         self.changed=0
+        self.eventChanged   = False
+        self.frame.setTitle()
 
     def setFileName(self,fileName):
         self.fileName   = fileName
