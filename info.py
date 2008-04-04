@@ -70,7 +70,7 @@ INFO={
     'title'             : "SPE",
     'url'               : 'http://pythonide.stani.be',
     'userPath'          : sm.osx.userPath('.spe'),
-    'version'           : "0.8.4.e",
+    'version'           : "0.8.4.f",
     'wxVersion'         : "2.6.1.0.",
 }
 
