@@ -859,8 +859,17 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         if self.frame.dead: return
         if event:
             tab = event.GetSelection()
-            self.notebook.SetPageText(event.GetOldSelection(),'')
-            self.notebook.SetPageText(tab,self.notebookLabel[tab])
+            old = event.GetOldSelection()
+            if type(old) == int:
+                try:
+                    self.notebook.SetPageText(old,'')
+                except:
+                    pass
+            if type(tab) == int:
+                try:
+                    self.notebook.SetPageText(tab,self.notebookLabel[tab])
+                except:
+                    pass
             event.Skip()
         else:
             tab = self.notebook.GetSelection()
