@@ -1022,6 +1022,7 @@ class Child(Framework):
             app.childActive = None
         if not destroyed and mdi!=MDI_SPLIT:
                 self.Destroy()
+        if not children: parentFrame.setTitle()
         if debug:
             print 'Event>: Child: %s.Close returns True'%self.__class__
         return True

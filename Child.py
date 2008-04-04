@@ -1292,7 +1292,6 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         self.frame.setTitle()
         self.changed=0
         self.eventChanged   = False
-        self.frame.setTitle()
 
     def setFileName(self,fileName):
         self.fileName   = fileName
