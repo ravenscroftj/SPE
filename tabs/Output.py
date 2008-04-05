@@ -54,6 +54,7 @@ class Output(html.HtmlWindow):
             #bind events
             self.Bind(wx.EVT_IDLE,self.OnIdle)
             self.Bind(wx.EVT_END_PROCESS,self.OnEndProcess)
+            self.Bind(wx.EVT_TEXT_COPY,self.Copy)
             #create process
             self.process        = wx.Process(self)
             self.process.Redirect()
@@ -102,6 +103,18 @@ class Output(html.HtmlWindow):
     #---view
     def Clear(self):
         self.SetPage('')
+        
+    def Copy(self, event):
+        text_data = wx.TextDataObject(self.SelectionToText())
+        if wx.TheClipboard.Open():
+            try:
+                if not wx.TheClipboard.SetData(text_data):
+                    self.app.parentPanel.messageError("Data can't be copied to clipboard.")
+            finally:
+                wx.TheClipboard.Close()
+        else:
+            self.app.parentPanel.messageError("Clipboard can't be opened.")
+        event.Skip()
 
     #---event handlers
     def OnIdle(self, event):
