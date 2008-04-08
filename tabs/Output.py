@@ -159,7 +159,6 @@ class Output(html.HtmlWindow):
         print fileName,lineno
         
 def Write(self,*args,**keyw):
-    print args,keyw
     wx.OutputStream.Write(self,*args,**keyw)
         
 class Panel(Output):

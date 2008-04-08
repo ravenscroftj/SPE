@@ -1007,18 +1007,18 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
 
     def updateExplore(self,uml=0):
         """Updates explore in sidebar."""
+        classes         = {}
         if not (self or self.explore):
-            return
+            return classes
         #get text
         try:
             text=self.source.GetText().split('\n')
         except:
-            return
+            return classes
         #initialize
         if uml:
             self.umlClass   = None
             previous    = 0
-        classes         = {}
         n               = len(text)
         tryMode         = 0
         hierarchyIndex  = 0
@@ -1028,7 +1028,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
         try:
             self.explore.CollapseAndReset(self.root)
         except:
-            return
+            return classes
         for line in range(len(text)):
             l           = text[line].strip()
             first       = l.split(' ')[0]
