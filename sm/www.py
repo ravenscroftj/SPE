@@ -1,4 +1,5 @@
-#(c)www.stani.be (read __doc__ for more information)                            
+#(c)www.stani.be (read __doc__ for more information)                            
+
 import sm
 
 INFO=sm.INFO.copy()
@@ -10,7 +11,8 @@ INFO['description']=\
 
 
 __doc__=INFO['doc']%INFO
-#_______________________________________________________________________________
+#_______________________________________________________________________________
+
 
 ####IMPORT----------------------------------------------------------------------
 import cStringIO, htmllib, httplib, MimeWriter, urllib
