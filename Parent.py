@@ -862,6 +862,15 @@ class Panel(wx.Notebook):
         self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
+        try:
+            from wx.tools.XRCed import xrced
+        except ImportError:
+            from plugins.XRCed import xrced
+        except:
+            self.messageError('You need to install\n'
+                'the wxpython tools (python-wxtools)\n'
+                'for this feature.')
+            return
         import plugins
         path   = os.path.dirname(plugins.__file__)
         xrced   = '%s'%os.path.join(path,'spe_xrced.py')
