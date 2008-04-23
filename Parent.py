@@ -720,15 +720,15 @@ class Panel(wx.Notebook):
             else:
                 path    = os.getcwd()
             if os.path.exists(THUNAR):
-                os.system('%s "%s"'%(THUNAR,path))
+                os.system('%s "%s" &'%(THUNAR,path))
             elif os.path.exists(NAUTILUS):
-                os.system('%s "%s"'%(NAUTILUS,path))
+                os.system('%s "%s" &'%(NAUTILUS,path))
             elif os.path.exists(DOLPHIN):
-                os.system('%s "%s"'%(DOLPHIN,path))
+                os.system('%s "%s" &'%(DOLPHIN,path))
             elif os.path.exists(KONQUEROR):
-                os.system('%s "%s"'%(KONQUEROR,path))
+                os.system('%s "%s" &'%(KONQUEROR,path))
             elif os.path.exists(PCMANFM):
-                os.system('%s "%s"'%(PCMANFM,path))
+                os.system('%s "%s" &'%(PCMANFM,path))
             else:
                 if path[0] == '/': path = 'file://'+path
                 webbrowser.open(path)
@@ -789,7 +789,12 @@ class Panel(wx.Notebook):
     def run_debug(self):
         """Run file"""
         if not self.runner:
-            from _spe.plugins.spe_winpdb import Runner
+            try:
+                from _spe.plugins.spe_winpdb import Runner
+            except ImportError:
+                self.messageError('You need to install\n'
+                    'winpdb for this feature.')
+                return
             self.runner = Runner(self.app)
         self.runner.switch()
 
@@ -816,7 +821,12 @@ class Panel(wx.Notebook):
             return
         if child.isNew(): return
         if not self.runner:
-            from _spe.plugins.spe_winpdb import Runner
+            try:
+                from _spe.plugins.spe_winpdb import Runner
+            except ImportError:
+                self.messageError('You need to install\n'
+                    'winpdb for this feature.')
+                return
             self.runner = Runner(self.app)
         self.runner.debug()
 
@@ -851,14 +861,27 @@ class Panel(wx.Notebook):
 
     def design_a_gui_with_wxglade(self):
         try:
+            import subprocess
+            glade   = subprocess.Popen(['which','wxglade'],
+                stdout=subprocess.PIPE).stdout.read().strip()
+            os.spawnl(os.P_NOWAIT,glade,glade)
+            return
+        except:
+            pass
+        try:
             from wxglade import __file__ as fileName
         except ImportError:
             from plugins.wxGlade import __file__ as fileName
+        except:
+            self.messageError('You need to install\n'
+                'wxglade (python-wxglade)\n'
+                'for this feature.')
+            return
         path    = info.dirname(fileName)
         glade   = '%s'%os.path.join(path,'wxglade.py')
         if info.WIN and ' ' in glade:
             glade = '"%s"'%glade
-        print os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
+        os.spawnl(os.P_NOWAIT,info.PYTHON_EXEC,info.PYTHON_EXEC,glade)
         self.SetStatusText('wxGlade is succesfully started.',1)
 
     def design_a_gui_with_xrc(self):
