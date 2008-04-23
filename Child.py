@@ -108,6 +108,7 @@ class Panel(wx.SplitterWindow):
         self.todoMax            = 1
         self.toggleExploreSelection = False
         self.warning            = ''
+        self.check_for_delete   = False
         #delete when fixed
         self.updateBug          = False
         #construct
@@ -710,6 +711,7 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
     ####Events------------------------------------------------------------------
     #---Smdi events
     def onActivate(self,event=None):
+        self.check_for_delete   = True
         if self.frame.menuBar:
             self.frame.menuBar.check_sidebar()
         else:
@@ -1241,11 +1243,12 @@ Please try then to change the encoding or save it again."""%(self.encoding,messa
                         return 1
             except:
                 return 0
-        elif self.fileName != NEWFILE:
+        elif self.check_for_delete and self.fileName != NEWFILE:
             #file does not exist anymore
             if self.parentPanel.messageConfirm('Warning: the file "%s" has been deleted!\nDo you want to save it now?'%baseName):
                 self.save()
             else:
+                self.check_for_delete   = False
                 self.eventChanged   = False
 
     def confirmSave(self, message=''):
