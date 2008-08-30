@@ -27,7 +27,7 @@ import Child
 ####Constants-------------------------------------------------------------------
 DEFAULT         = "<default>"
 FIREFOX         = '/usr/bin/firefox'
-NAUTILUS        = '/usr/bin/nautilus --no-desktop'
+NAUTILUS        = '/usr/bin/nautilus'
 DOLPHIN         = '/usr/bin/dolphin'
 KONQUEROR       = '/usr/bin/konqueror'
 THUNAR          = '/usr/bin/thunar'
@@ -722,7 +722,7 @@ class Panel(wx.Notebook):
             if os.path.exists(THUNAR):
                 os.system('%s "%s" &'%(THUNAR,path))
             elif os.path.exists(NAUTILUS):
-                os.system('%s "%s" &'%(NAUTILUS,path))
+                os.system('%s  --no-desktop "%s" &'%(NAUTILUS,path))
             elif os.path.exists(DOLPHIN):
                 os.system('%s "%s" &'%(DOLPHIN,path))
             elif os.path.exists(KONQUEROR):
